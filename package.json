@@ -1,8 +1,9 @@
 {
-  "name": "eslint-plugin-playwright",
+  "name": "eslint-plugin-jest-playwright",
+  "description": "ESLint globals for your Jest Playwright setup.",
   "version": "0.1.0",
   "main": "index.js",
-  "repository": "https://github.com/mxschmitt/eslint-plugin-playwright",
+  "repository": "https://github.com/mxschmitt/eslint-plugin-jest-playwright",
   "author": "Max Schmitt <max@schmitt.mx>",
   "license": "MIT"
 }

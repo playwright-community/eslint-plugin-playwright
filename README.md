@@ -1,13 +1,15 @@
-# ESLint Playwright globals
+# ESLint Jest Playwright globals
+
+> ESLint globals for your [Jest](https://jestjs.io/) [Playwright](https://github.com/microsoft/playwright) ([jest-playwright](https://github.com/mmarkelov/jest-playwright/)) installation.
 
 ## Usage
 
-Add `plugin:playwright/recommended` to your extends ESLint configuration. For example:
+Add `plugin:jest-playwright/recommended` to your extends ESLint configuration. For example:
 
 ```json
 {
     "extends": [
-        "plugin:playwright/recommended"
+        "plugin:jest-playwright/recommended"
     ]
 }
 ```
@@ -17,11 +19,11 @@ Add `plugin:playwright/recommended` to your extends ESLint configuration. For ex
 Yarn
 
 ```txt
-yarn add -D eslint-plugin-playwright
+yarn add -D eslint-plugin-jest-playwright
 ```
 
 NPM
 
 ```txt
-npm install -D eslint-plugin-playwright
+npm install -D eslint-plugin-jest-playwright
 ```
