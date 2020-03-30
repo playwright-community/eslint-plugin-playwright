@@ -1,0 +1,8 @@
+{
+  "name": "eslint-plugin-playwright",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/mxschmitt/eslint-plugin-playwright",
+  "author": "Max Schmitt <max@schmitt.mx>",
+  "license": "MIT"
+}
