@@ -2,7 +2,7 @@ module.exports = {
   configs: {
     recommended: {
       env: {
-        node: true,
+        'shared-node-browser': true,
         jest: true,
       },
       globals: {
