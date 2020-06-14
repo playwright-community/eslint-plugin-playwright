@@ -6,6 +6,8 @@ module.exports = {
         jest: true,
       },
       globals: {
+        browserName: true,
+        deviceName: true,
         browser: true,
         context: true,
         page: true,
