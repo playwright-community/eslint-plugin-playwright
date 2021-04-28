@@ -22,7 +22,8 @@ Add `plugin:jest-playwright/recommended` to your extends ESLint configuration. F
 
 ```json
 {
-  "extends": ["plugin:jest-playwright/recommended"]
+  "extends": ["plugin:jest-playwright/recommended"],
+  "plugins": ["jest-playwright"]
 }
 ```
 
@@ -52,7 +53,7 @@ The rule accepts a non-required option which can be used to specify custom match
 
 ```json
 {
-  "@widen/missing-playwright-await": [
+  "jest-playwright/missing-playwright-await": [
     "error",
     { "customMatchers": ["toHaveAttribute"] }
   ]
