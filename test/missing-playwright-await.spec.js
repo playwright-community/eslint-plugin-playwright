@@ -72,5 +72,6 @@ new RuleTester().run("missing-playwright-await", rule, {
     valid("await expect(page).toBeCustomThing(true)", options),
     valid("await expect(page).toBeCustomThing(true)", options),
     valid("await expect(page).toBeCustomThing(true)"),
+    valid("expect(page).toBeCustomThing(true)"),
   ],
 });
