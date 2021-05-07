@@ -18,5 +18,8 @@
   },
   "dependencies": {
     "eslint-plugin-jest": "^24.3.6"
+  },
+  "peerDependencies": {
+    "eslint": ">=5"
   }
 }
