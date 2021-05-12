@@ -22,8 +22,7 @@ Add `plugin:jest-playwright/recommended` to your extends ESLint configuration. F
 
 ```json
 {
-  "extends": ["plugin:jest-playwright/recommended"],
-  "plugins": ["jest-playwright"]
+  "extends": ["plugin:jest-playwright/recommended"]
 }
 ```
 
