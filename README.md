@@ -6,13 +6,13 @@
 
 Yarn
 
-```txt
+```sh
 yarn add -D eslint-plugin-jest-playwright
 ```
 
 NPM
 
-```txt
+```sh
 npm install -D eslint-plugin-jest-playwright
 ```
 
@@ -28,7 +28,7 @@ Add `plugin:jest-playwright/recommended` to your extends ESLint configuration. F
 
 ## Rules
 
-### `missing-playwright-expect` 🔧
+### `missing-playwright-await` 🔧
 
 Enforce Jest Playwright expect statements to be awaited.
 
@@ -37,13 +37,13 @@ Enforce Jest Playwright expect statements to be awaited.
 Example of **incorrect** code for this rule:
 
 ```js
-expect(page).toHaveText("text");
+expect(page).toMatchText("text");
 ```
 
 Example of **correct** code for this rule:
 
 ```js
-await expect(page).toHaveText("text");
+await expect(page).toMatchText("text");
 ```
 
 #### Options
