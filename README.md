@@ -1,28 +1,38 @@
 # ESLint Jest Playwright
 
-> ESLint plugin for your [Jest](https://jestjs.io/) [Playwright](https://github.com/microsoft/playwright) ([jest-playwright](https://github.com/mmarkelov/jest-playwright/)) installation.
+> ESLint plugin for your [Playwright](https://github.com/microsoft/playwright) testing needs.
 
 ## Installation
 
 Yarn
 
 ```sh
-yarn add -D eslint-plugin-jest-playwright
+yarn add -D eslint-plugin-playwright
 ```
 
 NPM
 
 ```sh
-npm install -D eslint-plugin-jest-playwright
+npm install -D eslint-plugin-playwright
 ```
 
 ## Usage
 
-Add `plugin:jest-playwright/recommended` to your extends ESLint configuration. For example:
+This plugin bundles two configurations to work with both `@playwright/test` or `jest-playwright`.
+
+### With [Playwright test runner](https://playwright.dev/docs/test-intro)
 
 ```json
 {
-  "extends": ["plugin:jest-playwright/recommended"]
+  "extends": ["plugin:playwright/playwright-test"]
+}
+```
+
+### With [Jest Playwright](https://github.com/playwright-community/jest-playwright)
+
+```json
+{
+  "extends": ["plugin:playwright/jest-playwright"]
 }
 ```
 
@@ -52,9 +62,9 @@ The rule accepts a non-required option which can be used to specify custom match
 
 ```json
 {
-  "jest-playwright/missing-playwright-await": [
+  "playwright/missing-playwright-await": [
     "error",
-    { "customMatchers": ["toHaveAttribute"] }
+    { "customMatchers": ["toBeThere"] }
   ]
 }
 ```
