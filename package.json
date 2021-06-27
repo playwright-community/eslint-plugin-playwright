@@ -1,9 +1,9 @@
 {
-  "name": "eslint-plugin-jest-playwright",
-  "description": "ESLint globals for your Jest Playwright setup.",
+  "name": "eslint-plugin-playwright",
+  "description": "ESLint plugin for Playwright testing.",
   "version": "0.3.3",
   "main": "lib/index.js",
-  "repository": "https://github.com/mxschmitt/eslint-plugin-jest-playwright",
+  "repository": "https://github.com/playwright-community/eslint-plugin-playwright",
   "author": "Max Schmitt <max@schmitt.mx>",
   "license": "MIT",
   "files": [
@@ -16,10 +16,13 @@
     "eslint": "^7.25.0",
     "jest": "^26.6.3"
   },
-  "dependencies": {
-    "eslint-plugin-jest": "^24.3.6"
-  },
   "peerDependencies": {
-    "eslint": ">=5"
+    "eslint": ">=5",
+    "eslint-plugin-jest": ">=24"
+  },
+  "peerDependenciesMeta": {
+    "eslint-plugin-jest": {
+      "optional": true
+    }
   }
 }
