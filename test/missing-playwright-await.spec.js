@@ -24,14 +24,18 @@ const valid = (code, options = []) => ({
 const options = [{ customMatchers: ["toBeCustomThing"] }];
 
 const defaultMatchers = [
-  "toEqualText",
+  "toBeChecked",
+  "toBeDisabled",
+  "toBeEnabled",
+  "toEqualText", // deprecated
   "toEqualUrl",
   "toEqualValue",
   "toHaveFocus",
   "toHaveSelector",
   "toHaveSelectorCount",
-  "toHaveText",
+  "toHaveText", // deprecated
   "toMatchText",
+  "toMatchTitle",
 ];
 
 new RuleTester().run("missing-playwright-await", rule, {
