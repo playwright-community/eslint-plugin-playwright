@@ -11,7 +11,7 @@ const wrapInTest = (input) => `test('a', async () => { ${input} })`;
 
 const invalid = (code, output, options = []) => ({
   code: wrapInTest(code),
-  errors: ["Playwright expectations must be awaited or returned."],
+  errors: [{ messageId: "missingAwait" }],
   options,
   output: wrapInTest(output),
 });
