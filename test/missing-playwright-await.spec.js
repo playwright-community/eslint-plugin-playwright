@@ -35,6 +35,7 @@ const defaultMatchers = [
   "toHaveSelectorCount",
   "toHaveText", // deprecated
   "toMatchAttribute",
+  "toMatchComputedStyle",
   "toMatchText",
   "toMatchTitle",
   "toMatchURL",
