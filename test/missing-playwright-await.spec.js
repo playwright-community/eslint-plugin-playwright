@@ -34,8 +34,11 @@ const defaultMatchers = [
   "toHaveSelector",
   "toHaveSelectorCount",
   "toHaveText", // deprecated
+  "toMatchAttribute",
   "toMatchText",
   "toMatchTitle",
+  "toMatchURL",
+  "toMatchValue",
 ];
 
 new RuleTester().run("missing-playwright-await", rule, {

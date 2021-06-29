@@ -54,7 +54,7 @@ The rule accepts a non-required option which can be used to specify custom match
 {
   "jest-playwright/missing-playwright-await": [
     "error",
-    { "customMatchers": ["toHaveAttribute"] }
+    { "customMatchers": ["toBeCustomThing"] }
   ]
 }
 ```
