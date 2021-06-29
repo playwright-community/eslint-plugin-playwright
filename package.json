@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-playwright",
   "description": "ESLint plugin for Playwright testing.",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "main": "lib/index.js",
   "repository": "https://github.com/playwright-community/eslint-plugin-playwright",
   "author": "Max Schmitt <max@schmitt.mx>",
