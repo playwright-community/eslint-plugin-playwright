@@ -1,5 +1,8 @@
 # ESLint Plugin Playwright
 
+[![Test](https://github.com/playwright-community/eslint-plugin-playwright/actions/workflows/test.yml/badge.svg)](https://github.com/playwright-community/eslint-plugin-playwright/actions/workflows/test.yml)
+[![NPM](https://img.shields.io/npm/v/eslint-plugin-playwright)](https://www.npmjs.com/package/eslint-plugin-playwright)
+
 > ESLint plugin for your [Playwright](https://github.com/microsoft/playwright) testing needs.
 
 ## Installation
