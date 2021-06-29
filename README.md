@@ -1,4 +1,4 @@
-# ESLint Playwright
+# ESLint Plugin Playwright
 
 > ESLint plugin for your [Playwright](https://github.com/microsoft/playwright) testing needs.
 
