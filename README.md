@@ -1,4 +1,4 @@
-# ESLint Jest Playwright
+# ESLint Playwright
 
 > ESLint plugin for your [Playwright](https://github.com/microsoft/playwright) testing needs.
 
@@ -40,7 +40,7 @@ This plugin bundles two configurations to work with both `@playwright/test` or `
 
 ### `missing-playwright-await` 🔧
 
-Enforce Jest Playwright expect statements to be awaited.
+Enforce Playwright expect statements to be awaited.
 
 #### Example
 
