@@ -64,7 +64,7 @@ The rule accepts a non-required option which can be used to specify custom match
 {
   "playwright/missing-playwright-await": [
     "error",
-    { "customMatchers": ["toBeThere"] }
+    { "customMatchers": ["toBeCustomThing"] }
   ]
 }
 ```

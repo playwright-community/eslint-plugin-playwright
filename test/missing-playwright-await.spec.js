@@ -37,6 +37,8 @@ const defaultMatchers = [
   "toMatchAttribute",
   "toMatchText",
   "toMatchTitle",
+  "toMatchURL",
+  "toMatchValue",
 ];
 
 new RuleTester().run("missing-playwright-await", rule, {
