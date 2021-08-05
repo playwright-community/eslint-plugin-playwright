@@ -23,38 +23,13 @@ const valid = (code, options = []) => ({
 
 const options = [{ customMatchers: ["toBeCustomThing"] }];
 
-const defaultMatchers = [
-  "toBeChecked",
-  "toBeDisabled",
-  "toBeEnabled",
-  "toEqualText", // deprecated
-  "toEqualUrl",
-  "toEqualValue",
-  "toHaveFocus",
-  "toHaveSelector",
-  "toHaveSelectorCount",
-  "toHaveText", // deprecated
-  "toMatchAttribute",
-  "toMatchComputedStyle",
-  "toMatchText",
-  "toMatchTitle",
-  "toMatchURL",
-  "toMatchValue",
-];
-
 new RuleTester().run("missing-playwright-await", rule, {
   invalid: [
-    // Default matchers
-    ...defaultMatchers.flatMap((matcher) => [
-      invalid(
-        `expect(page).${matcher}("text")`,
-        `await expect(page).${matcher}("text")`
-      ),
-      invalid(
-        `expect(page).not.${matcher}("text")`,
-        `await expect(page).not.${matcher}("text")`
-      ),
-    ]),
+    invalid(`expect(page).toBeChecked()`, `await expect(page).toBeChecked()`),
+    invalid(
+      `expect(page).not.toBeEnabled()`,
+      `await expect(page).not.toBeEnabled()`
+    ),
 
     // Custom matchers
     invalid(
@@ -69,12 +44,15 @@ new RuleTester().run("missing-playwright-await", rule, {
     ),
   ],
   valid: [
-    // Default matchers
-    ...defaultMatchers.flatMap((matcher) => [
-      valid(`await expect(page).${matcher}("text")`),
-      valid(`await expect(page).not.${matcher}("text")`),
-      valid(`return expect(page).${matcher}("text")`),
-    ]),
+    valid(`await expect(page).toEqualTitle("text")`),
+    valid(`await expect(page).not.toHaveText("text")`),
+
+    // Doesn't require an await when returning
+    valid(`return expect(page).toHaveText("text")`),
+    {
+      code: `const a = () => expect(page).toHaveText("text")`,
+      options,
+    },
 
     // Custom matchers
     valid("await expect(page).toBeCustomThing(true)", options),
