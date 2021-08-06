@@ -23,23 +23,13 @@ const valid = (code, options = []) => ({
 
 const options = [{ customMatchers: ["toBeCustomThing"] }];
 
+// Smoke test a few of the default matchers
 const defaultMatchers = [
   "toBeChecked",
-  "toBeDisabled",
-  "toBeEnabled",
-  "toEqualText", // deprecated
   "toEqualUrl",
-  "toEqualValue",
-  "toHaveFocus",
-  "toHaveSelector",
-  "toHaveSelectorCount",
-  "toHaveText", // deprecated
-  "toMatchAttribute",
+  "toHaveId",
   "toMatchComputedStyle",
-  "toMatchText",
-  "toMatchTitle",
-  "toMatchURL",
-  "toMatchValue",
+  "toMatchSnapshot",
 ];
 
 new RuleTester().run("missing-playwright-await", rule, {
