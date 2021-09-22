@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-jest-playwright",
   "description": "ESLint globals for your Jest Playwright setup.",
-  "version": "0.4.1",
+  "version": "0.5.1",
   "main": "index.js",
   "repository": "https://github.com/mxschmitt/eslint-plugin-playwright",
   "author": "Max Schmitt <max@schmitt.mx>",
@@ -10,6 +10,6 @@
     "index.js"
   ],
   "dependencies": {
-    "eslint-plugin-playwright": "^0.4.0"
+    "eslint-plugin-playwright": "^0.5.1"
   }
 }
