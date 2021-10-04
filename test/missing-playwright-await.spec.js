@@ -53,8 +53,8 @@ new RuleTester().run("missing-playwright-await", rule, {
     // test.step
     invalid(
       "testStep",
-      "test.step(async () => {})",
-      "await test.step(async () => {})"
+      "test.step('foo', async () => {})",
+      "await test.step('foo', async () => {})"
     ),
   ],
   valid: [
@@ -76,6 +76,6 @@ new RuleTester().run("missing-playwright-await", rule, {
     valid("expect(page).toBeCustomThing(true)"),
 
     // test.step
-    valid("await test.step(async () => {})"),
+    valid("await test.step('foo', async () => {})"),
   ],
 });
