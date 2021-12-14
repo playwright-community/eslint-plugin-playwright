@@ -13,12 +13,12 @@
     "test": "jest"
   },
   "devDependencies": {
-    "eslint": "^7.25.0",
-    "jest": "^27.0.6"
+    "eslint": "^8.4.1",
+    "jest": "^27.4.5"
   },
   "peerDependencies": {
-    "eslint": ">=7",
-    "eslint-plugin-jest": ">=24"
+    "eslint": ">=8",
+    "eslint-plugin-jest": ">=25"
   },
   "peerDependenciesMeta": {
     "eslint-plugin-jest": {
