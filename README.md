@@ -79,3 +79,22 @@ The rule accepts a non-required option which can be used to specify custom match
   ]
 }
 ```
+### `no-page-pause`
+
+Prevent usage of `page.pause()`.
+
+#### Example
+
+Example of **incorrect** code for this rule:
+
+```js
+await page.click('button');
+await page.pause();
+```
+
+Example of **correct** code for this rule:
+
+```js
+await page.click('button');
+```
+
