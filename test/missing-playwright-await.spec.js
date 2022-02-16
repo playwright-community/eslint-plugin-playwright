@@ -50,6 +50,18 @@ new RuleTester().run("missing-playwright-await", rule, {
       options
     ),
 
+    // expect.soft
+    invalid(
+      "expect",
+      "expect.soft(page).toBeChecked()",
+      "await expect.soft(page).toBeChecked()"
+    ),
+    invalid(
+      "expect",
+      "expect.soft(page).toBeChecked()",
+      "await expect.soft(page).toBeChecked()"
+    ),
+
     // test.step
     invalid(
       "testStep",
@@ -74,6 +86,10 @@ new RuleTester().run("missing-playwright-await", rule, {
     valid("await expect(page).toBeCustomThing(true)", options),
     valid("await expect(page).toBeCustomThing(true)"),
     valid("expect(page).toBeCustomThing(true)"),
+
+    // expect.soft
+    valid('await expect.soft(page).toHaveText("text")'),
+    valid('await expect.soft(page).not.toHaveText("text")'),
 
     // test.step
     valid("await test.step('foo', async () => {})"),
