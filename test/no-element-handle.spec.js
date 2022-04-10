@@ -41,6 +41,21 @@ new RuleTester().run('no-element-handle', rule, {
 
     // element handles as expression statement
     invalid('await page.$$("a")', 'page.locator("a")'),
+
+    // return element handle without awaiting it
+    invalid(
+      'function getHandle() { return page.$("button"); }',
+      'function getHandle() { return page.locator("button"); }'
+    ),
+
+    // missed return for the element handle
+    invalid(
+      'function getHandle() { page.$("button"); }',
+      'function getHandle() { page.locator("button"); }'
+    ),
+
+    // arrow function return element handles without awaiting it
+    invalid('const getHandles = () => page.$$("links");', 'const getHandles = () => page.locator("links");'),
   ],
   valid: [
     // page locator
