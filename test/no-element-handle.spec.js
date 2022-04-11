@@ -14,7 +14,12 @@ const invalid = (code, output) => ({
   errors: [
     {
       messageId: 'noElementHandle',
-      suggestions: [{ messageId: 'replaceWithLocator', output: wrapInTest(output) }],
+      suggestions: [
+        {
+          messageId: code.includes('page.$$') ? 'replaceElementHandlesWithLocator' : 'replaceElementHandleWithLocator',
+          output: wrapInTest(output),
+        },
+      ],
     },
   ],
 });
