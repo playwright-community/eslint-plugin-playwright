@@ -11,8 +11,12 @@ const wrapInTest = (input) => `test('verify noElementHandle rule', async () => {
 
 const invalid = (code, output) => ({
   code: wrapInTest(code),
-  errors: [{ messageId: 'noElementHandle' }],
-  output: wrapInTest(output),
+  errors: [
+    {
+      messageId: 'noElementHandle',
+      suggestions: [{ messageId: 'replaceWithLocator', output: wrapInTest(output) }],
+    },
+  ],
 });
 
 const valid = (code) => ({
@@ -22,10 +26,16 @@ const valid = (code) => ({
 new RuleTester().run('no-element-handle', rule, {
   invalid: [
     // element handle as const
-    invalid("const handle = await page.$('text=Submit');", "const handle = page.locator('text=Submit');"),
+    invalid('const handle = await page.$("text=Submit");', 'const handle = page.locator("text=Submit");'),
 
     // element handle as let
-    invalid("let handle = await page.$('text=Submit');", "let handle = page.locator('text=Submit');"),
+    invalid('let handle = await page.$("text=Submit");', 'let handle = page.locator("text=Submit");'),
+
+    // element handle as expression statement without await
+    invalid('page.$("div")', 'page.locator("div")'),
+
+    // element handles as expression statement without await
+    invalid('page.$$("div")', 'page.locator("div")'),
 
     // element handle as expression statement
     invalid('await page.$("div")', 'page.locator("div")'),
@@ -55,10 +65,7 @@ new RuleTester().run('no-element-handle', rule, {
     ),
 
     // missed return for the element handle
-    invalid(
-      'function getHandle() { page.$("button"); }',
-      'function getHandle() { page.locator("button"); }'
-    ),
+    invalid('function getHandle() { page.$("button"); }', 'function getHandle() { page.locator("button"); }'),
 
     // arrow function return element handle without awaiting it
     invalid('const getHandles = () => page.$("links");', 'const getHandles = () => page.locator("links");'),
