@@ -100,9 +100,9 @@ await page.click('button');
 
 ### `no-element-handle`
 
-Disallow the use of `page.$` or `page.$$` element handle.
+Disallow the creation of element handles with `page.$` or `page.$$`.
 
-👎 Examples of <span style="color:red">**incorrect**</span> code for this rule:
+Examples of **incorrect** code for this rule:
 
 ```js
 // Element Handle
@@ -113,7 +113,7 @@ await buttonHandle.click();
 const linkHandles = await page.$$('a');
 ```
 
-👍 Example of <span style="color:green">**correct**</span> code for this rule:
+Example of **correct** code for this rule:
 
 ```js
 const buttonLocator = page.locator('button');
