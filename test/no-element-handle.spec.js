@@ -79,5 +79,23 @@ new RuleTester().run('no-element-handle', rule, {
 
     // page locator with action
     valid('await page.locator("a").click();'),
+
+    // const $
+    valid('const $ = "text";'),
+
+    // $ as a method
+    valid('$("a");'),
+
+    // this.$ as a method
+    valid('this.$("a");'),
+
+    // internalPage.$ method
+    valid('internalPage.$("a");'),
+
+    // this.page.$$$ method
+    valid('this.page.$$$("div");'),
+
+    // page.$$$ method
+    valid('page.$$$("div");'),
   ],
 });
