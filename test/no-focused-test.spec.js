@@ -17,10 +17,6 @@ const invalid = (code, output) => ({
   ],
 });
 
-const valid = (code) => ({
-  code,
-});
-
 new RuleTester().run('no-focused-test', rule, {
   invalid: [
     invalid(
@@ -44,20 +40,13 @@ new RuleTester().run('no-focused-test', rule, {
     ),
   ],
   valid: [
-    valid('test.describe("describe tests", () => {});'),
-
-    valid('test.describe.skip("describe tests", () => {});'),
-
-    valid('test("one", async ({ page }) => {});'),
-
-    valid('test.fixme(isMobile, "Settings page does not work in mobile yet");'),
-
-    valid('test.slow();'),
-
-    valid('const only = true;'),
-
-    valid('function only() { return null };'),
-
-    valid('this.only();'),
+    'test.describe("describe tests", () => {});',
+    'test.describe.skip("describe tests", () => {});',
+    'test("one", async ({ page }) => {});',
+    'test.fixme(isMobile, "Settings page does not work in mobile yet");',
+    'test.slow();',
+    'const only = true;',
+    'function only() { return null };',
+    'this.only();',
   ],
 });
