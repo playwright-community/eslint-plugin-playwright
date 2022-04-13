@@ -210,7 +210,7 @@ test.describe('skip test inside describe', () => {
 });
 
 test.describe('skip test conditionally', async ({ browserName }) => {
-  test(browserName === 'firefox', 'Working on it');
+  test.skip(browserName === 'firefox', 'Working on it');
 });
 
 ```
