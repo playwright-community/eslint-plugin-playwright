@@ -31,7 +31,7 @@ new RuleTester().run('no-skipped-test', rule, {
   ],
   valid: [
     'test.describe("describe tests", () => {});',
-    'test.describe("describe tests", () => {});',
+    'test.describe.only("describe focus tests", () => {});',
     'test("one", async ({ page }) => {});',
     'test.only(isMobile, "Settings page does not work in mobile yet");',
     'test.slow();',
