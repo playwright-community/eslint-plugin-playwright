@@ -190,3 +190,24 @@ test.describe.serial('two tests in serial mode', () => {
   test('two', async ({ page }) => {});
 });
 ```
+
+### `no-wait-for-timeout`
+
+Disallow usage of `page.waitForTimeout()`.
+
+Example of **incorrect** code for this rule:
+
+```js
+await page.waitForTimeout(5000);
+```
+
+Examples of **correct** code for this rule:
+
+```js
+// Use signals such as network events, selectors becoming visible and others instead.
+await page.waitForLoadState();
+
+await page.waitForUrl('/home');
+
+await page.waitForFunction(() => window.innerWidth < 100);
+```
