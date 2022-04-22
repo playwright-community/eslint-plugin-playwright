@@ -251,7 +251,7 @@ test.describe('two tests', () => {
 
 Disallow usage of the `{ force: true }` option.
 
-Example of **incorrect** code for this rule:
+Examples of **incorrect** code for this rule:
 
 ```js
 await page.locator('button').click({ force: true });
