@@ -1,13 +1,5 @@
-const { RuleTester } = require('eslint');
+const { runRuleTester, wrapInTest } = require('../lib/utils/rule-tester');
 const rule = require('../lib/rules/no-element-handle');
-
-RuleTester.setDefaultConfig({
-  parserOptions: {
-    ecmaVersion: 2018,
-  },
-});
-
-const wrapInTest = (input) => `test('verify noElementHandle rule', async () => { ${input} })`;
 
 const invalid = (code, output) => ({
   code: wrapInTest(code),
@@ -28,7 +20,7 @@ const valid = (code) => ({
   code: wrapInTest(code),
 });
 
-new RuleTester().run('no-element-handle', rule, {
+runRuleTester('no-element-handle', rule, {
   invalid: [
     // element handle as const
     invalid('const handle = await page.$("text=Submit");', 'const handle = page.locator("text=Submit");'),

@@ -1,11 +1,5 @@
-const { RuleTester } = require('eslint');
+const { runRuleTester } = require('../lib/utils/rule-tester');
 const rule = require('../lib/rules/no-skipped-test');
-
-RuleTester.setDefaultConfig({
-  parserOptions: {
-    ecmaVersion: 2018,
-  },
-});
 
 const invalid = (code, output) => ({
   code,
@@ -17,7 +11,7 @@ const invalid = (code, output) => ({
   ],
 });
 
-new RuleTester().run('no-skipped-test', rule, {
+runRuleTester('no-skipped-test', rule, {
   invalid: [
     invalid('test.skip("skip this test", async ({ page }) => {});', 'test("skip this test", async ({ page }) => {});'),
     invalid('test.describe.skip("skip this describe", () => {});', 'test.describe("skip this describe", () => {});'),
