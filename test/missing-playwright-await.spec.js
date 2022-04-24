@@ -1,13 +1,5 @@
-const { RuleTester } = require("eslint");
-const rule = require("../lib/rules/missing-playwright-await");
-
-RuleTester.setDefaultConfig({
-  parserOptions: {
-    ecmaVersion: 2018,
-  },
-});
-
-const wrapInTest = (input) => `test('a', async () => { ${input} })`;
+const { runRuleTester, wrapInTest } = require('../lib/utils/rule-tester');
+const rule = require('../lib/rules/missing-playwright-await');
 
 const invalid = (messageId, code, output, options = []) => ({
   code: wrapInTest(code),
@@ -21,53 +13,28 @@ const valid = (code, options = []) => ({
   options,
 });
 
-const options = [{ customMatchers: ["toBeCustomThing"] }];
+const options = [{ customMatchers: ['toBeCustomThing'] }];
 
-new RuleTester().run("missing-playwright-await", rule, {
+runRuleTester('missing-playwright-await', rule, {
   invalid: [
-    invalid(
-      "expect",
-      "expect(page).toBeChecked()",
-      "await expect(page).toBeChecked()"
-    ),
-    invalid(
-      "expect",
-      "expect(page).not.toBeEnabled()",
-      "await expect(page).not.toBeEnabled()"
-    ),
+    invalid('expect', 'expect(page).toBeChecked()', 'await expect(page).toBeChecked()'),
+    invalid('expect', 'expect(page).not.toBeEnabled()', 'await expect(page).not.toBeEnabled()'),
 
     // Custom matchers
+    invalid('expect', 'expect(page).toBeCustomThing(false)', 'await expect(page).toBeCustomThing(false)', options),
     invalid(
-      "expect",
-      "expect(page).toBeCustomThing(false)",
-      "await expect(page).toBeCustomThing(false)",
-      options
-    ),
-    invalid(
-      "expect",
-      "expect(page).not.toBeCustomThing(true)",
-      "await expect(page).not.toBeCustomThing(true)",
+      'expect',
+      'expect(page).not.toBeCustomThing(true)',
+      'await expect(page).not.toBeCustomThing(true)',
       options
     ),
 
     // expect.soft
-    invalid(
-      "expect",
-      "expect.soft(page).toBeChecked()",
-      "await expect.soft(page).toBeChecked()"
-    ),
-    invalid(
-      "expect",
-      "expect.soft(page).toBeChecked()",
-      "await expect.soft(page).toBeChecked()"
-    ),
+    invalid('expect', 'expect.soft(page).toBeChecked()', 'await expect.soft(page).toBeChecked()'),
+    invalid('expect', 'expect.soft(page).toBeChecked()', 'await expect.soft(page).toBeChecked()'),
 
     // test.step
-    invalid(
-      "testStep",
-      "test.step('foo', async () => {})",
-      "await test.step('foo', async () => {})"
-    ),
+    invalid('testStep', "test.step('foo', async () => {})", "await test.step('foo', async () => {})"),
   ],
   valid: [
     valid('await expect(page).toEqualTitle("text")'),
@@ -81,11 +48,11 @@ new RuleTester().run("missing-playwright-await", rule, {
     },
 
     // Custom matchers
-    valid("await expect(page).toBeCustomThing(true)", options),
-    valid("await expect(page).toBeCustomThing(true)", options),
-    valid("await expect(page).toBeCustomThing(true)", options),
-    valid("await expect(page).toBeCustomThing(true)"),
-    valid("expect(page).toBeCustomThing(true)"),
+    valid('await expect(page).toBeCustomThing(true)', options),
+    valid('await expect(page).toBeCustomThing(true)', options),
+    valid('await expect(page).toBeCustomThing(true)', options),
+    valid('await expect(page).toBeCustomThing(true)'),
+    valid('expect(page).toBeCustomThing(true)'),
 
     // expect.soft
     valid('await expect.soft(page).toHaveText("text")'),
