@@ -1,13 +1,5 @@
-const { RuleTester } = require('eslint');
+const { runRuleTester, wrapInTest } = require('../lib/utils/rule-tester');
 const rule = require('../lib/rules/no-force-option');
-
-RuleTester.setDefaultConfig({
-  parserOptions: {
-    ecmaVersion: 2018,
-  },
-});
-
-const wrapInTest = (input) => `test('should work', async () => { ${input} })`;
 
 const invalid = (code) => ({
   code: wrapInTest(code),
@@ -18,7 +10,7 @@ const valid = (code) => ({
   code: wrapInTest(code),
 });
 
-new RuleTester().run('no-force-option', rule, {
+runRuleTester('no-force-option', rule, {
   invalid: [
     invalid('await page.locator("check").check({ force: true })'),
     invalid('await page.locator("check").uncheck({ force: true })'),
