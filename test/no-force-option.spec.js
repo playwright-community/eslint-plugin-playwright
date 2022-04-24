@@ -7,52 +7,48 @@ RuleTester.setDefaultConfig({
   },
 });
 
+const wrapInTest = (input) => `test('should work', async () => { ${input} })`;
+
 const invalid = (code) => ({
-  code,
+  code: wrapInTest(code),
   errors: [{ messageId: 'noForceOption' }],
+});
+
+const valid = (code) => ({
+  code: wrapInTest(code),
 });
 
 new RuleTester().run('no-force-option', rule, {
   invalid: [
-    invalid(`test('should work', async ({ page }) =>  { await page.locator('check').check({ force: true }) });`),
-    invalid(`test('should work', async ({ page }) =>  { await page.locator('check').uncheck({ force: true }) });`),
-    invalid(`test('should work', async ({ page }) =>  { await page.locator('button').click({ force: true }) });`),
-    invalid(
-      `test('should work', async ({ page }) =>  { const button = page.locator('button'); await button.click({ force: true }) });`
-    ),
-    invalid(
-      `test('should work', async ({ page }) =>  { await page.locator('button').locator('btn').click({ force: true }) });`
-    ),
-    invalid(`test('should work', async ({ page }) =>  { await page.locator('button').dblclick({ force: true }) });`),
-    invalid(`test('should work', async ({ page }) =>  { await page.locator('input').dragTo({ force: true }) });`),
-    invalid(
-      `test('should work', async ({ page }) =>  { await page.locator('input').fill('something', { force: true }) });`
-    ),
-    invalid(`test('should work', async ({ page }) =>  { await page.locator('elm').hover({ force: true }) });`),
-    invalid(
-      `test('should work', async ({ page }) =>  { await page.locator('select').selectOption({ label: 'Blue' }, { force: true }) });`
-    ),
-    invalid(`test('should work', async ({ page }) =>  { await page.locator('select').selectText({ force: true }) });`),
-    invalid(
-      `test('should work', async ({ page }) =>  { await page.locator('checkbox').setChecked(true, { force: true }) });`
-    ),
-    invalid(`test('should work', async ({ page }) =>  { await page.locator('button').tap({ force: true }) });`),
+    invalid('await page.locator("check").check({ force: true })'),
+    invalid('await page.locator("check").uncheck({ force: true })'),
+    invalid('await page.locator("button").click({ force: true })'),
+    invalid('const button = page.locator("button"); await button.click({ force: true })'),
+    invalid('await page.locator("button").locator("btn").click({ force: true })'),
+    invalid('await page.locator("button").dblclick({ force: true })'),
+    invalid('await page.locator("input").dragTo({ force: true })'),
+    invalid('await page.locator("input").fill("test", { force: true })'),
+    invalid('await page.locator("elm").hover({ force: true })'),
+    invalid('await page.locator("select").selectOption({ label: "Blue" }, { force: true })'),
+    invalid('await page.locator("select").selectText({ force: true })'),
+    invalid('await page.locator("checkbox").setChecked(true, { force: true })'),
+    invalid('await page.locator("button").tap({ force: true })'),
   ],
   valid: [
-    `test('should work', async ({ page }) =>  { await page.locator('check').check() });`,
-    `test('should work', async ({ page }) =>  { await page.locator('check').uncheck() });`,
-    `test('should work', async ({ page }) =>  { await page.locator('button').click() });`,
-    `test('should work', async ({ page }) =>  { await page.locator('button').locator('btn').click() });`,
-    `test('should work', async ({ page }) =>  { await page.locator('button').click({ delay: 500, noWaitAfter: true }) });`,
-    `test('should work', async ({ page }) =>  { await page.locator('button').dblclick() });`,
-    `test('should work', async ({ page }) =>  { await page.locator('input').dragTo() });`,
-    `test('should work', async ({ page }) =>  { await page.locator('input').fill('something', { timeout: 1000 }) });`,
-    `test('should work', async ({ page }) =>  { await page.locator('elm').hover() });`,
-    `test('should work', async ({ page }) =>  { await page.locator('select').selectOption({ label: 'Blue' }) });`,
-    `test('should work', async ({ page }) =>  { await page.locator('select').selectText() });`,
-    `test('should work', async ({ page }) =>  { await page.locator('checkbox').setChecked(true) });`,
-    `test('should work', async ({ page }) =>  { await page.locator('button').tap() });`,
-    `doSomething({ force: true });`,
-    `test('should work', async ({ page }) =>  { await doSomething({ force: true }) });`,
+    valid("await page.locator('check').check()"),
+    valid("await page.locator('check').uncheck()"),
+    valid("await page.locator('button').click()"),
+    valid("await page.locator('button').locator('btn').click()"),
+    valid("await page.locator('button').click({ delay: 500, noWaitAfter: true })"),
+    valid("await page.locator('button').dblclick()"),
+    valid("await page.locator('input').dragTo()"),
+    valid("await page.locator('input').fill('something', { timeout: 1000 })"),
+    valid("await page.locator('elm').hover()"),
+    valid("await page.locator('select').selectOption({ label: 'Blue' })"),
+    valid("await page.locator('select').selectText()"),
+    valid("await page.locator('checkbox').setChecked(true)"),
+    valid("await page.locator('button').tap()"),
+    valid('doSomething({ force: true })'),
+    valid('await doSomething({ force: true })'),
   ],
 });
