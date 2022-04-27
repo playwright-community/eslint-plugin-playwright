@@ -1,11 +1,5 @@
-const { RuleTester } = require('eslint');
+const { runRuleTester } = require('../lib/utils/rule-tester');
 const rule = require('../lib/rules/no-focused-test');
-
-RuleTester.setDefaultConfig({
-  parserOptions: {
-    ecmaVersion: 2018,
-  },
-});
 
 const invalid = (code, output) => ({
   code,
@@ -17,12 +11,9 @@ const invalid = (code, output) => ({
   ],
 });
 
-new RuleTester().run('no-focused-test', rule, {
+runRuleTester('no-focused-test', rule, {
   invalid: [
-    invalid(
-      'test.describe.only("skip this describe", () => {});',
-      'test.describe("skip this describe", () => {});'
-    ),
+    invalid('test.describe.only("skip this describe", () => {});', 'test.describe("skip this describe", () => {});'),
 
     invalid(
       'test.describe.parallel.only("skip this describe", () => {});',
@@ -34,10 +25,7 @@ new RuleTester().run('no-focused-test', rule, {
       'test.describe.serial("skip this describe", () => {});'
     ),
 
-    invalid(
-      'test.only("skip this test", async ({ page }) => {});',
-      'test("skip this test", async ({ page }) => {});'
-    ),
+    invalid('test.only("skip this test", async ({ page }) => {});', 'test("skip this test", async ({ page }) => {});'),
   ],
   valid: [
     'test.describe("describe tests", () => {});',

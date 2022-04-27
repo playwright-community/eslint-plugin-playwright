@@ -1,11 +1,5 @@
-const { RuleTester } = require('eslint');
+const { runRuleTester } = require('../lib/utils/rule-tester');
 const rule = require('../lib/rules/no-wait-for-timeout');
-
-RuleTester.setDefaultConfig({
-  parserOptions: {
-    ecmaVersion: 2018,
-  },
-});
 
 const invalid = (code, output) => ({
   code,
@@ -17,7 +11,7 @@ const invalid = (code, output) => ({
   ],
 });
 
-new RuleTester().run('no-wait-for-timeout', rule, {
+runRuleTester('no-wait-for-timeout', rule, {
   invalid: [
     invalid(`async function fn() { await page.waitForTimeout(1000) }`, 'async function fn() {  }'),
     invalid('async function fn() { return page.waitForTimeout(1000); }', 'async function fn() {  }'),
