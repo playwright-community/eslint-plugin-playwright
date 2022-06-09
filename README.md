@@ -270,3 +270,52 @@ await page.locator('check').check();
 
 await page.locator('input').fill('something');
 ```
+
+### `max-nested-describe`
+
+Enforces a maximum depth to nested `.describe()` calls. Useful for improving readability and parallelization of tests.
+
+Uses a default max depth option of `{ "max": 5 }`.
+
+Examples of **incorrect** code for this rule (using defaults):
+
+```js
+test.describe('level 1', () => {
+  test.describe('level 2', () => {
+    test.describe('level 3', () => {
+      test.describe('level 4', () => {
+        test.describe('level 5', () => {
+          test.describe('level 6', () => {
+            test('this test', async ({ page }) => {});
+            test('that test', async ({ page }) => {});
+          });
+        });
+      });
+    });
+  });
+});
+```
+
+Examples of **correct** code for this rule (using defaults):
+
+```js
+test.describe('first level', () => {
+  test.describe('second level', () => {
+    test('this test', async ({ page }) => {});
+    test('that test', async ({ page }) => {});
+  });
+});
+```
+
+#### Options
+
+The rule accepts a non-required option to override the default maximum nested describe depth (5).
+
+```json
+{
+  "playwright/max-nested-describe": [
+    "error",
+    { "max": 3 }
+  ]
+}
+```
