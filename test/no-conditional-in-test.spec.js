@@ -10,10 +10,6 @@ const invalid = (code, errors) => ({
   ],
 });
 
-const valid = (code) => ({
-  code
-});
-
 runRuleTester('no-conditional-in-test', rule, {
   invalid: [
     invalid('test("foo", () => { if (true) { expect(1).toBe(1); } });'),
@@ -146,57 +142,42 @@ runRuleTester('no-conditional-in-test', rule, {
     'test.skip(process.env.APP_VERSION === "v1", "There are no settings in v1");',
     'test("some slow test", () => { test.slow(); })',
     'const foo = bar ? foo : baz;',
-    valid(`
-      test.describe('foo', () => {
+    `test.describe('foo', () => {
         test.afterEach(() => {
           if ('bar') {}
         });
-      })
-    `),
-    valid(`
-      test.describe('foo', () => {
+      })`,
+    `test.describe('foo', () => {
         test.beforeEach(() => {
           if ('bar') {}
         });
-      })
-    `),
-    valid(`
-      test.describe('foo', function () {
+      })`,
+    `test.describe('foo', function () {
         test.beforeEach(function () {
           if ('bar') {}
         });
-      })
-    `),
-    valid(`
-      test.describe.parallel('foo', function () {
+      })`,
+    `test.describe.parallel('foo', function () {
         test.beforeEach(function () {
           if ('bar') {}
         });
-      })
-    `),
-    valid(`
-      test.describe.parallel.only('foo', function () {
+      })`,
+    `test.describe.parallel.only('foo', function () {
         test.beforeEach(function () {
           if ('bar') {}
         });
-      })
-    `),
-    valid(`
-      test.describe.serial('foo', function () {
+      })`,
+    `test.describe.serial('foo', function () {
         test.beforeEach(function () {
           if ('bar') {}
         });
-      })
-    `),
-    valid(`
-      test.describe.serial.only('foo', function () {
+      })`,
+    `test.describe.serial.only('foo', function () {
         test.beforeEach(function () {
           if ('bar') {}
         });
-      })
-    `),
-    valid(`
-      const values = something.map((thing) => {
+      })`,
+    `const values = something.map((thing) => {
         if (thing.isFoo) {
           return thing.foo
         } else {
@@ -208,10 +189,8 @@ runRuleTester('no-conditional-in-test', rule, {
         test('still valid', () => {
           expect(values).toStrictEqual(['foo']);
         });
-      });
-    `),
-    valid(`
-      describe('valid', () => {
+      });`,
+    `describe('valid', () => {
         const values = something.map((thing) => {
           if (thing.isFoo) {
             return thing.foo
@@ -225,7 +204,6 @@ runRuleTester('no-conditional-in-test', rule, {
             expect(values).toStrictEqual(['foo']);
           });
         });
-      });
-    `)
+      });`
   ]
 });
