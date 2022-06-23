@@ -31,7 +31,8 @@ runRuleTester('no-conditional-in-test', rule, {
         })
       })
     `),
-    invalid(`
+    invalid(
+      `
       describe('foo', () => {
         test('bar', () => {
           if ('bar') {}
@@ -41,18 +42,19 @@ runRuleTester('no-conditional-in-test', rule, {
           if ('quux') {}
         })
       })
-    `, 
-    [
-      {
-        messageId: 'conditionalInTest',
-      },
-      {
-        messageId: 'conditionalInTest',
-      },
-      {
-        messageId: 'conditionalInTest',
-      },
-    ]),
+    `,
+      [
+        {
+          messageId: 'conditionalInTest',
+        },
+        {
+          messageId: 'conditionalInTest',
+        },
+        {
+          messageId: 'conditionalInTest',
+        },
+      ]
+    ),
     invalid(`
       test("foo", function () {
         switch(someCondition()) {
@@ -133,7 +135,7 @@ runRuleTester('no-conditional-in-test', rule, {
           }
         })
       });
-    `)
+    `),
   ],
   valid: [
     'test("foo", () => { expect(1).toBe(1); });',
@@ -204,6 +206,6 @@ runRuleTester('no-conditional-in-test', rule, {
             expect(values).toStrictEqual(['foo']);
           });
         });
-      });`
-  ]
+      });`,
+  ],
 });

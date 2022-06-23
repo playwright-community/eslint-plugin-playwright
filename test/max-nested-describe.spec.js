@@ -13,7 +13,7 @@ const invalid = (code, options, errors) => ({
 
 const valid = (code, options) => ({
   code,
-  options: options || []
+  options: options || [],
 });
 
 runRuleTester('max-nested-describe', rule, {
@@ -52,7 +52,8 @@ runRuleTester('max-nested-describe', rule, {
       });
     });
     `),
-    invalid(`
+    invalid(
+      `
     test.describe('foo', () => {
       test.describe('bar', () => {
        test.describe('baz', () => {
@@ -80,11 +81,11 @@ runRuleTester('max-nested-describe', rule, {
       });
     })
   });
-  `, [{ max: 5 }], [
-    { messageId: 'exceededMaxDepth' },
-    { messageId: 'exceededMaxDepth' },
-  ]),
-  invalid(`
+  `,
+      [{ max: 5 }],
+      [{ messageId: 'exceededMaxDepth' }, { messageId: 'exceededMaxDepth' }]
+    ),
+    invalid(`
   test.describe.only('foo', function() {
     test.describe('bar', function() {
       test.describe('baz', function() {
@@ -98,7 +99,7 @@ runRuleTester('max-nested-describe', rule, {
     });
   });
   `),
-  invalid(`
+    invalid(`
   test.describe.serial.only('foo', function() {
     test.describe('bar', function() {
       test.describe('baz', function() {
@@ -112,14 +113,18 @@ runRuleTester('max-nested-describe', rule, {
     });
   });
   `),
-  invalid(`
+    invalid(
+      `
     test.describe('qux', () => {
       test('should get something', () => {
         expect(getSomething()).toBe('Something');
       });
     });
-  `, [{ max: 0 }]),
-  invalid(`
+  `,
+      [{ max: 0 }]
+    ),
+    invalid(
+      `
     test.describe('foo', () => {
       test.describe('bar', () => {
         test.describe('baz', () => {
@@ -132,20 +137,25 @@ runRuleTester('max-nested-describe', rule, {
         });
       });
     });
-  `, [{ max: 2 }]),
+  `,
+      [{ max: 2 }]
+    ),
   ],
   valid: [
     'test.describe("describe tests", () => {});',
     'test.describe.only("describe focus tests", () => {});',
     'test.describe.serial.only("describe serial focus tests", () => {});',
-    valid(`
+    valid(
+      `
     test('foo', function () {
       expect(true).toBe(true);
     });
     test('bar', () => {
       expect(true).toBe(true);
     });
-    `, [{ max: 0 }]),
+    `,
+      [{ max: 0 }]
+    ),
     valid(`
     test.describe('foo', function() {
         test.describe('bar', function () {
@@ -161,7 +171,8 @@ runRuleTester('max-nested-describe', rule, {
         });
       });
     `),
-    valid(`
+    valid(
+      `
       test.describe('foo', () => {
         test.describe('bar', () => {
           test.describe('baz', () => {
@@ -181,8 +192,11 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       });
-    `, [{ max: 4 }]),
-    valid(`
+    `,
+      [{ max: 4 }]
+    ),
+    valid(
+      `
       test.describe('foo', () => {
         test.describe.only('bar', () => {
           test.describe.skip('baz', () => {
@@ -192,8 +206,11 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       });
-    `, [{ max: 3 }]),
-    valid(`
+    `,
+      [{ max: 3 }]
+    ),
+    valid(
+      `
       describe('foo', () => {
         describe.only('bar', () => {
           describe.skip('baz', () => {
@@ -203,6 +220,8 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       });
-    `, [{ max: 3 }])
-  ]
+    `,
+      [{ max: 3 }]
+    ),
+  ],
 });

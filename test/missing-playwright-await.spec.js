@@ -17,11 +17,24 @@ const options = [{ customMatchers: ['toBeCustomThing'] }];
 
 runRuleTester('missing-playwright-await', rule, {
   invalid: [
-    invalid('expect', 'expect(page).toBeChecked()', 'await expect(page).toBeChecked()'),
-    invalid('expect', 'expect(page).not.toBeEnabled()', 'await expect(page).not.toBeEnabled()'),
+    invalid(
+      'expect',
+      'expect(page).toBeChecked()',
+      'await expect(page).toBeChecked()'
+    ),
+    invalid(
+      'expect',
+      'expect(page).not.toBeEnabled()',
+      'await expect(page).not.toBeEnabled()'
+    ),
 
     // Custom matchers
-    invalid('expect', 'expect(page).toBeCustomThing(false)', 'await expect(page).toBeCustomThing(false)', options),
+    invalid(
+      'expect',
+      'expect(page).toBeCustomThing(false)',
+      'await expect(page).toBeCustomThing(false)',
+      options
+    ),
     invalid(
       'expect',
       'expect(page).not.toBeCustomThing(true)',
@@ -30,11 +43,23 @@ runRuleTester('missing-playwright-await', rule, {
     ),
 
     // expect.soft
-    invalid('expect', 'expect.soft(page).toBeChecked()', 'await expect.soft(page).toBeChecked()'),
-    invalid('expect', 'expect.soft(page).toBeChecked()', 'await expect.soft(page).toBeChecked()'),
+    invalid(
+      'expect',
+      'expect.soft(page).toBeChecked()',
+      'await expect.soft(page).toBeChecked()'
+    ),
+    invalid(
+      'expect',
+      'expect.soft(page).toBeChecked()',
+      'await expect.soft(page).toBeChecked()'
+    ),
 
     // test.step
-    invalid('testStep', "test.step('foo', async () => {})", "await test.step('foo', async () => {})"),
+    invalid(
+      'testStep',
+      "test.step('foo', async () => {})",
+      "await test.step('foo', async () => {})"
+    ),
   ],
   valid: [
     valid('await expect(page).toEqualTitle("text")'),

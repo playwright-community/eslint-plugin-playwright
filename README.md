@@ -50,20 +50,20 @@ Identify false positives when async Playwright APIs are not properly awaited.
 Example of **incorrect** code for this rule:
 
 ```js
-expect(page).toMatchText("text");
+expect(page).toMatchText('text');
 
-test.step("clicks the button", async () => {
-  await page.click("button");
+test.step('clicks the button', async () => {
+  await page.click('button');
 });
 ```
 
 Example of **correct** code for this rule:
 
 ```js
-await expect(page).toMatchText("text");
+await expect(page).toMatchText('text');
 
-await test.step("clicks the button", async () => {
-  await page.click("button");
+await test.step('clicks the button', async () => {
+  await page.click('button');
 });
 ```
 
@@ -79,6 +79,7 @@ The rule accepts a non-required option which can be used to specify custom match
   ]
 }
 ```
+
 ### `no-page-pause`
 
 Prevent usage of `page.pause()`.
@@ -127,19 +128,23 @@ Disallow usage of `page.$eval` and `page.$$eval`.
 Examples of **incorrect** code for this rule:
 
 ```js
-const searchValue = await page.$eval('#search', el => el.value);
+const searchValue = await page.$eval('#search', (el) => el.value);
 
-const divCounts = await page.$$eval('div', (divs, min) => divs.length >= min, 10);
+const divCounts = await page.$$eval(
+  'div',
+  (divs, min) => divs.length >= min,
+  10
+);
 
-await page.$eval('#search', el => el.value);
+await page.$eval('#search', (el) => el.value);
 
-await page.$$eval('#search', el => el.value);
+await page.$$eval('#search', (el) => el.value);
 ```
 
 Example of **correct** code for this rule:
 
 ```js
-await page.locator('button').evaluate(node => node.innerText);
+await page.locator('button').evaluate((node) => node.innerText);
 
 await page.locator('div').evaluateAll((divs, min) => divs.length >= min, 10);
 ```
@@ -167,7 +172,6 @@ test.describe.serial.only('focus two tests in serial mode', () => {
   test('one', async ({ page }) => {});
   test('two', async ({ page }) => {});
 });
-
 ```
 
 Examples of **correct** code for this rule:
@@ -233,7 +237,6 @@ test.describe('skip test inside describe', () => {
 test.describe('skip test conditionally', async ({ browserName }) => {
   test.skip(browserName === 'firefox', 'Working on it');
 });
-
 ```
 
 Examples of **correct** code for this rule:
@@ -313,10 +316,7 @@ The rule accepts a non-required option to override the default maximum nested de
 
 ```json
 {
-  "playwright/max-nested-describe": [
-    "error",
-    { "max": 3 }
-  ]
+  "playwright/max-nested-describe": ["error", { "max": 3 }]
 }
 ```
 
@@ -350,8 +350,9 @@ test('bar', async ({ page }) => {
 });
 
 test('baz', async ({ page }) => {
-  const hotkey = process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f'];
-  await Promise.all(hotkey.map(x => page.keyboard.down(x)))
+  const hotkey =
+    process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f'];
+  await Promise.all(hotkey.map((x) => page.keyboard.down(x)));
 
   expect(actionIsPerformed()).toBe(true);
 });
@@ -384,14 +385,14 @@ beforeEach(() => {
 
 test('bar', async ({ page }) => {
   await expect(page.locator('.my-image').count()).toBeGreaterThan(0);
-})
+});
 
-const hotkey = process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f'];
+const hotkey =
+  process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f'];
 
 test('baz', async ({ page }) => {
-  await Promise.all(hotkey.map(x => page.keyboard.down(x)))
+  await Promise.all(hotkey.map((x) => page.keyboard.down(x)));
 
   expect(actionIsPerformed()).toBe(true);
 });
-
 ```

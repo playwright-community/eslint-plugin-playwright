@@ -22,22 +22,32 @@ runRuleTester('no-eval', rule, {
     invalid('await page.$$eval("#search", el => el.value);'),
 
     // $eval with arguments as function
-    invalid('const html = await page.$eval(".main-container", (e, suffix) => e.outerHTML + suffix, "hello");'),
+    invalid(
+      'const html = await page.$eval(".main-container", (e, suffix) => e.outerHTML + suffix, "hello");'
+    ),
 
     // $$eval with no arguments as const
-    invalid('const divCounts = await page.$$eval("div", (divs, min) => divs.length >= min, 10);'),
+    invalid(
+      'const divCounts = await page.$$eval("div", (divs, min) => divs.length >= min, 10);'
+    ),
   ],
   valid: [
     // locator evaluate
     valid('await page.locator(".tweet").evaluate(node => node.innerText)'),
 
     // element handle evaluate
-    valid('await (await page.$(".tweet")).$eval(".like", node => node.innerText)'),
+    valid(
+      'await (await page.$(".tweet")).$eval(".like", node => node.innerText)'
+    ),
 
     // element handle evaluate all
-    valid('await (await page.$(".tweet")).$$eval(".like", node => node.innerText)'),
+    valid(
+      'await (await page.$(".tweet")).$$eval(".like", node => node.innerText)'
+    ),
 
     // locator evaluateAll
-    valid('await page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'),
+    valid(
+      'await page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
+    ),
   ],
 });

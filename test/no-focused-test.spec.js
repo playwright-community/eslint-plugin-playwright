@@ -13,7 +13,10 @@ const invalid = (code, output) => ({
 
 runRuleTester('no-focused-test', rule, {
   invalid: [
-    invalid('test.describe.only("skip this describe", () => {});', 'test.describe("skip this describe", () => {});'),
+    invalid(
+      'test.describe.only("skip this describe", () => {});',
+      'test.describe("skip this describe", () => {});'
+    ),
 
     invalid(
       'test.describe.parallel.only("skip this describe", () => {});',
@@ -25,7 +28,10 @@ runRuleTester('no-focused-test', rule, {
       'test.describe.serial("skip this describe", () => {});'
     ),
 
-    invalid('test.only("skip this test", async ({ page }) => {});', 'test("skip this test", async ({ page }) => {});'),
+    invalid(
+      'test.only("skip this test", async ({ page }) => {});',
+      'test("skip this test", async ({ page }) => {});'
+    ),
   ],
   valid: [
     'test.describe("describe tests", () => {});',

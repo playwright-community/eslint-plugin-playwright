@@ -12,5 +12,8 @@ const valid = (code) => ({
 
 runRuleTester('no-page-pause', rule, {
   invalid: [invalid('await page.pause()')],
-  valid: [valid('await page.click()'), valid('await expect(page).toBePaused()')],
+  valid: [
+    valid('await page.click()'),
+    valid('await expect(page).toBePaused()'),
+  ],
 });

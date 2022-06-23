@@ -13,8 +13,14 @@ const invalid = (code, output) => ({
 
 runRuleTester('no-skipped-test', rule, {
   invalid: [
-    invalid('test.skip("skip this test", async ({ page }) => {});', 'test("skip this test", async ({ page }) => {});'),
-    invalid('test.describe.skip("skip this describe", () => {});', 'test.describe("skip this describe", () => {});'),
+    invalid(
+      'test.skip("skip this test", async ({ page }) => {});',
+      'test("skip this test", async ({ page }) => {});'
+    ),
+    invalid(
+      'test.describe.skip("skip this describe", () => {});',
+      'test.describe("skip this describe", () => {});'
+    ),
     invalid('test.skip(browserName === "firefox", "Still working on it");', ''),
     invalid(
       'test.describe.parallel("run in parallel", () => { test.skip(); expect(true).toBe(true); })',

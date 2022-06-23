@@ -8,7 +8,9 @@ const invalid = (code, output) => ({
       messageId: 'noElementHandle',
       suggestions: [
         {
-          messageId: code.includes('page.$$') ? 'replaceElementHandlesWithLocator' : 'replaceElementHandleWithLocator',
+          messageId: code.includes('page.$$')
+            ? 'replaceElementHandlesWithLocator'
+            : 'replaceElementHandleWithLocator',
           output: wrapInTest(output),
         },
       ],
@@ -23,10 +25,16 @@ const valid = (code) => ({
 runRuleTester('no-element-handle', rule, {
   invalid: [
     // element handle as const
-    invalid('const handle = await page.$("text=Submit");', 'const handle = page.locator("text=Submit");'),
+    invalid(
+      'const handle = await page.$("text=Submit");',
+      'const handle = page.locator("text=Submit");'
+    ),
 
     // element handle as let
-    invalid('let handle = await page.$("text=Submit");', 'let handle = page.locator("text=Submit");'),
+    invalid(
+      'let handle = await page.$("text=Submit");',
+      'let handle = page.locator("text=Submit");'
+    ),
 
     // element handle as expression statement without await
     invalid('page.$("div")', 'page.locator("div")'),
@@ -38,13 +46,22 @@ runRuleTester('no-element-handle', rule, {
     invalid('await page.$("div")', 'page.locator("div")'),
 
     // element handle click
-    invalid('await (await page.$$("div")).click();', 'await (page.locator("div")).click();'),
+    invalid(
+      'await (await page.$$("div")).click();',
+      'await (page.locator("div")).click();'
+    ),
 
     // element handles as const
-    invalid('const handles = await page.$$("a")', 'const handles = page.locator("a")'),
+    invalid(
+      'const handles = await page.$$("a")',
+      'const handles = page.locator("a")'
+    ),
 
     // element handles as let
-    invalid('let handles = await page.$$("a")', 'let handles = page.locator("a")'),
+    invalid(
+      'let handles = await page.$$("a")',
+      'let handles = page.locator("a")'
+    ),
 
     // element handles as expression statement
     invalid('await page.$$("a")', 'page.locator("a")'),
@@ -62,13 +79,22 @@ runRuleTester('no-element-handle', rule, {
     ),
 
     // missed return for the element handle
-    invalid('function getHandle() { page.$("button"); }', 'function getHandle() { page.locator("button"); }'),
+    invalid(
+      'function getHandle() { page.$("button"); }',
+      'function getHandle() { page.locator("button"); }'
+    ),
 
     // arrow function return element handle without awaiting it
-    invalid('const getHandles = () => page.$("links");', 'const getHandles = () => page.locator("links");'),
+    invalid(
+      'const getHandles = () => page.$("links");',
+      'const getHandles = () => page.locator("links");'
+    ),
 
     // arrow function return element handles without awaiting it
-    invalid('const getHandles = () => page.$$("links");', 'const getHandles = () => page.locator("links");'),
+    invalid(
+      'const getHandles = () => page.$$("links");',
+      'const getHandles = () => page.locator("links");'
+    ),
   ],
   valid: [
     // page locator

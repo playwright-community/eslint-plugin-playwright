@@ -10,11 +10,13 @@
     "lib"
   ],
   "scripts": {
+    "format": "prettier --write .",
     "test": "jest"
   },
   "devDependencies": {
     "eslint": "^8.4.1",
-    "jest": "^27.4.5"
+    "jest": "^27.4.5",
+    "prettier": "^2.7.1"
   },
   "peerDependencies": {
     "eslint": ">=7",
