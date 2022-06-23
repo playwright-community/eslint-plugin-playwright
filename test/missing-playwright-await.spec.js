@@ -62,6 +62,7 @@ runRuleTester('missing-playwright-await', rule, {
     ),
   ],
   valid: [
+    valid('await expect(page).toBeEditable'),
     valid('await expect(page).toEqualTitle("text")'),
     valid('await expect(page).not.toHaveText("text")'),
 
