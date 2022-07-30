@@ -1,90 +1,69 @@
-function isObject({ callee }, name) {
+import * as ESTree from 'estree';
+
+export function getNodeName(node: ESTree.Node) {
+  return node.type === 'Identifier' ? node.name : undefined;
+}
+
+export function isIdentifier(node: ESTree.Node, name: string) {
+  return getNodeName(node) === name;
+}
+
+export function isObject(node: ESTree.CallExpression, name: string) {
   return (
-    callee &&
-    callee.type === 'MemberExpression' &&
-    callee.object.type === 'Identifier' &&
-    callee.object.name === name
+    node.callee.type === 'MemberExpression' &&
+    isIdentifier(node.callee.object, name)
   );
 }
 
-function isCalleeProperty({ callee }, name) {
+export function isCalleeProperty(node: ESTree.CallExpression, name: string) {
   return (
-    callee &&
-    callee.property &&
-    callee.property.type === 'Identifier' &&
-    callee.property.name === name
+    node.callee.type === 'MemberExpression' &&
+    isIdentifier(node.callee.property, name)
   );
 }
 
-function isTestObject({ object }) {
-  return object && isIdentifier(object, 'test');
-}
-
-function isTestIdentifier(node) {
-  return isIdentifier(node, 'test') || isTestObject(node);
-}
-
-function hasAnnotation(node, annotation) {
+export function isTestIdentifier(node: ESTree.Node) {
   return (
-    node.property &&
-    node.property.type === 'Identifier' &&
-    node.property.name === annotation
+    isIdentifier(node, 'test') ||
+    (node.type === 'MemberExpression' && isIdentifier(node.object, 'test'))
   );
 }
 
-function isObjectProperty({ object }, name) {
+export function isObjectProperty(node: ESTree.MemberExpression, name: string) {
   return (
-    object &&
-    object.type === 'MemberExpression' &&
-    object.property.type === 'Identifier' &&
-    object.property.name === name
+    node.object.type === 'MemberExpression' &&
+    isIdentifier(node.object.property, name)
   );
 }
 
-function isStringLiteral(node, value) {
+function isLiteral<T>(node: ESTree.Node, type: string, value?: T) {
   return (
-    node &&
     node.type === 'Literal' &&
-    typeof node.value === 'string' &&
-    (value === undefined || node.value === value)
+    (value === undefined
+      ? typeof node.value === type
+      : (node.value as any) === value)
   );
 }
 
-function isBooleanLiteral(node) {
-  return node && node.type === 'Literal' && typeof node.value === 'boolean';
+export function isStringLiteral(node: ESTree.Node, value?: string) {
+  return isLiteral(node, 'string', value);
 }
 
-function isBinaryExpression(node) {
-  return node && node.type === 'BinaryExpression';
+export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
+  return isLiteral(node, 'boolean', value);
 }
 
-function isCallExpression(node) {
-  return node && node.type === 'CallExpression';
-}
-
-function isMemberExpression(node) {
-  return node && node.type === 'MemberExpression';
-}
-
-function isIdentifier(node, name) {
-  return (
-    node &&
-    node.type === 'Identifier' &&
-    (name === undefined || node.name === name)
-  );
-}
-
-function isDescribeAlias(node) {
+function isDescribeAlias(node: ESTree.Node) {
   return isIdentifier(node, 'describe');
 }
 
-function isDescribeProperty(node) {
+function isDescribeProperty(node: ESTree.Node) {
   const describeProperties = ['parallel', 'serial', 'only', 'skip'];
   return describeProperties.some((prop) => isIdentifier(node, prop));
 }
 
-function isDescribeCall(node) {
-  if (isDescribeAlias(node.callee)) {
+export function isDescribeCall(node: ESTree.CallExpression) {
+  if (isIdentifier(node.callee, 'describe')) {
     return true;
   }
 
@@ -112,23 +91,3 @@ function isDescribeCall(node) {
 
   return false;
 }
-
-function isHookCall(node) {
-  const hooks = ['beforeAll', 'beforeEach', 'afterAll', 'afterEach'];
-  return hooks.some((hook) => isCalleeProperty(node, hook));
-}
-
-module.exports = {
-  isObject,
-  isCalleeProperty,
-  isTestIdentifier,
-  hasAnnotation,
-  isObjectProperty,
-  isStringLiteral,
-  isBooleanLiteral,
-  isBinaryExpression,
-  isCallExpression,
-  isMemberExpression,
-  isDescribeCall,
-  isHookCall,
-};

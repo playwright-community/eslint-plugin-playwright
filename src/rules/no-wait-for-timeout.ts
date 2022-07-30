@@ -1,7 +1,7 @@
-const { isObject, isCalleeProperty } = require('../utils/ast');
+import { Rule } from 'eslint';
+import { isObject, isCalleeProperty } from '../utils/ast';
 
-/** @type {import('eslint').Rule.RuleModule} */
-module.exports = {
+export default {
   create(context) {
     return {
       CallExpression(node) {
@@ -42,4 +42,4 @@ module.exports = {
     },
     type: 'suggestion',
   },
-};
+} as Rule.RuleModule;

@@ -1,17 +1,17 @@
-const { isCallExpression, isDescribeCall } = require('../utils/ast');
+import { Rule } from 'eslint';
+import { isDescribeCall } from '../utils/ast';
 
-/** @type {import('eslint').Rule.RuleModule} */
-module.exports = {
+export default {
   create(context) {
     const { options } = context;
-    const defaultOptions = { max: 5 };
-    const { max } = options[0] || defaultOptions;
-    const describeCallbackStack = [];
+    const max: number = options[0]?.max ?? 5;
+    const describeCallbackStack: number[] = [];
 
-    function pushDescribeCallback(node) {
-      const { parent } = node;
-
-      if (!isCallExpression(parent) || !isDescribeCall(parent)) {
+    function pushDescribeCallback(node: Rule.Node) {
+      if (
+        node.parent.type !== 'CallExpression' ||
+        !isDescribeCall(node.parent)
+      ) {
         return;
       }
 
@@ -19,17 +19,20 @@ module.exports = {
 
       if (describeCallbackStack.length > max) {
         context.report({
-          node: parent,
+          node: node.parent,
           messageId: 'exceededMaxDepth',
-          data: { depth: describeCallbackStack.length, max },
+          data: {
+            depth: describeCallbackStack.length.toString(),
+            max: max.toString(),
+          },
         });
       }
     }
 
-    function popDescribeCallback(node) {
+    function popDescribeCallback(node: Rule.Node) {
       const { parent } = node;
 
-      if (isCallExpression(parent) && isDescribeCall(parent)) {
+      if (parent.type === 'CallExpression' && isDescribeCall(parent)) {
         describeCallbackStack.pop();
       }
     }
@@ -67,4 +70,4 @@ module.exports = {
       },
     ],
   },
-};
+} as Rule.RuleModule;

@@ -1,13 +1,6 @@
-const { RuleTester } = require('eslint');
+import { RuleTester } from 'eslint';
 
 /**
- *
- * @param {string} name - The name of the rule
- * @param {string} rule - Path to the rule to test
- * @param {Object} tests - The tests to run
- * @param {string[]} tests.valid - Valid tests
- * @param {string[]} tests.invalid - Invalid tests
- *
  * @example
  * const rule = require('../lib/rules/missing-playwright-await');
  *
@@ -16,19 +9,15 @@ const { RuleTester } = require('eslint');
  *   invalid: ['expect(page.locator('checkbox')).toBeChecked()'],
  * });
  */
-function runRuleTester(name, rule, tests) {
+export function runRuleTester(...args: Parameters<RuleTester['run']>) {
   const config = {
     parserOptions: {
       ecmaVersion: 2018,
     },
   };
 
-  return new RuleTester(config).run(name, rule, tests);
+  return new RuleTester(config).run(...args);
 }
 
-const wrapInTest = (input) => `test('test', async () => { ${input} })`;
-
-module.exports = {
-  runRuleTester,
-  wrapInTest,
-};
+export const wrapInTest = (input: string) =>
+  `test('test', async () => { ${input} })`;

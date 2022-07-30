@@ -1,11 +1,12 @@
-const {
+import { AST, Rule } from 'eslint';
+import * as ESTree from 'estree';
+import {
   isTestIdentifier,
   isObjectProperty,
-  hasAnnotation,
   isStringLiteral,
   isBooleanLiteral,
-  isBinaryExpression,
-} = require('../utils/ast');
+  isIdentifier,
+} from '../utils/ast';
 
 /**
  * This function returns needed range to remove skip annotation.
@@ -19,34 +20,39 @@ const {
  *
  * Otherwise we need to remove the range of `.skip` annotation - 1 (dot notation).
  */
-function getSkipRange(node) {
-  const [first, second] = node.parent.arguments;
+function getSkipRange(
+  node: ESTree.MemberExpression & Rule.NodeParentExtension,
+  parent: ESTree.CallExpression & Rule.NodeParentExtension
+): AST.Range {
+  const [first, second] = parent.arguments;
 
   const isStandaloneSkip =
-    !node.parent.arguments.length ||
-    ((isBinaryExpression(first) || isBooleanLiteral(first)) &&
+    !parent.arguments.length ||
+    ((first.type === 'BinaryExpression' || isBooleanLiteral(first)) &&
       isStringLiteral(second));
 
   return isStandaloneSkip
-    ? node.parent.parent.range
-    : [node.property.range[0] - 1, node.property.range[1]];
+    ? parent.parent.range!
+    : [node.property.range![0] - 1, node.property.range![1]];
 }
 
-/** @type {import('eslint').Rule.RuleModule} */
-module.exports = {
+export default {
   create(context) {
     return {
       MemberExpression(node) {
+        const parent = node.parent;
+
         if (
           (isTestIdentifier(node) || isObjectProperty(node, 'describe')) &&
-          hasAnnotation(node, 'skip')
+          isIdentifier(node.property, 'skip') &&
+          parent.type === 'CallExpression'
         ) {
           context.report({
             messageId: 'noSkippedTest',
             suggest: [
               {
                 messageId: 'removeSkippedTestAnnotation',
-                fix: (fixer) => fixer.removeRange(getSkipRange(node)),
+                fix: (fixer) => fixer.removeRange(getSkipRange(node, parent)),
               },
             ],
             node,
@@ -69,4 +75,4 @@ module.exports = {
     },
     type: 'suggestion',
   },
-};
+} as Rule.RuleModule;
