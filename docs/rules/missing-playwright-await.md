@@ -30,7 +30,7 @@ The rule accepts a non-required option which can be used to specify custom
 matchers which this rule should also warn about. This is useful when creating
 your own async `expect` matchers.
 
-```javascripton
+```json
 {
   "playwright/missing-playwright-await": [
     "error",

@@ -14,7 +14,6 @@ const divCounts = await page.$$eval(
 );
 
 await page.$eval('#search', (el) => el.value);
-
 await page.$$eval('#search', (el) => el.value);
 ```
 
@@ -22,6 +21,5 @@ Example of **correct** code for this rule:
 
 ```javascript
 await page.locator('button').evaluate((node) => node.innerText);
-
 await page.locator('div').evaluateAll((divs, min) => divs.length >= min, 10);
 ```
