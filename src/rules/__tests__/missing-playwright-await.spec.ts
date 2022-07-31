@@ -1,5 +1,5 @@
-import { runRuleTester, wrapInTest } from '../utils/rule-tester';
-import rule from './missing-playwright-await';
+import { runRuleTester, wrapInTest } from '../../utils/rule-tester';
+import rule from '../missing-playwright-await';
 
 const invalid = (
   messageId: string,
