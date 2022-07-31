@@ -1,8 +1,8 @@
-# Disallow usage of `.only()` annotation (`no-focused-test`)
+# Disallow usage of `.only` annotation (`no-focused-test`)
 
 Examples of **incorrect** code for this rule:
 
-```js
+```javascript
 test.only('focus this test', async ({ page }) => {});
 
 test.describe.only('focus two tests', () => {
@@ -23,7 +23,7 @@ test.describe.serial.only('focus two tests in serial mode', () => {
 
 Examples of **correct** code for this rule:
 
-```js
+```javascript
 test('this test', async ({ page }) => {});
 
 test.describe('two tests', () => {

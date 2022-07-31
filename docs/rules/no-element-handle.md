@@ -6,7 +6,7 @@ Disallow the creation of element handles with `page.$` or `page.$$`.
 
 Examples of **incorrect** code for this rule:
 
-```js
+```javascript
 // Element Handle
 const buttonHandle = await page.$('button');
 await buttonHandle.click();
@@ -17,7 +17,7 @@ const linkHandles = await page.$$('a');
 
 Example of **correct** code for this rule:
 
-```js
+```javascript
 const buttonLocator = page.locator('button');
 await buttonLocator.click();
 ```

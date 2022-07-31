@@ -9,7 +9,7 @@ devoted to it.
 
 Examples of **incorrect** code for this rule:
 
-```js
+```javascript
 test('foo', async ({ page }) => {
   if (someCondition) {
     bar();
@@ -43,7 +43,7 @@ test('baz', async ({ page }) => {
 
 Examples of **correct** code for this rule:
 
-```js
+```javascript
 test.describe('my tests', () => {
   if (someCondition) {
     test('foo', async ({ page }) => {

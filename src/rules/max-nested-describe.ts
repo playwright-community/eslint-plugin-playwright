@@ -1,4 +1,5 @@
 import { Rule } from 'eslint';
+import * as ESTree from 'estree';
 import { isDescribeCall } from '../utils/ast';
 
 export default {
@@ -56,7 +57,6 @@ export default {
         'Maximum describe call depth exceeded ({{ depth }}). Maximum allowed is {{ max }}.',
     },
     type: 'suggestion',
-    fixable: 'code',
     schema: [
       {
         type: 'object',

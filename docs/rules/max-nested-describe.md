@@ -38,7 +38,7 @@ test.describe('foo', () => {
 
 ## Options
 
-```json
+```javascripton
 {
   "playwright/max-nested-describe": ["error", { "max": 5 }]
 }

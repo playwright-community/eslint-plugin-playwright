@@ -4,7 +4,7 @@
 
 Examples of **incorrect** code for this rule:
 
-```js
+```javascript
 const searchValue = await page.$eval('#search', (el) => el.value);
 
 const divCounts = await page.$$eval(
@@ -20,7 +20,7 @@ await page.$$eval('#search', (el) => el.value);
 
 Example of **correct** code for this rule:
 
-```js
+```javascript
 await page.locator('button').evaluate((node) => node.innerText);
 
 await page.locator('div').evaluateAll((divs, min) => divs.length >= min, 10);

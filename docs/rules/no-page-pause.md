@@ -6,13 +6,13 @@ Prevent usage of `page.pause()`.
 
 Example of **incorrect** code for this rule:
 
-```js
+```javascript
 await page.click('button');
 await page.pause();
 ```
 
 Example of **correct** code for this rule:
 
-```js
+```javascript
 await page.click('button');
 ```

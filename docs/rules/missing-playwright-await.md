@@ -6,7 +6,7 @@ Identify false positives when async Playwright APIs are not properly awaited.
 
 Example of **incorrect** code for this rule:
 
-```js
+```javascript
 expect(page).toMatchText('text');
 
 test.step('clicks the button', async () => {
@@ -16,7 +16,7 @@ test.step('clicks the button', async () => {
 
 Example of **correct** code for this rule:
 
-```js
+```javascript
 await expect(page).toMatchText('text');
 
 await test.step('clicks the button', async () => {
@@ -30,7 +30,7 @@ The rule accepts a non-required option which can be used to specify custom
 matchers which this rule should also warn about. This is useful when creating
 your own async `expect` matchers.
 
-```json
+```javascripton
 {
   "playwright/missing-playwright-await": [
     "error",
