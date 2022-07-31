@@ -42,7 +42,7 @@ export default {
       category: 'Possible Errors',
       description: 'Prevent usage of `.only()` focus test annotation',
       recommended: true,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright#no-focused-test',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-focused-test.md',
     },
     hasSuggestions: true,
     messages: {

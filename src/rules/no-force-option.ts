@@ -50,7 +50,7 @@ export default {
       category: 'Best Practices',
       description: 'Prevent usage of `{ force: true }` option.',
       recommended: true,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright#no-force-option',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-force-option.md',
     },
     messages: {
       noForceOption: 'Unexpected use of { force: true } option.',

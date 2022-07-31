@@ -23,7 +23,7 @@ export default {
       description:
         'The use of `page.$eval` and `page.$$eval` are discouraged, use `locator.evaluate` or `locator.evaluateAll` instead',
       recommended: true,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright#no-eval',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-eval.md',
     },
     messages: {
       noEval: 'Unexpected use of page.$eval().',
