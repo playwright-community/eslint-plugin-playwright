@@ -1,5 +1,5 @@
-import { runRuleTester, Errors } from '../utils/rule-tester';
-import rule from './max-nested-describe';
+import { runRuleTester, Errors } from '../../utils/rule-tester';
+import rule from '../max-nested-describe';
 
 const invalid = (
   code: string,

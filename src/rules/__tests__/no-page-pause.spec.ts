@@ -1,5 +1,5 @@
-import { runRuleTester, wrapInTest } from '../utils/rule-tester';
-import rule from './no-page-pause';
+import { runRuleTester, wrapInTest } from '../../utils/rule-tester';
+import rule from '../no-page-pause';
 
 const invalid = (code: string) => ({
   code: wrapInTest(code),

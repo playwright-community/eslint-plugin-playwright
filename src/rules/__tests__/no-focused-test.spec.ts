@@ -1,5 +1,5 @@
-import { runRuleTester } from '../utils/rule-tester';
-import rule from './no-focused-test';
+import { runRuleTester } from '../../utils/rule-tester';
+import rule from '../no-focused-test';
 
 const invalid = (code: string, output: string) => ({
   code,
