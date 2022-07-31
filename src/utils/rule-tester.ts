@@ -2,7 +2,7 @@ import { RuleTester } from 'eslint';
 
 /**
  * @example
- * const rule = require('../lib/rules/missing-playwright-await');
+ * import rule from './missing-playwright-await';
  *
  * runRuleTester('missing-playwright-await', rule, {
  *   valid: ['await expect(page.locator('checkbox')).toBeChecked()'],
@@ -21,3 +21,5 @@ export function runRuleTester(...args: Parameters<RuleTester['run']>) {
 
 export const wrapInTest = (input: string) =>
   `test('test', async () => { ${input} })`;
+
+export type Errors = RuleTester.InvalidTestCase['errors'];

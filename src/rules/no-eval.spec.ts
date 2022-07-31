@@ -1,14 +1,12 @@
-const { runRuleTester, wrapInTest } = require('../lib/utils/rule-tester');
-const rule = require('../lib/rules/no-eval');
+import { runRuleTester, wrapInTest } from '../utils/rule-tester';
+import rule from './no-eval';
 
-const invalid = (code) => ({
+const invalid = (code: string) => ({
   code: wrapInTest(code),
   errors: [{ messageId: code.includes('page.$eval') ? 'noEval' : 'noEvalAll' }],
 });
 
-const valid = (code) => ({
-  code: wrapInTest(code),
-});
+const valid = wrapInTest;
 
 runRuleTester('no-eval', rule, {
   invalid: [

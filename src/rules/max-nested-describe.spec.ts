@@ -1,20 +1,13 @@
-const { runRuleTester } = require('../lib/utils/rule-tester');
-const rule = require('../lib/rules/max-nested-describe');
+import { runRuleTester, Errors } from '../utils/rule-tester';
+import rule from './max-nested-describe';
 
-const invalid = (code, options, errors) => ({
-  code,
-  options: options || [],
-  errors: errors || [
-    {
-      messageId: 'exceededMaxDepth',
-    },
-  ],
-});
+const invalid = (
+  code: string,
+  options: unknown[] = [],
+  errors: Errors = [{ messageId: 'exceededMaxDepth' }]
+) => ({ code, options, errors });
 
-const valid = (code, options) => ({
-  code,
-  options: options || [],
-});
+const valid = (code: string, options: unknown[] = []) => ({ code, options });
 
 runRuleTester('max-nested-describe', rule, {
   invalid: [

@@ -1,14 +1,10 @@
-const { runRuleTester } = require('../lib/utils/rule-tester');
-const rule = require('../lib/rules/no-conditional-in-test');
+import { Errors, runRuleTester } from '../utils/rule-tester';
+import rule from './no-conditional-in-test';
 
-const invalid = (code, errors) => ({
-  code,
-  errors: errors || [
-    {
-      messageId: 'conditionalInTest',
-    },
-  ],
-});
+const invalid = (
+  code: string,
+  errors: Errors = [{ messageId: 'conditionalInTest' }]
+) => ({ code, errors });
 
 runRuleTester('no-conditional-in-test', rule, {
   invalid: [
