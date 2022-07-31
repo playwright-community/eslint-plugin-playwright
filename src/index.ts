@@ -9,7 +9,7 @@ import noForceOption from './rules/no-force-option';
 import maxNestedDescribe from './rules/max-nested-describe';
 import noConditionalInTest from './rules/no-conditional-in-test';
 
-export default {
+export = {
   configs: {
     'playwright-test': {
       plugins: ['playwright'],
