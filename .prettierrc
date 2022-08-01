@@ -1,3 +1,4 @@
 {
+  "proseWrap": "always",
   "singleQuote": true
 }

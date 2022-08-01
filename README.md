@@ -3,25 +3,27 @@
 [![Test](https://github.com/playwright-community/eslint-plugin-playwright/actions/workflows/test.yml/badge.svg)](https://github.com/playwright-community/eslint-plugin-playwright/actions/workflows/test.yml)
 [![NPM](https://img.shields.io/npm/v/eslint-plugin-playwright)](https://www.npmjs.com/package/eslint-plugin-playwright)
 
-> ESLint plugin for your [Playwright](https://github.com/microsoft/playwright) testing needs.
+> ESLint plugin for your [Playwright](https://github.com/microsoft/playwright)
+> testing needs.
 
 ## Installation
 
 Yarn
 
-```sh
+```bash
 yarn add -D eslint-plugin-playwright
 ```
 
 NPM
 
-```sh
+```bash
 npm install -D eslint-plugin-playwright
 ```
 
 ## Usage
 
-This plugin bundles two configurations to work with both `@playwright/test` or `jest-playwright`.
+This plugin bundles two configurations to work with both `@playwright/test` or
+`jest-playwright`.
 
 ### With [Playwright test runner](https://playwright.dev/docs/test-intro)
 
@@ -39,360 +41,23 @@ This plugin bundles two configurations to work with both `@playwright/test` or `
 }
 ```
 
-## Rules
-
-### `missing-playwright-await` 🔧
-
-Identify false positives when async Playwright APIs are not properly awaited.
-
-#### Example
-
-Example of **incorrect** code for this rule:
-
-```js
-expect(page).toMatchText('text');
-
-test.step('clicks the button', async () => {
-  await page.click('button');
-});
-```
-
-Example of **correct** code for this rule:
-
-```js
-await expect(page).toMatchText('text');
-
-await test.step('clicks the button', async () => {
-  await page.click('button');
-});
-```
-
-#### Options
-
-The rule accepts a non-required option which can be used to specify custom matchers which this rule should also warn about. This is useful when creating your own async `expect` matchers.
-
-```json
-{
-  "playwright/missing-playwright-await": [
-    "error",
-    { "customMatchers": ["toBeCustomThing"] }
-  ]
-}
-```
-
-### `no-page-pause`
-
-Prevent usage of `page.pause()`.
-
-#### Example
-
-Example of **incorrect** code for this rule:
-
-```js
-await page.click('button');
-await page.pause();
-```
-
-Example of **correct** code for this rule:
-
-```js
-await page.click('button');
-```
-
-### `no-element-handle`
-
-Disallow the creation of element handles with `page.$` or `page.$$`.
-
-Examples of **incorrect** code for this rule:
-
-```js
-// Element Handle
-const buttonHandle = await page.$('button');
-await buttonHandle.click();
-
-// Element Handles
-const linkHandles = await page.$$('a');
-```
-
-Example of **correct** code for this rule:
-
-```js
-const buttonLocator = page.locator('button');
-await buttonLocator.click();
-```
-
-### `no-eval`
-
-Disallow usage of `page.$eval` and `page.$$eval`.
-
-Examples of **incorrect** code for this rule:
-
-```js
-const searchValue = await page.$eval('#search', (el) => el.value);
-
-const divCounts = await page.$$eval(
-  'div',
-  (divs, min) => divs.length >= min,
-  10
-);
-
-await page.$eval('#search', (el) => el.value);
-
-await page.$$eval('#search', (el) => el.value);
-```
-
-Example of **correct** code for this rule:
-
-```js
-await page.locator('button').evaluate((node) => node.innerText);
-
-await page.locator('div').evaluateAll((divs, min) => divs.length >= min, 10);
-```
-
-### `no-focused-test`
-
-Disallow usage of `.only()` annotation
-
-Examples of **incorrect** code for this rule:
-
-```js
-test.only('focus this test', async ({ page }) => {});
-
-test.describe.only('focus two tests', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
-
-test.describe.parallel.only('focus two tests in parallel mode', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
-
-test.describe.serial.only('focus two tests in serial mode', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
-```
-
-Examples of **correct** code for this rule:
-
-```js
-test('this test', async ({ page }) => {});
-
-test.describe('two tests', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
-
-test.describe.parallel('two tests in parallel mode', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
-
-test.describe.serial('two tests in serial mode', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
-```
-
-### `no-wait-for-timeout`
-
-Disallow usage of `page.waitForTimeout()`.
-
-Example of **incorrect** code for this rule:
-
-```js
-await page.waitForTimeout(5000);
-```
-
-Examples of **correct** code for this rule:
-
-```js
-// Use signals such as network events, selectors becoming visible and others instead.
-await page.waitForLoadState();
-
-await page.waitForUrl('/home');
-
-await page.waitForFunction(() => window.innerWidth < 100);
-```
-
-### `no-skipped-test`
-
-Disallow usage of the `.skip()` annotation.
-
-Examples of **incorrect** code for this rule:
-
-```js
-test.skip('skip this test', async ({ page }) => {});
-
-test.describe.skip('skip two tests', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
-
-test.describe('skip test inside describe', () => {
-  test.skip();
-});
-
-test.describe('skip test conditionally', async ({ browserName }) => {
-  test.skip(browserName === 'firefox', 'Working on it');
-});
-```
-
-Examples of **correct** code for this rule:
-
-```js
-test('this test', async ({ page }) => {});
-
-test.describe('two tests', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
-```
-
-### `no-force-option`
-
-Disallow usage of the `{ force: true }` option.
-
-Examples of **incorrect** code for this rule:
-
-```js
-await page.locator('button').click({ force: true });
-
-await page.locator('check').check({ force: true });
-
-await page.locator('input').fill('something', { force: true });
-```
-
-Examples of **correct** code for this rule:
-
-```js
-await page.locator('button').click();
-
-await page.locator('check').check();
-
-await page.locator('input').fill('something');
-```
-
-### `max-nested-describe`
-
-Enforces a maximum depth to nested `.describe()` calls. Useful for improving readability and parallelization of tests.
-
-Uses a default max depth option of `{ "max": 5 }`.
-
-Examples of **incorrect** code for this rule (using defaults):
-
-```js
-test.describe('level 1', () => {
-  test.describe('level 2', () => {
-    test.describe('level 3', () => {
-      test.describe('level 4', () => {
-        test.describe('level 5', () => {
-          test.describe('level 6', () => {
-            test('this test', async ({ page }) => {});
-            test('that test', async ({ page }) => {});
-          });
-        });
-      });
-    });
-  });
-});
-```
-
-Examples of **correct** code for this rule (using defaults):
-
-```js
-test.describe('first level', () => {
-  test.describe('second level', () => {
-    test('this test', async ({ page }) => {});
-    test('that test', async ({ page }) => {});
-  });
-});
-```
-
-#### Options
-
-The rule accepts a non-required option to override the default maximum nested describe depth (5).
-
-```json
-{
-  "playwright/max-nested-describe": ["error", { "max": 3 }]
-}
-```
-
-### `no-conditional-in-test`
-
-Disallow conditional statements such as `if`, `switch`, and ternary expressions within tests.
-
-Examples of **incorrect** code for this rule:
-
-```js
-test('foo', async ({ page }) => {
-  if (someCondition) {
-    bar();
-  }
-});
-
-test('bar', async ({ page }) => {
-  switch (mode) {
-    case 'single':
-      generateOne();
-      break;
-    case 'double':
-      generateTwo();
-      break;
-    case 'multiple':
-      generateMany();
-      break;
-  }
-
-  await expect(page.locator('.my-image').count()).toBeGreaterThan(0);
-});
-
-test('baz', async ({ page }) => {
-  const hotkey =
-    process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f'];
-  await Promise.all(hotkey.map((x) => page.keyboard.down(x)));
-
-  expect(actionIsPerformed()).toBe(true);
-});
-```
-
-Examples of **correct** code for this rule:
-
-```js
-test.describe('my tests', () => {
-  if (someCondition) {
-    test('foo', async ({ page }) => {
-      bar();
-    });
-  }
-});
-
-beforeEach(() => {
-  switch (mode) {
-    case 'single':
-      generateOne();
-      break;
-    case 'double':
-      generateTwo();
-      break;
-    case 'multiple':
-      generateMany();
-      break;
-  }
-});
-
-test('bar', async ({ page }) => {
-  await expect(page.locator('.my-image').count()).toBeGreaterThan(0);
-});
-
-const hotkey =
-  process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f'];
-
-test('baz', async ({ page }) => {
-  await Promise.all(hotkey.map((x) => page.keyboard.down(x)));
-
-  expect(actionIsPerformed()).toBe(true);
-});
-```
+## List of Supported Rules
+
+✔: Enabled in the recommended configuration.\
+🔧: Some problems reported by this rule are automatically fixable by the [`--fix`](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix)
+command line option.\
+💡: Some problems reported by this rule are manually fixable by editor
+[suggestions](https://eslint.org/docs/latest/developer-guide/working-with-rules#providing-suggestions).
+
+|  ✔  | 🔧  | 💡  | Rule                                                                                                                                          | Description                                       |
+| :-: | :-: | :-: | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+|  ✔  |     |     | [max-nested-describe](max-nested-describe.md)                                                                                                 | Enforces a maximum depth to nested describe calls |
+|  ✔  | 🔧  |     | [missing-playwright-await](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/missing-playwright-await.md) | Enforce Playwright APIs to be awaited             |
+|  ✔  |     |     | [no-conditional-in-test](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-conditional-in-test.md)     | Disallow conditional logic in tests               |
+|  ✔  |     | 💡  | [no-element-handle](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-element-handle.md)               | Disallow usage of element handles                 |
+|  ✔  |     |     | [no-eval](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-eval.md)                                   | Disallow usage of `page.$eval` and `page.$$eval`  |
+|  ✔  |     | 💡  | [no-focused-test](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-focused-test.md)                   | Disallow usage of `.only` annotation              |
+|  ✔  |     |     | [no-force-option](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-force-option.md)                   | Disallow usage of the `{ force: true }` option    |
+|  ✔  |     |     | [no-page-pause](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-page-pause.md)                       | Disallow using `page.pause`                       |
+|  ✔  |     | 💡  | [no-skipped-test](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-skipped-test.md)                   | Disallow usage of the `.skip` annotation          |
+|  ✔  |     | 💡  | [no-wait-for-timeout](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-wait-for-timeout.md)           | Disallow usage of `page.waitForTimeout`           |

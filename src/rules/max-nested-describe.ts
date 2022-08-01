@@ -49,14 +49,13 @@ export default {
       category: 'Best Practices',
       description: 'Enforces a maximum depth to nested describe calls',
       recommended: false,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright#max-nested-describe',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/max-nested-describe.md',
     },
     messages: {
       exceededMaxDepth:
         'Maximum describe call depth exceeded ({{ depth }}). Maximum allowed is {{ max }}.',
     },
     type: 'suggestion',
-    fixable: 'code',
     schema: [
       {
         type: 'object',

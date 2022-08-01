@@ -33,7 +33,7 @@ export default {
       category: 'Best Practices',
       description: 'Prevent usage of page.waitForTimeout()',
       recommended: true,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright#no-wait-for-timeout',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-wait-for-timeout.md',
     },
     hasSuggestions: true,
     messages: {
