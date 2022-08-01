@@ -1,5 +1,5 @@
-import { runRuleTester, wrapInTest } from '../../utils/rule-tester';
-import rule from '../no-element-handle';
+import { runRuleTester, wrapInTest } from '../utils/rule-tester';
+import rule from '../../src/rules/no-element-handle';
 
 const invalid = (code: string, output: string) => ({
   code: wrapInTest(code),

@@ -1,5 +1,5 @@
-import { Errors, runRuleTester } from '../../utils/rule-tester';
-import rule from '../no-conditional-in-test';
+import { Errors, runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-conditional-in-test';
 
 const invalid = (
   code: string,
