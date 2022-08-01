@@ -1,7 +1,7 @@
-const { runRuleTester } = require('../lib/utils/rule-tester');
-const rule = require('../lib/rules/no-wait-for-timeout');
+import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-wait-for-timeout';
 
-const invalid = (code, output) => ({
+const invalid = (code: string, output: string) => ({
   code,
   errors: [
     {

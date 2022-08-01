@@ -1,14 +1,19 @@
-const { runRuleTester, wrapInTest } = require('../lib/utils/rule-tester');
-const rule = require('../lib/rules/missing-playwright-await');
+import { runRuleTester, wrapInTest } from '../utils/rule-tester';
+import rule from '../../src/rules/missing-playwright-await';
 
-const invalid = (messageId, code, output, options = []) => ({
+const invalid = (
+  messageId: string,
+  code: string,
+  output: string,
+  options: unknown[] = []
+) => ({
   code: wrapInTest(code),
   errors: [{ messageId }],
   options,
   output: wrapInTest(output),
 });
 
-const valid = (code, options = []) => ({
+const valid = (code: string, options: unknown[] = []) => ({
   code: wrapInTest(code),
   options,
 });

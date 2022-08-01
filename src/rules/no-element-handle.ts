@@ -1,15 +1,20 @@
-const { isObject, isCalleeProperty } = require('../utils/ast');
+import { isObject, isCalleeProperty } from '../utils/ast';
+import * as ESTree from 'estree';
+import { Rule, AST } from 'eslint';
 
-function getRange(node) {
+function getRange(
+  node: ESTree.CallExpression & Rule.NodeParentExtension
+): AST.Range {
+  const callee = node.callee as ESTree.MemberExpression;
   const start =
-    node.parent && node.parent.type === 'AwaitExpression'
-      ? node.parent.range[0]
-      : node.callee.object.range[0];
+    node.parent.type === 'AwaitExpression'
+      ? node.parent.range![0]
+      : callee.object.range![0];
 
-  return [start, node.callee.property.range[1]];
+  return [start, callee.property.range![1]];
 }
 
-module.exports = {
+export default {
   create(context) {
     return {
       CallExpression(node) {
@@ -50,4 +55,4 @@ module.exports = {
     },
     type: 'suggestion',
   },
-};
+} as Rule.RuleModule;

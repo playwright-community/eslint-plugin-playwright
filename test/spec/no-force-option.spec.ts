@@ -1,14 +1,12 @@
-const { runRuleTester, wrapInTest } = require('../lib/utils/rule-tester');
-const rule = require('../lib/rules/no-force-option');
+import { runRuleTester, wrapInTest } from '../utils/rule-tester';
+import rule from '../../src/rules/no-force-option';
 
-const invalid = (code) => ({
+const invalid = (code: string) => ({
   code: wrapInTest(code),
   errors: [{ messageId: 'noForceOption' }],
 });
 
-const valid = (code) => ({
-  code: wrapInTest(code),
-});
+const valid = wrapInTest;
 
 runRuleTester('no-force-option', rule, {
   invalid: [

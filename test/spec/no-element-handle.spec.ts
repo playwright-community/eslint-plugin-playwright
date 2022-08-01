@@ -1,7 +1,7 @@
-const { runRuleTester, wrapInTest } = require('../lib/utils/rule-tester');
-const rule = require('../lib/rules/no-element-handle');
+import { runRuleTester, wrapInTest } from '../utils/rule-tester';
+import rule from '../../src/rules/no-element-handle';
 
-const invalid = (code, output) => ({
+const invalid = (code: string, output: string) => ({
   code: wrapInTest(code),
   errors: [
     {
@@ -18,9 +18,7 @@ const invalid = (code, output) => ({
   ],
 });
 
-const valid = (code) => ({
-  code: wrapInTest(code),
-});
+const valid = wrapInTest;
 
 runRuleTester('no-element-handle', rule, {
   invalid: [

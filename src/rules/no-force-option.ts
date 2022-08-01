@@ -1,16 +1,17 @@
-function isForceOptionEnabled({ parent }) {
-  return (
-    parent &&
-    parent.arguments &&
-    parent.arguments.length &&
-    parent.arguments.some(
-      (argument) =>
-        argument.type === 'ObjectExpression' &&
-        argument.properties.some(
-          ({ key, value }) =>
-            key && key.name === 'force' && value && value.value === true
-        )
-    )
+import { Rule } from 'eslint';
+import * as ESTree from 'estree';
+import { isBooleanLiteral, isIdentifier } from '../utils/ast';
+
+function isForceOptionEnabled(node: ESTree.CallExpression) {
+  return node.arguments.some(
+    (argument) =>
+      argument.type === 'ObjectExpression' &&
+      argument.properties.some(
+        (property) =>
+          property.type === 'Property' &&
+          isIdentifier(property.key, 'force') &&
+          isBooleanLiteral(property.value, true)
+      )
   );
 }
 
@@ -29,15 +30,15 @@ const methodsWithForceOption = new Set([
   'tap',
 ]);
 
-/** @type {import('eslint').Rule.RuleModule} */
-module.exports = {
+export default {
   create(context) {
     return {
       MemberExpression(node) {
         if (
-          node.property &&
+          node.property.type === 'Identifier' &&
           methodsWithForceOption.has(node.property.name) &&
-          isForceOptionEnabled(node)
+          node.parent.type === 'CallExpression' &&
+          isForceOptionEnabled(node.parent)
         ) {
           context.report({ messageId: 'noForceOption', node });
         }
@@ -56,4 +57,4 @@ module.exports = {
     },
     type: 'suggestion',
   },
-};
+} as Rule.RuleModule;

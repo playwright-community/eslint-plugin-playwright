@@ -1,15 +1,21 @@
-const {
+import { Rule } from 'eslint';
+import * as ESTree from 'estree';
+import {
   isTestIdentifier,
   isDescribeCall,
-  isHookCall,
-} = require('../utils/ast');
+  isCalleeProperty,
+} from '../utils/ast';
 
-/** @type {import('eslint').Rule.RuleModule} */
-module.exports = {
+function isHookCall(node: ESTree.CallExpression) {
+  const hooks = ['beforeAll', 'beforeEach', 'afterAll', 'afterEach'];
+  return hooks.some((hook) => isCalleeProperty(node, hook));
+}
+
+export default {
   create(context) {
     let inTestCase = false;
 
-    function maybeReportConditional(node) {
+    function maybeReportConditional(node: Rule.Node) {
       if (inTestCase) {
         context.report({
           messageId: 'conditionalInTest',
@@ -20,19 +26,17 @@ module.exports = {
 
     return {
       CallExpression(node) {
-        const { callee } = node;
         if (
-          isTestIdentifier(callee) &&
+          isTestIdentifier(node.callee) &&
           !isDescribeCall(node) &&
           !isHookCall(node)
         ) {
           inTestCase = true;
         }
       },
-      'CallExpression:exit'(node) {
-        const { callee } = node;
+      'CallExpression:exit'(node: ESTree.CallExpression) {
         if (
-          isTestIdentifier(callee) &&
+          isTestIdentifier(node.callee) &&
           !isDescribeCall(node) &&
           !isHookCall(node)
         ) {
@@ -58,4 +62,4 @@ module.exports = {
     type: 'problem',
     schema: [],
   },
-};
+} as Rule.RuleModule;

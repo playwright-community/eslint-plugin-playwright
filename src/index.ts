@@ -1,15 +1,15 @@
-const missingPlaywrightAwait = require('./rules/missing-playwright-await');
-const noPagePause = require('./rules/no-page-pause');
-const noElementHandle = require('./rules/no-element-handle');
-const noEval = require('./rules/no-eval');
-const noFocusedTest = require('./rules/no-focused-test');
-const noSkippedTest = require('./rules/no-skipped-test');
-const noWaitForTimeout = require('./rules/no-wait-for-timeout');
-const noForceOption = require('./rules/no-force-option');
-const maxNestedDescribe = require('./rules/max-nested-describe');
-const noConditionalInTest = require('./rules/no-conditional-in-test');
+import missingPlaywrightAwait from './rules/missing-playwright-await';
+import noPagePause from './rules/no-page-pause';
+import noElementHandle from './rules/no-element-handle';
+import noEval from './rules/no-eval';
+import noFocusedTest from './rules/no-focused-test';
+import noSkippedTest from './rules/no-skipped-test';
+import noWaitForTimeout from './rules/no-wait-for-timeout';
+import noForceOption from './rules/no-force-option';
+import maxNestedDescribe from './rules/max-nested-describe';
+import noConditionalInTest from './rules/no-conditional-in-test';
 
-module.exports = {
+export = {
   configs: {
     'playwright-test': {
       plugins: ['playwright'],

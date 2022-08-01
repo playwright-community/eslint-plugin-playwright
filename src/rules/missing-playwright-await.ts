@@ -1,15 +1,22 @@
-function getMemberPartName(node, part) {
-  return node[part].type === 'Identifier' ? node[part].name : undefined;
-}
+import * as ESTree from 'estree';
+import { Rule } from 'eslint';
+import { getNodeName } from '../utils/ast';
 
-function getMemberExpressionNode(node, matchers) {
-  const propertyName = getMemberPartName(node, 'property');
+type MemberExpression = ESTree.MemberExpression & Rule.NodeParentExtension;
 
-  if (getMemberPartName(node, 'object') === 'test') {
+function getMemberExpressionNode(
+  node: MemberExpression,
+  matchers: Set<string>
+) {
+  const propertyName = getNodeName(node.property);
+
+  if (getNodeName(node.object) === 'test') {
     return propertyName === 'step' ? { node, type: 'testStep' } : undefined;
   }
 
-  return matchers.has(propertyName) ? { node, type: 'expect' } : undefined;
+  return propertyName && matchers.has(propertyName)
+    ? { node, type: 'expect' }
+    : undefined;
 }
 
 const validTypes = new Set([
@@ -18,7 +25,7 @@ const validTypes = new Set([
   'ArrowFunctionExpression',
 ]);
 
-function isValid(node) {
+function isValid(node: MemberExpression) {
   return (
     validTypes.has(node.parent?.type) ||
     validTypes.has(node.parent?.parent?.type)
@@ -68,7 +75,7 @@ const playwrightTestMatchers = [
   'toHaveValue',
 ];
 
-module.exports = {
+export default {
   create(context) {
     const options = context.options[0] || {};
     const matchers = new Set([
@@ -117,4 +124,4 @@ module.exports = {
     ],
     type: 'problem',
   },
-};
+} as Rule.RuleModule;
