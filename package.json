@@ -11,6 +11,7 @@
     "!lib/**/*.spec.js"
   ],
   "scripts": {
+    "build": "tsc",
     "format": "prettier --write .",
     "test": "jest"
   },
