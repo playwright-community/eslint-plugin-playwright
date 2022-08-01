@@ -11,9 +11,10 @@
     "!lib/**/*.spec.js"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "format": "prettier --write .",
-    "test": "jest"
+    "test": "jest",
+    "ts": "tsc"
   },
   "devDependencies": {
     "@types/eslint": "^8.4.5",
