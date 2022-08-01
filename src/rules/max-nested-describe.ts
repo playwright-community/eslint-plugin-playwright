@@ -1,5 +1,4 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
 import { isDescribeCall } from '../utils/ast';
 
 export default {

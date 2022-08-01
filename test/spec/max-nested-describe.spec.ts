@@ -1,5 +1,5 @@
 import { runRuleTester, Errors } from '../utils/rule-tester';
-import rule from './max-nested-describe';
+import rule from '../../src/rules/max-nested-describe';
 
 const invalid = (
   code: string,
@@ -57,7 +57,7 @@ runRuleTester('max-nested-describe', rule, {
                 expect(getSomething()).toBe('Something');
               });
             });
-            
+
             test.describe('baz4', () => {
               it('should get something', () => {
                 expect(getSomething()).toBe('Something');
@@ -66,7 +66,7 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       });
-      
+
       test.describe('qux', function () {
         test('should get something', () => {
           expect(getSomething()).toBe('Something');

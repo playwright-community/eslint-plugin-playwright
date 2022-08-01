@@ -1,5 +1,5 @@
 import { runRuleTester } from '../utils/rule-tester';
-import rule from './no-skipped-test';
+import rule from '../../src/rules/no-skipped-test';
 
 const invalid = (code: string, output: string) => ({
   code,

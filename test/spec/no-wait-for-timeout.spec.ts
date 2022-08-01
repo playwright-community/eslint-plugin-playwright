@@ -1,5 +1,5 @@
 import { runRuleTester } from '../utils/rule-tester';
-import rule from './no-wait-for-timeout';
+import rule from '../../src/rules/no-wait-for-timeout';
 
 const invalid = (code: string, output: string) => ({
   code,
