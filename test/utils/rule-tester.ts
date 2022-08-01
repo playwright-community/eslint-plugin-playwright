@@ -2,7 +2,7 @@ import { RuleTester } from 'eslint';
 
 /**
  * @example
- * import rule from './missing-playwright-await';
+ * import rule from '../../src/rules/missing-playwright-await';
  *
  * runRuleTester('missing-playwright-await', rule, {
  *   valid: ['await expect(page.locator('checkbox')).toBeChecked()'],
