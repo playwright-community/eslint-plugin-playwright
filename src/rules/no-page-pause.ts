@@ -1,4 +1,4 @@
-import { Rule } from 'eslint';
+import type { Rule } from 'eslint';
 import { isObject, isCalleeProperty } from '../utils/ast';
 
 export default {

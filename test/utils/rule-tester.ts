@@ -1,3 +1,4 @@
+import test from '@playwright/test';
 import { RuleTester } from 'eslint';
 
 /**
@@ -9,14 +10,14 @@ import { RuleTester } from 'eslint';
  *   invalid: ['expect(page.locator('checkbox')).toBeChecked()'],
  * });
  */
-export function runRuleTester(...args: Parameters<RuleTester['run']>) {
+export function runRuleTester(...args: Parameters<RuleTester['run']>): void {
   const config = {
     parserOptions: {
       ecmaVersion: 2018,
     },
   };
 
-  return new RuleTester(config).run(...args);
+  new RuleTester(config).run(...args);
 }
 
 export const wrapInTest = (input: string) =>

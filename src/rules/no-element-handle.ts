@@ -1,5 +1,5 @@
 import { isObject, isCalleeProperty } from '../utils/ast';
-import * as ESTree from 'estree';
+import type * as ESTree from 'estree';
 import { Rule, AST } from 'eslint';
 
 function getRange(

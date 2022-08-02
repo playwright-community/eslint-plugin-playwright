@@ -1,5 +1,5 @@
-import * as ESTree from 'estree';
-import { Rule } from 'eslint';
+import type * as ESTree from 'estree';
+import type { Rule } from 'eslint';
 import { getNodeName } from '../utils/ast';
 
 type MemberExpression = ESTree.MemberExpression & Rule.NodeParentExtension;

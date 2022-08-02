@@ -1,4 +1,4 @@
-import * as ESTree from 'estree';
+import type * as ESTree from 'estree';
 
 export function getNodeName(node: ESTree.Node) {
   return node.type === 'Identifier' ? node.name : undefined;

@@ -1,5 +1,5 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import type { Rule } from 'eslint';
+import type * as ESTree from 'estree';
 import { isBooleanLiteral, isIdentifier } from '../utils/ast';
 
 function isForceOptionEnabled(node: ESTree.CallExpression) {

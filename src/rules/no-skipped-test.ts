@@ -1,5 +1,5 @@
-import { AST, Rule } from 'eslint';
-import * as ESTree from 'estree';
+import type { AST, Rule } from 'eslint';
+import type * as ESTree from 'estree';
 import {
   isTestIdentifier,
   isObjectProperty,

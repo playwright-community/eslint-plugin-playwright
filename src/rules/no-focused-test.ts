@@ -1,5 +1,5 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import type { Rule } from 'eslint';
+import type * as ESTree from 'estree';
 import { isIdentifier, isTestIdentifier } from '../utils/ast';
 
 function isTestGroup(node: ESTree.MemberExpression) {
