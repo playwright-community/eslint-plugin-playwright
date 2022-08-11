@@ -51,7 +51,7 @@ command line option.\
 
 |  ✔  | 🔧  | 💡  | Rule                                                                                                                                          | Description                                       |
 | :-: | :-: | :-: | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-|  ✔  |     |     | [max-nested-describe](max-nested-describe.md)                                                                                                 | Enforces a maximum depth to nested describe calls |
+|  ✔  |     |     | [max-nested-describe](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/max-nested-describe.md)           | Enforces a maximum depth to nested describe calls |
 |  ✔  | 🔧  |     | [missing-playwright-await](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/missing-playwright-await.md) | Enforce Playwright APIs to be awaited             |
 |  ✔  |     |     | [no-conditional-in-test](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-conditional-in-test.md)     | Disallow conditional logic in tests               |
 |  ✔  |     | 💡  | [no-element-handle](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-element-handle.md)               | Disallow usage of element handles                 |
