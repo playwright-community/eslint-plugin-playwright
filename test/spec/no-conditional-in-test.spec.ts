@@ -40,15 +40,9 @@ runRuleTester('no-conditional-in-test', rule, {
       })
     `,
       [
-        {
-          messageId: 'conditionalInTest',
-        },
-        {
-          messageId: 'conditionalInTest',
-        },
-        {
-          messageId: 'conditionalInTest',
-        },
+        { messageId: 'conditionalInTest' },
+        { messageId: 'conditionalInTest' },
+        { messageId: 'conditionalInTest' },
       ]
     ),
     invalid(`
@@ -203,5 +197,19 @@ runRuleTester('no-conditional-in-test', rule, {
           });
         });
       });`,
+    // Conditionals are only disallowed at the root level. Nested conditionals
+    // are common and valid.
+    `test('nested', () => {
+      const [request] = await Promise.all([
+        page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET'),
+        page.click('button'),
+      ]);
+    })`,
+    `test('nested', () => {
+      await page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET')
+    })`,
+    `test('nested', () => {
+      test.skip(true && false)
+    })`,
   ],
 });
