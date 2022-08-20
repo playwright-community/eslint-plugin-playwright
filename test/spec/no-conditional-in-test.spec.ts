@@ -126,6 +126,13 @@ runRuleTester('no-conditional-in-test', rule, {
         })
       });
     `),
+    invalid(`
+      test('test', async ({ page }) => {
+        await test.step('step', async () => {
+          if (true) {}
+        });
+      });
+    `),
   ],
   valid: [
     'test("foo", () => { expect(1).toBe(1); });',
@@ -199,17 +206,34 @@ runRuleTester('no-conditional-in-test', rule, {
       });`,
     // Conditionals are only disallowed at the root level. Nested conditionals
     // are common and valid.
-    `test('nested', () => {
+    `test('nested', async ({ page }) => {
       const [request] = await Promise.all([
         page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET'),
         page.click('button'),
       ]);
     })`,
-    `test('nested', () => {
+    `test('nested', async ({ page }) => {
+      await page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET')
+    })`,
+    `test.fixme('nested', async ({ page }) => {
+      await page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET')
+    })`,
+    `test.only('nested', async ({ page }) => {
       await page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET')
     })`,
     `test('nested', () => {
       test.skip(true && false)
+    })`,
+    `test('nested', () => {
+      test.skip(
+        ({ baseURL }) => (baseURL || "").includes("localhost"),
+        "message",
+      )
+    })`,
+    `test('test', async ({ page }) => {
+      await test.step('step', async () => {
+        await page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET')
+      });
     })`,
   ],
 });

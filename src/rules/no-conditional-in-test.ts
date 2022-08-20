@@ -1,52 +1,21 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import {
-  isTestIdentifier,
-  isDescribeCall,
-  isCalleeProperty,
-} from '../utils/ast';
-
-function isHookCall(node: ESTree.CallExpression) {
-  const hooks = ['beforeAll', 'beforeEach', 'afterAll', 'afterEach'];
-  return hooks.some((hook) => isCalleeProperty(node, hook));
-}
+import { findParent, isTest } from '../utils/ast';
 
 export default {
   create(context) {
-    let inTestCase = false;
+    function checkConditional(node: Rule.Node & Rule.NodeParentExtension) {
+      const call = findParent(node, 'CallExpression');
 
-    function maybeReportConditional(node: Rule.Node) {
-      if (inTestCase) {
-        context.report({
-          messageId: 'conditionalInTest',
-          node,
-        });
+      if (call && isTest(call)) {
+        context.report({ messageId: 'conditionalInTest', node });
       }
     }
 
     return {
-      CallExpression(node) {
-        if (
-          isTestIdentifier(node.callee) &&
-          !isDescribeCall(node) &&
-          !isHookCall(node)
-        ) {
-          inTestCase = true;
-        }
-      },
-      'CallExpression:exit'(node: ESTree.CallExpression) {
-        if (
-          isTestIdentifier(node.callee) &&
-          !isDescribeCall(node) &&
-          !isHookCall(node)
-        ) {
-          inTestCase = false;
-        }
-      },
-      IfStatement: maybeReportConditional,
-      SwitchStatement: maybeReportConditional,
-      ConditionalExpression: maybeReportConditional,
-      LogicalExpression: maybeReportConditional,
+      IfStatement: checkConditional,
+      SwitchStatement: checkConditional,
+      ConditionalExpression: checkConditional,
+      LogicalExpression: checkConditional,
     };
   },
   meta: {
