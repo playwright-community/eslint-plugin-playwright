@@ -18,12 +18,21 @@ runRuleTester('no-eval', rule, {
     invalid('toBeHidden', 'toBeVisible'),
     invalid('toBeEnabled', 'toBeDisabled'),
     invalid('toBeDisabled', 'toBeEnabled'),
+    // Incomplete call expression
+    {
+      code: 'expect(locator).not.toBeHidden',
+      output: 'expect(locator).toBeVisible',
+      errors: [{ messageId: 'noUselessNot' }],
+    },
   ],
   valid: [
     'expect(locator).toBeVisible()',
     'expect(locator).toBeHidden()',
     'expect(locator).toBeEnabled()',
     'expect(locator).toBeDisabled()',
+    // Incomplete call expression
+    'expect(locator).toBeVisible',
+    'expect(locator).toBeEnabled',
     // Doesn't impact non-complimentary matchers
     "expect(locator).not.toHaveText('foo')",
     'expect(locator).not.toBeChecked()',
