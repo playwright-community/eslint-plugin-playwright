@@ -9,6 +9,7 @@ import noForceOption from './rules/no-force-option';
 import maxNestedDescribe from './rules/max-nested-describe';
 import noConditionalInTest from './rules/no-conditional-in-test';
 import noUselessNot from './rules/no-useless-not';
+import validExpect from './rules/valid-expect';
 
 export = {
   configs: {
@@ -30,6 +31,7 @@ export = {
         'playwright/max-nested-describe': 'warn',
         'playwright/no-conditional-in-test': 'warn',
         'playwright/no-useless-not': 'warn',
+        'playwright/valid-expect': 'error',
       },
     },
     'jest-playwright': {
@@ -77,5 +79,6 @@ export = {
     'max-nested-describe': maxNestedDescribe,
     'no-conditional-in-test': noConditionalInTest,
     'no-useless-not': noUselessNot,
+    'valid-expect': validExpect,
   },
 };
