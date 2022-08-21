@@ -1,29 +1,22 @@
 import { runRuleTester } from '../utils/rule-tester';
 import rule from '../../src/rules/valid-expect';
 
-const addSoft = (str: string) => str.replace('expect', 'expect.soft');
-
-function withSoft<T extends string | { code: string }>(items: T[]) {
-  return items.flatMap((item) => [
-    item,
-    typeof item === 'string'
-      ? addSoft(item)
-      : { ...(item as {}), code: addSoft(item.code) },
-  ]);
-}
-
 const invalid = (code: string, messageId: string) => ({
   code,
   errors: [{ messageId }],
 });
 
 runRuleTester('valid-expect', rule, {
-  valid: withSoft([
+  valid: [
     'expect("something").toBe("else")',
+    'expect.soft("something").toBe("else")',
+    'expect.poll(() => "something").toBe("else")',
     'expect(true).toBeDefined()',
     'expect(undefined).not.toBeDefined()',
     'expect([1, 2, 3]).toEqual([1, 2, 3])',
     'expect(1, "1 !== 2").toBe(2)',
+    'expect.soft(1, "1 !== 2").toBe(2)',
+    'expect.poll(() => 1, { message: "1 !== 2" }).toBe(2)',
     // minArgs
     {
       code: 'expect(1, "1 !== 2").toBe(2)',
@@ -42,16 +35,25 @@ runRuleTester('valid-expect', rule, {
       code: 'expect(1, 2, 3).toBe(4)',
       options: [{ maxArgs: 3 }],
     },
-  ]),
-  invalid: withSoft([
+  ],
+  invalid: [
     // Matcher not found
     invalid('expect(foo)', 'matcherNotFound'),
-    invalid('expect("something")', 'matcherNotFound'),
     invalid('expect(foo).not', 'matcherNotFound'),
+    invalid('expect.soft(foo)', 'matcherNotFound'),
+    invalid('expect.soft(foo).not', 'matcherNotFound'),
+    invalid('expect.poll(foo)', 'matcherNotFound'),
+    invalid('expect.poll(foo).not', 'matcherNotFound'),
     // Matcher not called
     invalid('expect(foo).toBe', 'matcherNotCalled'),
     invalid('expect(foo).not.toBe', 'matcherNotCalled'),
     invalid('something(expect(foo).not.toBe)', 'matcherNotCalled'),
+    invalid('expect.soft(foo).toBe', 'matcherNotCalled'),
+    invalid('expect.soft(foo).not.toBe', 'matcherNotCalled'),
+    invalid('something(expect.soft(foo).not.toBe)', 'matcherNotCalled'),
+    invalid('expect.poll(() => foo).toBe', 'matcherNotCalled'),
+    invalid('expect.poll(() => foo).not.toBe', 'matcherNotCalled'),
+    invalid('something(expect.poll(() => foo).not.toBe)', 'matcherNotCalled'),
     // minArgs
     {
       code: 'expect().toBe(true)',
@@ -87,5 +89,5 @@ runRuleTester('valid-expect', rule, {
         { messageId: 'notEnoughArgs', data: { amount: 1, s: '' } },
       ],
     },
-  ]),
+  ],
 });
