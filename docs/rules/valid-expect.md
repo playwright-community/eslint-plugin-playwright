@@ -1,7 +1,6 @@
 # Enforce valid `expect()` usage (`valid-expect`)
 
-Ensure `expect()` is called with a single argument and there is an actual
-expectation made.
+Ensure `expect()` is called with a matcher.
 
 ## Rule details
 
