@@ -12,7 +12,7 @@ const invalid = (oldMatcher: string, newMatcher: string) => ({
   ],
 });
 
-runRuleTester('no-eval', rule, {
+runRuleTester('no-useless-not', rule, {
   invalid: [
     invalid('toBeVisible', 'toBeHidden'),
     invalid('toBeHidden', 'toBeVisible'),
