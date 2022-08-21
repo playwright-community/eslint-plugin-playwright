@@ -29,12 +29,11 @@ runRuleTester('valid-expect', rule, {
     },
     {
       code: 'expect(1, 2, 3).toBe(4)',
-      options: [{ maxArgs: 2 }],
+      options: [{ maxArgs: 3 }],
     },
   ],
   invalid: [
-    // Matcher not called,
-    invalid('expect()', 'matcherNotFound'),
+    // Matcher not found
     invalid('expect(foo)', 'matcherNotFound'),
     invalid('expect("something")', 'matcherNotFound'),
     invalid('expect(foo).not', 'matcherNotFound'),
@@ -42,25 +41,41 @@ runRuleTester('valid-expect', rule, {
     // Matcher not called
     invalid('expect(foo).toBe', 'matcherNotCalled'),
     invalid('expect(foo).not.toBe', 'matcherNotCalled'),
+    invalid('something(expect(foo).not.toBe)', 'matcherNotCalled'),
     // minArgs
     {
       code: 'expect().toBe(true)',
-      errors: [{ messageId: 'notEnoughArgs', data: { amount: 1 } }],
+      errors: [{ messageId: 'notEnoughArgs', data: { amount: 1, s: '' } }],
     },
     {
       code: 'expect(foo).toBe(true)',
       options: [{ minArgs: 2 }],
-      errors: [{ messageId: 'notEnoughArgs', data: { amount: 2 } }],
+      errors: [{ messageId: 'notEnoughArgs', data: { amount: 2, s: 's' } }],
     },
     // maxArgs
     {
       code: 'expect(foo, "bar", "baz").toBe(true)',
-      errors: [{ messageId: 'tooManyArgs', data: { amount: 2 } }],
+      errors: [{ messageId: 'tooManyArgs', data: { amount: 2, s: 's' } }],
     },
     {
       code: 'expect(foo, "bar").toBe(true)',
       options: [{ maxArgs: 1 }],
-      errors: [{ messageId: 'tooManyArgs', data: { amount: 1 } }],
+      errors: [{ messageId: 'tooManyArgs', data: { amount: 1, s: '' } }],
+    },
+    // Multiple errors
+    {
+      code: 'expect()',
+      errors: [
+        { messageId: 'matcherNotFound' },
+        { messageId: 'notEnoughArgs', data: { amount: 1, s: '' } },
+      ],
+    },
+    {
+      code: 'expect().toHaveText',
+      errors: [
+        { messageId: 'matcherNotCalled' },
+        { messageId: 'notEnoughArgs', data: { amount: 1, s: '' } },
+      ],
     },
   ],
 });
