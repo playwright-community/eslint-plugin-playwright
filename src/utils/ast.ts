@@ -120,3 +120,14 @@ export function isTest(node: ESTree.CallExpression) {
     )
   );
 }
+
+const expectSubCommands = new Set(['soft', 'poll']);
+export function isExpectCall(node: ESTree.CallExpression) {
+  return (
+    isIdentifier(node.callee, 'expect') ||
+    (node.callee.type === 'MemberExpression' &&
+      isIdentifier(node.callee.object, 'expect') &&
+      node.callee.property.type === 'Identifier' &&
+      expectSubCommands.has(node.callee.property.name))
+  );
+}
