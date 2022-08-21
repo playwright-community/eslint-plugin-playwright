@@ -1,13 +1,24 @@
 import { runRuleTester } from '../utils/rule-tester';
 import rule from '../../src/rules/valid-expect';
 
+const addSoft = (str: string) => str.replace('expect', 'expect.soft');
+
+function withSoft<T extends string | { code: string }>(items: T[]) {
+  return items.flatMap((item) => [
+    item,
+    typeof item === 'string'
+      ? addSoft(item)
+      : { ...(item as {}), code: addSoft(item.code) },
+  ]);
+}
+
 const invalid = (code: string, messageId: string) => ({
   code,
   errors: [{ messageId }],
 });
 
 runRuleTester('valid-expect', rule, {
-  valid: [
+  valid: withSoft([
     'expect("something").toBe("else")',
     'expect(true).toBeDefined()',
     'expect(undefined).not.toBeDefined()',
@@ -31,13 +42,12 @@ runRuleTester('valid-expect', rule, {
       code: 'expect(1, 2, 3).toBe(4)',
       options: [{ maxArgs: 3 }],
     },
-  ],
-  invalid: [
+  ]),
+  invalid: withSoft([
     // Matcher not found
     invalid('expect(foo)', 'matcherNotFound'),
     invalid('expect("something")', 'matcherNotFound'),
     invalid('expect(foo).not', 'matcherNotFound'),
-    invalid('expect("something")', 'matcherNotFound'),
     // Matcher not called
     invalid('expect(foo).toBe', 'matcherNotCalled'),
     invalid('expect(foo).not.toBe', 'matcherNotCalled'),
@@ -77,5 +87,5 @@ runRuleTester('valid-expect', rule, {
         { messageId: 'notEnoughArgs', data: { amount: 1, s: '' } },
       ],
     },
-  ],
+  ]),
 });

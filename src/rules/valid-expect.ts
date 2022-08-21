@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { isIdentifier } from '../utils/ast';
+import { isExpectCall, isIdentifier } from '../utils/ast';
 import { NodeWithParent } from '../utils/types';
 
 function isMatcherFound(node: NodeWithParent): boolean {
@@ -43,9 +43,7 @@ export default {
 
     return {
       CallExpression(node) {
-        if (!isIdentifier(node.callee, 'expect')) {
-          return;
-        }
+        if (!isExpectCall(node)) return;
 
         if (!isMatcherFound(node)) {
           context.report({ node, messageId: 'matcherNotFound' });

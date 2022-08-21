@@ -91,3 +91,12 @@ export function isDescribeCall(node: ESTree.CallExpression) {
 
   return false;
 }
+
+export function isExpectCall(node: ESTree.CallExpression) {
+  return (
+    isIdentifier(node.callee, 'expect') ||
+    (node.callee.type === 'MemberExpression' &&
+      isIdentifier(node.callee.object, 'expect') &&
+      isIdentifier(node.callee.property, 'soft'))
+  );
+}
