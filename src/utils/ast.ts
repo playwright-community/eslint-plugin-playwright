@@ -1,3 +1,4 @@
+import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 
 export function getNodeName(node: ESTree.Node) {
@@ -90,6 +91,34 @@ export function isDescribeCall(node: ESTree.CallExpression) {
   }
 
   return false;
+}
+
+type NodeWithParent<T extends ESTree.Node['type']> = Extract<
+  ESTree.Node,
+  { type: T }
+> &
+  Rule.NodeParentExtension;
+
+export function findParent<T extends ESTree.Node['type']>(
+  node: ESTree.Node & Rule.NodeParentExtension,
+  type: T
+): NodeWithParent<T> | undefined {
+  if (!node.parent) return;
+
+  return node.parent.type === type
+    ? (node.parent as unknown as NodeWithParent<T>)
+    : findParent(node.parent, type);
+}
+
+export function isTest(node: ESTree.CallExpression) {
+  return (
+    isTestIdentifier(node.callee) &&
+    !isDescribeCall(node) &&
+    node.arguments.length === 2 &&
+    ['ArrowFunctionExpression', 'FunctionExpression'].includes(
+      node.arguments[1].type
+    )
+  );
 }
 
 const expectSubCommands = new Set(['soft', 'poll']);
