@@ -37,6 +37,7 @@ export default {
       maxArgs: 2,
       ...((context.options?.[0] as {}) ?? {}),
     };
+
     const minArgs = Math.min(options.minArgs, options.maxArgs);
     const maxArgs = Math.max(options.minArgs, options.maxArgs);
 
