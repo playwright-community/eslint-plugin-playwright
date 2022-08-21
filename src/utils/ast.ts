@@ -121,6 +121,16 @@ export function isTest(node: ESTree.CallExpression) {
   );
 }
 
+const testHooks = new Set(['afterAll', 'afterEach', 'beforeAll', 'beforeEach']);
+export function isTestHook(node: ESTree.CallExpression) {
+  return (
+    node.callee.type === 'MemberExpression' &&
+    isIdentifier(node.callee.object, 'test') &&
+    node.callee.property.type === 'Identifier' &&
+    testHooks.has(node.callee.property.name)
+  );
+}
+
 const expectSubCommands = new Set(['soft', 'poll']);
 export function isExpectCall(node: ESTree.CallExpression) {
   return (

@@ -10,6 +10,7 @@ import maxNestedDescribe from './rules/max-nested-describe';
 import noConditionalInTest from './rules/no-conditional-in-test';
 import noUselessNot from './rules/no-useless-not';
 import validExpect from './rules/valid-expect';
+import requireTopLevelDescribe from './rules/require-top-level-describe';
 
 export = {
   configs: {
@@ -80,5 +81,6 @@ export = {
     'no-conditional-in-test': noConditionalInTest,
     'no-useless-not': noUselessNot,
     'valid-expect': validExpect,
+    'require-top-level-describe': requireTopLevelDescribe,
   },
 };
