@@ -1,28 +1,42 @@
 import { Rule } from 'eslint';
 import { isExpectCall, isIdentifier } from '../utils/ast';
 import { NodeWithParent } from '../utils/types';
+import * as ESTree from 'estree';
 
-function isMatcherFound(node: NodeWithParent): boolean {
+function isMatcherFound(node: NodeWithParent) {
   if (node.parent.type !== 'MemberExpression') {
-    return false;
+    return { found: false, node };
   }
 
-  return !(
+  if (
     isIdentifier(node.parent.property, 'not') &&
     node.parent.parent.type !== 'MemberExpression'
-  );
+  ) {
+    return { found: false, node: node.parent };
+  }
+
+  return { found: true, node };
 }
 
-function isMatcherCalled(node: NodeWithParent): boolean {
-  return node.parent.type === 'MemberExpression'
-    ? // If the parent is a member expression, we continue traversing upward to
-      // handle matcher chains of unknown length. e.g. expect().not.something.
-      isMatcherCalled(node.parent)
-    : // Just asserting that the parent is a call expression is not enough as
-      // the node could be an argument of a call expression which doesn't
-      // determine if it is called. To determine if it is called, we verify
-      // that the parent call expression callee is the same as the node.
-      node.parent.type === 'CallExpression' && node.parent.callee === node;
+function isMatcherCalled(node: NodeWithParent): {
+  called: boolean;
+  node: ESTree.Node;
+} {
+  if (node.parent.type !== 'MemberExpression') {
+    // Just asserting that the parent is a call expression is not enough as
+    // the node could be an argument of a call expression which doesn't
+    // determine if it is called. To determine if it is called, we verify
+    // that the parent call expression callee is the same as the node.
+    return {
+      called:
+        node.parent.type === 'CallExpression' && node.parent.callee === node,
+      node,
+    };
+  }
+
+  // If the parent is a member expression, we continue traversing upward to
+  // handle matcher chains of unknown length. e.g. expect().not.something.
+  return isMatcherCalled(node.parent);
 }
 
 const getAmountData = (amount: number) => ({
@@ -45,10 +59,18 @@ export default {
       CallExpression(node) {
         if (!isExpectCall(node)) return;
 
-        if (!isMatcherFound(node)) {
-          context.report({ node, messageId: 'matcherNotFound' });
-        } else if (!isMatcherCalled(node)) {
-          context.report({ node, messageId: 'matcherNotCalled' });
+        const result = isMatcherFound(node);
+        if (!result.found) {
+          context.report({ node: result.node, messageId: 'matcherNotFound' });
+        } else {
+          const result = isMatcherCalled(node);
+
+          if (!result.called) {
+            context.report({
+              node: result.node,
+              messageId: 'matcherNotCalled',
+            });
+          }
         }
 
         if (node.arguments.length < minArgs) {
