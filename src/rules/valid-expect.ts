@@ -2,6 +2,7 @@ import { Rule } from 'eslint';
 import { isExpectCall, isIdentifier } from '../utils/ast';
 import { NodeWithParent } from '../utils/types';
 import * as ESTree from 'estree';
+import { getAmountData } from '../utils/misc';
 
 function isMatcherFound(node: NodeWithParent) {
   if (node.parent.type !== 'MemberExpression') {
@@ -38,11 +39,6 @@ function isMatcherCalled(node: NodeWithParent): {
   // handle matcher chains of unknown length. e.g. expect().not.something.
   return isMatcherCalled(node.parent);
 }
-
-const getAmountData = (amount: number) => ({
-  amount: amount.toString(),
-  s: amount === 1 ? '' : 's',
-});
 
 export default {
   create(context) {

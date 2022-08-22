@@ -48,7 +48,7 @@ export default {
     docs: {
       category: 'Best Practices',
       description: 'Enforces a maximum depth to nested describe calls',
-      recommended: false,
+      recommended: true,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/max-nested-describe.md',
     },
     messages: {
