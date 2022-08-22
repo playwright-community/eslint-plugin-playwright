@@ -54,43 +54,35 @@ export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
   return isLiteral(node, 'boolean', value);
 }
 
-function isDescribeAlias(node: ESTree.Node) {
-  return isIdentifier(node, 'describe');
-}
+const describeProperties = new Set([
+  'parallel',
+  'serial',
+  'only',
+  'skip',
+  'fixme',
+]);
 
 function isDescribeProperty(node: ESTree.Node) {
-  const describeProperties = ['parallel', 'serial', 'only', 'skip'];
-  return describeProperties.some((prop) => isIdentifier(node, prop));
+  return describeProperties.has(getNodeName(node) ?? '');
 }
 
-export function isDescribeCall(node: ESTree.CallExpression) {
-  if (isIdentifier(node.callee, 'describe')) {
+export function isDescribeCall(node: ESTree.Node): boolean {
+  const inner = node.type === 'CallExpression' ? node.callee : node;
+
+  // Allow describe without test prefix
+  if (isIdentifier(inner, 'describe')) {
     return true;
   }
 
-  const callee =
-    node.callee.type === 'TaggedTemplateExpression'
-      ? node.callee.tag
-      : node.callee.type === 'CallExpression'
-      ? node.callee.callee
-      : node.callee;
-
-  if (callee.type === 'MemberExpression' && isDescribeAlias(callee.property)) {
-    return true;
+  if (inner.type !== 'MemberExpression') {
+    return false;
   }
 
-  if (
-    callee.type === 'MemberExpression' &&
-    isDescribeProperty(callee.property)
-  ) {
-    return callee.object.type === 'MemberExpression'
-      ? callee.object.object.type === 'MemberExpression'
-        ? isDescribeAlias(callee.object.object.property)
-        : isDescribeAlias(callee.object.property)
-      : isDescribeAlias(callee.property) || isDescribeAlias(callee.object);
-  }
-
-  return false;
+  return isIdentifier(inner.property, 'describe')
+    ? true
+    : isDescribeProperty(inner.property)
+    ? isDescribeCall(inner.object)
+    : false;
 }
 
 type NodeWithParent<T extends ESTree.Node['type']> = Extract<

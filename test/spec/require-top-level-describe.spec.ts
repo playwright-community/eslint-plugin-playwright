@@ -12,10 +12,10 @@ runRuleTester('require-top-level-describe', rule, {
     'foo()',
     'test.info()',
     'test.describe("suite", () => { test("foo") });',
-    'test.describe("suite", () => { test.beforeAll("my beforeAll") });',
-    'test.describe("suite", () => { test.beforeEach("my beforeAll") });',
-    'test.describe("suite", () => { test.afterAll("my afterAll") });',
-    'test.describe("suite", () => { test.afterEach("my afterEach") });',
+    'test.describe.only("suite", () => { test.beforeAll("my beforeAll") });',
+    'test.describe.parallel("suite", () => { test.beforeEach("my beforeAll") });',
+    'test.describe.serial("suite", () => { test.afterAll("my afterAll") });',
+    'test.describe.parallel.fixme("suite", () => { test.afterEach("my afterEach") });',
     dedent`
       test.describe("suite", () => {
         test.beforeEach("a", () => {});
@@ -83,8 +83,8 @@ runRuleTester('require-top-level-describe', rule, {
     {
       code: dedent`
         test.describe('one', () => {});
-        test.describe('two', () => {});
-        test.describe('three', () => {});
+        test.describe.only('two', () => {});
+        test.describe.parallel('three', () => {});
       `,
       options: [{ maxTopLevelDescribes: 2 }],
       errors: [{ messageId: 'tooManyDescribes', line: 3 }],
@@ -96,16 +96,16 @@ runRuleTester('require-top-level-describe', rule, {
           test.describe('two (nested)', () => {});
         });
 
-        test.describe('two', () => {
+        test.describe.only('two', () => {
           test.describe('one (nested)', () => {});
-          test.describe('two (nested)', () => {});
-          test.describe('three (nested)', () => {});
+          test.describe.serial.only('two (nested)', () => {});
+          test.describe.fixme('three (nested)', () => {});
         });
 
-        test.describe('three', () => {
+        test.describe.fixme('three', () => {
           test.describe('one (nested)', () => {});
-          test.describe('two (nested)', () => {});
-          test.describe('three (nested)', () => {});
+          test.describe.serial('two (nested)', () => {});
+          test.describe.parallel('three (nested)', () => {});
         });
       `,
       options: [{ maxTopLevelDescribes: 2 }],
@@ -114,8 +114,8 @@ runRuleTester('require-top-level-describe', rule, {
     {
       code: dedent`
         test.describe('one', () => {});
-        test.describe('two', () => {});
-        test.describe('three', () => {});
+        test.describe.fixme.only('two', () => {});
+        test.describe.fixme('three', () => {});
       `,
       options: [{ maxTopLevelDescribes: 1 }],
       errors: [
