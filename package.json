@@ -17,8 +17,10 @@
     "ts": "tsc"
   },
   "devDependencies": {
+    "@types/dedent": "^0.7.0",
     "@types/eslint": "^8.4.5",
     "@types/estree": "^1.0.0",
+    "dedent": "^0.7.0",
     "eslint": "^8.4.1",
     "jest": "^28.1.3",
     "prettier": "^2.7.1",
