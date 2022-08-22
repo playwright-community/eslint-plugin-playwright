@@ -1,6 +1,14 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 
+export function getStringValue(node: ESTree.Node) {
+  return node.type === 'TemplateLiteral'
+    ? node.quasis[0].value.raw
+    : node.type === 'Literal' && typeof node.value === 'string'
+    ? node.value
+    : '';
+}
+
 export function getNodeName(node: ESTree.Node) {
   return node.type === 'Identifier' ? node.name : undefined;
 }

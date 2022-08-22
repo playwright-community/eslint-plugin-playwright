@@ -49,7 +49,7 @@ export default {
       category: 'Best Practices',
       description:
         'Require test cases and hooks to be inside a `test.describe` block',
-      recommended: true,
+      recommended: false,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/require-top-level-describe.md',
     },
     messages: {

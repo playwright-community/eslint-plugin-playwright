@@ -138,6 +138,8 @@ runRuleTester('max-nested-describe', rule, {
     'test.describe("describe tests", () => {});',
     'test.describe.only("describe focus tests", () => {});',
     'test.describe.serial.only("describe serial focus tests", () => {});',
+    'test.describe.serial.skip("describe serial focus tests", () => {});',
+    'test.describe.parallel.fixme("describe serial focus tests", () => {});',
     valid(
       `
     test('foo', function () {
