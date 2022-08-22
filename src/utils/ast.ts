@@ -69,12 +69,18 @@ const describeProperties = new Set([
   'skip',
   'fixme',
 ]);
+
 function isDescribeProperty(node: ESTree.Node) {
   return describeProperties.has(getNodeName(node) ?? '');
 }
 
 export function isDescribeCall(node: ESTree.Node): boolean {
   const inner = node.type === 'CallExpression' ? node.callee : node;
+
+  // Allow describe without test prefix
+  if (isIdentifier(inner, 'describe')) {
+    return true;
+  }
 
   if (inner.type !== 'MemberExpression') {
     return false;
