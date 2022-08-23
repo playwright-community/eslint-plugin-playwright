@@ -141,3 +141,14 @@ export function isExpectCall(node: ESTree.CallExpression) {
       expectSubCommands.has(node.callee.property.name))
   );
 }
+
+export function getMatchers(
+  node: ESTree.Node & Rule.NodeParentExtension,
+  chain: ESTree.Node[] = []
+): ESTree.Node[] {
+  if (node.parent.type === 'MemberExpression' && node.parent.object === node) {
+    return getMatchers(node.parent, [...chain, node.parent.property]);
+  }
+
+  return chain;
+}
