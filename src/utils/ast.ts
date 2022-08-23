@@ -1,3 +1,4 @@
+import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import { NodeWithParent, TypedNodeWithParent } from './types';
 
@@ -154,13 +155,4 @@ export function getMatchers(
   }
 
   return chain;
-}
-
-export function isPropertyAccessor(
-  node: ESTree.MemberExpression,
-  name: string
-) {
-  return (
-    isIdentifier(node.property, name) || isStringLiteral(node.property, name)
-  );
 }
