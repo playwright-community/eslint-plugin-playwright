@@ -1,4 +1,4 @@
-import { isObject, isCalleeProperty } from '../utils/ast';
+import { isCalleeObject, isCalleeProperty } from '../utils/ast';
 import * as ESTree from 'estree';
 import { Rule, AST } from 'eslint';
 
@@ -11,7 +11,7 @@ function getRange(
       ? node.parent.range![0]
       : callee.object.range![0];
 
-  return [start, callee.property.range![1]];
+  return [start, callee.range![1]];
 }
 
 export default {
@@ -19,7 +19,7 @@ export default {
     return {
       CallExpression(node) {
         if (
-          isObject(node, 'page') &&
+          isCalleeObject(node, 'page') &&
           (isCalleeProperty(node, '$') || isCalleeProperty(node, '$$'))
         ) {
           context.report({

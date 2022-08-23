@@ -1,11 +1,11 @@
 import { Rule } from 'eslint';
-import { isObject, isCalleeProperty } from '../utils/ast';
+import { isCalleeObject, isCalleeProperty } from '../utils/ast';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (isObject(node, 'page') && isCalleeProperty(node, 'pause')) {
+        if (isCalleeObject(node, 'page') && isCalleeProperty(node, 'pause')) {
           context.report({ messageId: 'noPagePause', node });
         }
       },

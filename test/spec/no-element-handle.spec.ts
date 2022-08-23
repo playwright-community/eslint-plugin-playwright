@@ -8,7 +8,7 @@ const invalid = (code: string, output: string) => ({
       messageId: 'noElementHandle',
       suggestions: [
         {
-          messageId: code.includes('page.$$')
+          messageId: code.includes('$$')
             ? 'replaceElementHandlesWithLocator'
             : 'replaceElementHandleWithLocator',
           output: wrapInTest(output),
@@ -25,6 +25,14 @@ runRuleTester('no-element-handle', rule, {
     // element handle as const
     invalid(
       'const handle = await page.$("text=Submit");',
+      'const handle = page.locator("text=Submit");'
+    ),
+    invalid(
+      'const handle = await page["$$"]("text=Submit");',
+      'const handle = page.locator("text=Submit");'
+    ),
+    invalid(
+      'const handle = await page[`$$`]("text=Submit");',
       'const handle = page.locator("text=Submit");'
     ),
 
@@ -53,6 +61,14 @@ runRuleTester('no-element-handle', rule, {
     invalid(
       'const handles = await page.$$("a")',
       'const handles = page.locator("a")'
+    ),
+    invalid(
+      'const handle = await page["$$"]("a");',
+      'const handle = page.locator("a");'
+    ),
+    invalid(
+      'const handle = await page[`$$`]("a");',
+      'const handle = page.locator("a");'
     ),
 
     // element handles as let
@@ -95,28 +111,15 @@ runRuleTester('no-element-handle', rule, {
     ),
   ],
   valid: [
-    // page locator
     valid('page.locator("a")'),
-
-    // page locator with action
     valid('await page.locator("a").click();'),
-
-    // const $
     valid('const $ = "text";'),
-
-    // $ as a method
     valid('$("a");'),
-
-    // this.$ as a method
     valid('this.$("a");'),
-
-    // internalPage.$ method
+    valid('this["$"]("a");'),
+    valid('this[`$`]("a");'),
     valid('internalPage.$("a");'),
-
-    // this.page.$$$ method
     valid('this.page.$$$("div");'),
-
-    // page.$$$ method
     valid('page.$$$("div");'),
   ],
 });
