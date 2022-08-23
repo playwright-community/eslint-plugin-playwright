@@ -12,6 +12,7 @@ import noUselessNot from './rules/no-useless-not';
 import validExpect from './rules/valid-expect';
 import preferLowercaseTitle from './rules/prefer-lowercase-title';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
+import noRestrictedMatchers from './rules/no-restricted-matchers';
 
 export = {
   configs: {
@@ -84,5 +85,6 @@ export = {
     'valid-expect': validExpect,
     'prefer-lowercase-title': preferLowercaseTitle,
     'require-top-level-describe': requireTopLevelDescribe,
+    'no-restricted-matchers': noRestrictedMatchers,
   },
 };
