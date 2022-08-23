@@ -34,13 +34,17 @@ export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
   return isLiteral(node, 'boolean', value);
 }
 
+export function getPropertyName(node: ESTree.MemberExpression) {
+  return node.property.type === 'Identifier'
+    ? node.property.name
+    : getStringValue(node.property);
+}
+
 export function isPropertyAccessor(
   node: ESTree.MemberExpression,
   name: string
 ) {
-  return (
-    isIdentifier(node.property, name) || getStringValue(node.property) === name
-  );
+  return getPropertyName(node) === name;
 }
 
 export function isCalleeObject(node: ESTree.CallExpression, name: string) {
@@ -93,7 +97,7 @@ export function isDescribeCall(node: ESTree.Node): boolean {
 
   return isIdentifier(inner.property, 'describe')
     ? true
-    : describeProperties.has(getNodeName(node) ?? '')
+    : describeProperties.has(getPropertyName(inner))
     ? isDescribeCall(inner.object)
     : false;
 }
