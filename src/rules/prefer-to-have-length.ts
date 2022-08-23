@@ -3,8 +3,7 @@ import {
   isExpectCall,
   getNodeName,
   getMatchers,
-  isIdentifier,
-  isStringLiteral,
+  isPropertyAccessor,
 } from '../utils/ast';
 
 const matchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
@@ -24,10 +23,7 @@ export default {
           !matcher ||
           !matchers.has(getNodeName(matcher) ?? '') ||
           argument?.type !== 'MemberExpression' ||
-          !(
-            isIdentifier(argument.property, 'length') ||
-            isStringLiteral(argument.property, 'length')
-          )
+          !isPropertyAccessor(argument, 'length')
         ) {
           return;
         }
