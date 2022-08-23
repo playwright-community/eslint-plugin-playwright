@@ -1,5 +1,6 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
+import { NodeWithParent, TypedNodeWithParent } from './types';
 
 export function getStringValue(node: ESTree.Node) {
   return node.type === 'TemplateLiteral'
@@ -15,34 +16,6 @@ export function getNodeName(node: ESTree.Node) {
 
 export function isIdentifier(node: ESTree.Node, name: string) {
   return getNodeName(node) === name;
-}
-
-export function isObject(node: ESTree.CallExpression, name: string) {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    isIdentifier(node.callee.object, name)
-  );
-}
-
-export function isCalleeProperty(node: ESTree.CallExpression, name: string) {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    isIdentifier(node.callee.property, name)
-  );
-}
-
-export function isTestIdentifier(node: ESTree.Node) {
-  return (
-    isIdentifier(node, 'test') ||
-    (node.type === 'MemberExpression' && isIdentifier(node.object, 'test'))
-  );
-}
-
-export function isObjectProperty(node: ESTree.MemberExpression, name: string) {
-  return (
-    node.object.type === 'MemberExpression' &&
-    isIdentifier(node.object.property, name)
-  );
 }
 
 function isLiteral<T>(node: ESTree.Node, type: string, value?: T) {
@@ -62,6 +35,47 @@ export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
   return isLiteral(node, 'boolean', value);
 }
 
+export function getPropertyName(node: ESTree.MemberExpression) {
+  return node.property.type === 'Identifier'
+    ? node.property.name
+    : getStringValue(node.property);
+}
+
+export function isPropertyAccessor(
+  node: ESTree.MemberExpression,
+  name: string
+) {
+  return getPropertyName(node) === name;
+}
+
+export function isCalleeObject(node: ESTree.CallExpression, name: string) {
+  return (
+    node.callee.type === 'MemberExpression' &&
+    isIdentifier(node.callee.object, name)
+  );
+}
+
+export function isCalleeProperty(node: ESTree.CallExpression, name: string) {
+  return (
+    node.callee.type === 'MemberExpression' &&
+    isPropertyAccessor(node.callee, name)
+  );
+}
+
+export function isTestIdentifier(node: ESTree.Node) {
+  return (
+    isIdentifier(node, 'test') ||
+    (node.type === 'MemberExpression' && isIdentifier(node.object, 'test'))
+  );
+}
+
+export function isObjectProperty(node: ESTree.MemberExpression, name: string) {
+  return (
+    node.object.type === 'MemberExpression' &&
+    isIdentifier(node.object.property, name)
+  );
+}
+
 const describeProperties = new Set([
   'parallel',
   'serial',
@@ -69,10 +83,6 @@ const describeProperties = new Set([
   'skip',
   'fixme',
 ]);
-
-function isDescribeProperty(node: ESTree.Node) {
-  return describeProperties.has(getNodeName(node) ?? '');
-}
 
 export function isDescribeCall(node: ESTree.Node): boolean {
   const inner = node.type === 'CallExpression' ? node.callee : node;
@@ -88,25 +98,19 @@ export function isDescribeCall(node: ESTree.Node): boolean {
 
   return isIdentifier(inner.property, 'describe')
     ? true
-    : isDescribeProperty(inner.property)
+    : describeProperties.has(getPropertyName(inner))
     ? isDescribeCall(inner.object)
     : false;
 }
 
-type NodeWithParent<T extends ESTree.Node['type']> = Extract<
-  ESTree.Node,
-  { type: T }
-> &
-  Rule.NodeParentExtension;
-
 export function findParent<T extends ESTree.Node['type']>(
-  node: ESTree.Node & Rule.NodeParentExtension,
+  node: NodeWithParent,
   type: T
-): NodeWithParent<T> | undefined {
+): TypedNodeWithParent<T> | undefined {
   if (!node.parent) return;
 
   return node.parent.type === type
-    ? (node.parent as unknown as NodeWithParent<T>)
+    ? (node.parent as unknown as TypedNodeWithParent<T>)
     : findParent(node.parent, type);
 }
 
@@ -151,13 +155,4 @@ export function getMatchers(
   }
 
   return chain;
-}
-
-export function isPropertyAccessor(
-  node: ESTree.MemberExpression,
-  name: string
-) {
-  return (
-    isIdentifier(node.property, name) || isStringLiteral(node.property, name)
-  );
 }

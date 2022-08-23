@@ -1,12 +1,12 @@
 import { Rule } from 'eslint';
-import { isObject, isCalleeProperty } from '../utils/ast';
+import { isCalleeObject, isCalleeProperty } from '../utils/ast';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
         if (
-          isObject(node, 'page') &&
+          isCalleeObject(node, 'page') &&
           isCalleeProperty(node, 'waitForTimeout')
         ) {
           context.report({

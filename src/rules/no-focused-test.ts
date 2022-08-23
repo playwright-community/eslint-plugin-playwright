@@ -1,34 +1,28 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { isIdentifier, isTestIdentifier } from '../utils/ast';
-
-function isTestGroup(node: ESTree.MemberExpression) {
-  const testGroups = new Set(['describe', 'parallel', 'serial']);
-
-  return (
-    node.object.type === 'MemberExpression' &&
-    node.object.property.type === 'Identifier' &&
-    testGroups.has(node.object.property.name)
-  );
-}
+import { isDescribeCall, isPropertyAccessor, isTest } from '../utils/ast';
 
 export default {
   create(context) {
     return {
-      MemberExpression(node) {
+      CallExpression(node) {
         if (
-          (isTestIdentifier(node) || isTestGroup(node)) &&
-          isIdentifier(node.property, 'only')
+          (isTest(node) || isDescribeCall(node)) &&
+          node.callee.type === 'MemberExpression' &&
+          isPropertyAccessor(node.callee, 'only')
         ) {
-          const range = node.property.range!;
+          const { callee } = node;
 
           context.report({
             messageId: 'noFocusedTest',
             suggest: [
               {
-                messageId: 'removeFocusedTestAnnotation',
+                messageId: 'suggestRemoveOnly',
                 // - 1 to remove the `.only` annotation with dot notation
-                fix: (fixer) => fixer.removeRange([range[0] - 1, range[1]]),
+                fix: (fixer) =>
+                  fixer.removeRange([
+                    callee.property.range![0] - 1,
+                    callee.range![1],
+                  ]),
               },
             ],
             node,
@@ -46,8 +40,8 @@ export default {
     },
     hasSuggestions: true,
     messages: {
-      noFocusedTest: 'Unexpected use of .only() annotation.',
-      removeFocusedTestAnnotation: 'Remove .only() annotation',
+      noFocusedTest: 'Unexpected focused test.',
+      suggestRemoveOnly: 'Remove .only() annotation.',
     },
     type: 'problem',
   },

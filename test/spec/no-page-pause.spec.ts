@@ -9,9 +9,15 @@ const invalid = (code: string) => ({
 const valid = wrapInTest;
 
 runRuleTester('no-page-pause', rule, {
-  invalid: [invalid('await page.pause()')],
+  invalid: [
+    invalid('await page.pause()'),
+    invalid('await page["pause"]()'),
+    invalid('await page[`pause`]()'),
+  ],
   valid: [
     valid('await page.click()'),
+    valid('await page["hover"]()'),
+    valid('await page[`check`]()'),
     valid('await expect(page).toBePaused()'),
   ],
 });
