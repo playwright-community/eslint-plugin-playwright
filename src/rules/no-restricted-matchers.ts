@@ -1,18 +1,5 @@
 import { Rule } from 'eslint';
-import { getNodeName, isExpectCall } from '../utils/ast';
-import * as ESTree from 'estree';
-import { NodeWithParent } from '../utils/types';
-
-function getMatchers(
-  node: NodeWithParent,
-  chain: ESTree.Node[] = []
-): ESTree.Node[] {
-  if (node.parent.type === 'MemberExpression' && node.parent.object === node) {
-    return getMatchers(node.parent, [...chain, node.parent.property]);
-  }
-
-  return chain;
-}
+import { getMatchers, getNodeName, isExpectCall } from '../utils/ast';
 
 export default {
   create(context) {
