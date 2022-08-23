@@ -8,11 +8,12 @@ import noWaitForTimeout from './rules/no-wait-for-timeout';
 import noForceOption from './rules/no-force-option';
 import maxNestedDescribe from './rules/max-nested-describe';
 import noConditionalInTest from './rules/no-conditional-in-test';
-import noUselessNot from './rules/no-useless-not';
-import validExpect from './rules/valid-expect';
-import preferLowercaseTitle from './rules/prefer-lowercase-title';
-import requireTopLevelDescribe from './rules/require-top-level-describe';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
+import noUselessNot from './rules/no-useless-not';
+import preferLowercaseTitle from './rules/prefer-lowercase-title';
+import preferToHaveLength from './rules/prefer-to-have-length';
+import requireTopLevelDescribe from './rules/require-top-level-describe';
+import validExpect from './rules/valid-expect';
 
 export = {
   configs: {
@@ -82,9 +83,10 @@ export = {
     'max-nested-describe': maxNestedDescribe,
     'no-conditional-in-test': noConditionalInTest,
     'no-useless-not': noUselessNot,
-    'valid-expect': validExpect,
-    'prefer-lowercase-title': preferLowercaseTitle,
-    'require-top-level-describe': requireTopLevelDescribe,
     'no-restricted-matchers': noRestrictedMatchers,
+    'prefer-lowercase-title': preferLowercaseTitle,
+    'prefer-to-have-length': preferToHaveLength,
+    'require-top-level-describe': requireTopLevelDescribe,
+    'valid-expect': validExpect,
   },
 };
