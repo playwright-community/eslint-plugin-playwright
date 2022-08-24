@@ -42,8 +42,8 @@ runRuleTester('missing-playwright-await', rule, {
     ),
     invalid(
       'expect',
-      'expect(page).not.toBeCustomThing(true)',
-      'await expect(page).not.toBeCustomThing(true)',
+      'expect(page)["not"][`toBeCustomThing`](true)',
+      'await expect(page)["not"][`toBeCustomThing`](true)',
       options
     ),
 
@@ -55,8 +55,13 @@ runRuleTester('missing-playwright-await', rule, {
     ),
     invalid(
       'expect',
-      'expect.soft(page).toBeChecked()',
-      'await expect.soft(page).toBeChecked()'
+      'expect["soft"](page)["toBeChecked"]()',
+      'await expect["soft"](page)["toBeChecked"]()'
+    ),
+    invalid(
+      'expect',
+      'expect[`soft`](page)[`toBeChecked`]()',
+      'await expect[`soft`](page)[`toBeChecked`]()'
     ),
 
     // test.step
@@ -64,6 +69,11 @@ runRuleTester('missing-playwright-await', rule, {
       'testStep',
       "test.step('foo', async () => {})",
       "await test.step('foo', async () => {})"
+    ),
+    invalid(
+      'testStep',
+      "test['step']('foo', async () => {})",
+      "await test['step']('foo', async () => {})"
     ),
   ],
   valid: [

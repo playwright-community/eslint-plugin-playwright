@@ -12,12 +12,8 @@ export function getStringValue(node: ESTree.Node) {
     : '';
 }
 
-export function getNodeName(node: ESTree.Node) {
-  return node.type === 'Identifier' ? node.name : undefined;
-}
-
-export function isIdentifier(node: ESTree.Node, name: string) {
-  return getNodeName(node) === name;
+function isIdentifier(node: ESTree.Node, name: string) {
+  return node.type === 'Identifier' && node.name === name;
 }
 
 function isLiteral<T>(node: ESTree.Node, type: string, value?: T) {
@@ -62,13 +58,6 @@ export function isTestIdentifier(node: ESTree.Node) {
   return (
     isIdentifier(node, 'test') ||
     (node.type === 'MemberExpression' && isIdentifier(node.object, 'test'))
-  );
-}
-
-export function isObjectProperty(node: ESTree.MemberExpression, name: string) {
-  return (
-    node.object.type === 'MemberExpression' &&
-    isIdentifier(node.object.property, name)
   );
 }
 
