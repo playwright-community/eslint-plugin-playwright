@@ -1,58 +1,35 @@
-import { AST, Rule } from 'eslint';
-import * as ESTree from 'estree';
+import { Rule } from 'eslint';
 import {
+  isTest,
+  isDescribeCall,
+  isPropertyAccessor,
   isTestIdentifier,
-  isObjectProperty,
-  isStringLiteral,
-  isBooleanLiteral,
-  isIdentifier,
 } from '../utils/ast';
-
-/**
- * This function returns needed range to remove skip annotation.
- *
- * To cover the standalone cases:
- * 1. test.skip() => when there's no arguments
- * 2. test.skip(browserName === 'firefox', 'Working on it') => when there's first argument is a binary expression and the second argument is a string literal
- * 3. test.skip(true, 'Working on it') => when there's first argument is a boolean literal and the second argument is a string literal
- *
- * So, if it's standalone skip then we need to remove the whole line
- *
- * Otherwise we need to remove the range of `.skip` annotation - 1 (dot notation).
- */
-function getSkipRange(
-  node: ESTree.MemberExpression & Rule.NodeParentExtension,
-  parent: ESTree.CallExpression & Rule.NodeParentExtension
-): AST.Range {
-  const [first, second] = parent.arguments;
-
-  const isStandaloneSkip =
-    !parent.arguments.length ||
-    ((first.type === 'BinaryExpression' || isBooleanLiteral(first)) &&
-      isStringLiteral(second));
-
-  return isStandaloneSkip
-    ? parent.parent.range!
-    : [node.property.range![0] - 1, node.property.range![1]];
-}
 
 export default {
   create(context) {
     return {
-      MemberExpression(node) {
-        const parent = node.parent;
+      CallExpression(node) {
+        const { callee } = node;
 
         if (
-          (isTestIdentifier(node) || isObjectProperty(node, 'describe')) &&
-          isIdentifier(node.property, 'skip') &&
-          parent.type === 'CallExpression'
+          (isTestIdentifier(callee) || isDescribeCall(node)) &&
+          callee.type === 'MemberExpression' &&
+          isPropertyAccessor(callee, 'skip')
         ) {
           context.report({
             messageId: 'noSkippedTest',
             suggest: [
               {
                 messageId: 'removeSkippedTestAnnotation',
-                fix: (fixer) => fixer.removeRange(getSkipRange(node, parent)),
+                fix: (fixer) => {
+                  return isTest(node) || isDescribeCall(node)
+                    ? fixer.removeRange([
+                        callee.property.range![0] - 1,
+                        callee.range![1],
+                      ])
+                    : fixer.remove(node.parent);
+                },
               },
             ],
             node,

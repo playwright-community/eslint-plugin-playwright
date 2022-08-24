@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 import { Rule } from 'eslint';
-import { getNodeName } from '../utils/ast';
+import { getStringValue } from '../utils/ast';
 
 type MemberExpression = ESTree.MemberExpression & Rule.NodeParentExtension;
 
@@ -8,9 +8,9 @@ function getMemberExpressionNode(
   node: MemberExpression,
   matchers: Set<string>
 ) {
-  const propertyName = getNodeName(node.property);
+  const propertyName = getStringValue(node.property);
 
-  if (getNodeName(node.object) === 'test') {
+  if (getStringValue(node.object) === 'test') {
     return propertyName === 'step' ? { node, type: 'testStep' } : undefined;
   }
 

@@ -11,6 +11,8 @@ runRuleTester('no-restricted-matchers', rule, {
     'expect.soft(a)',
     'expect.soft(a).toHaveText()',
     'expect.poll(() => true).toThrow()',
+    'expect["soft"](a).toHaveText()',
+    'expect[`poll`](() => true).toThrow()',
     {
       code: 'expect(a).toBe(b)',
       options: [{ 'not.toBe': null }],
@@ -25,6 +27,14 @@ runRuleTester('no-restricted-matchers', rule, {
     },
     {
       code: 'expect.poll(() => true).toBe(b)',
+      options: [{ 'not.toBe': null }],
+    },
+    {
+      code: 'expect["soft"](a)["toBe"](b)',
+      options: [{ 'not.toBe': null }],
+    },
+    {
+      code: 'expect[`poll`](() => true)[`toBe`](b)',
       options: [{ 'not.toBe': null }],
     },
   ],
@@ -54,13 +64,13 @@ runRuleTester('no-restricted-matchers', rule, {
       ],
     },
     {
-      code: 'expect.poll(() => a).toBe(b)',
+      code: 'expect["poll"](() => a)["toBe"](b)',
       options: [{ toBe: null }],
       errors: [
         {
           messageId: 'restricted',
           data: { message: '', chain: 'toBe' },
-          column: 22,
+          column: 25,
           line: 1,
         },
       ],
@@ -91,13 +101,13 @@ runRuleTester('no-restricted-matchers', rule, {
       ],
     },
     {
-      code: 'expect.soft(a).not.toBe()',
+      code: 'expect[`soft`](a)[`not`]["toBe"]()',
       options: [{ not: null }],
       errors: [
         {
           messageId: 'restricted',
           data: { message: '', chain: 'not' },
-          column: 16,
+          column: 19,
           line: 1,
         },
       ],

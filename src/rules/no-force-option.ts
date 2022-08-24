@@ -1,17 +1,18 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import { isBooleanLiteral, isIdentifier } from '../utils/ast';
+import { getStringValue, isBooleanLiteral } from '../utils/ast';
 
 function isForceOptionEnabled(node: ESTree.CallExpression) {
-  return node.arguments.some(
-    (argument) =>
-      argument.type === 'ObjectExpression' &&
-      argument.properties.some(
-        (property) =>
-          property.type === 'Property' &&
-          isIdentifier(property.key, 'force') &&
-          isBooleanLiteral(property.value, true)
-      )
+  const arg = node.arguments[node.arguments.length - 1];
+
+  return (
+    arg?.type === 'ObjectExpression' &&
+    arg.properties.some(
+      (property) =>
+        property.type === 'Property' &&
+        getStringValue(property.key) === 'force' &&
+        isBooleanLiteral(property.value, true)
+    )
   );
 }
 
@@ -35,8 +36,7 @@ export default {
     return {
       MemberExpression(node) {
         if (
-          node.property.type === 'Identifier' &&
-          methodsWithForceOption.has(node.property.name) &&
+          methodsWithForceOption.has(getStringValue(node.property)) &&
           node.parent.type === 'CallExpression' &&
           isForceOptionEnabled(node.parent)
         ) {

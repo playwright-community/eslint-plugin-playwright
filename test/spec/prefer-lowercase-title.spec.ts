@@ -23,12 +23,13 @@ runRuleTester('prefer-lowercase-title', rule, {
     "test.fixme('foo', () => {})",
     "test.skip('foo', () => {})",
     "test.only('foo Bar', () => {})",
-    'test.fixme(`foo`, () => {})',
+    'test["fixme"]("foo", () => {})',
+    'test["skip"](`foo`, () => {})',
     'test.describe()',
     "test.describe('foo Bar', () => {})",
     'test.describe(`foo`, () => {})',
-    'test.describe("<Foo/>", () => {})',
-    'test.describe("123 foo", () => {})',
+    'test["describe"]("<Foo/>", () => {})',
+    'test[`describe`]("123 foo", () => {})',
     'test.describe("42", () => {})',
     'test.describe(``)',
     'test.describe("")',
@@ -42,8 +43,8 @@ runRuleTester('prefer-lowercase-title', rule, {
     "test.describe.parallel.fixme('foo', () => {})",
     "test.describe.parallel.only('foo Bar Baz', () => {})",
     "test.describe.serial.skip('foo', () => {})",
-    "test.describe.serial.fixme('foo', () => {})",
-    "test.describe.serial.only('foo', () => {})",
+    "test.describe[`serial`].fixme('foo', () => {})",
+    "test.describe['serial'].only('foo', () => {})",
   ],
   invalid: [
     invalid("test('Foo',  () => {})", "test('foo',  () => {})", 'test'),
@@ -59,13 +60,13 @@ runRuleTester('prefer-lowercase-title', rule, {
       'test'
     ),
     invalid(
-      "test.fixme('Foo',  () => {})",
-      "test.fixme('foo',  () => {})",
+      "test['fixme']('Foo',  () => {})",
+      "test['fixme']('foo',  () => {})",
       'test'
     ),
     invalid(
-      'test.only(`Foo`,  () => {})',
-      'test.only(`foo`,  () => {})',
+      'test[`only`](`Foo`,  () => {})',
+      'test[`only`](`foo`,  () => {})',
       'test'
     ),
     invalid(
@@ -74,8 +75,8 @@ runRuleTester('prefer-lowercase-title', rule, {
       'test.describe'
     ),
     invalid(
-      'test.describe(`Foo Bar`,  () => {})',
-      'test.describe(`foo Bar`,  () => {})',
+      'test[`describe`](`Foo Bar`,  () => {})',
+      'test[`describe`](`foo Bar`,  () => {})',
       'test.describe'
     ),
     invalid(
@@ -89,8 +90,8 @@ runRuleTester('prefer-lowercase-title', rule, {
       'test.describe'
     ),
     invalid(
-      'test.describe.only("Foo",  () => {})',
-      'test.describe.only("foo",  () => {})',
+      'test[`describe`]["only"]("Foo",  () => {})',
+      'test[`describe`]["only"]("foo",  () => {})',
       'test.describe'
     ),
     invalid(

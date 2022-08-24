@@ -1,12 +1,16 @@
 import { Rule } from 'eslint';
+import * as ESTree from 'estree';
 import {
   isExpectCall,
-  getNodeName,
   getMatchers,
   isPropertyAccessor,
+  getStringValue,
 } from '../utils/ast';
 
 const matchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
+
+const getRangeOffset = (node: ESTree.Node) =>
+  node.type === 'Identifier' ? 0 : 1;
 
 export default {
   create(context) {
@@ -21,7 +25,7 @@ export default {
 
         if (
           !matcher ||
-          !matchers.has(getNodeName(matcher) ?? '') ||
+          !matchers.has(getStringValue(matcher) ?? '') ||
           argument?.type !== 'MemberExpression' ||
           !isPropertyAccessor(argument, 'length')
         ) {
@@ -37,7 +41,13 @@ export default {
                 argument.range![1],
               ]),
               // replace the current matcher with "toHaveLength"
-              fixer.replaceText(matcher, 'toHaveLength'),
+              fixer.replaceTextRange(
+                [
+                  matcher.range![0] + getRangeOffset(matcher),
+                  matcher.range![1] - getRangeOffset(matcher),
+                ],
+                'toHaveLength'
+              ),
             ];
           },
           messageId: 'useToHaveLength',

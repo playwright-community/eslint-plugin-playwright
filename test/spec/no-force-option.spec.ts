@@ -11,17 +11,19 @@ const valid = wrapInTest;
 runRuleTester('no-force-option', rule, {
   invalid: [
     invalid('await page.locator("check").check({ force: true })'),
-    invalid('await page.locator("check").uncheck({ force: true })'),
-    invalid('await page.locator("button").click({ force: true })'),
+    invalid('await page.locator("check").uncheck({ ["force"]: true })'),
+    invalid('await page.locator("button").click({ [`force`]: true })'),
     invalid(
-      'const button = page.locator("button"); await button.click({ force: true })'
+      'const button = page["locator"]("button"); await button.click({ force: true })'
     ),
     invalid(
-      'await page.locator("button").locator("btn").click({ force: true })'
+      'await page[`locator`]("button").locator("btn").click({ force: true })'
     ),
     invalid('await page.locator("button").dblclick({ force: true })'),
     invalid('await page.locator("input").dragTo({ force: true })'),
     invalid('await page.locator("input").fill("test", { force: true })'),
+    invalid('await page[`locator`]("input").fill("test", { ["force"]: true })'),
+    invalid('await page["locator"]("input").fill("test", { [`force`]: true })'),
     invalid('await page.locator("elm").hover({ force: true })'),
     invalid(
       'await page.locator("select").selectOption({ label: "Blue" }, { force: true })'
@@ -47,6 +49,7 @@ runRuleTester('no-force-option', rule, {
     valid("await page.locator('checkbox').setChecked(true)"),
     valid("await page.locator('button').tap()"),
     valid('doSomething({ force: true })'),
-    valid('await doSomething({ force: true })'),
+    valid('await doSomething({ ["force"]: true })'),
+    valid('await doSomething({ [`force`]: true })'),
   ],
 });

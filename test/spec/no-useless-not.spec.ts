@@ -18,6 +18,26 @@ runRuleTester('no-useless-not', rule, {
     invalid('toBeHidden', 'toBeVisible'),
     invalid('toBeEnabled', 'toBeDisabled'),
     invalid('toBeDisabled', 'toBeEnabled'),
+    {
+      code: 'expect(locator)["not"]["toBeHidden"]()',
+      output: 'expect(locator)["toBeVisible"]()',
+      errors: [{ messageId: 'noUselessNot' }],
+    },
+    {
+      code: 'expect(locator)[`not`][`toBeHidden`]()',
+      output: 'expect(locator)[`toBeVisible`]()',
+      errors: [{ messageId: 'noUselessNot' }],
+    },
+    {
+      code: 'expect.soft(locator).not.toBeVisible()',
+      output: 'expect.soft(locator).toBeHidden()',
+      errors: [{ messageId: 'noUselessNot' }],
+    },
+    {
+      code: 'expect.poll(() => locator)[`not`][`toBeHidden`]()',
+      output: 'expect.poll(() => locator)[`toBeVisible`]()',
+      errors: [{ messageId: 'noUselessNot' }],
+    },
     // Incomplete call expression
     {
       code: 'expect(locator).not.toBeHidden',
@@ -30,6 +50,10 @@ runRuleTester('no-useless-not', rule, {
     'expect(locator).toBeHidden()',
     'expect(locator).toBeEnabled()',
     'expect(locator).toBeDisabled()',
+    'expect.soft(locator).toBeEnabled()',
+    'expect.poll(() => locator).toBeDisabled()',
+    'expect(locator)[`toBeEnabled`]()',
+    'expect(locator)["toBeDisabled"]()',
     // Incomplete call expression
     'expect(locator).toBeVisible',
     'expect(locator).toBeEnabled',

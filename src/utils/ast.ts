@@ -3,19 +3,17 @@ import * as ESTree from 'estree';
 import { NodeWithParent, TypedNodeWithParent } from './types';
 
 export function getStringValue(node: ESTree.Node) {
-  return node.type === 'TemplateLiteral'
+  return node.type === 'Identifier'
+    ? node.name
+    : node.type === 'TemplateLiteral'
     ? node.quasis[0].value.raw
     : node.type === 'Literal' && typeof node.value === 'string'
     ? node.value
     : '';
 }
 
-export function getNodeName(node: ESTree.Node) {
-  return node.type === 'Identifier' ? node.name : undefined;
-}
-
-export function isIdentifier(node: ESTree.Node, name: string) {
-  return getNodeName(node) === name;
+function isIdentifier(node: ESTree.Node, name: string) {
+  return node.type === 'Identifier' && node.name === name;
 }
 
 function isLiteral<T>(node: ESTree.Node, type: string, value?: T) {
@@ -35,17 +33,11 @@ export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
   return isLiteral(node, 'boolean', value);
 }
 
-export function getPropertyName(node: ESTree.MemberExpression) {
-  return node.property.type === 'Identifier'
-    ? node.property.name
-    : getStringValue(node.property);
-}
-
 export function isPropertyAccessor(
   node: ESTree.MemberExpression,
   name: string
 ) {
-  return getPropertyName(node) === name;
+  return getStringValue(node.property) === name;
 }
 
 export function isCalleeObject(node: ESTree.CallExpression, name: string) {
@@ -69,13 +61,6 @@ export function isTestIdentifier(node: ESTree.Node) {
   );
 }
 
-export function isObjectProperty(node: ESTree.MemberExpression, name: string) {
-  return (
-    node.object.type === 'MemberExpression' &&
-    isIdentifier(node.object.property, name)
-  );
-}
-
 const describeProperties = new Set([
   'parallel',
   'serial',
@@ -96,9 +81,9 @@ export function isDescribeCall(node: ESTree.Node): boolean {
     return false;
   }
 
-  return isIdentifier(inner.property, 'describe')
+  return isPropertyAccessor(inner, 'describe')
     ? true
-    : describeProperties.has(getPropertyName(inner))
+    : describeProperties.has(getStringValue(inner.property))
     ? isDescribeCall(inner.object)
     : false;
 }
@@ -130,8 +115,7 @@ export function isTestHook(node: ESTree.CallExpression) {
   return (
     node.callee.type === 'MemberExpression' &&
     isIdentifier(node.callee.object, 'test') &&
-    node.callee.property.type === 'Identifier' &&
-    testHooks.has(node.callee.property.name)
+    testHooks.has(getStringValue(node.callee.property))
   );
 }
 
@@ -141,8 +125,7 @@ export function isExpectCall(node: ESTree.CallExpression) {
     isIdentifier(node.callee, 'expect') ||
     (node.callee.type === 'MemberExpression' &&
       isIdentifier(node.callee.object, 'expect') &&
-      node.callee.property.type === 'Identifier' &&
-      expectSubCommands.has(node.callee.property.name))
+      expectSubCommands.has(getStringValue(node.callee.property)))
   );
 }
 

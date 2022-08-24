@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { isExpectCall, isIdentifier } from '../utils/ast';
+import { isExpectCall, isPropertyAccessor } from '../utils/ast';
 import { NodeWithParent } from '../utils/types';
 import * as ESTree from 'estree';
 import { getAmountData } from '../utils/misc';
@@ -10,7 +10,7 @@ function isMatcherFound(node: NodeWithParent) {
   }
 
   if (
-    isIdentifier(node.parent.property, 'not') &&
+    isPropertyAccessor(node.parent, 'not') &&
     node.parent.parent.type !== 'MemberExpression'
   ) {
     return { found: false, node: node.parent };

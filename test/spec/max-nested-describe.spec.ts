@@ -49,10 +49,10 @@ runRuleTester('max-nested-describe', rule, {
       `
     test.describe('foo', () => {
       test.describe('bar', () => {
-       test.describe('baz', () => {
+       test["describe"]('baz', () => {
         test.describe('baz1', () => {
           test.describe('baz2', () => {
-            test.describe('baz3', () => {
+            test[\`describe\`]('baz3', () => {
               test('should get something', () => {
                 expect(getSomething()).toBe('Something');
               });
