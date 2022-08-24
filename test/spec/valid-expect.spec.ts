@@ -16,7 +16,9 @@ runRuleTester('valid-expect', rule, {
     'expect([1, 2, 3]).toEqual([1, 2, 3])',
     'expect(1, "1 !== 2").toBe(2)',
     'expect.soft(1, "1 !== 2").toBe(2)',
-    'expect.poll(() => 1, { message: "1 !== 2" }).toBe(2)',
+    'expect["soft"](1, "1 !== 2")["toBe"](2)',
+    'expect[`poll`](() => 1, { message: "1 !== 2" })[`toBe`](2)',
+    'expect[`poll`](() => 1, { message: "1 !== 2" })[`toBe`](2)',
     // minArgs
     {
       code: 'expect(1, "1 !== 2").toBe(2)',
@@ -42,11 +44,14 @@ runRuleTester('valid-expect', rule, {
     invalid('expect(foo).not', 'matcherNotFound'),
     invalid('expect.soft(foo)', 'matcherNotFound'),
     invalid('expect.soft(foo).not', 'matcherNotFound'),
+    invalid('expect["soft"](foo)["not"]', 'matcherNotFound'),
     invalid('expect.poll(foo)', 'matcherNotFound'),
     invalid('expect.poll(foo).not', 'matcherNotFound'),
+    invalid('expect[`poll`](foo)[`not`]', 'matcherNotFound'),
     // Matcher not called
     invalid('expect(foo).toBe', 'matcherNotCalled'),
     invalid('expect(foo).not.toBe', 'matcherNotCalled'),
+    invalid('expect(foo)["not"].toBe', 'matcherNotCalled'),
     invalid('something(expect(foo).not.toBe)', 'matcherNotCalled'),
     invalid('expect.soft(foo).toBe', 'matcherNotCalled'),
     invalid('expect.soft(foo).not.toBe', 'matcherNotCalled'),
@@ -54,6 +59,11 @@ runRuleTester('valid-expect', rule, {
     invalid('expect.poll(() => foo).toBe', 'matcherNotCalled'),
     invalid('expect.poll(() => foo).not.toBe', 'matcherNotCalled'),
     invalid('something(expect.poll(() => foo).not.toBe)', 'matcherNotCalled'),
+    invalid('expect["poll"](() => foo)["not"][`toBe`]', 'matcherNotCalled'),
+    invalid(
+      'something(expect["poll"](() => foo)["not"][`toBe`])',
+      'matcherNotCalled'
+    ),
     // minArgs
     {
       code: 'expect().toBe(true)',

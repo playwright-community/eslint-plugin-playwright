@@ -51,6 +51,8 @@ runRuleTester('require-top-level-describe', rule, {
     invalid('test.beforeEach(() => {})', 'unexpectedHook'),
     invalid('test.afterAll(() => {})', 'unexpectedHook'),
     invalid('test.afterEach(() => {})', 'unexpectedHook'),
+    invalid('test["afterEach"](() => {})', 'unexpectedHook'),
+    invalid('test[`afterEach`](() => {})', 'unexpectedHook'),
     {
       code: dedent`
         test.describe("suite", () => {});
@@ -63,6 +65,8 @@ runRuleTester('require-top-level-describe', rule, {
     invalid('test.skip("foo", () => {})', 'unexpectedTest'),
     invalid('test.fixme("foo", () => {})', 'unexpectedTest'),
     invalid('test.only("foo", () => {})', 'unexpectedTest'),
+    invalid('test["only"]("foo", () => {})', 'unexpectedTest'),
+    invalid('test[`only`]("foo", () => {})', 'unexpectedTest'),
     {
       code: dedent`
         test("foo", () => {})
@@ -96,13 +100,13 @@ runRuleTester('require-top-level-describe', rule, {
           test.describe('two (nested)', () => {});
         });
 
-        test.describe.only('two', () => {
+        test["describe"].only('two', () => {
           test.describe('one (nested)', () => {});
           test.describe.serial.only('two (nested)', () => {});
           test.describe.fixme('three (nested)', () => {});
         });
 
-        test.describe.fixme('three', () => {
+        test[\`describe\`][\`fixme\`]('three', () => {
           test.describe('one (nested)', () => {});
           test.describe.serial('two (nested)', () => {});
           test.describe.parallel('three (nested)', () => {});

@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { getMatchers, getNodeName, isExpectCall } from '../utils/ast';
+import { getMatchers, getStringValue, isExpectCall } from '../utils/ast';
 
 export default {
   create(context) {
@@ -17,7 +17,7 @@ export default {
         const permutations = matchers.map((_, i) => matchers.slice(0, i + 1));
 
         for (const permutation of permutations) {
-          const chain = permutation.map(getNodeName).join('.');
+          const chain = permutation.map(getStringValue).join('.');
 
           if (chain in restrictedChains) {
             const message = restrictedChains[chain];

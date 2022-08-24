@@ -22,8 +22,8 @@ runRuleTester('no-focused-test', rule, {
       'test.describe("skip this describe", () => {});'
     ),
     invalid(
-      'test.describe[`only`]("skip this describe", () => {});',
-      'test.describe("skip this describe", () => {});'
+      'test["describe"][`only`]("skip this describe", () => {});',
+      'test["describe"]("skip this describe", () => {});'
     ),
     invalid(
       'test.describe.parallel.only("skip this describe", () => {});',

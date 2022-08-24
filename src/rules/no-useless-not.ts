@@ -1,5 +1,6 @@
 import { Rule } from 'eslint';
-import { getNodeName, isIdentifier } from '../utils/ast';
+import * as ESTree from 'estree';
+import { getStringValue, isExpectCall, isPropertyAccessor } from '../utils/ast';
 
 const matcherMap = {
   toBeVisible: 'toBeHidden',
@@ -8,6 +9,9 @@ const matcherMap = {
   toBeDisabled: 'toBeEnabled',
 };
 
+const getRangeOffset = (node: ESTree.Node) =>
+  node.type === 'Identifier' ? 0 : 1;
+
 export default {
   create(context) {
     return {
@@ -15,20 +19,29 @@ export default {
         if (
           node.object.type === 'MemberExpression' &&
           node.object.object.type === 'CallExpression' &&
-          isIdentifier(node.object.object.callee, 'expect') &&
-          isIdentifier(node.object.property, 'not')
+          isExpectCall(node.object.object) &&
+          isPropertyAccessor(node.object, 'not')
         ) {
-          const matcher = getNodeName(node.property) as
+          const matcher = getStringValue(node.property) as
             | keyof typeof matcherMap
             | undefined;
 
           if (matcher && matcher in matcherMap) {
-            const range = node.object.property.range!;
+            const { property } = node.object;
 
             context.report({
               fix: (fixer) => [
-                fixer.removeRange([range[0], range[1] + 1]),
-                fixer.replaceText(node.property, matcherMap[matcher]),
+                fixer.removeRange([
+                  property.range![0] - getRangeOffset(property),
+                  property.range![1] + 1,
+                ]),
+                fixer.replaceTextRange(
+                  [
+                    node.property.range![0] + getRangeOffset(node.property),
+                    node.property.range![1] - getRangeOffset(node.property),
+                  ],
+                  matcherMap[matcher]
+                ),
               ],
               messageId: 'noUselessNot',
               node: node,
