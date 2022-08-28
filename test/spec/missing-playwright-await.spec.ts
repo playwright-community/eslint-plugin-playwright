@@ -64,6 +64,23 @@ runRuleTester('missing-playwright-await', rule, {
       'await expect[`soft`](page)[`toBeChecked`]()'
     ),
 
+    // expect.poll
+    invalid(
+      'expect',
+      'expect.poll(() => foo).toBe(true)',
+      'await expect.poll(() => foo).toBe(true)'
+    ),
+    invalid(
+      'expect',
+      'expect["poll"](() => foo)["toContain"]("bar")',
+      'await expect["poll"](() => foo)["toContain"]("bar")'
+    ),
+    invalid(
+      'expect',
+      'expect[`poll`](() => foo)[`toBeTruthy`]()',
+      'await expect[`poll`](() => foo)[`toBeTruthy`]()'
+    ),
+
     // test.step
     invalid(
       'testStep',
@@ -75,8 +92,8 @@ runRuleTester('missing-playwright-await', rule, {
       "test['step']('foo', async () => {})",
       "await test['step']('foo', async () => {})"
     ),
-  ],
-  valid: [
+  ].slice(0, 3),
+  valid: [] || [
     valid('await expect(page).toBeEditable'),
     valid('await expect(page).toEqualTitle("text")'),
     valid('await expect(page).not.toHaveText("text")'),
