@@ -2,7 +2,7 @@ import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import {
   isExpectCall,
-  getMatchers,
+  getMatcherChain,
   isPropertyAccessor,
   getStringValue,
 } from '../utils/ast';
@@ -21,7 +21,7 @@ export default {
         }
 
         const [argument] = node.arguments;
-        const [matcher] = getMatchers(node).slice(-1);
+        const [matcher] = getMatcherChain(node).slice(-1);
 
         if (
           !matcher ||

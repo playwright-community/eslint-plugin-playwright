@@ -129,12 +129,12 @@ export function isExpectCall(node: ESTree.CallExpression) {
   );
 }
 
-export function getMatchers(
+export function getMatcherChain(
   node: ESTree.Node & Rule.NodeParentExtension,
   chain: ESTree.Node[] = []
 ): ESTree.Node[] {
   if (node.parent.type === 'MemberExpression' && node.parent.object === node) {
-    return getMatchers(node.parent, [...chain, node.parent.property]);
+    return getMatcherChain(node.parent, [...chain, node.parent.property]);
   }
 
   return chain;

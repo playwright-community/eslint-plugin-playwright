@@ -14,6 +14,7 @@ import preferLowercaseTitle from './rules/prefer-lowercase-title';
 import preferToHaveLength from './rules/prefer-to-have-length';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validExpect from './rules/valid-expect';
+import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
 
 export = {
   configs: {
@@ -35,6 +36,7 @@ export = {
         'playwright/max-nested-describe': 'warn',
         'playwright/no-conditional-in-test': 'warn',
         'playwright/no-useless-not': 'warn',
+        'playwright/prefer-web-first-assertions': 'error',
         'playwright/valid-expect': 'error',
       },
     },
@@ -86,6 +88,7 @@ export = {
     'no-restricted-matchers': noRestrictedMatchers,
     'prefer-lowercase-title': preferLowercaseTitle,
     'prefer-to-have-length': preferToHaveLength,
+    'prefer-web-first-assertions': preferWebFirstAssertions,
     'require-top-level-describe': requireTopLevelDescribe,
     'valid-expect': validExpect,
   },

@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { getMatchers, getStringValue, isExpectCall } from '../utils/ast';
+import { getMatcherChain, getStringValue, isExpectCall } from '../utils/ast';
 
 export default {
   create(context) {
@@ -13,7 +13,7 @@ export default {
           return;
         }
 
-        const matchers = getMatchers(node);
+        const matchers = getMatcherChain(node);
         const permutations = matchers.map((_, i) => matchers.slice(0, i + 1));
 
         for (const permutation of permutations) {
