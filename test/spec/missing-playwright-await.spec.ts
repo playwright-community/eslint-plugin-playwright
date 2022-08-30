@@ -116,6 +116,11 @@ runRuleTester('missing-playwright-await', rule, {
     valid('await expect.soft(page).toHaveText("text")'),
     valid('await expect.soft(page).not.toHaveText("text")'),
 
+    // expect.poll
+    valid('await expect.poll(() => foo).toBe("text")'),
+    valid('await expect["poll"](() => foo).toContain("text")'),
+    valid('await expect[`poll`](() => foo).toBeTruthy()'),
+
     // test.step
     valid("await test.step('foo', async () => {})"),
   ],
