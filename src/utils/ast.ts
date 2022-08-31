@@ -2,7 +2,9 @@ import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import { NodeWithParent, TypedNodeWithParent } from './types';
 
-export function getStringValue(node: ESTree.Node) {
+export function getStringValue(node: ESTree.Node | undefined) {
+  if (!node) return '';
+
   return node.type === 'Identifier'
     ? node.name
     : node.type === 'TemplateLiteral'
@@ -12,7 +14,7 @@ export function getStringValue(node: ESTree.Node) {
     : '';
 }
 
-function isIdentifier(node: ESTree.Node, name: string) {
+export function isIdentifier(node: ESTree.Node, name: string) {
   return node.type === 'Identifier' && node.name === name;
 }
 
@@ -120,13 +122,26 @@ export function isTestHook(node: ESTree.CallExpression) {
 }
 
 const expectSubCommands = new Set(['soft', 'poll']);
+export type ExpectType = 'standalone' | 'soft' | 'poll';
+
+export function parseExpectCall(
+  node: ESTree.CallExpression
+): ExpectType | undefined {
+  if (isIdentifier(node.callee, 'expect')) {
+    return 'standalone';
+  }
+
+  if (
+    node.callee.type === 'MemberExpression' &&
+    isIdentifier(node.callee.object, 'expect')
+  ) {
+    const type = getStringValue(node.callee.property);
+    return expectSubCommands.has(type) ? (type as ExpectType) : undefined;
+  }
+}
+
 export function isExpectCall(node: ESTree.CallExpression) {
-  return (
-    isIdentifier(node.callee, 'expect') ||
-    (node.callee.type === 'MemberExpression' &&
-      isIdentifier(node.callee.object, 'expect') &&
-      expectSubCommands.has(getStringValue(node.callee.property)))
-  );
+  return !!parseExpectCall(node);
 }
 
 export function getMatchers(
