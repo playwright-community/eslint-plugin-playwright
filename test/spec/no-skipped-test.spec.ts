@@ -37,6 +37,7 @@ runRuleTester('no-skipped-test', rule, {
       'test.describe[`skip`]("skip this describe", () => {});',
       'test.describe("skip this describe", () => {});'
     ),
+    invalid('test.skip(browserName === "firefox");', ''),
     invalid('test.skip(browserName === "firefox", "Still working on it");', ''),
     invalid(
       'test.describe.parallel("run in parallel", () => { test.skip(); expect(true).toBe(true); })',
