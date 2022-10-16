@@ -11,6 +11,7 @@ import noConditionalInTest from './rules/no-conditional-in-test';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
 import noUselessNot from './rules/no-useless-not';
 import preferLowercaseTitle from './rules/prefer-lowercase-title';
+import preferToBe from './rules/prefer-to-be';
 import preferToHaveLength from './rules/prefer-to-have-length';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validExpect from './rules/valid-expect';
@@ -85,6 +86,7 @@ export = {
     'no-useless-not': noUselessNot,
     'no-restricted-matchers': noRestrictedMatchers,
     'prefer-lowercase-title': preferLowercaseTitle,
+    'prefer-to-be': preferToBe,
     'prefer-to-have-length': preferToHaveLength,
     'require-top-level-describe': requireTopLevelDescribe,
     'valid-expect': validExpect,
