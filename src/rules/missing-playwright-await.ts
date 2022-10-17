@@ -3,7 +3,7 @@ import { Rule } from 'eslint';
 import {
   getMatchers,
   isPropertyAccessor,
-  parseExpectCall,
+  getExpectType,
   isIdentifier,
   getStringValue,
 } from '../utils/ast';
@@ -70,7 +70,7 @@ function getCallType(
     return { messageId: 'testStep' };
   }
 
-  const expectType = parseExpectCall(node);
+  const expectType = getExpectType(node);
   if (!expectType) return;
 
   // expect.poll
