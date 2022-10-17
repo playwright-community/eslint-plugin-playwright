@@ -1,41 +1,31 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { isExpectCall, getMatchers, getStringValue } from '../utils/ast';
-
-const getRangeOffset = (node: ESTree.Node) =>
-  node.type === 'Identifier' ? 0 : 1;
+import { replaceAccessorFixer } from '../utils/fixer';
+import { parseExpectCall } from '../utils/parseExpectCall';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (!isExpectCall(node)) {
-          return;
-        }
+        const expectCall = parseExpectCall(node);
 
-        const [matcher] = getMatchers(node).slice(-1);
-        if ((getStringValue(matcher) ?? '') !== 'toEqual') {
-          return;
-        }
-
-        context.report({
-          node: matcher,
-          messageId: 'useToStrictEqual',
-          suggest: [
-            {
-              messageId: 'suggestReplaceWithStrictEqual',
-              fix: (fixer) => {
-                return fixer.replaceTextRange(
-                  [
-                    matcher.range![0] + getRangeOffset(matcher),
-                    matcher.range![1] - getRangeOffset(matcher),
-                  ],
-                  'toStrictEqual'
-                );
+        if (expectCall?.matcherName === 'toEqual') {
+          context.report({
+            node: expectCall.matcher,
+            messageId: 'useToStrictEqual',
+            suggest: [
+              {
+                messageId: 'suggestReplaceWithStrictEqual',
+                fix: (fixer) => {
+                  return replaceAccessorFixer(
+                    fixer,
+                    expectCall.matcher,
+                    'toStrictEqual'
+                  );
+                },
               },
-            },
-          ],
-        });
+            ],
+          });
+        }
       },
     };
   },

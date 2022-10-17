@@ -124,7 +124,7 @@ export function isTestHook(node: ESTree.CallExpression) {
 const expectSubCommands = new Set(['soft', 'poll']);
 export type ExpectType = 'standalone' | 'soft' | 'poll';
 
-export function parseExpectCall(
+export function getExpectType(
   node: ESTree.CallExpression
 ): ExpectType | undefined {
   if (isIdentifier(node.callee, 'expect')) {
@@ -141,15 +141,18 @@ export function parseExpectCall(
 }
 
 export function isExpectCall(node: ESTree.CallExpression) {
-  return !!parseExpectCall(node);
+  return !!getExpectType(node);
 }
 
 export function getMatchers(
-  node: ESTree.Node & Rule.NodeParentExtension,
-  chain: ESTree.Node[] = []
-): ESTree.Node[] {
+  node: Rule.Node,
+  chain: Rule.Node[] = []
+): Rule.Node[] {
   if (node.parent.type === 'MemberExpression' && node.parent.object === node) {
-    return getMatchers(node.parent, [...chain, node.parent.property]);
+    return getMatchers(node.parent, [
+      ...chain,
+      node.parent.property as Rule.Node,
+    ]);
   }
 
   return chain;
