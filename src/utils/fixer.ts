@@ -1,7 +1,8 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 
-const getOffset = (node: ESTree.Node) => (node.type === 'Identifier' ? 0 : 1);
+export const getRangeOffset = (node: ESTree.Node) =>
+  node.type === 'Identifier' ? 0 : 1;
 
 /**
  * Replaces an accessor node with the given `text`.
@@ -17,7 +18,7 @@ export function replaceAccessorFixer(
   const [start, end] = node.range!;
 
   return fixer.replaceTextRange(
-    [start + getOffset(node), end - getOffset(node)],
+    [start + getRangeOffset(node), end - getRangeOffset(node)],
     text
   );
 }

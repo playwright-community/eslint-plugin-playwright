@@ -10,8 +10,9 @@ function getExpectArguments(node: Rule.Node): ESTree.Node[] {
 }
 
 export interface ParsedExpectCall {
-  matcherName: string;
+  members: ESTree.Node[];
   matcher: ESTree.Node;
+  matcherName: string;
   modifiers: ESTree.Node[];
   args: ESTree.Node[];
 }
@@ -23,11 +24,12 @@ export function parseExpectCall(
     return;
   }
 
+  const members = getMatchers(node);
   const modifiers: ESTree.Node[] = [];
   let matcher: Rule.Node | undefined;
 
   // Separate the matchers (e.g. toBe) from modifiers (e.g. not)
-  getMatchers(node).forEach((item) => {
+  members.forEach((item) => {
     if (MODIFIER_NAMES.has(getStringValue(item))) {
       modifiers.push(item);
     } else {
@@ -41,9 +43,10 @@ export function parseExpectCall(
   }
 
   return {
-    matcherName: getStringValue(matcher),
+    members,
     matcher,
-    args: getExpectArguments(matcher),
+    matcherName: getStringValue(matcher),
     modifiers,
+    args: getExpectArguments(matcher),
   };
 }

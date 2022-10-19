@@ -1,31 +1,21 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import {
-  isExpectCall,
-  getMatchers,
-  isPropertyAccessor,
-  getStringValue,
-} from '../utils/ast';
+import { isPropertyAccessor } from '../utils/ast';
+import { replaceAccessorFixer } from '../utils/fixer';
+import { parseExpectCall } from '../utils/parseExpectCall';
 
-const matchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
-
-const getRangeOffset = (node: ESTree.Node) =>
-  node.type === 'Identifier' ? 0 : 1;
+const lengthMatchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (!isExpectCall(node)) {
+        const expectCall = parseExpectCall(node);
+        if (!expectCall || !lengthMatchers.has(expectCall.matcherName)) {
           return;
         }
 
         const [argument] = node.arguments;
-        const [matcher] = getMatchers(node).slice(-1);
-
         if (
-          !matcher ||
-          !matchers.has(getStringValue(matcher) ?? '') ||
           argument?.type !== 'MemberExpression' ||
           !isPropertyAccessor(argument, 'length')
         ) {
@@ -41,17 +31,11 @@ export default {
                 argument.range![1],
               ]),
               // replace the current matcher with "toHaveLength"
-              fixer.replaceTextRange(
-                [
-                  matcher.range![0] + getRangeOffset(matcher),
-                  matcher.range![1] - getRangeOffset(matcher),
-                ],
-                'toHaveLength'
-              ),
+              replaceAccessorFixer(fixer, expectCall.matcher, 'toHaveLength'),
             ];
           },
           messageId: 'useToHaveLength',
-          node: matcher,
+          node: expectCall.matcher,
         });
       },
     };
