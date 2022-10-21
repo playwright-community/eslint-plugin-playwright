@@ -37,6 +37,14 @@ runRuleTester('no-restricted-matchers', rule, {
       code: 'expect[`poll`](() => true)[`toBe`](b)',
       options: [{ 'not.toBe': null }],
     },
+    {
+      code: 'expect(a).toHaveKnot(b)',
+      options: [{ not: null }],
+    },
+    {
+      code: 'expect(a).nothing(b)',
+      options: [{ not: null }],
+    },
   ],
   invalid: [
     {

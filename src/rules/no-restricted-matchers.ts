@@ -2,6 +2,12 @@ import { Rule } from 'eslint';
 import { getStringValue } from '../utils/ast';
 import { parseExpectCall } from '../utils/parseExpectCall';
 
+// To properly test matcher chains, we ensure the entire chain is surrounded by
+// periods so that the `includes` matcher doesn't match substrings. For example,
+// `not` should only match `expect().not.something()` but it should not match
+// `expect().nothing()`.
+const wrap = (chain: string) => `.${chain}.`;
+
 export default {
   create(context) {
     const restrictedChains = (context.options?.[0] ?? {}) as {
@@ -18,7 +24,7 @@ export default {
         const chain = expectCall.members.map(getStringValue).join('.');
 
         Object.entries(restrictedChains)
-          .filter(([restriction]) => chain.includes(restriction))
+          .filter(([restriction]) => wrap(chain).includes(wrap(restriction)))
           .forEach(([restriction, message]) => {
             context.report({
               messageId: message ? 'restrictedWithMessage' : 'restricted',
