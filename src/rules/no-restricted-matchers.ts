@@ -1,5 +1,12 @@
 import { Rule } from 'eslint';
-import { getMatchers, getStringValue, isExpectCall } from '../utils/ast';
+import { getStringValue } from '../utils/ast';
+import { parseExpectCall } from '../utils/parseExpectCall';
+
+// To properly test matcher chains, we ensure the entire chain is surrounded by
+// periods so that the `includes` matcher doesn't match substrings. For example,
+// `not` should only match `expect().not.something()` but it should not match
+// `expect().nothing()`.
+const wrap = (chain: string) => `.${chain}.`;
 
 export default {
   create(context) {
@@ -9,31 +16,25 @@ export default {
 
     return {
       CallExpression(node) {
-        if (!isExpectCall(node)) {
-          return;
-        }
+        const expectCall = parseExpectCall(node);
+        if (!expectCall) return;
 
-        const matchers = getMatchers(node);
-        const permutations = matchers.map((_, i) => matchers.slice(0, i + 1));
+        // Stringify the expect call chain to compare to the list of restricted
+        // matcher chains.
+        const chain = expectCall.members.map(getStringValue).join('.');
 
-        for (const permutation of permutations) {
-          const chain = permutation.map(getStringValue).join('.');
-
-          if (chain in restrictedChains) {
-            const message = restrictedChains[chain];
-
+        Object.entries(restrictedChains)
+          .filter(([restriction]) => wrap(chain).includes(wrap(restriction)))
+          .forEach(([restriction, message]) => {
             context.report({
               messageId: message ? 'restrictedWithMessage' : 'restricted',
-              data: { message: message ?? '', chain },
+              data: { message: message ?? '', restriction },
               loc: {
-                start: permutation[0].loc!.start,
-                end: permutation[permutation.length - 1].loc!.end,
+                start: expectCall.members[0].loc!.start,
+                end: expectCall.members[expectCall.members.length - 1].loc!.end,
               },
             });
-
-            break;
-          }
-        }
+          });
       },
     };
   },
@@ -45,7 +46,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-restricted-matchers.md',
     },
     messages: {
-      restricted: 'Use of `{{chain}}` is disallowed',
+      restricted: 'Use of `{{restriction}}` is disallowed',
       restrictedWithMessage: '{{message}}',
     },
     type: 'suggestion',

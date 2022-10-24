@@ -37,6 +37,14 @@ runRuleTester('no-restricted-matchers', rule, {
       code: 'expect[`poll`](() => true)[`toBe`](b)',
       options: [{ 'not.toBe': null }],
     },
+    {
+      code: 'expect(a).toHaveKnot(b)',
+      options: [{ not: null }],
+    },
+    {
+      code: 'expect(a).nothing(b)',
+      options: [{ not: null }],
+    },
   ],
   invalid: [
     {
@@ -45,7 +53,7 @@ runRuleTester('no-restricted-matchers', rule, {
       errors: [
         {
           messageId: 'restricted',
-          data: { message: '', chain: 'toBe' },
+          data: { message: '', restriction: 'toBe' },
           column: 11,
           line: 1,
         },
@@ -57,7 +65,7 @@ runRuleTester('no-restricted-matchers', rule, {
       errors: [
         {
           messageId: 'restricted',
-          data: { message: '', chain: 'toBe' },
+          data: { message: '', restriction: 'toBe' },
           column: 16,
           line: 1,
         },
@@ -69,7 +77,7 @@ runRuleTester('no-restricted-matchers', rule, {
       errors: [
         {
           messageId: 'restricted',
-          data: { message: '', chain: 'toBe' },
+          data: { message: '', restriction: 'toBe' },
           column: 25,
           line: 1,
         },
@@ -81,7 +89,7 @@ runRuleTester('no-restricted-matchers', rule, {
       errors: [
         {
           messageId: 'restricted',
-          data: { message: '', chain: 'not' },
+          data: { message: '', restriction: 'not' },
           column: 11,
           line: 1,
         },
@@ -93,7 +101,7 @@ runRuleTester('no-restricted-matchers', rule, {
       errors: [
         {
           messageId: 'restricted',
-          data: { message: '', chain: 'not.toBeTruthy' },
+          data: { message: '', restriction: 'not.toBeTruthy' },
           endColumn: 25,
           column: 11,
           line: 1,
@@ -106,7 +114,7 @@ runRuleTester('no-restricted-matchers', rule, {
       errors: [
         {
           messageId: 'restricted',
-          data: { message: '', chain: 'not' },
+          data: { message: '', restriction: 'not' },
           column: 19,
           line: 1,
         },
@@ -118,7 +126,7 @@ runRuleTester('no-restricted-matchers', rule, {
       errors: [
         {
           messageId: 'restricted',
-          data: { message: '', chain: 'not.toBeTruthy' },
+          data: { message: '', restriction: 'not.toBeTruthy' },
           endColumn: 39,
           column: 25,
           line: 1,
@@ -133,7 +141,7 @@ runRuleTester('no-restricted-matchers', rule, {
           messageId: 'restrictedWithMessage',
           data: {
             message: 'Prefer `toStrictEqual` instead',
-            chain: 'toBe',
+            restriction: 'toBe',
           },
           column: 11,
           line: 1,
@@ -148,7 +156,7 @@ runRuleTester('no-restricted-matchers', rule, {
           messageId: 'restrictedWithMessage',
           data: {
             message: 'Use not.toContainText instead',
-            chain: 'not.toHaveText',
+            restriction: 'not.toHaveText',
           },
           endColumn: 27,
           column: 13,
