@@ -17,13 +17,15 @@ export default {
           callee.type === 'MemberExpression' &&
           isPropertyAccessor(callee, 'skip')
         ) {
+          const isHook = isTest(node) || isDescribeCall(node);
+
           context.report({
             messageId: 'noSkippedTest',
             suggest: [
               {
                 messageId: 'removeSkippedTestAnnotation',
                 fix: (fixer) => {
-                  return isTest(node) || isDescribeCall(node)
+                  return isHook
                     ? fixer.removeRange([
                         callee.property.range![0] - 1,
                         callee.range![1],
@@ -32,7 +34,7 @@ export default {
                 },
               },
             ],
-            node,
+            node: isHook ? callee.property : node,
           });
         }
       },
