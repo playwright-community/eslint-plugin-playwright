@@ -18,6 +18,10 @@ runRuleTester('no-wait-for-timeout', rule, {
       'async function fn() {  }'
     ),
     invalid(
+      'async function fn() { await this.page.waitForTimeout(1000) }',
+      'async function fn() {  }'
+    ),
+    invalid(
       'async function fn() { await page["waitForTimeout"](1000) }',
       'async function fn() {  }'
     ),
@@ -44,6 +48,7 @@ runRuleTester('no-wait-for-timeout', rule, {
   valid: [
     'function waitForTimeout() {}',
     'async function fn() { await waitForTimeout(4343); }',
+    'async function fn() { await this.foo.waitForTimeout(4343); }',
     '(async function() { await page.waitForSelector("#foo"); })();',
     'page.waitForSelector("#foo");',
     'page["waitForSelector"]("#foo");',

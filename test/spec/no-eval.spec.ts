@@ -11,6 +11,7 @@ const valid = wrapInTest;
 runRuleTester('no-eval', rule, {
   valid: [
     valid('await page.locator(".tweet").evaluate(node => node.innerText)'),
+    valid('await this.page.locator(".tweet").evaluate(node => node.innerText)'),
     valid('await page.locator(".tweet")["evaluate"](node => node.innerText)'),
     valid('await page.locator(".tweet")[`evaluate`](node => node.innerText)'),
     valid(
@@ -28,9 +29,15 @@ runRuleTester('no-eval', rule, {
     valid(
       'await page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
     ),
+    valid(
+      'await this.page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
+    ),
   ],
   invalid: [
     invalid('const searchValue = await page.$eval("#search", el => el.value);'),
+    invalid(
+      'const searchValue = await this.page.$eval("#search", el => el.value);'
+    ),
     invalid(
       'const searchValue = await page["$eval"]("#search", el => el.value);'
     ),
@@ -38,7 +45,9 @@ runRuleTester('no-eval', rule, {
       'const searchValue = await page[`$eval`]("#search", el => el.value);'
     ),
     invalid('await page.$eval("#search", el => el.value);'),
+    invalid('await this.page.$eval("#search", el => el.value);'),
     invalid('await page.$$eval("#search", el => el.value);'),
+    invalid('await this.page.$$eval("#search", el => el.value);'),
     invalid('await page["$$eval"]("#search", el => el.value);'),
     invalid('await page[`$$eval`]("#search", el => el.value);'),
     invalid(

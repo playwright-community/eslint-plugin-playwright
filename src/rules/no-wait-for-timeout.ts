@@ -1,14 +1,11 @@
 import { Rule } from 'eslint';
-import { isCalleeObject, isCalleeProperty } from '../utils/ast';
+import { isPageMethod } from '../utils/ast';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (
-          isCalleeObject(node, 'page') &&
-          isCalleeProperty(node, 'waitForTimeout')
-        ) {
+        if (isPageMethod(node, 'waitForTimeout')) {
           context.report({
             messageId: 'noWaitForTimeout',
             suggest: [

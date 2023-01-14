@@ -42,20 +42,6 @@ export function isPropertyAccessor(
   return getStringValue(node.property) === name;
 }
 
-export function isCalleeObject(node: ESTree.CallExpression, name: string) {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    isIdentifier(node.callee.object, name)
-  );
-}
-
-export function isCalleeProperty(node: ESTree.CallExpression, name: string) {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    isPropertyAccessor(node.callee, name)
-  );
-}
-
 export function isTestIdentifier(node: ESTree.Node) {
   return (
     isIdentifier(node, 'test') ||
