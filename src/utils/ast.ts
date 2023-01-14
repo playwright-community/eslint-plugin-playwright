@@ -157,3 +157,13 @@ export function getMatchers(
 
   return chain;
 }
+
+export function isPageMethod(node: ESTree.CallExpression, name: string) {
+  return (
+    node.callee.type === 'MemberExpression' &&
+    (node.callee.object.type === 'MemberExpression'
+      ? isIdentifier(node.callee.object.property, 'page')
+      : isIdentifier(node.callee.object, 'page')) &&
+    isPropertyAccessor(node.callee, name)
+  );
+}
