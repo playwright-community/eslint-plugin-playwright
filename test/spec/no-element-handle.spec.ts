@@ -28,12 +28,20 @@ runRuleTester('no-element-handle', rule, {
       'const handle = page.locator("text=Submit");'
     ),
     invalid(
+      'const handle = await this.page.$("text=Submit");',
+      'const handle = this.page.locator("text=Submit");'
+    ),
+    invalid(
       'const handle = await page["$$"]("text=Submit");',
-      'const handle = page.locator("text=Submit");'
+      'const handle = page["locator"]("text=Submit");'
     ),
     invalid(
       'const handle = await page[`$$`]("text=Submit");',
-      'const handle = page.locator("text=Submit");'
+      'const handle = page[`locator`]("text=Submit");'
+    ),
+    invalid(
+      'const handle = await this.page.$$("text=Submit");',
+      'const handle = this.page.locator("text=Submit");'
     ),
 
     // element handle as let
@@ -64,11 +72,11 @@ runRuleTester('no-element-handle', rule, {
     ),
     invalid(
       'const handle = await page["$$"]("a");',
-      'const handle = page.locator("a");'
+      'const handle = page["locator"]("a");'
     ),
     invalid(
       'const handle = await page[`$$`]("a");',
-      'const handle = page.locator("a");'
+      'const handle = page[`locator`]("a");'
     ),
 
     // element handles as let
@@ -112,6 +120,7 @@ runRuleTester('no-element-handle', rule, {
   ],
   valid: [
     valid('page.locator("a")'),
+    valid('this.page.locator("a")'),
     valid('await page.locator("a").click();'),
     valid('const $ = "text";'),
     valid('$("a");'),

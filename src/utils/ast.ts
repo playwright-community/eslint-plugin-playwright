@@ -42,20 +42,6 @@ export function isPropertyAccessor(
   return getStringValue(node.property) === name;
 }
 
-export function isCalleeObject(node: ESTree.CallExpression, name: string) {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    isIdentifier(node.callee.object, name)
-  );
-}
-
-export function isCalleeProperty(node: ESTree.CallExpression, name: string) {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    isPropertyAccessor(node.callee, name)
-  );
-}
-
 export function isTestIdentifier(node: ESTree.Node) {
   return (
     isIdentifier(node, 'test') ||
@@ -156,4 +142,14 @@ export function getMatchers(
   }
 
   return chain;
+}
+
+export function isPageMethod(node: ESTree.CallExpression, name: string) {
+  return (
+    node.callee.type === 'MemberExpression' &&
+    (node.callee.object.type === 'MemberExpression'
+      ? isIdentifier(node.callee.object.property, 'page')
+      : isIdentifier(node.callee.object, 'page')) &&
+    isPropertyAccessor(node.callee, name)
+  );
 }

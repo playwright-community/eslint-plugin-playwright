@@ -24,6 +24,24 @@ runRuleTester('no-wait-for-timeout', rule, {
       ],
     },
     {
+      code: 'async function fn() { await this.page.waitForTimeout(1000) }',
+      errors: [
+        {
+          messageId,
+          suggestions: [
+            {
+              messageId: 'removeWaitForTimeout',
+              output: 'async function fn() {  }',
+            },
+          ],
+          line: 1,
+          column: 29,
+          endLine: 1,
+          endColumn: 59,
+        },
+      ],
+    },
+    {
       code: 'async function fn() { await page["waitForTimeout"](1000) }',
       errors: [
         {
@@ -148,6 +166,7 @@ runRuleTester('no-wait-for-timeout', rule, {
   valid: [
     'function waitForTimeout() {}',
     'async function fn() { await waitForTimeout(4343); }',
+    'async function fn() { await this.foo.waitForTimeout(4343); }',
     '(async function() { await page.waitForSelector("#foo"); })();',
     'page.waitForSelector("#foo");',
     'page["waitForSelector"]("#foo");',

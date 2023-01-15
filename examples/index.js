@@ -1,0 +1,1 @@
+await this.page.pause();
