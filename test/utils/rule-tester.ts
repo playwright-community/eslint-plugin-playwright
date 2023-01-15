@@ -21,5 +21,3 @@ export function runRuleTester(...args: Parameters<RuleTester['run']>) {
 
 export const wrapInTest = (input: string) =>
   `test('test', async () => { ${input} })`;
-
-export type Errors = RuleTester.InvalidTestCase['errors'];
