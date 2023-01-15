@@ -2,11 +2,6 @@ import rule from '../../src/rules/require-top-level-describe';
 import * as dedent from 'dedent';
 import { runRuleTester } from '../utils/rule-tester';
 
-const invalid = (code: string, messageId: string) => ({
-  code,
-  errors: [{ messageId }],
-});
-
 runRuleTester('require-top-level-describe', rule, {
   valid: [
     'foo()',

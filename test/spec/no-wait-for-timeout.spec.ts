@@ -4,6 +4,14 @@ import rule from '../../src/rules/no-wait-for-timeout';
 const messageId = 'noWaitForTimeout';
 
 runRuleTester('no-wait-for-timeout', rule, {
+  valid: [
+    'function waitForTimeout() {}',
+    'async function fn() { await waitForTimeout(4343); }',
+    'async function fn() { await this.foo.waitForTimeout(4343); }',
+    '(async function() { await page.waitForSelector("#foo"); })();',
+    'page.waitForSelector("#foo");',
+    'page["waitForSelector"]("#foo");',
+  ],
   invalid: [
     {
       code: 'async function fn() { await page.waitForTimeout(1000) }',
@@ -162,13 +170,5 @@ runRuleTester('no-wait-for-timeout', rule, {
         },
       ],
     },
-  ],
-  valid: [
-    'function waitForTimeout() {}',
-    'async function fn() { await waitForTimeout(4343); }',
-    'async function fn() { await this.foo.waitForTimeout(4343); }',
-    '(async function() { await page.waitForSelector("#foo"); })();',
-    'page.waitForSelector("#foo");',
-    'page["waitForSelector"]("#foo");',
   ],
 });

@@ -4,6 +4,22 @@ import rule from '../../src/rules/no-skipped-test';
 const messageId = 'removeSkippedTestAnnotation';
 
 runRuleTester('no-skipped-test', rule, {
+  valid: [
+    'test.describe("describe tests", () => {});',
+    'test.describe.only("describe focus tests", () => {});',
+    'test.describ["only"]("describe focus tests", () => {});',
+    'test.describ[`only`]("describe focus tests", () => {});',
+    'test("one", async ({ page }) => {});',
+    'test.only(isMobile, "Settings page does not work in mobile yet");',
+    'test.slow();',
+    'test["slow"]();',
+    'test[`slow`]();',
+    'const skip = true;',
+    'function skip() { return null };',
+    'this.skip();',
+    'this["skip"]();',
+    'this[`skip`]();',
+  ],
   invalid: [
     {
       code: 'test.skip("skip this test", async ({ page }) => {});',
@@ -185,21 +201,5 @@ runRuleTester('no-skipped-test', rule, {
         },
       ],
     },
-  ],
-  valid: [
-    'test.describe("describe tests", () => {});',
-    'test.describe.only("describe focus tests", () => {});',
-    'test.describ["only"]("describe focus tests", () => {});',
-    'test.describ[`only`]("describe focus tests", () => {});',
-    'test("one", async ({ page }) => {});',
-    'test.only(isMobile, "Settings page does not work in mobile yet");',
-    'test.slow();',
-    'test["slow"]();',
-    'test[`slow`]();',
-    'const skip = true;',
-    'function skip() { return null };',
-    'this.skip();',
-    'this["skip"]();',
-    'this[`skip`]();',
   ],
 });

@@ -4,6 +4,93 @@ import rule from '../../src/rules/max-nested-describe';
 const messageId = 'exceededMaxDepth';
 
 runRuleTester('max-nested-describe', rule, {
+  valid: [
+    'test.describe("describe tests", () => {});',
+    'test.describe.only("describe focus tests", () => {});',
+    'test.describe.serial.only("describe serial focus tests", () => {});',
+    'test.describe.serial.skip("describe serial focus tests", () => {});',
+    'test.describe.parallel.fixme("describe serial focus tests", () => {});',
+    {
+      code: `
+        test('foo', function () {
+          expect(true).toBe(true);
+        });
+        test('bar', () => {
+          expect(true).toBe(true);
+        });
+      `,
+      options: [{ max: 0 }],
+    },
+    {
+      code: `
+        test.describe('foo', function() {
+          test.describe('bar', function () {
+            test.describe('baz', function () {
+              test.describe('qux', function () {
+                test.describe('quxx', function () {
+                  test('should get something', () => {
+                    expect(getSomething()).toBe('Something');
+                  });
+                });
+              });
+            });
+          });
+        });
+      `,
+    },
+    {
+      code: `
+        test.describe('foo', () => {
+          test.describe('bar', () => {
+            test.describe('baz', () => {
+              test.describe('qux', () => {
+                test('foo', () => {
+                  expect(someCall().property).toBe(true);
+                });
+                test('bar', () => {
+                  expect(universe.answer).toBe(42);
+                });
+              });
+              test.describe('quxx', () => {
+                test('baz', () => {
+                  expect(2 + 2).toEqual(4);
+                });
+              });
+            });
+          });
+        });
+      `,
+      options: [{ max: 4 }],
+    },
+    {
+      code: `
+        test.describe('foo', () => {
+          test.describe.only('bar', () => {
+            test.describe.skip('baz', () => {
+              test('something', async () => {
+                expect('something').toBe('something');
+              });
+            });
+          });
+        });
+      `,
+      options: [{ max: 3 }],
+    },
+    {
+      code: `
+        describe('foo', () => {
+          describe.only('bar', () => {
+            describe.skip('baz', () => {
+              test('something', async () => {
+                expect('something').toBe('something');
+              });
+            });
+          });
+        });
+      `,
+      options: [{ max: 3 }],
+    },
+  ],
   invalid: [
     {
       code: `
@@ -141,93 +228,6 @@ runRuleTester('max-nested-describe', rule, {
       `,
       errors: [{ messageId, line: 4, column: 13, endLine: 4, endColumn: 26 }],
       options: [{ max: 2 }],
-    },
-  ],
-  valid: [
-    'test.describe("describe tests", () => {});',
-    'test.describe.only("describe focus tests", () => {});',
-    'test.describe.serial.only("describe serial focus tests", () => {});',
-    'test.describe.serial.skip("describe serial focus tests", () => {});',
-    'test.describe.parallel.fixme("describe serial focus tests", () => {});',
-    {
-      code: `
-        test('foo', function () {
-          expect(true).toBe(true);
-        });
-        test('bar', () => {
-          expect(true).toBe(true);
-        });
-      `,
-      options: [{ max: 0 }],
-    },
-    {
-      code: `
-        test.describe('foo', function() {
-          test.describe('bar', function () {
-            test.describe('baz', function () {
-              test.describe('qux', function () {
-                test.describe('quxx', function () {
-                  test('should get something', () => {
-                    expect(getSomething()).toBe('Something');
-                  });
-                });
-              });
-            });
-          });
-        });
-      `,
-    },
-    {
-      code: `
-        test.describe('foo', () => {
-          test.describe('bar', () => {
-            test.describe('baz', () => {
-              test.describe('qux', () => {
-                test('foo', () => {
-                  expect(someCall().property).toBe(true);
-                });
-                test('bar', () => {
-                  expect(universe.answer).toBe(42);
-                });
-              });
-              test.describe('quxx', () => {
-                test('baz', () => {
-                  expect(2 + 2).toEqual(4);
-                });
-              });
-            });
-          });
-        });
-      `,
-      options: [{ max: 4 }],
-    },
-    {
-      code: `
-        test.describe('foo', () => {
-          test.describe.only('bar', () => {
-            test.describe.skip('baz', () => {
-              test('something', async () => {
-                expect('something').toBe('something');
-              });
-            });
-          });
-        });
-      `,
-      options: [{ max: 3 }],
-    },
-    {
-      code: `
-        describe('foo', () => {
-          describe.only('bar', () => {
-            describe.skip('baz', () => {
-              test('something', async () => {
-                expect('something').toBe('something');
-              });
-            });
-          });
-        });
-      `,
-      options: [{ max: 3 }],
     },
   ],
 });

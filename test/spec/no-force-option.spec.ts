@@ -4,6 +4,26 @@ import rule from '../../src/rules/no-force-option';
 const messageId = 'noForceOption';
 
 runRuleTester('no-force-option', rule, {
+  valid: [
+    test("await page.locator('check').check()"),
+    test("await page.locator('check').uncheck()"),
+    test("await page.locator('button').click()"),
+    test("await page.locator('button').locator('btn').click()"),
+    test(
+      "await page.locator('button').click({ delay: 500, noWaitAfter: true })"
+    ),
+    test("await page.locator('button').dblclick()"),
+    test("await page.locator('input').dragTo()"),
+    test("await page.locator('input').fill('something', { timeout: 1000 })"),
+    test("await page.locator('elm').hover()"),
+    test("await page.locator('select').selectOption({ label: 'Blue' })"),
+    test("await page.locator('select').selectText()"),
+    test("await page.locator('checkbox').setChecked(true)"),
+    test("await page.locator('button').tap()"),
+    test('doSomething({ force: true })'),
+    test('await doSomething({ ["force"]: true })'),
+    test('await doSomething({ [`force`]: true })'),
+  ],
   invalid: [
     {
       code: test('await page.locator("check").check({ force: true })'),
@@ -78,25 +98,5 @@ runRuleTester('no-force-option', rule, {
       code: test('await page.locator("button").tap({ force: true })'),
       errors: [{ messageId, line: 1, column: 63, endColumn: 74 }],
     },
-  ],
-  valid: [
-    test("await page.locator('check').check()"),
-    test("await page.locator('check').uncheck()"),
-    test("await page.locator('button').click()"),
-    test("await page.locator('button').locator('btn').click()"),
-    test(
-      "await page.locator('button').click({ delay: 500, noWaitAfter: true })"
-    ),
-    test("await page.locator('button').dblclick()"),
-    test("await page.locator('input').dragTo()"),
-    test("await page.locator('input').fill('something', { timeout: 1000 })"),
-    test("await page.locator('elm').hover()"),
-    test("await page.locator('select').selectOption({ label: 'Blue' })"),
-    test("await page.locator('select').selectText()"),
-    test("await page.locator('checkbox').setChecked(true)"),
-    test("await page.locator('button').tap()"),
-    test('doSomething({ force: true })'),
-    test('await doSomething({ ["force"]: true })'),
-    test('await doSomething({ [`force`]: true })'),
   ],
 });

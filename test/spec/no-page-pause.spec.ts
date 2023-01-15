@@ -4,6 +4,13 @@ import rule from '../../src/rules/no-page-pause';
 const messageId = 'noPagePause';
 
 runRuleTester('no-page-pause', rule, {
+  valid: [
+    test('await page.click()'),
+    test('await this.page.click()'),
+    test('await page["hover"]()'),
+    test('await page[`check`]()'),
+    test('await expect(page).toBePaused()'),
+  ],
   invalid: [
     {
       code: test('await page.pause()'),
@@ -21,12 +28,5 @@ runRuleTester('no-page-pause', rule, {
       code: test('await page[`pause`]()'),
       errors: [{ messageId, line: 1, column: 34, endColumn: 49 }],
     },
-  ],
-  valid: [
-    test('await page.click()'),
-    test('await this.page.click()'),
-    test('await page["hover"]()'),
-    test('await page[`check`]()'),
-    test('await expect(page).toBePaused()'),
   ],
 });

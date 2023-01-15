@@ -1,21 +1,25 @@
 import { runRuleTester } from '../utils/rule-tester';
 import rule from '../../src/rules/no-useless-not';
 
-const invalid = (oldMatcher: string, newMatcher: string) => ({
-  code: `expect(locator).not.${oldMatcher}()`,
-  output: `expect(locator).${newMatcher}()`,
-  errors: [
-    {
-      messageId: 'noUselessNot',
-      data: { old: oldMatcher, new: newMatcher },
-      line: 1,
-      column: 17,
-      endColumn: 21 + oldMatcher.length,
-    },
-  ],
-});
-
 runRuleTester('no-useless-not', rule, {
+  valid: [
+    'expect(locator).toBeVisible()',
+    'expect(locator).toBeHidden()',
+    'expect(locator).toBeEnabled()',
+    'expect(locator).toBeDisabled()',
+    'expect.soft(locator).toBeEnabled()',
+    'expect.poll(() => locator).toBeDisabled()',
+    'expect(locator)[`toBeEnabled`]()',
+    'expect(locator)["toBeDisabled"]()',
+    // Incomplete call expression
+    'expect(locator).toBeVisible',
+    'expect(locator).toBeEnabled',
+    // Doesn't impact non-complimentary matchers
+    "expect(locator).not.toHaveText('foo')",
+    'expect(locator).not.toBeChecked()',
+    'expect(locator).not.toBeChecked({ checked: false })',
+    'expect(locator).not.toBeFocused()',
+  ],
   invalid: [
     {
       code: 'expect(locator).not.toBeVisible()',
@@ -130,23 +134,5 @@ runRuleTester('no-useless-not', rule, {
         },
       ],
     },
-  ],
-  valid: [
-    'expect(locator).toBeVisible()',
-    'expect(locator).toBeHidden()',
-    'expect(locator).toBeEnabled()',
-    'expect(locator).toBeDisabled()',
-    'expect.soft(locator).toBeEnabled()',
-    'expect.poll(() => locator).toBeDisabled()',
-    'expect(locator)[`toBeEnabled`]()',
-    'expect(locator)["toBeDisabled"]()',
-    // Incomplete call expression
-    'expect(locator).toBeVisible',
-    'expect(locator).toBeEnabled',
-    // Doesn't impact non-complimentary matchers
-    "expect(locator).not.toHaveText('foo')",
-    'expect(locator).not.toBeChecked()',
-    'expect(locator).not.toBeChecked({ checked: false })',
-    'expect(locator).not.toBeFocused()',
   ],
 });

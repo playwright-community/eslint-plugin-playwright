@@ -5,8 +5,8 @@ import { RuleTester } from 'eslint';
  * import rule from '../../src/rules/missing-playwright-await';
  *
  * runRuleTester('missing-playwright-await', rule, {
- *   valid: ['await expect(page.locator('checkbox')).toBeChecked()'],
  *   invalid: ['expect(page.locator('checkbox')).toBeChecked()'],
+ *   valid: ['await expect(page.locator('checkbox')).toBeChecked()'],
  * });
  */
 export function runRuleTester(...args: Parameters<RuleTester['run']>) {

@@ -2,6 +2,30 @@ import { runRuleTester, test } from '../utils/rule-tester';
 import rule from '../../src/rules/no-eval';
 
 runRuleTester('no-eval', rule, {
+  valid: [
+    test('await page.locator(".tweet").evaluate(node => node.innerText)'),
+    test('await this.page.locator(".tweet").evaluate(node => node.innerText)'),
+    test('await page.locator(".tweet")["evaluate"](node => node.innerText)'),
+    test('await page.locator(".tweet")[`evaluate`](node => node.innerText)'),
+    test(
+      'await (await page.$(".tweet")).$eval(".like", node => node.innerText)'
+    ),
+    test(
+      'await (await page.$(".tweet"))["$eval"](".like", node => node.innerText)'
+    ),
+    test(
+      'await (await page.$(".tweet")).$$eval(".like", node => node.innerText)'
+    ),
+    test(
+      'await (await page.$(".tweet"))[`$$eval`](".like", node => node.innerText)'
+    ),
+    test(
+      'await page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
+    ),
+    test(
+      'await this.page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
+    ),
+  ],
   invalid: [
     {
       code: test(
@@ -63,29 +87,5 @@ runRuleTester('no-eval', rule, {
       ),
       errors: [{ messageId: 'noEvalAll', line: 1, column: 52, endColumn: 63 }],
     },
-  ],
-  valid: [
-    test('await page.locator(".tweet").evaluate(node => node.innerText)'),
-    test('await this.page.locator(".tweet").evaluate(node => node.innerText)'),
-    test('await page.locator(".tweet")["evaluate"](node => node.innerText)'),
-    test('await page.locator(".tweet")[`evaluate`](node => node.innerText)'),
-    test(
-      'await (await page.$(".tweet")).$eval(".like", node => node.innerText)'
-    ),
-    test(
-      'await (await page.$(".tweet"))["$eval"](".like", node => node.innerText)'
-    ),
-    test(
-      'await (await page.$(".tweet")).$$eval(".like", node => node.innerText)'
-    ),
-    test(
-      'await (await page.$(".tweet"))[`$$eval`](".like", node => node.innerText)'
-    ),
-    test(
-      'await page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
-    ),
-    test(
-      'await this.page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
-    ),
   ],
 });

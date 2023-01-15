@@ -4,6 +4,20 @@ import rule from '../../src/rules/no-focused-test';
 const messageId = 'noFocusedTest';
 
 runRuleTester('no-focused-test', rule, {
+  valid: [
+    'test.describe("describe tests", () => {});',
+    'test.describe.skip("describe tests", () => {});',
+    'test("one", async ({code: page }) => {});',
+    'test.fixme(isMobile, "Settings page does not work in mobile yet");',
+    'test["fixme"](isMobile, "Settings page does not work in mobile yet");',
+    'test[`fixme`](isMobile, "Settings page does not work in mobile yet");',
+    'test.slow();',
+    'test["slow"]();',
+    'test[`slow`]();',
+    'const only = true;',
+    'function only() {code: return null };',
+    'this.only();',
+  ],
   invalid: [
     {
       code: 'test.describe.only("skip this describe", () => {});',
@@ -141,19 +155,5 @@ runRuleTester('no-focused-test', rule, {
         },
       ],
     },
-  ],
-  valid: [
-    'test.describe("describe tests", () => {});',
-    'test.describe.skip("describe tests", () => {});',
-    'test("one", async ({code: page }) => {});',
-    'test.fixme(isMobile, "Settings page does not work in mobile yet");',
-    'test["fixme"](isMobile, "Settings page does not work in mobile yet");',
-    'test[`fixme`](isMobile, "Settings page does not work in mobile yet");',
-    'test.slow();',
-    'test["slow"]();',
-    'test[`slow`]();',
-    'const only = true;',
-    'function only() {code: return null };',
-    'this.only();',
   ],
 });

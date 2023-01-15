@@ -2,6 +2,19 @@ import { runRuleTester, test } from '../utils/rule-tester';
 import rule from '../../src/rules/no-element-handle';
 
 runRuleTester('no-element-handle', rule, {
+  valid: [
+    test('page.locator("a")'),
+    test('this.page.locator("a")'),
+    test('await page.locator("a").click();'),
+    test('const $ = "text";'),
+    test('$("a");'),
+    test('this.$("a");'),
+    test('this["$"]("a");'),
+    test('this[`$`]("a");'),
+    test('internalPage.$("a");'),
+    test('this.page.$$$("div");'),
+    test('page.$$$("div");'),
+  ],
   invalid: [
     // element handle as const
     {
@@ -361,18 +374,5 @@ runRuleTester('no-element-handle', rule, {
         },
       ],
     },
-  ],
-  valid: [
-    test('page.locator("a")'),
-    test('this.page.locator("a")'),
-    test('await page.locator("a").click();'),
-    test('const $ = "text";'),
-    test('$("a");'),
-    test('this.$("a");'),
-    test('this["$"]("a");'),
-    test('this[`$`]("a");'),
-    test('internalPage.$("a");'),
-    test('this.page.$$$("div");'),
-    test('page.$$$("div");'),
   ],
 });
