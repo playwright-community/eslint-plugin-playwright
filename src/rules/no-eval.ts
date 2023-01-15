@@ -10,7 +10,7 @@ export default {
         if (isEval || isPageMethod(node, '$$eval')) {
           context.report({
             messageId: isEval ? 'noEval' : 'noEvalAll',
-            node,
+            node: node.callee,
           });
         }
       },
