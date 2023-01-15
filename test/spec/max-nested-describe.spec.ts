@@ -1,5 +1,6 @@
 import { runRuleTester } from '../utils/rule-tester';
 import rule from '../../src/rules/max-nested-describe';
+import dedent = require('dedent');
 
 const messageId = 'exceededMaxDepth';
 
@@ -11,7 +12,7 @@ runRuleTester('max-nested-describe', rule, {
     'test.describe.serial.skip("describe serial focus tests", () => {});',
     'test.describe.parallel.fixme("describe serial focus tests", () => {});',
     {
-      code: `
+      code: dedent`
         test('foo', function () {
           expect(true).toBe(true);
         });
@@ -22,7 +23,7 @@ runRuleTester('max-nested-describe', rule, {
       options: [{ max: 0 }],
     },
     {
-      code: `
+      code: dedent`
         test.describe('foo', function() {
           test.describe('bar', function () {
             test.describe('baz', function () {
@@ -39,7 +40,7 @@ runRuleTester('max-nested-describe', rule, {
       `,
     },
     {
-      code: `
+      code: dedent`
         test.describe('foo', () => {
           test.describe('bar', () => {
             test.describe('baz', () => {
@@ -63,7 +64,7 @@ runRuleTester('max-nested-describe', rule, {
       options: [{ max: 4 }],
     },
     {
-      code: `
+      code: dedent`
         test.describe('foo', () => {
           test.describe.only('bar', () => {
             test.describe.skip('baz', () => {
@@ -77,7 +78,7 @@ runRuleTester('max-nested-describe', rule, {
       options: [{ max: 3 }],
     },
     {
-      code: `
+      code: dedent`
         describe('foo', () => {
           describe.only('bar', () => {
             describe.skip('baz', () => {
@@ -93,7 +94,7 @@ runRuleTester('max-nested-describe', rule, {
   ],
   invalid: [
     {
-      code: `
+      code: dedent`
         test.describe('foo', function() {
           test.describe('bar', function () {
             test.describe('baz', function () {
@@ -110,10 +111,10 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 7, column: 19, endLine: 7, endColumn: 32 }],
+      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 24 }],
     },
     {
-      code: `
+      code: dedent`
         describe('foo', function() {
           describe('bar', function () {
             describe('baz', function () {
@@ -130,10 +131,10 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 7, column: 19, endLine: 7, endColumn: 27 }],
+      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 19 }],
     },
     {
-      code: `
+      code: dedent`
         test.describe('foo', () => {
           test.describe('bar', () => {
             test["describe"]('baz', () => {
@@ -164,12 +165,12 @@ runRuleTester('max-nested-describe', rule, {
       `,
       options: [{ max: 5 }],
       errors: [
-        { messageId, line: 7, column: 19, endLine: 7, endColumn: 35 },
-        { messageId, line: 13, column: 19, endLine: 13, endColumn: 32 },
+        { messageId, line: 6, column: 11, endLine: 6, endColumn: 27 },
+        { messageId, line: 12, column: 11, endLine: 12, endColumn: 24 },
       ],
     },
     {
-      code: `
+      code: dedent`
         test.describe.only('foo', function() {
           test.describe('bar', function() {
             test.describe('baz', function() {
@@ -182,10 +183,10 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 7, column: 19, endLine: 7, endColumn: 37 }],
+      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 29 }],
     },
     {
-      code: `
+      code: dedent`
         test.describe.serial.only('foo', function() {
           test.describe('bar', function() {
             test.describe('baz', function() {
@@ -198,21 +199,21 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 7, column: 19, endLine: 7, endColumn: 32 }],
+      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 24 }],
     },
     {
-      code: `
+      code: dedent`
         test.describe('qux', () => {
           test('should get something', () => {
             expect(getSomething()).toBe('Something');
           });
         });
       `,
-      errors: [{ messageId, line: 2, column: 9, endLine: 2, endColumn: 22 }],
+      errors: [{ messageId, line: 1, column: 1, endLine: 1, endColumn: 14 }],
       options: [{ max: 0 }],
     },
     {
-      code: `
+      code: dedent`
         test.describe('foo', () => {
           test.describe('bar', () => {
             test.describe('baz', () => {
@@ -226,7 +227,7 @@ runRuleTester('max-nested-describe', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 4, column: 13, endLine: 4, endColumn: 26 }],
+      errors: [{ messageId, line: 3, column: 5, endLine: 3, endColumn: 18 }],
       options: [{ max: 2 }],
     },
   ],
