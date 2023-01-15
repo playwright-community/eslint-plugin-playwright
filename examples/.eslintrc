@@ -3,5 +3,19 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2022
+  },
+  "rules": {
+    "playwright/prefer-lowercase-title": "warn",
+    "playwright/prefer-to-be": "warn",
+    "playwright/prefer-to-have-length": "warn",
+    "playwright/prefer-strict-equal": "warn",
+    "playwright/require-top-level-describe": "warn",
+    "playwright/no-restricted-matchers": [
+      "error",
+      {
+        "toBeFalsy": "Use `toBe(false)` instead.",
+        "not": null
+      }
+    ]
   }
 }
