@@ -1,6 +1,9 @@
 {
   "name": "examples",
   "type": "module",
+  "scripts": {
+    "lint": "eslint ."
+  },
   "dependencies": {
     "@playwright/test": "^1.29.2",
     "eslint": "^8.31.0",

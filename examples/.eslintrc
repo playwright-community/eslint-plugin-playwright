@@ -9,7 +9,7 @@
     "playwright/prefer-to-be": "warn",
     "playwright/prefer-to-have-length": "warn",
     "playwright/prefer-strict-equal": "warn",
-    "playwright/require-top-level-describe": "warn",
+    "playwright/max-nested-describe": ["warn", { "max": 1 }],
     "playwright/no-restricted-matchers": [
       "error",
       {
