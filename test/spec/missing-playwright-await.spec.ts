@@ -1,127 +1,205 @@
-import { runRuleTester, wrapInTest } from '../utils/rule-tester';
+import { runRuleTester, wrapInTest as test } from '../utils/rule-tester';
 import rule from '../../src/rules/missing-playwright-await';
-
-const invalid = (
-  messageId: string,
-  code: string,
-  output: string,
-  options: unknown[] = []
-) => ({
-  code: wrapInTest(code),
-  errors: [{ messageId }],
-  options,
-  output: wrapInTest(output),
-});
-
-const valid = (code: string, options: unknown[] = []) => ({
-  code: wrapInTest(code),
-  options,
-});
-
-const options = [{ customMatchers: ['toBeCustomThing'] }];
 
 runRuleTester('missing-playwright-await', rule, {
   invalid: [
-    invalid(
-      'expect',
-      'expect(page).toBeChecked()',
-      'await expect(page).toBeChecked()'
-    ),
-    invalid(
-      'expect',
-      'expect(page).not.toBeEnabled()',
-      'await expect(page).not.toBeEnabled()'
-    ),
-
+    {
+      code: test('expect(page).toBeChecked()'),
+      output: test('await expect(page).toBeChecked()'),
+      errors: [
+        {
+          messageId: 'expect',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 34,
+        },
+      ],
+    },
+    {
+      code: test('expect(page).not.toBeEnabled()'),
+      output: test('await expect(page).not.toBeEnabled()'),
+      errors: [
+        {
+          messageId: 'expect',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 34,
+        },
+      ],
+    },
     // Custom matchers
-    invalid(
-      'expect',
-      'expect(page).toBeCustomThing(false)',
-      'await expect(page).toBeCustomThing(false)',
-      options
-    ),
-    invalid(
-      'expect',
-      'expect(page)["not"][`toBeCustomThing`](true)',
-      'await expect(page)["not"][`toBeCustomThing`](true)',
-      options
-    ),
-
+    {
+      code: test('expect(page).toBeCustomThing(false)'),
+      output: test('await expect(page).toBeCustomThing(false)'),
+      errors: [
+        {
+          messageId: 'expect',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 34,
+        },
+      ],
+      options: [{ customMatchers: ['toBeCustomThing'] }],
+    },
+    {
+      code: test('expect(page)["not"][`toBeCustomThing`](true)'),
+      output: test('await expect(page)["not"][`toBeCustomThing`](true)'),
+      errors: [
+        {
+          messageId: 'expect',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 34,
+        },
+      ],
+      options: [{ customMatchers: ['toBeCustomThing'] }],
+    },
     // expect.soft
-    invalid(
-      'expect',
-      'expect.soft(page).toBeChecked()',
-      'await expect.soft(page).toBeChecked()'
-    ),
-    invalid(
-      'expect',
-      'expect["soft"](page)["toBeChecked"]()',
-      'await expect["soft"](page)["toBeChecked"]()'
-    ),
-    invalid(
-      'expect',
-      'expect[`soft`](page)[`toBeChecked`]()',
-      'await expect[`soft`](page)[`toBeChecked`]()'
-    ),
-
+    {
+      code: test('expect.soft(page).toBeChecked()'),
+      output: test('await expect.soft(page).toBeChecked()'),
+      errors: [
+        {
+          messageId: 'expect',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 39,
+        },
+      ],
+    },
+    {
+      code: test('expect["soft"](page)["toBeChecked"]()'),
+      output: test('await expect["soft"](page)["toBeChecked"]()'),
+      errors: [
+        {
+          messageId: 'expect',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 42,
+        },
+      ],
+    },
+    {
+      code: test('expect[`soft`](page)[`toBeChecked`]()'),
+      output: test('await expect[`soft`](page)[`toBeChecked`]()'),
+      errors: [
+        {
+          messageId: 'expect',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 42,
+        },
+      ],
+    },
     // expect.poll
-    invalid(
-      'expectPoll',
-      'expect.poll(() => foo).toBe(true)',
-      'await expect.poll(() => foo).toBe(true)'
-    ),
-    invalid(
-      'expectPoll',
-      'expect["poll"](() => foo)["toContain"]("bar")',
-      'await expect["poll"](() => foo)["toContain"]("bar")'
-    ),
-    invalid(
-      'expectPoll',
-      'expect[`poll`](() => foo)[`toBeTruthy`]()',
-      'await expect[`poll`](() => foo)[`toBeTruthy`]()'
-    ),
-
+    {
+      code: test('expect.poll(() => foo).toBe(true)'),
+      output: test('await expect.poll(() => foo).toBe(true)'),
+      errors: [
+        {
+          messageId: 'expectPoll',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 39,
+        },
+      ],
+    },
+    {
+      code: test('expect["poll"](() => foo)["toContain"]("bar")'),
+      output: test('await expect["poll"](() => foo)["toContain"]("bar")'),
+      errors: [
+        {
+          messageId: 'expectPoll',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 42,
+        },
+      ],
+    },
+    {
+      code: test('expect[`poll`](() => foo)[`toBeTruthy`]()'),
+      output: test('await expect[`poll`](() => foo)[`toBeTruthy`]()'),
+      errors: [
+        {
+          messageId: 'expectPoll',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 42,
+        },
+      ],
+    },
     // test.step
-    invalid(
-      'testStep',
-      "test.step('foo', async () => {})",
-      "await test.step('foo', async () => {})"
-    ),
-    invalid(
-      'testStep',
-      "test['step']('foo', async () => {})",
-      "await test['step']('foo', async () => {})"
-    ),
+    {
+      code: test("test.step('foo', async () => {})"),
+      output: test("await test.step('foo', async () => {})"),
+      errors: [
+        {
+          messageId: 'testStep',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 37,
+        },
+      ],
+    },
+    {
+      code: test("test['step']('foo', async () => {})"),
+      output: test("await test['step']('foo', async () => {})"),
+      errors: [
+        {
+          messageId: 'testStep',
+          line: 1,
+          column: 28,
+          endLine: 1,
+          endColumn: 40,
+        },
+      ],
+    },
   ],
   valid: [
-    valid('await expect(page).toBeEditable'),
-    valid('await expect(page).toEqualTitle("text")'),
-    valid('await expect(page).not.toHaveText("text")'),
+    { code: test('await expect(page).toBeEditable') },
+    { code: test('await expect(page).toEqualTitle("text")') },
+    { code: test('await expect(page).not.toHaveText("text")') },
 
     // Doesn't require an await when returning
-    valid('return expect(page).toHaveText("text")'),
+    { code: test('return expect(page).toHaveText("text")') },
     {
-      code: 'const a = () => expect(page).toHaveText("text")',
-      options,
+      code: test('const a = () => expect(page).toHaveText("text")'),
+      options: [{ customMatchers: ['toBeCustomThing'] }],
     },
 
     // Custom matchers
-    valid('await expect(page).toBeCustomThing(true)', options),
-    valid('await expect(page).toBeCustomThing(true)', options),
-    valid('await expect(page).toBeCustomThing(true)', options),
-    valid('await expect(page).toBeCustomThing(true)'),
-    valid('expect(page).toBeCustomThing(true)'),
+    {
+      code: test('await expect(page).toBeCustomThing(true)'),
+      options: [{ customMatchers: ['toBeCustomThing'] }],
+    },
+    { code: test('await expect(page).toBeCustomThing(true)') },
+    { code: test('expect(page).toBeCustomThing(true)') },
+    {
+      code: test('await expect(page).toBeAsync(true)'),
+      options: [{ customMatchers: ['toBeAsync'] }],
+    },
 
     // expect.soft
-    valid('await expect.soft(page).toHaveText("text")'),
-    valid('await expect.soft(page).not.toHaveText("text")'),
+    { code: test('await expect.soft(page).toHaveText("text")') },
+    { code: test('await expect.soft(page).not.toHaveText("text")') },
 
     // expect.poll
-    valid('await expect.poll(() => foo).toBe("text")'),
-    valid('await expect["poll"](() => foo).toContain("text")'),
-    valid('await expect[`poll`](() => foo).toBeTruthy()'),
+    { code: test('await expect.poll(() => foo).toBe("text")') },
+    { code: test('await expect["poll"](() => foo).toContain("text")') },
+    { code: test('await expect[`poll`](() => foo).toBeTruthy()') },
 
     // test.step
-    valid("await test.step('foo', async () => {})"),
+    { code: test("await test.step('foo', async () => {})") },
   ],
 });
