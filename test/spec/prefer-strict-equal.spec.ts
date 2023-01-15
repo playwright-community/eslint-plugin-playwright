@@ -13,14 +13,15 @@ runRuleTester('prefer-strict-equal', rule, {
       errors: [
         {
           messageId: 'useToStrictEqual',
-          column: 19,
-          line: 1,
           suggestions: [
             {
               messageId: 'suggestReplaceWithStrictEqual',
               output: 'expect(something).toStrictEqual(somethingElse);',
             },
           ],
+          line: 1,
+          column: 19,
+          endColumn: 26,
         },
       ],
     },
@@ -29,14 +30,15 @@ runRuleTester('prefer-strict-equal', rule, {
       errors: [
         {
           messageId: 'useToStrictEqual',
-          column: 19,
-          line: 1,
           suggestions: [
             {
               messageId: 'suggestReplaceWithStrictEqual',
               output: 'expect(something)["toStrictEqual"](somethingElse);',
             },
           ],
+          line: 1,
+          column: 19,
+          endColumn: 28,
         },
       ],
     },
