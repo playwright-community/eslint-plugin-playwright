@@ -1,8 +1,8 @@
-import { runRuleTester, wrapInTest } from '../utils/rule-tester';
+import { runRuleTester, test } from '../utils/rule-tester';
 import rule from '../../src/rules/no-element-handle';
 
 const invalid = (code: string, output: string) => ({
-  code: wrapInTest(code),
+  code: test(code),
   errors: [
     {
       messageId: 'noElementHandle',
@@ -11,14 +11,14 @@ const invalid = (code: string, output: string) => ({
           messageId: code.includes('$$')
             ? 'replaceElementHandlesWithLocator'
             : 'replaceElementHandleWithLocator',
-          output: wrapInTest(output),
+          output: test(output),
         },
       ],
     },
   ],
 });
 
-const valid = wrapInTest;
+const valid = test;
 
 runRuleTester('no-element-handle', rule, {
   invalid: [

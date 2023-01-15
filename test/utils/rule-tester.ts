@@ -19,5 +19,4 @@ export function runRuleTester(...args: Parameters<RuleTester['run']>) {
   return new RuleTester(config).run(...args);
 }
 
-export const wrapInTest = (input: string) =>
-  `test('test', async () => { ${input} })`;
+export const test = (input: string) => `test('test', async () => { ${input} })`;

@@ -1,4 +1,4 @@
-import { runRuleTester, wrapInTest as test } from '../utils/rule-tester';
+import { runRuleTester, test } from '../utils/rule-tester';
 import rule from '../../src/rules/no-force-option';
 
 const messageId = 'noForceOption';
