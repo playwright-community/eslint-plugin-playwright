@@ -7,7 +7,7 @@ function isForceOptionEnabled(node: ESTree.CallExpression) {
 
   return (
     arg?.type === 'ObjectExpression' &&
-    arg.properties.some(
+    arg.properties.find(
       (property) =>
         property.type === 'Property' &&
         getStringValue(property.key) === 'force' &&
@@ -37,10 +37,13 @@ export default {
       MemberExpression(node) {
         if (
           methodsWithForceOption.has(getStringValue(node.property)) &&
-          node.parent.type === 'CallExpression' &&
-          isForceOptionEnabled(node.parent)
+          node.parent.type === 'CallExpression'
         ) {
-          context.report({ messageId: 'noForceOption', node });
+          const reportNode = isForceOptionEnabled(node.parent);
+
+          if (reportNode) {
+            context.report({ messageId: 'noForceOption', node: reportNode });
+          }
         }
       },
     };
