@@ -19,7 +19,7 @@ export default {
 
       if (describeCallbackStack.length > max) {
         context.report({
-          node: node.parent,
+          node: node.parent.callee,
           messageId: 'exceededMaxDepth',
           data: {
             depth: describeCallbackStack.length.toString(),
