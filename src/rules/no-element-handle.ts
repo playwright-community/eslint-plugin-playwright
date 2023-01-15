@@ -1,36 +1,46 @@
-import { isCalleeObject, isCalleeProperty } from '../utils/ast';
+import { isPageMethod } from '../utils/ast';
 import * as ESTree from 'estree';
 import { Rule, AST } from 'eslint';
 
-function getRange(
-  node: ESTree.CallExpression & Rule.NodeParentExtension
-): AST.Range {
-  const callee = node.callee as ESTree.MemberExpression;
-  const start =
-    node.parent.type === 'AwaitExpression'
-      ? node.parent.range![0]
-      : callee.object.range![0];
-
-  return [start, callee.range![1]];
+function getPropertyRange(node: ESTree.Node): AST.Range {
+  return node.type === 'Identifier'
+    ? node.range!
+    : [node.range![0] + 1, node.range![1] - 1];
 }
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (
-          isCalleeObject(node, 'page') &&
-          (isCalleeProperty(node, '$') || isCalleeProperty(node, '$$'))
-        ) {
+        if (isPageMethod(node, '$') || isPageMethod(node, '$$')) {
           context.report({
             messageId: 'noElementHandle',
             suggest: [
               {
-                messageId: isCalleeProperty(node, '$')
+                messageId: isPageMethod(node, '$')
                   ? 'replaceElementHandleWithLocator'
                   : 'replaceElementHandlesWithLocator',
-                fix: (fixer) =>
-                  fixer.replaceTextRange(getRange(node), 'page.locator'),
+                fix: (fixer) => {
+                  const { property } = node.callee as ESTree.MemberExpression;
+
+                  // Replace $/$$ with locator
+                  const fixes = [
+                    fixer.replaceTextRange(
+                      getPropertyRange(property),
+                      'locator'
+                    ),
+                  ];
+
+                  // Remove the await expression if it exists as locators do
+                  // not need to be awaited.
+                  if (node.parent.type === 'AwaitExpression') {
+                    fixes.push(
+                      fixer.removeRange([node.parent.range![0], node.range![0]])
+                    );
+                  }
+
+                  return fixes;
+                },
               },
             ],
             node,
