@@ -14,6 +14,7 @@ import preferLowercaseTitle from './rules/prefer-lowercase-title';
 import preferToBe from './rules/prefer-to-be';
 import preferToHaveLength from './rules/prefer-to-have-length';
 import preferStrictEqual from './rules/prefer-strict-equal';
+import requireSoftAssertions from './rules/require-soft-assertions';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validExpect from './rules/valid-expect';
 
@@ -91,6 +92,7 @@ export = {
     'prefer-to-be': preferToBe,
     'prefer-to-have-length': preferToHaveLength,
     'require-top-level-describe': requireTopLevelDescribe,
+    'require-soft-assertions': requireSoftAssertions,
     'valid-expect': validExpect,
   },
 };
