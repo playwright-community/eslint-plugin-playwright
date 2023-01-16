@@ -3,7 +3,7 @@ import { runRuleTester } from '../utils/rule-tester';
 
 const messageId = 'requireSoft';
 
-runRuleTester('require-top-level-describe', rule, {
+runRuleTester('require-soft-assertions', rule, {
   valid: [
     'expect.soft(page).toHaveTitle("baz")',
     'expect.soft(page.locator("foo")).toHaveText("bar")',
