@@ -39,7 +39,7 @@ runRuleTester('missing-playwright-await', rule, {
         await Promise.all([
           expect(page.locator("foo")).toHaveText("bar"),
           expect(page).toHaveTitle("baz"),
-        ]),
+        ])
       `),
     },
   ],

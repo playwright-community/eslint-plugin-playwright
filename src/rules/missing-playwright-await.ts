@@ -87,9 +87,22 @@ function getCallType(
   }
 }
 
+function isPromiseAll(node: Rule.Node) {
+  return node.type === 'ArrayExpression' &&
+    node.parent.type === 'CallExpression' &&
+    node.parent.callee.type === 'MemberExpression' &&
+    isIdentifier(node.parent.callee.object, 'Promise') &&
+    isIdentifier(node.parent.callee.property, 'all')
+    ? node.parent
+    : null;
+}
+
 function checkValidity(node: Rule.Node): ESTree.Node | undefined {
-  return validTypes.has(node.parent.type)
-    ? undefined
+  if (validTypes.has(node.parent.type)) return;
+
+  const promiseAll = isPromiseAll(node.parent);
+  return promiseAll
+    ? checkValidity(promiseAll)
     : node.parent.type === 'MemberExpression' ||
       (node.parent.type === 'CallExpression' && node.parent.callee === node)
     ? checkValidity(node.parent)
