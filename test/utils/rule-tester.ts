@@ -13,6 +13,7 @@ export function runRuleTester(...args: Parameters<RuleTester['run']>) {
   const config = {
     parserOptions: {
       ecmaVersion: 2022,
+      sourceType: 'module',
     },
   };
 
