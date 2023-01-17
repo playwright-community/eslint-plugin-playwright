@@ -1,5 +1,6 @@
 import { runRuleTester, test } from '../utils/rule-tester';
 import rule from '../../src/rules/missing-playwright-await';
+import * as dedent from 'dedent';
 
 runRuleTester('missing-playwright-await', rule, {
   valid: [
@@ -32,6 +33,15 @@ runRuleTester('missing-playwright-await', rule, {
     { code: test('await expect[`poll`](() => foo).toBeTruthy()') },
     // test.step
     { code: test("await test.step('foo', async () => {})") },
+    // Promise.all
+    {
+      code: test(`
+        await Promise.all([
+          expect(page.locator("foo")).toHaveText("bar"),
+          expect(page).toHaveTitle("baz"),
+        ])
+      `),
+    },
   ],
   invalid: [
     {
@@ -194,6 +204,28 @@ runRuleTester('missing-playwright-await', rule, {
           endLine: 1,
           endColumn: 40,
         },
+      ],
+    },
+    {
+      code: dedent(
+        test(`
+          const promises = [
+            expect(page.locator("foo")).toHaveText("bar"),
+            expect(page).toHaveTitle("baz"),
+          ]
+        `)
+      ),
+      output: dedent(
+        test(`
+          const promises = [
+            await expect(page.locator("foo")).toHaveText("bar"),
+            await expect(page).toHaveTitle("baz"),
+          ]
+        `)
+      ),
+      errors: [
+        { messageId: 'expect', line: 3, column: 4, endLine: 3, endColumn: 10 },
+        { messageId: 'expect', line: 4, column: 4, endLine: 4, endColumn: 10 },
       ],
     },
   ],
