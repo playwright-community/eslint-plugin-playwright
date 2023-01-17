@@ -78,7 +78,7 @@ function getCallType(
     return { messageId: 'expectPoll' };
   }
 
-  // expect with awitable matcher
+  // expect with awaitable matcher
   const [lastMatcher] = getMatchers(node).slice(-1);
   const matcherName = getStringValue(lastMatcher);
 
@@ -116,7 +116,7 @@ export default {
             fix: (fixer) => fixer.insertTextBefore(node, 'await '),
             messageId: result.messageId,
             data: result.data,
-            node: reportNode,
+            node: node.callee,
           });
         }
       },

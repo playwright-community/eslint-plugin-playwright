@@ -2,12 +2,6 @@ import { Rule } from 'eslint';
 import { getStringValue } from '../utils/ast';
 import { parseExpectCall } from '../utils/parseExpectCall';
 
-// To properly test matcher chains, we ensure the entire chain is surrounded by
-// periods so that the `includes` matcher doesn't match substrings. For example,
-// `not` should only match `expect().not.something()` but it should not match
-// `expect().nothing()`.
-const wrap = (chain: string) => `.${chain}.`;
-
 export default {
   create(context) {
     const restrictedChains = (context.options?.[0] ?? {}) as {
@@ -19,19 +13,42 @@ export default {
         const expectCall = parseExpectCall(node);
         if (!expectCall) return;
 
-        // Stringify the expect call chain to compare to the list of restricted
-        // matcher chains.
-        const chain = expectCall.members.map(getStringValue).join('.');
-
         Object.entries(restrictedChains)
-          .filter(([restriction]) => wrap(chain).includes(wrap(restriction)))
-          .forEach(([restriction, message]) => {
+          .map(([restriction, message]) => {
+            const chain = expectCall.members;
+            const restrictionLinks = restriction.split('.').length;
+
+            // Find in the full chain, where the restriction chain starts
+            const startIndex = chain.findIndex((_, i) => {
+              // Construct the partial chain to compare against the restriction
+              // chain string.
+              const partial = chain
+                .slice(i, i + restrictionLinks)
+                .map(getStringValue)
+                .join('.');
+
+              return partial === restriction;
+            });
+
+            return {
+              // If the restriction chain was found, return the portion of the
+              // chain that matches the restriction chain.
+              chain:
+                startIndex !== -1
+                  ? chain.slice(startIndex, startIndex + restrictionLinks)
+                  : [],
+              restriction,
+              message,
+            };
+          })
+          .filter(({ chain }) => chain.length)
+          .forEach(({ chain, restriction, message }) => {
             context.report({
               messageId: message ? 'restrictedWithMessage' : 'restricted',
               data: { message: message ?? '', restriction },
               loc: {
-                start: expectCall.members[0].loc!.start,
-                end: expectCall.members[expectCall.members.length - 1].loc!.end,
+                start: chain[0].loc!.start,
+                end: chain[chain.length - 1].loc!.end,
               },
             });
           });

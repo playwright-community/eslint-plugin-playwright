@@ -16,37 +16,51 @@ runRuleTester('prefer-to-have-length', rule, {
     {
       code: 'expect(files.length).toBe(1)',
       output: 'expect(files).toHaveLength(1)',
-      errors: [{ messageId: 'useToHaveLength', column: 22, line: 1 }],
+      errors: [
+        { messageId: 'useToHaveLength', column: 22, endColumn: 26, line: 1 },
+      ],
     },
     {
       code: 'expect(files.length).not.toBe(1)',
       output: 'expect(files).not.toHaveLength(1)',
-      errors: [{ messageId: 'useToHaveLength', column: 26, line: 1 }],
+      errors: [
+        { messageId: 'useToHaveLength', column: 26, endColumn: 30, line: 1 },
+      ],
     },
     {
       code: 'expect.soft(files["length"]).not.toBe(1)',
       output: 'expect.soft(files).not.toHaveLength(1)',
-      errors: [{ messageId: 'useToHaveLength', column: 34, line: 1 }],
+      errors: [
+        { messageId: 'useToHaveLength', column: 34, endColumn: 38, line: 1 },
+      ],
     },
     {
       code: 'expect(files["length"]).not["toBe"](1)',
       output: 'expect(files).not["toHaveLength"](1)',
-      errors: [{ messageId: 'useToHaveLength', column: 29, line: 1 }],
+      errors: [
+        { messageId: 'useToHaveLength', column: 29, endColumn: 35, line: 1 },
+      ],
     },
     {
       code: 'expect(files.length)[`toEqual`](1)',
       output: 'expect(files)[`toHaveLength`](1)',
-      errors: [{ messageId: 'useToHaveLength', column: 22, line: 1 }],
+      errors: [
+        { messageId: 'useToHaveLength', column: 22, endColumn: 31, line: 1 },
+      ],
     },
     {
       code: 'expect(files.length).toStrictEqual(1)',
       output: 'expect(files).toHaveLength(1)',
-      errors: [{ messageId: 'useToHaveLength', column: 22, line: 1 }],
+      errors: [
+        { messageId: 'useToHaveLength', column: 22, endColumn: 35, line: 1 },
+      ],
     },
     {
       code: 'expect(files.length).not.toStrictEqual(1)',
       output: 'expect(files).not.toHaveLength(1)',
-      errors: [{ messageId: 'useToHaveLength', column: 26, line: 1 }],
+      errors: [
+        { messageId: 'useToHaveLength', column: 26, endColumn: 39, line: 1 },
+      ],
     },
   ],
 });

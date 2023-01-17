@@ -43,7 +43,7 @@ export default {
                 },
               },
             ],
-            node,
+            node: node.callee,
           });
         }
       },

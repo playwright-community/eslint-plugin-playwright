@@ -23,7 +23,7 @@ export default {
 
             if (topLevelDescribeCount > maxTopLevelDescribes) {
               context.report({
-                node,
+                node: node.callee,
                 messageId: 'tooManyDescribes',
                 data: getAmountData(maxTopLevelDescribes),
               });
@@ -31,9 +31,9 @@ export default {
           }
         } else if (!describeCount) {
           if (isTest(node)) {
-            context.report({ node, messageId: 'unexpectedTest' });
+            context.report({ node: node.callee, messageId: 'unexpectedTest' });
           } else if (isTestHook(node)) {
-            context.report({ node, messageId: 'unexpectedHook' });
+            context.report({ node: node.callee, messageId: 'unexpectedHook' });
           }
         }
       },

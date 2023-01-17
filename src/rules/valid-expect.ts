@@ -49,7 +49,10 @@ export default {
 
           if (!result.called) {
             context.report({
-              node: result.node,
+              node:
+                result.node.type === 'MemberExpression'
+                  ? result.node.property
+                  : result.node,
               messageId: 'matcherNotCalled',
             });
           }

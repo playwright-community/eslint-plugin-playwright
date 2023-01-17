@@ -37,8 +37,11 @@ export default {
               replaceAccessorFixer(fixer, expectCall.matcher, newMatcher),
             ],
             messageId: 'noUselessNot',
-            node: node,
             data: { old: expectCall.matcherName, new: newMatcher },
+            loc: {
+              start: notModifier.loc!.start,
+              end: expectCall.matcher.loc!.end,
+            },
           });
         }
       },
