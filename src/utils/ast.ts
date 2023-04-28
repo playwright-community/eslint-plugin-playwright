@@ -76,6 +76,20 @@ export function isDescribeCall(node: ESTree.Node): boolean {
     : false;
 }
 
+export function isStepCall(node: ESTree.Node): boolean {
+  const inner = node.type === 'CallExpression' ? node.callee : node;
+
+  if (inner.type !== 'MemberExpression') {
+    return false;
+  }
+
+  return isPropertyAccessor(inner, 'step')
+    ? true
+    : describeProperties.has(getStringValue(inner.property))
+    ? isStepCall(inner.object)
+    : false;
+}
+
 export function findParent<T extends ESTree.Node['type']>(
   node: NodeWithParent,
   type: T

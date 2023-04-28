@@ -84,6 +84,7 @@ export = {
     'no-wait-for-timeout': noWaitForTimeout,
     'no-force-option': noForceOption,
     'max-nested-describe': maxNestedDescribe,
+    'max-nested-step': maxNestedDescribe,
     'no-conditional-in-test': noConditionalInTest,
     'no-useless-not': noUselessNot,
     'no-restricted-matchers': noRestrictedMatchers,
