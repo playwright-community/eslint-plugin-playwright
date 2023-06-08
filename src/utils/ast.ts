@@ -153,3 +153,23 @@ export function isPageMethod(node: ESTree.CallExpression, name: string) {
     isPropertyAccessor(node.callee, name)
   );
 }
+
+/**
+ * Determine if a node is a method on a playwright locator object.
+ * 
+ * @param node The ESTree call expression
+ * @param name The identifier of the method on the locator object
+ * @returns 
+ */
+export function isLocatorMethod(node: ESTree.CallExpression, name: string): ESTree.MemberExpression | undefined {
+  // TODO: Logic is not finished.
+
+  if (
+    node.callee.type === 'MemberExpression' &&
+    isPropertyAccessor(node.callee, name)
+  ) {
+    return node.callee;
+  }
+
+  return undefined;
+}
