@@ -1,5 +1,6 @@
 import { Rule } from 'eslint';
-import { getMatcherChain, getStringValue, isExpectCall } from '../utils/ast';
+import { getStringValue } from '../utils/ast';
+import { parseExpectCall } from '../utils/parseExpectCall';
 
 export default {
   create(context) {
@@ -9,31 +10,48 @@ export default {
 
     return {
       CallExpression(node) {
-        if (!isExpectCall(node)) {
-          return;
-        }
+        const expectCall = parseExpectCall(node);
+        if (!expectCall) return;
 
-        const matchers = getMatcherChain(node);
-        const permutations = matchers.map((_, i) => matchers.slice(0, i + 1));
+        Object.entries(restrictedChains)
+          .map(([restriction, message]) => {
+            const chain = expectCall.members;
+            const restrictionLinks = restriction.split('.').length;
 
-        for (const permutation of permutations) {
-          const chain = permutation.map(getStringValue).join('.');
+            // Find in the full chain, where the restriction chain starts
+            const startIndex = chain.findIndex((_, i) => {
+              // Construct the partial chain to compare against the restriction
+              // chain string.
+              const partial = chain
+                .slice(i, i + restrictionLinks)
+                .map(getStringValue)
+                .join('.');
 
-          if (chain in restrictedChains) {
-            const message = restrictedChains[chain];
-
-            context.report({
-              messageId: message ? 'restrictedWithMessage' : 'restricted',
-              data: { message: message ?? '', chain },
-              loc: {
-                start: permutation[0].loc!.start,
-                end: permutation[permutation.length - 1].loc!.end,
-              },
+              return partial === restriction;
             });
 
-            break;
-          }
-        }
+            return {
+              // If the restriction chain was found, return the portion of the
+              // chain that matches the restriction chain.
+              chain:
+                startIndex !== -1
+                  ? chain.slice(startIndex, startIndex + restrictionLinks)
+                  : [],
+              restriction,
+              message,
+            };
+          })
+          .filter(({ chain }) => chain.length)
+          .forEach(({ chain, restriction, message }) => {
+            context.report({
+              messageId: message ? 'restrictedWithMessage' : 'restricted',
+              data: { message: message ?? '', restriction },
+              loc: {
+                start: chain[0].loc!.start,
+                end: chain[chain.length - 1].loc!.end,
+              },
+            });
+          });
       },
     };
   },
@@ -45,7 +63,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-restricted-matchers.md',
     },
     messages: {
-      restricted: 'Use of `{{chain}}` is disallowed',
+      restricted: 'Use of `{{restriction}}` is disallowed',
       restrictedWithMessage: '{{message}}',
     },
     type: 'suggestion',

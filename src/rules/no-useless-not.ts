@@ -1,56 +1,48 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { getStringValue, isExpectCall, isPropertyAccessor } from '../utils/ast';
+import { getStringValue } from '../utils/ast';
+import { getRangeOffset, replaceAccessorFixer } from '../utils/fixer';
+import { parseExpectCall } from '../utils/parseExpectCall';
 
-const matcherMap = {
+const matcherMap: Record<string, string> = {
   toBeVisible: 'toBeHidden',
   toBeHidden: 'toBeVisible',
   toBeEnabled: 'toBeDisabled',
   toBeDisabled: 'toBeEnabled',
 };
 
-const getRangeOffset = (node: ESTree.Node) =>
-  node.type === 'Identifier' ? 0 : 1;
-
 export default {
   create(context) {
     return {
-      MemberExpression(node) {
-        if (
-          node.object.type === 'MemberExpression' &&
-          node.object.object.type === 'CallExpression' &&
-          isExpectCall(node.object.object) &&
-          isPropertyAccessor(node.object, 'not')
-        ) {
-          const matcher = getStringValue(node.property) as
-            | keyof typeof matcherMap
-            | undefined;
+      CallExpression(node) {
+        const expectCall = parseExpectCall(node);
+        if (!expectCall) return;
 
-          if (matcher && matcher in matcherMap) {
-            const { property } = node.object;
+        // As the name implies, this rule only implies if the not modifier is
+        // part of the matcher chain
+        const notModifier = expectCall.modifiers.find(
+          (mod) => getStringValue(mod) === 'not'
+        );
+        if (!notModifier) return;
 
-            context.report({
-              fix: (fixer) => [
-                fixer.removeRange([
-                  property.range![0] - getRangeOffset(property),
-                  property.range![1] + 1,
-                ]),
-                fixer.replaceTextRange(
-                  [
-                    node.property.range![0] + getRangeOffset(node.property),
-                    node.property.range![1] - getRangeOffset(node.property),
-                  ],
-                  matcherMap[matcher]
-                ),
-              ],
-              messageId: 'noUselessNot',
-              node: node,
-              data: {
-                old: matcher,
-                new: matcherMap[matcher],
-              },
-            });
-          }
+        // This rule only applies to specific matchers that have opposites
+        if (expectCall.matcherName in matcherMap) {
+          const newMatcher = matcherMap[expectCall.matcherName];
+
+          context.report({
+            fix: (fixer) => [
+              fixer.removeRange([
+                notModifier.range![0] - getRangeOffset(notModifier),
+                notModifier.range![1] + 1,
+              ]),
+              replaceAccessorFixer(fixer, expectCall.matcher, newMatcher),
+            ],
+            messageId: 'noUselessNot',
+            data: { old: expectCall.matcherName, new: newMatcher },
+            loc: {
+              start: notModifier.loc!.start,
+              end: expectCall.matcher.loc!.end,
+            },
+          });
         }
       },
     };

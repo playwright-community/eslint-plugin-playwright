@@ -1,139 +1,10 @@
-import { Errors, runRuleTester } from '../utils/rule-tester';
+import { runRuleTester } from '../utils/rule-tester';
 import rule from '../../src/rules/no-conditional-in-test';
+import dedent = require('dedent');
 
-const invalid = (
-  code: string,
-  errors: Errors = [{ messageId: 'conditionalInTest' }]
-) => ({ code, errors });
+const messageId = 'conditionalInTest';
 
 runRuleTester('no-conditional-in-test', rule, {
-  invalid: [
-    invalid('test("foo", () => { if (true) { expect(1).toBe(1); } });'),
-    invalid(`
-      test.describe("foo", () => {
-        test("bar", () => {
-          if (someCondition()) {
-            expect(1).toBe(1);
-          } else {
-            expect(2).toBe(2);
-          }
-        });
-      });
-    `),
-    invalid(`
-      describe('foo', () => {
-        test('bar', () => {
-          if ('bar') {}
-        })
-      })
-    `),
-    invalid(
-      `
-      describe('foo', () => {
-        test('bar', () => {
-          if ('bar') {}
-        })
-        test('baz', () => {
-          if ('qux') {}
-          if ('quux') {}
-        })
-      })
-    `,
-      [
-        { messageId: 'conditionalInTest' },
-        { messageId: 'conditionalInTest' },
-        { messageId: 'conditionalInTest' },
-      ]
-    ),
-    invalid(`
-      test("foo", function () {
-        switch(someCondition()) {
-          case 1:
-            expect(1).toBe(1);
-            break;
-          case 2:
-            expect(2).toBe(2);
-            break;
-        }
-      });
-    `),
-    invalid(`
-      test('foo', () => {
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      test('foo', () => {
-        bar ? expect(1).toBe(1) : expect(2).toBe(2);
-      })
-    `),
-    invalid(`
-      test('foo', function () {
-        bar ? expect(1).toBe(1) : expect(2).toBe(2);
-      })
-    `),
-    invalid(`
-      test('foo', function () {
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      test('foo', async function ({ page }) {
-        await asyncFunc();
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      test.skip('foo', () => {
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      test.skip('foo', async ({ page }) => {
-        await asyncFunc();
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      test.skip('foo', function () {
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      test.only('foo', () => {
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      test.fixme('foo', () => {
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      test('foo', () => {
-        callExpression()
-        if ('bar') {}
-      })
-    `),
-    invalid(`
-      testDetails.forEach((detail) => {
-        test(detail.name, () => {
-          if (detail.fail) {
-            test.fail();
-          } else {
-            expect(true).toBe(true);
-          }
-        })
-      });
-    `),
-    invalid(`
-      test('test', async ({ page }) => {
-        await test.step('step', async () => {
-          if (true) {}
-        });
-      });
-    `),
-  ],
   valid: [
     'test("foo", () => { expect(1).toBe(1); });',
     'test.fixme("some broken test", () => { expect(1).toBe(1); });',
@@ -235,5 +106,183 @@ runRuleTester('no-conditional-in-test', rule, {
         await page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET')
       });
     })`,
+  ],
+  invalid: [
+    {
+      code: 'test("foo", () => { if (true) { expect(1).toBe(1); } });',
+      errors: [{ messageId, line: 1, column: 21, endLine: 1, endColumn: 53 }],
+    },
+    {
+      code: dedent`
+        test.describe("foo", () => {
+          test("bar", () => {
+            if (someCondition()) {
+              expect(1).toBe(1);
+            } else {
+              expect(2).toBe(2);
+            }
+          });
+        });
+      `,
+      errors: [{ messageId, line: 3, column: 5, endLine: 7, endColumn: 6 }],
+    },
+    {
+      code: dedent`
+        describe('foo', () => {
+          test('bar', () => {
+            if ('bar') {}
+          })
+        })
+      `,
+      errors: [{ messageId, line: 3, column: 5, endLine: 3, endColumn: 18 }],
+    },
+    {
+      code: dedent`
+        describe('foo', () => {
+          test('bar', () => {
+            if ('bar') {}
+          })
+          test('baz', () => {
+            if ('qux') {}
+            if ('quux') {}
+          })
+        })
+      `,
+      errors: [
+        { messageId, line: 3, column: 5, endLine: 3, endColumn: 18 },
+        { messageId, line: 6, column: 5, endLine: 6, endColumn: 18 },
+        { messageId, line: 7, column: 5, endLine: 7, endColumn: 19 },
+      ],
+    },
+    {
+      code: dedent`
+        test("foo", function () {
+          switch(someCondition()) {
+            case 1:
+              expect(1).toBe(1);
+              break;
+            case 2:
+              expect(2).toBe(2);
+              break;
+          }
+        });
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 9, endColumn: 4 }],
+    },
+    {
+      code: dedent`
+        test('foo', () => {
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 2, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        test('foo', () => {
+          bar ? expect(1).toBe(1) : expect(2).toBe(2);
+        })
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 2, endColumn: 46 }],
+    },
+    {
+      code: dedent`
+        test('foo', function () {
+          bar ? expect(1).toBe(1) : expect(2).toBe(2);
+        })
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 2, endColumn: 46 }],
+    },
+    {
+      code: dedent`
+        test('foo', function () {
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 2, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        test('foo', async function ({ page }) {
+          await asyncFunc();
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 3, column: 3, endLine: 3, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        test.skip('foo', () => {
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 2, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        test.skip('foo', async ({ page }) => {
+          await asyncFunc();
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 3, column: 3, endLine: 3, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        test.skip('foo', function () {
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 2, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        test.only('foo', () => {
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 2, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        test.fixme('foo', () => {
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 2, column: 3, endLine: 2, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        test('foo', () => {
+          callExpression()
+          if ('bar') {}
+        })
+      `,
+      errors: [{ messageId, line: 3, column: 3, endLine: 3, endColumn: 16 }],
+    },
+    {
+      code: dedent`
+        testDetails.forEach((detail) => {
+          test(detail.name, () => {
+            if (detail.fail) {
+              test.fail();
+            } else {
+              expect(true).toBe(true);
+            }
+          })
+        });
+      `,
+      errors: [{ messageId, line: 3, column: 5, endLine: 7, endColumn: 6 }],
+    },
+    {
+      code: dedent`
+        test('test', async ({ page }) => {
+          await test.step('step', async () => {
+            if (true) {}
+          });
+        });
+      `,
+      errors: [{ messageId, line: 3, column: 5, endLine: 3, endColumn: 17 }],
+    },
   ],
 });

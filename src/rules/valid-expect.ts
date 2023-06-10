@@ -1,23 +1,9 @@
 import { Rule } from 'eslint';
-import { isExpectCall, isPropertyAccessor } from '../utils/ast';
+import { isExpectCall } from '../utils/ast';
 import { NodeWithParent } from '../utils/types';
 import * as ESTree from 'estree';
 import { getAmountData } from '../utils/misc';
-
-function isMatcherFound(node: NodeWithParent) {
-  if (node.parent.type !== 'MemberExpression') {
-    return { found: false, node };
-  }
-
-  if (
-    isPropertyAccessor(node.parent, 'not') &&
-    node.parent.parent.type !== 'MemberExpression'
-  ) {
-    return { found: false, node: node.parent };
-  }
-
-  return { found: true, node };
-}
+import { parseExpectCall } from '../utils/parseExpectCall';
 
 function isMatcherCalled(node: NodeWithParent): {
   called: boolean;
@@ -55,15 +41,18 @@ export default {
       CallExpression(node) {
         if (!isExpectCall(node)) return;
 
-        const result = isMatcherFound(node);
-        if (!result.found) {
-          context.report({ node: result.node, messageId: 'matcherNotFound' });
+        const expectCall = parseExpectCall(node);
+        if (!expectCall) {
+          context.report({ node, messageId: 'matcherNotFound' });
         } else {
           const result = isMatcherCalled(node);
 
           if (!result.called) {
             context.report({
-              node: result.node,
+              node:
+                result.node.type === 'MemberExpression'
+                  ? result.node.property
+                  : result.node,
               messageId: 'matcherNotCalled',
             });
           }

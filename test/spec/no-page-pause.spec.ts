@@ -1,23 +1,32 @@
-import { runRuleTester, wrapInTest } from '../utils/rule-tester';
+import { runRuleTester, test } from '../utils/rule-tester';
 import rule from '../../src/rules/no-page-pause';
 
-const invalid = (code: string) => ({
-  code: wrapInTest(code),
-  errors: [{ messageId: 'noPagePause' }],
-});
-
-const valid = wrapInTest;
+const messageId = 'noPagePause';
 
 runRuleTester('no-page-pause', rule, {
-  invalid: [
-    invalid('await page.pause()'),
-    invalid('await page["pause"]()'),
-    invalid('await page[`pause`]()'),
-  ],
   valid: [
-    valid('await page.click()'),
-    valid('await page["hover"]()'),
-    valid('await page[`check`]()'),
-    valid('await expect(page).toBePaused()'),
+    test('await page.click()'),
+    test('await this.page.click()'),
+    test('await page["hover"]()'),
+    test('await page[`check`]()'),
+    test('await expect(page).toBePaused()'),
+  ],
+  invalid: [
+    {
+      code: test('await page.pause()'),
+      errors: [{ messageId, line: 1, column: 34, endColumn: 46 }],
+    },
+    {
+      code: test('await this.page.pause()'),
+      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
+    },
+    {
+      code: test('await page["pause"]()'),
+      errors: [{ messageId, line: 1, column: 34, endColumn: 49 }],
+    },
+    {
+      code: test('await page[`pause`]()'),
+      errors: [{ messageId, line: 1, column: 34, endColumn: 49 }],
+    },
   ],
 });

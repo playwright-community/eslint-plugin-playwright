@@ -1,36 +1,18 @@
 import * as ESTree from 'estree';
 import { Rule } from 'eslint';
-import { getStringValue } from '../utils/ast';
-
-type MemberExpression = ESTree.MemberExpression & Rule.NodeParentExtension;
-
-function getMemberExpressionNode(
-  node: MemberExpression,
-  matchers: Set<string>
-) {
-  const propertyName = getStringValue(node.property);
-
-  if (getStringValue(node.object) === 'test') {
-    return propertyName === 'step' ? { node, type: 'testStep' } : undefined;
-  }
-
-  return propertyName && matchers.has(propertyName)
-    ? { node, type: 'expect' }
-    : undefined;
-}
+import {
+  getMatchers,
+  isPropertyAccessor,
+  getExpectType,
+  isIdentifier,
+  getStringValue,
+} from '../utils/ast';
 
 const validTypes = new Set([
   'AwaitExpression',
   'ReturnStatement',
   'ArrowFunctionExpression',
 ]);
-
-function isValid(node: MemberExpression) {
-  return (
-    validTypes.has(node.parent?.type) ||
-    validTypes.has(node.parent?.parent?.type)
-  );
-}
 
 const expectPlaywrightMatchers = [
   'toBeChecked',
@@ -75,10 +57,62 @@ const playwrightTestMatchers = [
   'toHaveValue',
 ];
 
+function getCallType(
+  node: ESTree.CallExpression & Rule.NodeParentExtension,
+  awaitableMatchers: Set<string>
+) {
+  // test.step
+  if (
+    node.callee.type === 'MemberExpression' &&
+    isIdentifier(node.callee.object, 'test') &&
+    isPropertyAccessor(node.callee, 'step')
+  ) {
+    return { messageId: 'testStep' };
+  }
+
+  const expectType = getExpectType(node);
+  if (!expectType) return;
+
+  // expect.poll
+  if (expectType === 'poll') {
+    return { messageId: 'expectPoll' };
+  }
+
+  // expect with awaitable matcher
+  const [lastMatcher] = getMatchers(node).slice(-1);
+  const matcherName = getStringValue(lastMatcher);
+
+  if (awaitableMatchers.has(matcherName)) {
+    return { messageId: 'expect', data: { matcherName } };
+  }
+}
+
+function isPromiseAll(node: Rule.Node) {
+  return node.type === 'ArrayExpression' &&
+    node.parent.type === 'CallExpression' &&
+    node.parent.callee.type === 'MemberExpression' &&
+    isIdentifier(node.parent.callee.object, 'Promise') &&
+    isIdentifier(node.parent.callee.property, 'all')
+    ? node.parent
+    : null;
+}
+
+function checkValidity(node: Rule.Node): ESTree.Node | undefined {
+  if (validTypes.has(node.parent.type)) return;
+
+  const promiseAll = isPromiseAll(node.parent);
+  return promiseAll
+    ? checkValidity(promiseAll)
+    : node.parent.type === 'MemberExpression' ||
+      (node.parent.type === 'CallExpression' && node.parent.callee === node)
+    ? checkValidity(node.parent)
+    : node;
+}
+
 export default {
   create(context) {
     const options = context.options[0] || {};
-    const matchers = new Set([
+    const awaitableMatchers = new Set([
       ...expectPlaywrightMatchers,
       ...playwrightTestMatchers,
       // Add any custom matchers to the set
@@ -86,14 +120,16 @@ export default {
     ]);
 
     return {
-      MemberExpression(statement) {
-        const result = getMemberExpressionNode(statement, matchers);
+      CallExpression(node) {
+        const result = getCallType(node, awaitableMatchers);
+        const reportNode = result ? checkValidity(node) : undefined;
 
-        if (result && !isValid(result.node)) {
+        if (result && reportNode) {
           context.report({
-            fix: (fixer) => fixer.insertTextBefore(result.node, 'await '),
-            messageId: result.type,
-            node: result.node,
+            fix: (fixer) => fixer.insertTextBefore(node, 'await '),
+            messageId: result.messageId,
+            data: result.data,
+            node: node.callee,
           });
         }
       },
@@ -107,7 +143,8 @@ export default {
     },
     fixable: 'code',
     messages: {
-      expect: "'expect' matchers must be awaited or returned.",
+      expect: "'{{matcherName}}' must be awaited or returned.",
+      expectPoll: "'expect.poll' matchers must be awaited or returned.",
       testStep: "'test.step' must be awaited or returned.",
     },
     schema: [

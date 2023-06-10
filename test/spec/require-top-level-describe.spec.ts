@@ -2,11 +2,6 @@ import rule from '../../src/rules/require-top-level-describe';
 import * as dedent from 'dedent';
 import { runRuleTester } from '../utils/rule-tester';
 
-const invalid = (code: string, messageId: string) => ({
-  code,
-  errors: [{ messageId }],
-});
-
 runRuleTester('require-top-level-describe', rule, {
   valid: [
     'foo()',
@@ -47,32 +42,102 @@ runRuleTester('require-top-level-describe', rule, {
   ],
   invalid: [
     // Top level hooks
-    invalid('test.beforeAll(() => {})', 'unexpectedHook'),
-    invalid('test.beforeEach(() => {})', 'unexpectedHook'),
-    invalid('test.afterAll(() => {})', 'unexpectedHook'),
-    invalid('test.afterEach(() => {})', 'unexpectedHook'),
-    invalid('test["afterEach"](() => {})', 'unexpectedHook'),
-    invalid('test[`afterEach`](() => {})', 'unexpectedHook'),
+    {
+      code: 'test.beforeAll(() => {})',
+      errors: [
+        { messageId: 'unexpectedHook', line: 1, column: 1, endColumn: 15 },
+      ],
+    },
+    {
+      code: 'test.beforeEach(() => {})',
+      errors: [
+        { messageId: 'unexpectedHook', line: 1, column: 1, endColumn: 16 },
+      ],
+    },
+    {
+      code: 'test.afterAll(() => {})',
+      errors: [
+        { messageId: 'unexpectedHook', line: 1, column: 1, endColumn: 14 },
+      ],
+    },
+    {
+      code: 'test.afterEach(() => {})',
+      errors: [
+        { messageId: 'unexpectedHook', line: 1, column: 1, endColumn: 15 },
+      ],
+    },
+    {
+      code: 'test["afterEach"](() => {})',
+      errors: [
+        { messageId: 'unexpectedHook', line: 1, column: 1, endColumn: 18 },
+      ],
+    },
+    {
+      code: 'test[`afterEach`](() => {})',
+      errors: [
+        { messageId: 'unexpectedHook', line: 1, column: 1, endColumn: 18 },
+      ],
+    },
     {
       code: dedent`
         test.describe("suite", () => {});
         test.afterAll(() => {})
       `,
-      errors: [{ messageId: 'unexpectedHook' }],
+      errors: [
+        {
+          messageId: 'unexpectedHook',
+          line: 2,
+          column: 1,
+          endLine: 2,
+          endColumn: 14,
+        },
+      ],
     },
     // Top level tests
-    invalid('test("foo", () => {})', 'unexpectedTest'),
-    invalid('test.skip("foo", () => {})', 'unexpectedTest'),
-    invalid('test.fixme("foo", () => {})', 'unexpectedTest'),
-    invalid('test.only("foo", () => {})', 'unexpectedTest'),
-    invalid('test["only"]("foo", () => {})', 'unexpectedTest'),
-    invalid('test[`only`]("foo", () => {})', 'unexpectedTest'),
+    {
+      code: 'test("foo", () => {})',
+      errors: [
+        { messageId: 'unexpectedTest', line: 1, column: 1, endColumn: 5 },
+      ],
+    },
+    {
+      code: 'test.skip("foo", () => {})',
+      errors: [
+        { messageId: 'unexpectedTest', line: 1, column: 1, endColumn: 10 },
+      ],
+    },
+    {
+      code: 'test.fixme("foo", () => {})',
+      errors: [
+        { messageId: 'unexpectedTest', line: 1, column: 1, endColumn: 11 },
+      ],
+    },
+    {
+      code: 'test.only("foo", () => {})',
+      errors: [
+        { messageId: 'unexpectedTest', line: 1, column: 1, endColumn: 10 },
+      ],
+    },
+    {
+      code: 'test["only"]("foo", () => {})',
+      errors: [
+        { messageId: 'unexpectedTest', line: 1, column: 1, endColumn: 13 },
+      ],
+    },
+    {
+      code: 'test[`only`]("foo", () => {})',
+      errors: [
+        { messageId: 'unexpectedTest', line: 1, column: 1, endColumn: 13 },
+      ],
+    },
     {
       code: dedent`
         test("foo", () => {})
         test.describe("suite", () => {});
       `,
-      errors: [{ messageId: 'unexpectedTest' }],
+      errors: [
+        { messageId: 'unexpectedTest', line: 1, column: 1, endColumn: 5 },
+      ],
     },
     {
       code: dedent`
@@ -81,7 +146,9 @@ runRuleTester('require-top-level-describe', rule, {
           test("bar", () => {})
         });
       `,
-      errors: [{ messageId: 'unexpectedTest' }],
+      errors: [
+        { messageId: 'unexpectedTest', line: 1, column: 1, endColumn: 5 },
+      ],
     },
     // Too many describes
     {
@@ -91,7 +158,9 @@ runRuleTester('require-top-level-describe', rule, {
         test.describe.parallel('three', () => {});
       `,
       options: [{ maxTopLevelDescribes: 2 }],
-      errors: [{ messageId: 'tooManyDescribes', line: 3 }],
+      errors: [
+        { messageId: 'tooManyDescribes', line: 3, column: 1, endColumn: 23 },
+      ],
     },
     {
       code: dedent`
@@ -113,7 +182,9 @@ runRuleTester('require-top-level-describe', rule, {
         });
       `,
       options: [{ maxTopLevelDescribes: 2 }],
-      errors: [{ messageId: 'tooManyDescribes', line: 12 }],
+      errors: [
+        { messageId: 'tooManyDescribes', line: 12, column: 1, endColumn: 26 },
+      ],
     },
     {
       code: dedent`
@@ -123,8 +194,8 @@ runRuleTester('require-top-level-describe', rule, {
       `,
       options: [{ maxTopLevelDescribes: 1 }],
       errors: [
-        { messageId: 'tooManyDescribes', line: 2 },
-        { messageId: 'tooManyDescribes', line: 3 },
+        { messageId: 'tooManyDescribes', line: 2, column: 1, endColumn: 25 },
+        { messageId: 'tooManyDescribes', line: 3, column: 1, endColumn: 20 },
       ],
     },
   ],

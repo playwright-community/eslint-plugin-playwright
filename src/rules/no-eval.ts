@@ -1,17 +1,16 @@
 import { Rule } from 'eslint';
-import { isCalleeObject, isCalleeProperty } from '../utils/ast';
+import { isPageMethod } from '../utils/ast';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (
-          isCalleeObject(node, 'page') &&
-          (isCalleeProperty(node, '$eval') || isCalleeProperty(node, '$$eval'))
-        ) {
+        const isEval = isPageMethod(node, '$eval');
+
+        if (isEval || isPageMethod(node, '$$eval')) {
           context.report({
-            messageId: isCalleeProperty(node, '$eval') ? 'noEval' : 'noEvalAll',
-            node,
+            messageId: isEval ? 'noEval' : 'noEvalAll',
+            node: node.callee,
           });
         }
       },
