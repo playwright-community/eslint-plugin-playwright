@@ -1,7 +1,7 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import {
-  getMatcherChain,
+  getMatchers,
   getStringValue,
   isBooleanLiteral,
   isExpectCall,
@@ -69,7 +69,7 @@ export default {
         }
 
         // Matcher must be supported
-        const matcherChain = getMatcherChain(node);
+        const matcherChain = getMatchers(node);
         const matcher = matcherChain[matcherChain.length - 1];
         const matcherName = getStringValue(matcher);
         if (!supportedMatchers.has(matcherName)) return;

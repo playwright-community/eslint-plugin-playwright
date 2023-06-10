@@ -15,7 +15,6 @@ export default {
         }
 
         const [argument] = node.arguments;
-
         if (
           argument?.type !== 'MemberExpression' ||
           !isPropertyAccessor(argument, 'length')
