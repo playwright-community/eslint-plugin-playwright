@@ -84,11 +84,14 @@ export default {
             {
               messageId: 'suggestWebFirstAssertion',
               fix: (fixer) => {
-                const methodEnd =
-                  arg.argument.type === 'CallExpression' &&
-                  arg.argument.arguments.length
-                    ? arg.argument.arguments.at(-1)!.range![1] + 1
-                    : callee.property.range![1] + 2;
+                const methodArgs =
+                  arg.argument.type === 'CallExpression'
+                    ? arg.argument.arguments
+                    : [];
+
+                const methodEnd = methodArgs.length
+                  ? methodArgs[methodArgs.length - 1]!.range![1] + 1
+                  : callee.property.range![1] + 2;
 
                 const fixes = [
                   // Add await to the expect call
@@ -146,11 +149,6 @@ export default {
                 }
 
                 // Add the new matcher arguments if needed
-                const methodArgs =
-                  arg.argument.type === 'CallExpression'
-                    ? arg.argument.arguments
-                    : [];
-
                 const hasOtherArgs = !!methodArgs.filter(
                   (arg) => !isBooleanLiteral(arg)
                 ).length;
