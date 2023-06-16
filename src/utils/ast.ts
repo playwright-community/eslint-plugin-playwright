@@ -14,6 +14,10 @@ export function getStringValue(node: ESTree.Node | undefined) {
     : '';
 }
 
+export function getRawValue(node: ESTree.Node) {
+  return node.type === 'Literal' ? node.raw : undefined;
+}
+
 export function isIdentifier(node: ESTree.Node, name: string) {
   return node.type === 'Identifier' && node.name === name;
 }

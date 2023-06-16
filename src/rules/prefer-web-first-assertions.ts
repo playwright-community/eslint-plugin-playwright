@@ -1,11 +1,7 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import {
-  getMatchers,
-  getStringValue,
-  isBooleanLiteral,
-  isExpectCall,
-} from '../utils/ast';
+import { getRawValue, getStringValue, isBooleanLiteral } from '../utils/ast';
+import { parseExpectCall } from '../utils/parseExpectCall';
 
 type MethodConfig = {
   type: 'string' | 'boolean';
@@ -39,6 +35,10 @@ const methods: Record<string, MethodConfig> = {
     matcher: 'toBeVisible',
     inverse: 'toBeHidden',
   },
+  getAttribute: {
+    type: 'string',
+    matcher: 'toHaveAttribute',
+  },
 };
 
 const supportedMatchers = new Set([
@@ -57,7 +57,8 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (!isExpectCall(node)) return;
+        const expectCall = parseExpectCall(node);
+        if (!expectCall) return;
 
         const [arg] = node.arguments;
         if (
@@ -69,10 +70,7 @@ export default {
         }
 
         // Matcher must be supported
-        const matcherChain = getMatchers(node);
-        const matcher = matcherChain[matcherChain.length - 1];
-        const matcherName = getStringValue(matcher);
-        if (!supportedMatchers.has(matcherName)) return;
+        if (!supportedMatchers.has(expectCall.matcherName)) return;
 
         // Playwright method must be supported
         const method = getStringValue(arg.argument.callee.property);
@@ -86,7 +84,11 @@ export default {
             {
               messageId: 'suggestWebFirstAssertion',
               fix: (fixer) => {
-                const matcherCall = getMatcherCall(matcher);
+                const methodEnd =
+                  arg.argument.type === 'CallExpression' &&
+                  arg.argument.arguments.length
+                    ? arg.argument.arguments.at(-1)!.range![1] + 1
+                    : callee.property.range![1] + 2;
 
                 const fixes = [
                   // Add await to the expect call
@@ -96,36 +98,36 @@ export default {
                     [arg.range![0], arg.argument.range![0]],
                     ''
                   ),
-                  // Remove the instance method
+                  // Remove the old Playwright method and any arguments
                   fixer.replaceTextRange(
-                    [
-                      callee.property.range![0] - 1,
-                      callee.property.range![1] + 2,
-                    ],
+                    [callee.property.range![0] - 1, methodEnd],
                     ''
                   ),
                 ];
 
                 // Change the matcher
-                const lastMatcher = matcherChain[matcherChain.length - 1];
-                const isNot = getStringValue(matcherChain[0]) === 'not';
+                const { args, matcher } = expectCall;
+                const notModifier = expectCall.modifiers.find(
+                  (mod) => getStringValue(mod) === 'not'
+                );
+
                 const isFalsy =
                   methodConfig.type === 'boolean' &&
-                  !!matcherCall?.arguments.length &&
-                  isBooleanLiteral(matcherCall.arguments[0], false);
+                  ((!!args.length && isBooleanLiteral(args[0], false)) ||
+                    expectCall.matcherName === 'toBeFalsy');
 
                 const isInverse = methodConfig.inverse
-                  ? isNot || isFalsy
-                  : isNot && isFalsy;
+                  ? notModifier || isFalsy
+                  : notModifier && isFalsy;
 
                 // Remove not from matcher chain if no longer needed
-                if (isInverse && isNot) {
-                  const notRange = matcherChain[0].range!;
+                if (isInverse && notModifier) {
+                  const notRange = notModifier.range!;
                   fixes.push(fixer.removeRange([notRange[0], notRange[1] + 1]));
                 }
 
                 // Add not to the matcher chain if no inverse matcher exists
-                if (!methodConfig.inverse && !isNot && isFalsy) {
+                if (!methodConfig.inverse && !notModifier && isFalsy) {
                   fixes.push(fixer.insertTextBefore(matcher, 'not.'));
                 }
 
@@ -133,14 +135,39 @@ export default {
                 // matcher should only be used if the old statement was not a
                 // double negation.
                 const newMatcher =
-                  (+isNot ^ +isFalsy && methodConfig.inverse) ||
+                  (+!!notModifier ^ +isFalsy && methodConfig.inverse) ||
                   methodConfig.matcher;
-                fixes.push(fixer.replaceText(lastMatcher, newMatcher));
+                fixes.push(fixer.replaceText(matcher, newMatcher));
 
                 // Remove boolean argument if it exists
-                const [matcherArg] = matcherCall?.arguments ?? [];
+                const [matcherArg] = args ?? [];
                 if (matcherArg && isBooleanLiteral(matcherArg)) {
                   fixes.push(fixer.remove(matcherArg));
+                }
+
+                // Add the new matcher arguments if needed
+                const methodArgs =
+                  arg.argument.type === 'CallExpression'
+                    ? arg.argument.arguments
+                    : [];
+
+                const hasOtherArgs = !!methodArgs.filter(
+                  (arg) => !isBooleanLiteral(arg)
+                ).length;
+
+                if (methodArgs) {
+                  const range = matcher.range!;
+                  const stringArgs = methodArgs
+                    .map((arg) => getRawValue(arg))
+                    .concat(hasOtherArgs ? '' : [])
+                    .join(', ');
+
+                  fixes.push(
+                    fixer.insertTextAfterRange(
+                      [range[0], range[1] + 1],
+                      stringArgs
+                    )
+                  );
                 }
 
                 return fixes;
@@ -150,8 +177,6 @@ export default {
           node,
         });
       },
-
-      // const matchers = getMatchers(node);
     };
   },
   meta: {
