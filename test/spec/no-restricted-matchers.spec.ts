@@ -2,6 +2,130 @@ import rule from '../../src/rules/no-restricted-matchers';
 import { runRuleTester } from '../utils/rule-tester';
 
 runRuleTester('no-restricted-matchers', rule, {
+  invalid: [
+    {
+      code: 'expect(a).toBe(b)',
+      errors: [
+        {
+          column: 11,
+          data: { message: '', restriction: 'toBe' },
+          endColumn: 15,
+          line: 1,
+          messageId: 'restricted',
+        },
+      ],
+      options: [{ toBe: null }],
+    },
+    {
+      code: 'expect.soft(a).toBe(b)',
+      errors: [
+        {
+          column: 16,
+          data: { message: '', restriction: 'toBe' },
+          endColumn: 20,
+          line: 1,
+          messageId: 'restricted',
+        },
+      ],
+      options: [{ toBe: null }],
+    },
+    {
+      code: 'expect["poll"](() => a)["toBe"](b)',
+      errors: [
+        {
+          column: 25,
+          data: { message: '', restriction: 'toBe' },
+          endColumn: 31,
+          line: 1,
+          messageId: 'restricted',
+        },
+      ],
+      options: [{ toBe: null }],
+    },
+    {
+      code: 'expect(a).not.toBe()',
+      errors: [
+        {
+          column: 11,
+          data: { message: '', restriction: 'not' },
+          endColumn: 14,
+          line: 1,
+          messageId: 'restricted',
+        },
+      ],
+      options: [{ not: null }],
+    },
+    {
+      code: 'expect(a).not.toBeTruthy()',
+      errors: [
+        {
+          column: 11,
+          data: { message: '', restriction: 'not.toBeTruthy' },
+          endColumn: 25,
+          line: 1,
+          messageId: 'restricted',
+        },
+      ],
+      options: [{ 'not.toBeTruthy': null }],
+    },
+    {
+      code: 'expect[`soft`](a)[`not`]["toBe"]()',
+      errors: [
+        {
+          column: 19,
+          data: { message: '', restriction: 'not' },
+          endColumn: 24,
+          line: 1,
+          messageId: 'restricted',
+        },
+      ],
+      options: [{ not: null }],
+    },
+    {
+      code: 'expect.poll(() => true).not.toBeTruthy()',
+      errors: [
+        {
+          column: 25,
+          data: { message: '', restriction: 'not.toBeTruthy' },
+          endColumn: 39,
+          line: 1,
+          messageId: 'restricted',
+        },
+      ],
+      options: [{ 'not.toBeTruthy': null }],
+    },
+    {
+      code: 'expect(a).toBe(b)',
+      errors: [
+        {
+          column: 11,
+          data: {
+            message: 'Prefer `toStrictEqual` instead',
+            restriction: 'toBe',
+          },
+          endColumn: 15,
+          line: 1,
+          messageId: 'restrictedWithMessage',
+        },
+      ],
+      options: [{ toBe: 'Prefer `toStrictEqual` instead' }],
+    },
+    {
+      code: "expect(foo).not.toHaveText('bar')",
+      errors: [
+        {
+          column: 13,
+          data: {
+            message: 'Use not.toContainText instead',
+            restriction: 'not.toHaveText',
+          },
+          endColumn: 27,
+          messageId: 'restrictedWithMessage',
+        },
+      ],
+      options: [{ 'not.toHaveText': 'Use not.toContainText instead' }],
+    },
+  ],
   valid: [
     'expect(a)',
     'expect(a).toBe()',
@@ -44,130 +168,6 @@ runRuleTester('no-restricted-matchers', rule, {
     {
       code: 'expect(a).nothing(b)',
       options: [{ not: null }],
-    },
-  ],
-  invalid: [
-    {
-      code: 'expect(a).toBe(b)',
-      options: [{ toBe: null }],
-      errors: [
-        {
-          messageId: 'restricted',
-          data: { message: '', restriction: 'toBe' },
-          line: 1,
-          column: 11,
-          endColumn: 15,
-        },
-      ],
-    },
-    {
-      code: 'expect.soft(a).toBe(b)',
-      options: [{ toBe: null }],
-      errors: [
-        {
-          messageId: 'restricted',
-          data: { message: '', restriction: 'toBe' },
-          line: 1,
-          column: 16,
-          endColumn: 20,
-        },
-      ],
-    },
-    {
-      code: 'expect["poll"](() => a)["toBe"](b)',
-      options: [{ toBe: null }],
-      errors: [
-        {
-          messageId: 'restricted',
-          data: { message: '', restriction: 'toBe' },
-          line: 1,
-          column: 25,
-          endColumn: 31,
-        },
-      ],
-    },
-    {
-      code: 'expect(a).not.toBe()',
-      options: [{ not: null }],
-      errors: [
-        {
-          messageId: 'restricted',
-          data: { message: '', restriction: 'not' },
-          line: 1,
-          column: 11,
-          endColumn: 14,
-        },
-      ],
-    },
-    {
-      code: 'expect(a).not.toBeTruthy()',
-      options: [{ 'not.toBeTruthy': null }],
-      errors: [
-        {
-          messageId: 'restricted',
-          data: { message: '', restriction: 'not.toBeTruthy' },
-          line: 1,
-          column: 11,
-          endColumn: 25,
-        },
-      ],
-    },
-    {
-      code: 'expect[`soft`](a)[`not`]["toBe"]()',
-      options: [{ not: null }],
-      errors: [
-        {
-          messageId: 'restricted',
-          data: { message: '', restriction: 'not' },
-          line: 1,
-          column: 19,
-          endColumn: 24,
-        },
-      ],
-    },
-    {
-      code: 'expect.poll(() => true).not.toBeTruthy()',
-      options: [{ 'not.toBeTruthy': null }],
-      errors: [
-        {
-          messageId: 'restricted',
-          data: { message: '', restriction: 'not.toBeTruthy' },
-          line: 1,
-          column: 25,
-          endColumn: 39,
-        },
-      ],
-    },
-    {
-      code: 'expect(a).toBe(b)',
-      options: [{ toBe: 'Prefer `toStrictEqual` instead' }],
-      errors: [
-        {
-          messageId: 'restrictedWithMessage',
-          data: {
-            message: 'Prefer `toStrictEqual` instead',
-            restriction: 'toBe',
-          },
-          line: 1,
-          column: 11,
-          endColumn: 15,
-        },
-      ],
-    },
-    {
-      code: "expect(foo).not.toHaveText('bar')",
-      options: [{ 'not.toHaveText': 'Use not.toContainText instead' }],
-      errors: [
-        {
-          messageId: 'restrictedWithMessage',
-          data: {
-            message: 'Use not.toContainText instead',
-            restriction: 'not.toHaveText',
-          },
-          column: 13,
-          endColumn: 27,
-        },
-      ],
     },
   ],
 });

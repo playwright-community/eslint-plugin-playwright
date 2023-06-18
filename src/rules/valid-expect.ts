@@ -1,9 +1,9 @@
 import { Rule } from 'eslint';
-import { isExpectCall } from '../utils/ast';
-import { NodeWithParent } from '../utils/types';
 import * as ESTree from 'estree';
+import { isExpectCall } from '../utils/ast';
 import { getAmountData } from '../utils/misc';
 import { parseExpectCall } from '../utils/parseExpectCall';
+import { NodeWithParent } from '../utils/types';
 
 function isMatcherCalled(node: NodeWithParent): {
   called: boolean;
@@ -29,8 +29,8 @@ function isMatcherCalled(node: NodeWithParent): {
 export default {
   create(context) {
     const options = {
-      minArgs: 1,
       maxArgs: 2,
+      minArgs: 1,
       ...((context.options?.[0] as {}) ?? {}),
     };
 
@@ -43,33 +43,33 @@ export default {
 
         const expectCall = parseExpectCall(node);
         if (!expectCall) {
-          context.report({ node, messageId: 'matcherNotFound' });
+          context.report({ messageId: 'matcherNotFound', node });
         } else {
           const result = isMatcherCalled(node);
 
           if (!result.called) {
             context.report({
+              messageId: 'matcherNotCalled',
               node:
                 result.node.type === 'MemberExpression'
                   ? result.node.property
                   : result.node,
-              messageId: 'matcherNotCalled',
             });
           }
         }
 
         if (node.arguments.length < minArgs) {
           context.report({
-            messageId: 'notEnoughArgs',
             data: getAmountData(minArgs),
+            messageId: 'notEnoughArgs',
             node,
           });
         }
 
         if (node.arguments.length > maxArgs) {
           context.report({
-            messageId: 'tooManyArgs',
             data: getAmountData(maxArgs),
+            messageId: 'tooManyArgs',
             node,
           });
         }
@@ -84,27 +84,27 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/valid-expect.md',
     },
     messages: {
-      tooManyArgs: 'Expect takes at most {{amount}} argument{{s}}.',
-      notEnoughArgs: 'Expect requires at least {{amount}} argument{{s}}.',
-      matcherNotFound: 'Expect must have a corresponding matcher call.',
       matcherNotCalled: 'Matchers must be called to assert.',
+      matcherNotFound: 'Expect must have a corresponding matcher call.',
+      notEnoughArgs: 'Expect requires at least {{amount}} argument{{s}}.',
+      tooManyArgs: 'Expect takes at most {{amount}} argument{{s}}.',
     },
-    type: 'problem',
     schema: [
       {
-        type: 'object',
+        additionalProperties: false,
         properties: {
-          minArgs: {
-            type: 'number',
-            minimum: 1,
-          },
           maxArgs: {
-            type: 'number',
             minimum: 1,
+            type: 'number',
+          },
+          minArgs: {
+            minimum: 1,
+            type: 'number',
           },
         },
-        additionalProperties: false,
+        type: 'object',
       },
     ],
+    type: 'problem',
   },
 } as Rule.RuleModule;

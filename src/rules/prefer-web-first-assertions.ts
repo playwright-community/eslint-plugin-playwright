@@ -4,41 +4,41 @@ import { getRawValue, getStringValue, isBooleanLiteral } from '../utils/ast';
 import { parseExpectCall } from '../utils/parseExpectCall';
 
 type MethodConfig = {
-  type: 'string' | 'boolean';
-  matcher: string;
   inverse?: string;
+  matcher: string;
+  type: 'boolean' | 'string';
 };
 
 const methods: Record<string, MethodConfig> = {
-  innerText: { type: 'string', matcher: 'toHaveText' },
-  textContent: { type: 'string', matcher: 'toHaveText' },
-  inputValue: { type: 'string', matcher: 'toHaveValue' },
-  isEditable: { type: 'boolean', matcher: 'toBeEditable' },
-  isChecked: { type: 'boolean', matcher: 'toBeChecked' },
-  isDisabled: {
-    type: 'boolean',
-    matcher: 'toBeDisabled',
-    inverse: 'toBeEnabled',
+  getAttribute: {
+    matcher: 'toHaveAttribute',
+    type: 'string',
   },
-  isEnabled: {
+  innerText: { matcher: 'toHaveText', type: 'string' },
+  inputValue: { matcher: 'toHaveValue', type: 'string' },
+  isChecked: { matcher: 'toBeChecked', type: 'boolean' },
+  isDisabled: {
+    inverse: 'toBeEnabled',
+    matcher: 'toBeDisabled',
     type: 'boolean',
-    matcher: 'toBeEnabled',
+  },
+  isEditable: { matcher: 'toBeEditable', type: 'boolean' },
+  isEnabled: {
     inverse: 'toBeDisabled',
+    matcher: 'toBeEnabled',
+    type: 'boolean',
   },
   isHidden: {
-    type: 'boolean',
-    matcher: 'toBeHidden',
     inverse: 'toBeVisible',
+    matcher: 'toBeHidden',
+    type: 'boolean',
   },
   isVisible: {
-    type: 'boolean',
-    matcher: 'toBeVisible',
     inverse: 'toBeHidden',
+    matcher: 'toBeVisible',
+    type: 'boolean',
   },
-  getAttribute: {
-    type: 'string',
-    matcher: 'toHaveAttribute',
-  },
+  textContent: { matcher: 'toHaveText', type: 'string' },
 };
 
 const supportedMatchers = new Set([
@@ -101,11 +101,9 @@ export default {
 
         const { callee } = arg.argument;
         context.report({
-          node,
-          messageId: 'useWebFirstAssertion',
           data: {
-            method: method,
             matcher: newMatcher,
+            method,
           },
           fix: (fixer) => {
             const methodArgs =
@@ -170,6 +168,8 @@ export default {
 
             return fixes;
           },
+          messageId: 'useWebFirstAssertion',
+          node,
         });
       },
     };

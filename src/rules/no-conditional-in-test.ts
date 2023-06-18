@@ -12,10 +12,10 @@ export default {
     }
 
     return {
-      IfStatement: checkConditional,
-      SwitchStatement: checkConditional,
       ConditionalExpression: checkConditional,
+      IfStatement: checkConditional,
       LogicalExpression: checkConditional,
+      SwitchStatement: checkConditional,
     };
   },
   meta: {
@@ -28,7 +28,7 @@ export default {
     messages: {
       conditionalInTest: 'Avoid having conditionals in tests',
     },
-    type: 'problem',
     schema: [],
+    type: 'problem',
   },
 } as Rule.RuleModule;

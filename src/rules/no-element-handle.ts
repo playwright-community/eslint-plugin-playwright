@@ -1,6 +1,6 @@
-import { isPageMethod } from '../utils/ast';
+import { AST, Rule } from 'eslint';
 import * as ESTree from 'estree';
-import { Rule, AST } from 'eslint';
+import { isPageMethod } from '../utils/ast';
 
 function getPropertyRange(node: ESTree.Node): AST.Range {
   return node.type === 'Identifier'
@@ -15,11 +15,9 @@ export default {
         if (isPageMethod(node, '$') || isPageMethod(node, '$$')) {
           context.report({
             messageId: 'noElementHandle',
+            node: node.callee,
             suggest: [
               {
-                messageId: isPageMethod(node, '$')
-                  ? 'replaceElementHandleWithLocator'
-                  : 'replaceElementHandlesWithLocator',
                 fix: (fixer) => {
                   const { property } = node.callee as ESTree.MemberExpression;
 
@@ -41,9 +39,11 @@ export default {
 
                   return fixes;
                 },
+                messageId: isPageMethod(node, '$')
+                  ? 'replaceElementHandleWithLocator'
+                  : 'replaceElementHandlesWithLocator',
               },
             ],
-            node: node.callee,
           });
         }
       },
@@ -60,8 +60,8 @@ export default {
     hasSuggestions: true,
     messages: {
       noElementHandle: 'Unexpected use of element handles.',
-      replaceElementHandleWithLocator: 'Replace `page.$` with `page.locator`',
       replaceElementHandlesWithLocator: 'Replace `page.$$` with `page.locator`',
+      replaceElementHandleWithLocator: 'Replace `page.$` with `page.locator`',
     },
     type: 'suggestion',
   },

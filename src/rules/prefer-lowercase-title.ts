@@ -1,11 +1,11 @@
-import { Rule, AST } from 'eslint';
+import { AST, Rule } from 'eslint';
+import * as ESTree from 'estree';
 import {
   getStringValue,
   isDescribeCall,
   isStringLiteral,
   isTest,
 } from '../utils/ast';
-import * as ESTree from 'estree';
 
 type Method = 'test' | 'test.describe';
 
@@ -17,9 +17,9 @@ function isString(
 
 export default {
   create(context) {
-    const { ignoreTopLevelDescribe, allowedPrefixes, ignore } = {
-      ignore: [] as Method[],
+    const { allowedPrefixes, ignore, ignoreTopLevelDescribe } = {
       allowedPrefixes: [] as string[],
+      ignore: [] as Method[],
       ignoreTopLevelDescribe: false,
       ...((context.options?.[0] as {}) ?? {}),
     };
@@ -67,8 +67,6 @@ export default {
         }
 
         context.report({
-          messageId: 'unexpectedLowercase',
-          node: node.arguments[0],
           data: { method },
           fix(fixer) {
             const rangeIgnoringQuotes: AST.Range = [
@@ -82,6 +80,8 @@ export default {
 
             return fixer.replaceTextRange(rangeIgnoringQuotes, newDescription);
           },
+          messageId: 'unexpectedLowercase',
+          node: node.arguments[0],
         });
       },
       'CallExpression:exit'(node: ESTree.CallExpression) {
@@ -98,34 +98,34 @@ export default {
       recommended: false,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-lowercase-title.md',
     },
+    fixable: 'code',
     messages: {
       unexpectedLowercase: '`{{method}}`s should begin with lowercase',
     },
-    type: 'suggestion',
-    fixable: 'code',
     schema: [
       {
-        type: 'object',
+        additionalProperties: false,
         properties: {
-          ignore: {
+          allowedPrefixes: {
+            additionalItems: false,
+            items: { type: 'string' },
             type: 'array',
+          },
+          ignore: {
+            additionalItems: false,
             items: {
               enum: ['test.describe', 'test'],
             },
-            additionalItems: false,
-          },
-          allowedPrefixes: {
             type: 'array',
-            items: { type: 'string' },
-            additionalItems: false,
           },
           ignoreTopLevelDescribe: {
-            type: 'boolean',
             default: false,
+            type: 'boolean',
           },
         },
-        additionalProperties: false,
+        type: 'object',
       },
     ],
+    type: 'suggestion',
   },
 } as Rule.RuleModule;
