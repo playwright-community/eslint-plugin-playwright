@@ -170,5 +170,79 @@ runRuleTester('no-wait-for-timeout', rule, {
         },
       ],
     },
+    {
+      code: 'foo.page().waitForTimeout(2000)',
+      only: true,
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 29,
+        },
+      ],
+    },
+    {
+      code: 'this.foo().page().waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 29,
+        },
+      ],
+    },
+    {
+      code: 'page2.waitForTimeout(2000)',
+      only: true,
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 29,
+        },
+      ],
+    },
+    {
+      code: 'this.page2.waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 29,
+        },
+      ],
+    },
+    {
+      code: 'myPage.waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 29,
+        },
+      ],
+    },
+    {
+      code: 'this.myPage.waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 29,
+        },
+      ],
+    },
   ],
 });
