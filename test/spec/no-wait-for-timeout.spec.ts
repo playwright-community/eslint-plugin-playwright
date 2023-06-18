@@ -11,6 +11,8 @@ runRuleTester('no-wait-for-timeout', rule, {
     '(async function() { await page.waitForSelector("#foo"); })();',
     'page.waitForSelector("#foo");',
     'page["waitForSelector"]("#foo");',
+    'rampage.waitForTimeout(2000);',
+    'myPage2.waitForTimeout(2000);',
   ],
   invalid: [
     {
@@ -167,6 +169,78 @@ runRuleTester('no-wait-for-timeout', rule, {
           line: 1,
           column: 1,
           endColumn: 29,
+        },
+      ],
+    },
+    {
+      code: 'foo.page().waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 32,
+        },
+      ],
+    },
+    {
+      code: 'this.foo().page().waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 39,
+        },
+      ],
+    },
+    {
+      code: 'page2.waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 27,
+        },
+      ],
+    },
+    {
+      code: 'this.page2.waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 32,
+        },
+      ],
+    },
+    {
+      code: 'myPage.waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 28,
+        },
+      ],
+    },
+    {
+      code: 'this.myPage.waitForTimeout(2000)',
+      errors: [
+        {
+          messageId,
+          suggestions: [{ messageId: 'removeWaitForTimeout', output: '' }],
+          line: 1,
+          column: 1,
+          endColumn: 33,
         },
       ],
     },

@@ -11,7 +11,7 @@ runRuleTester('no-element-handle', rule, {
     test('this.$("a");'),
     test('this["$"]("a");'),
     test('this[`$`]("a");'),
-    test('internalPage.$("a");'),
+    test('something.$("a");'),
     test('this.page.$$$("div");'),
     test('page.$$$("div");'),
   ],
