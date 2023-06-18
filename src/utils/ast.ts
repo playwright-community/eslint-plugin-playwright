@@ -168,7 +168,7 @@ function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
 export function isPageMethod(node: ESTree.CallExpression, name: string) {
   return (
     node.callee.type === 'MemberExpression' &&
-    dig(node.callee.object, /(^page|Page$)/) &&
+    dig(node.callee.object, /(^(page|frame)|(Page|Frame)$)/) &&
     isPropertyAccessor(node.callee, name)
   );
 }
