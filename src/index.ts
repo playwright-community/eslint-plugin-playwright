@@ -19,30 +19,33 @@ import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validExpect from './rules/valid-expect';
 import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
 
+const recommended = {
+  plugins: ['playwright'],
+  env: {
+    'shared-node-browser': true,
+  },
+  rules: {
+    'no-empty-pattern': 'off',
+    'playwright/missing-playwright-await': 'error',
+    'playwright/no-page-pause': 'warn',
+    'playwright/no-element-handle': 'warn',
+    'playwright/no-eval': 'warn',
+    'playwright/no-focused-test': 'error',
+    'playwright/no-skipped-test': 'warn',
+    'playwright/no-wait-for-timeout': 'warn',
+    'playwright/no-force-option': 'warn',
+    'playwright/max-nested-describe': 'warn',
+    'playwright/no-conditional-in-test': 'warn',
+    'playwright/no-useless-not': 'warn',
+    'playwright/prefer-web-first-assertions': 'error',
+    'playwright/valid-expect': 'error',
+  },
+};
+
 export = {
   configs: {
-    'playwright-test': {
-      plugins: ['playwright'],
-      env: {
-        'shared-node-browser': true,
-      },
-      rules: {
-        'no-empty-pattern': 'off',
-        'playwright/missing-playwright-await': 'error',
-        'playwright/no-page-pause': 'warn',
-        'playwright/no-element-handle': 'warn',
-        'playwright/no-eval': 'warn',
-        'playwright/no-focused-test': 'error',
-        'playwright/no-skipped-test': 'warn',
-        'playwright/no-wait-for-timeout': 'warn',
-        'playwright/no-force-option': 'warn',
-        'playwright/max-nested-describe': 'warn',
-        'playwright/no-conditional-in-test': 'warn',
-        'playwright/no-useless-not': 'warn',
-        'playwright/prefer-web-first-assertions': 'error',
-        'playwright/valid-expect': 'error',
-      },
-    },
+    recommended,
+    'playwright-test': recommended,
     'jest-playwright': {
       plugins: ['jest', 'playwright'],
       env: {

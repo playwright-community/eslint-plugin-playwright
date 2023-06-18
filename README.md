@@ -1,12 +1,17 @@
 # ESLint Plugin Playwright
 
 [![Test](https://github.com/playwright-community/eslint-plugin-playwright/actions/workflows/test.yml/badge.svg)](https://github.com/playwright-community/eslint-plugin-playwright/actions/workflows/test.yml)
-[![NPM](https://img.shields.io/npm/v/eslint-plugin-playwright)](https://www.npmjs.com/package/eslint-plugin-playwright)
+[![npm](https://img.shields.io/npm/v/eslint-plugin-playwright)](https://www.npmjs.com/package/eslint-plugin-playwright)
 
-> ESLint plugin for your [Playwright](https://github.com/microsoft/playwright)
-> testing needs.
+ESLint plugin for [Playwright](https://github.com/microsoft/playwright).
 
 ## Installation
+
+npm
+
+```bash
+npm install -D eslint-plugin-playwright
+```
 
 Yarn
 
@@ -14,10 +19,10 @@ Yarn
 yarn add -D eslint-plugin-playwright
 ```
 
-NPM
+pnpm
 
 ```bash
-npm install -D eslint-plugin-playwright
+pnpm add -D eslint-plugin-playwright
 ```
 
 ## Usage
@@ -25,11 +30,11 @@ npm install -D eslint-plugin-playwright
 This plugin bundles two configurations to work with both `@playwright/test` or
 `jest-playwright`.
 
-### With [Playwright test runner](https://playwright.dev/docs/test-intro)
+### With [Playwright test runner](https://playwright.dev/docs/writing-tests)
 
 ```json
 {
-  "extends": ["plugin:playwright/playwright-test"]
+  "extends": ["plugin:playwright/recommended"]
 }
 ```
 
