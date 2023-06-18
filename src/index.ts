@@ -5,6 +5,7 @@ import noElementHandle from './rules/no-element-handle';
 import noEval from './rules/no-eval';
 import noFocusedTest from './rules/no-focused-test';
 import noForceOption from './rules/no-force-option';
+import noNetworkidle from './rules/no-networkidle';
 import noPagePause from './rules/no-page-pause';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
 import noSkippedTest from './rules/no-skipped-test';
@@ -33,6 +34,7 @@ const recommended = {
     'playwright/no-eval': 'warn',
     'playwright/no-focused-test': 'error',
     'playwright/no-force-option': 'warn',
+    'playwright/no-networkidle': 'error',
     'playwright/no-page-pause': 'warn',
     'playwright/no-skipped-test': 'warn',
     'playwright/no-useless-not': 'warn',
@@ -87,6 +89,7 @@ export = {
     'no-eval': noEval,
     'no-focused-test': noFocusedTest,
     'no-force-option': noForceOption,
+    'no-networkidle': noNetworkidle,
     'no-page-pause': noPagePause,
     'no-restricted-matchers': noRestrictedMatchers,
     'no-skipped-test': noSkippedTest,
