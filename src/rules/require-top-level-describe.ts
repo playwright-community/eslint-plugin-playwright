@@ -7,7 +7,7 @@ export default {
   create(context) {
     const { maxTopLevelDescribes } = {
       maxTopLevelDescribes: Infinity,
-      ...((context.options?.[0] as {}) ?? {}),
+      ...((context.options?.[0] as Record<string, unknown>) ?? {}),
     };
 
     let topLevelDescribeCount = 0;

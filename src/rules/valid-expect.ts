@@ -31,7 +31,7 @@ export default {
     const options = {
       maxArgs: 2,
       minArgs: 1,
-      ...((context.options?.[0] as {}) ?? {}),
+      ...((context.options?.[0] as Record<string, unknown>) ?? {}),
     };
 
     const minArgs = Math.min(options.minArgs, options.maxArgs);

@@ -21,7 +21,7 @@ export default {
       allowedPrefixes: [] as string[],
       ignore: [] as Method[],
       ignoreTopLevelDescribe: false,
-      ...((context.options?.[0] as {}) ?? {}),
+      ...((context.options?.[0] as Record<string, unknown>) ?? {}),
     };
 
     let describeCount = 0;
