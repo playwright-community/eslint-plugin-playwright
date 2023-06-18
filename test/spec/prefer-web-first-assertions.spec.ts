@@ -1,18 +1,6 @@
 import { runRuleTester, test } from '../utils/rule-tester';
 import rule from '../../src/rules/prefer-web-first-assertions';
 
-const error = (output: string) => [
-  {
-    messageId: 'useWebFirstAssertion',
-    suggestions: [
-      {
-        messageId: 'suggestWebFirstAssertion',
-        output: test(output),
-      },
-    ],
-  },
-];
-
 runRuleTester('prefer-web-first-assertions', rule, {
   valid: [
     { code: test('await expect(page.locator(".tweet")).toBeVisible()') },
@@ -28,55 +16,145 @@ runRuleTester('prefer-web-first-assertions', rule, {
     // isVisible
     {
       code: test('expect(await page.locator(".tweet").isVisible()).toBe(true)'),
-      errors: error('await expect(page.locator(".tweet")).toBeVisible()'),
+      output: test('await expect(page.locator(".tweet")).toBeVisible()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isVisible', matcher: 'toBeVisible' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator(".tweet").isVisible()).toBe(false)'
       ),
-      errors: error('await expect(page.locator(".tweet")).toBeHidden()'),
+      output: test('await expect(page.locator(".tweet")).toBeHidden()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isVisible', matcher: 'toBeHidden' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator(".tweet").isVisible()).toEqual(true)'
       ),
-      errors: error('await expect(page.locator(".tweet")).toBeVisible()'),
+      output: test('await expect(page.locator(".tweet")).toBeVisible()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isVisible', matcher: 'toBeVisible' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator(".tweet").isVisible()).toEqual(false)'
       ),
-      errors: error('await expect(page.locator(".tweet")).toBeHidden()'),
+      output: test('await expect(page.locator(".tweet")).toBeHidden()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isVisible', matcher: 'toBeHidden' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator(".tweet").isVisible()).not.toBe(true)'
       ),
-      errors: error('await expect(page.locator(".tweet")).toBeHidden()'),
+      output: test('await expect(page.locator(".tweet")).toBeHidden()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isVisible', matcher: 'toBeHidden' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator(".tweet").isVisible()).not.toBe(false)'
       ),
-      errors: error('await expect(page.locator(".tweet")).toBeVisible()'),
+      output: test('await expect(page.locator(".tweet")).toBeVisible()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isVisible', matcher: 'toBeVisible' },
+        },
+      ],
     },
 
     // isHidden
     {
       code: test('expect(await foo.isHidden()).toBe(true)'),
-      errors: error('await expect(foo).toBeHidden()'),
+      output: test('await expect(foo).toBeHidden()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 56,
+          data: { method: 'isHidden', matcher: 'toBeHidden' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isHidden()).not.toBe(true)'),
-      errors: error('await expect(foo).toBeVisible()'),
+      output: test('await expect(foo).toBeVisible()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 56,
+          data: { method: 'isHidden', matcher: 'toBeVisible' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isHidden()).toBe(false)'),
-      errors: error('await expect(foo).toBeVisible()'),
+      output: test('await expect(foo).toBeVisible()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 56,
+          data: { method: 'isHidden', matcher: 'toBeVisible' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isHidden()).not.toBe(false)'),
-      errors: error('await expect(foo).toBeHidden()'),
+      output: test('await expect(foo).toBeHidden()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 56,
+          data: { method: 'isHidden', matcher: 'toBeHidden' },
+        },
+      ],
     },
 
     // getAttribute
@@ -84,173 +162,461 @@ runRuleTester('prefer-web-first-assertions', rule, {
       code: test(
         'expect.soft(await foo.getAttribute("aria-label")).toBe("bar")'
       ),
-      errors: error(
+      output: test(
         'await expect.soft(foo).toHaveAttribute("aria-label", "bar")'
       ),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 77,
+          data: { method: 'getAttribute', matcher: 'toHaveAttribute' },
+        },
+      ],
     },
     {
       code: test(
         'expect.soft(await foo.getAttribute("aria-label")).not.toBe("bar")'
       ),
-      errors: error(
+      output: test(
         'await expect.soft(foo).not.toHaveAttribute("aria-label", "bar")'
       ),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 77,
+          data: { method: 'getAttribute', matcher: 'toHaveAttribute' },
+        },
+      ],
     },
     {
       code: test(
         'expect.soft(await page.locator("foo").getAttribute("aria-label")).toBe("bar")'
       ),
-      errors: error(
+      output: test(
         'await expect.soft(page.locator("foo")).toHaveAttribute("aria-label", "bar")'
       ),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 93,
+          data: { method: 'getAttribute', matcher: 'toHaveAttribute' },
+        },
+      ],
     },
     {
       code: test(
         'expect.soft(await page.locator("foo").getAttribute("aria-label")).not.toBe("bar")'
       ),
-      errors: error(
+      output: test(
         'await expect.soft(page.locator("foo")).not.toHaveAttribute("aria-label", "bar")'
       ),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 93,
+          data: { method: 'getAttribute', matcher: 'toHaveAttribute' },
+        },
+      ],
     },
 
     // innerText
     {
       code: test('expect.soft(await foo.innerText()).toBe("bar")'),
-      errors: error('await expect.soft(foo).toHaveText("bar")'),
+      output: test('await expect.soft(foo).toHaveText("bar")'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 62,
+          data: { method: 'innerText', matcher: 'toHaveText' },
+        },
+      ],
     },
     {
       code: test('expect.soft(await foo.innerText()).not.toBe("bar")'),
-      errors: error('await expect.soft(foo).not.toHaveText("bar")'),
+      output: test('await expect.soft(foo).not.toHaveText("bar")'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 62,
+          data: { method: 'innerText', matcher: 'toHaveText' },
+        },
+      ],
     },
 
     // inputValue
     {
       code: test('expect["soft"](await foo.inputValue()).toBe("bar")'),
-      errors: error('await expect["soft"](foo).toHaveValue("bar")'),
+      output: test('await expect["soft"](foo).toHaveValue("bar")'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 66,
+          data: { method: 'inputValue', matcher: 'toHaveValue' },
+        },
+      ],
     },
     {
       code: test('expect[`soft`](await foo.inputValue()).not.toEqual("bar")'),
-      errors: error('await expect[`soft`](foo).not.toHaveValue("bar")'),
+      output: test('await expect[`soft`](foo).not.toHaveValue("bar")'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 66,
+          data: { method: 'inputValue', matcher: 'toHaveValue' },
+        },
+      ],
     },
 
     // textContent
     {
       code: test('expect(await foo.textContent()).toBe("bar")'),
-      errors: error('await expect(foo).toHaveText("bar")'),
+      output: test('await expect(foo).toHaveText("bar")'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 59,
+          data: { method: 'textContent', matcher: 'toHaveText' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.textContent()).not.toBe("bar")'),
-      errors: error('await expect(foo).not.toHaveText("bar")'),
+      output: test('await expect(foo).not.toHaveText("bar")'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 59,
+          data: { method: 'textContent', matcher: 'toHaveText' },
+        },
+      ],
     },
 
     // isChecked
     {
       code: test('expect(await page.locator("howdy").isChecked()).toBe(true)'),
-      errors: error('await expect(page.locator("howdy")).toBeChecked()'),
+      output: test('await expect(page.locator("howdy")).toBeChecked()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 75,
+          data: { method: 'isChecked', matcher: 'toBeChecked' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator("howdy").isChecked()).toBeTruthy()'
       ),
-      errors: error('await expect(page.locator("howdy")).toBeChecked()'),
+      output: test('await expect(page.locator("howdy")).toBeChecked()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 75,
+          data: { method: 'isChecked', matcher: 'toBeChecked' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator("howdy").isChecked()).not.toBe(true)'
       ),
-      errors: error('await expect(page.locator("howdy")).not.toBeChecked()'),
+      output: test('await expect(page.locator("howdy")).not.toBeChecked()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 75,
+          data: { method: 'isChecked', matcher: 'toBeChecked' },
+        },
+      ],
     },
     {
       code: test('expect(await page.locator("howdy").isChecked()).toBe(false)'),
-      errors: error('await expect(page.locator("howdy")).not.toBeChecked()'),
+      output: test('await expect(page.locator("howdy")).not.toBeChecked()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 75,
+          data: { method: 'isChecked', matcher: 'toBeChecked' },
+        },
+      ],
     },
     {
       code: test('expect(await page.locator("howdy").isChecked()).toBeFalsy()'),
-      errors: error('await expect(page.locator("howdy")).not.toBeChecked()'),
+      output: test('await expect(page.locator("howdy")).not.toBeChecked()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 75,
+          data: { method: 'isChecked', matcher: 'toBeChecked' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator("howdy").isChecked()).not.toBe(false)'
       ),
-      errors: error('await expect(page.locator("howdy")).toBeChecked()'),
+      output: test('await expect(page.locator("howdy")).toBeChecked()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 75,
+          data: { method: 'isChecked', matcher: 'toBeChecked' },
+        },
+      ],
     },
 
     // isDisabled
     {
       code: test('expect(await foo.isDisabled()).toBe(true)'),
-      errors: error('await expect(foo).toBeDisabled()'),
+      output: test('await expect(foo).toBeDisabled()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 58,
+          data: { method: 'isDisabled', matcher: 'toBeDisabled' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isDisabled()).not.toBe(true)'),
-      errors: error('await expect(foo).toBeEnabled()'),
+      output: test('await expect(foo).toBeEnabled()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 58,
+          data: { method: 'isDisabled', matcher: 'toBeEnabled' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isDisabled()).toBe(false)'),
-      errors: error('await expect(foo).toBeEnabled()'),
+      output: test('await expect(foo).toBeEnabled()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 58,
+          data: { method: 'isDisabled', matcher: 'toBeEnabled' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isDisabled()).not.toBe(false)'),
-      errors: error('await expect(foo).toBeDisabled()'),
+      output: test('await expect(foo).toBeDisabled()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 58,
+          data: { method: 'isDisabled', matcher: 'toBeDisabled' },
+        },
+      ],
     },
 
     // isEnabled
     {
       code: test('expect(await foo.isEnabled()).toBe(true)'),
-      errors: error('await expect(foo).toBeEnabled()'),
+      output: test('await expect(foo).toBeEnabled()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 57,
+          data: { method: 'isEnabled', matcher: 'toBeEnabled' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isEnabled()).not.toBe(true)'),
-      errors: error('await expect(foo).toBeDisabled()'),
+      output: test('await expect(foo).toBeDisabled()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 57,
+          data: { method: 'isEnabled', matcher: 'toBeDisabled' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isEnabled()).toBe(false)'),
-      errors: error('await expect(foo).toBeDisabled()'),
+      output: test('await expect(foo).toBeDisabled()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 57,
+          data: { method: 'isEnabled', matcher: 'toBeDisabled' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isEnabled()).not.toBe(false)'),
-      errors: error('await expect(foo).toBeEnabled()'),
+      output: test('await expect(foo).toBeEnabled()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 57,
+          data: { method: 'isEnabled', matcher: 'toBeEnabled' },
+        },
+      ],
     },
 
     // isEditable
     {
       code: test('expect(await foo.isEditable()).toBe(true)'),
-      errors: error('await expect(foo).toBeEditable()'),
+      output: test('await expect(foo).toBeEditable()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 58,
+          data: { method: 'isEditable', matcher: 'toBeEditable' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isEditable()).not.toBe(true)'),
-      errors: error('await expect(foo).not.toBeEditable()'),
+      output: test('await expect(foo).not.toBeEditable()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 58,
+          data: { method: 'isEditable', matcher: 'toBeEditable' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isEditable()).toBe(false)'),
-      errors: error('await expect(foo).not.toBeEditable()'),
+      output: test('await expect(foo).not.toBeEditable()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 58,
+          data: { method: 'isEditable', matcher: 'toBeEditable' },
+        },
+      ],
     },
     {
       code: test('expect(await foo.isEditable()).not.toBe(false)'),
-      errors: error('await expect(foo).toBeEditable()'),
+      output: test('await expect(foo).toBeEditable()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 58,
+          data: { method: 'isEditable', matcher: 'toBeEditable' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator("howdy").isEditable()).not.toBe(true)'
       ),
-      errors: error('await expect(page.locator("howdy")).not.toBeEditable()'),
+      output: test('await expect(page.locator("howdy")).not.toBeEditable()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isEditable', matcher: 'toBeEditable' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator("howdy").isEditable()).toBe(false)'
       ),
-      errors: error('await expect(page.locator("howdy")).not.toBeEditable()'),
+      output: test('await expect(page.locator("howdy")).not.toBeEditable()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isEditable', matcher: 'toBeEditable' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator("howdy").isEditable()).toBeFalsy()'
       ),
-      errors: error('await expect(page.locator("howdy")).not.toBeEditable()'),
+      output: test('await expect(page.locator("howdy")).not.toBeEditable()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isEditable', matcher: 'toBeEditable' },
+        },
+      ],
     },
     {
       code: test(
         'expect(await page.locator("howdy").isEditable()).not.toBe(false)'
       ),
-      errors: error('await expect(page.locator("howdy")).toBeEditable()'),
+      output: test('await expect(page.locator("howdy")).toBeEditable()'),
+      errors: [
+        {
+          messageId: 'useWebFirstAssertion',
+          line: 1,
+          column: 28,
+          endColumn: 76,
+          data: { method: 'isEditable', matcher: 'toBeEditable' },
+        },
+      ],
     },
   ],
 });
