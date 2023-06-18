@@ -1,9 +1,47 @@
-import { runRuleTester, test } from '../utils/rule-tester';
-import rule from '../../src/rules/no-page-pause';
+import rule from '../../src/rules/no-networkidle';
+import { runRuleTester } from '../utils/rule-tester';
 
 const messageId = 'noNetworkidle';
 
 runRuleTester('no-networkidle', rule, {
+  invalid: [
+    {
+      code: 'page.waitForLoadState("networkidle")',
+      errors: [{ column: 23, endColumn: 36, line: 1, messageId }],
+    },
+    {
+      code: 'page.waitForURL(url, { waitUntil: "networkidle" })',
+      errors: [{ column: 35, endColumn: 48, line: 1, messageId }],
+    },
+    {
+      code: 'page["waitForURL"](url, { waitUntil: "networkidle" })',
+      errors: [{ column: 38, endColumn: 51, line: 1, messageId }],
+    },
+    {
+      code: 'page[`waitForURL`](url, { waitUntil: "networkidle" })',
+      errors: [{ column: 38, endColumn: 51, line: 1, messageId }],
+    },
+    {
+      code: 'page.goto(url, { waitUntil: "networkidle" })',
+      errors: [{ column: 29, endColumn: 42, line: 1, messageId }],
+    },
+    {
+      code: 'page.reload(url, { waitUntil: "networkidle" })',
+      errors: [{ column: 31, endColumn: 44, line: 1, messageId }],
+    },
+    {
+      code: 'page.setContent(url, { waitUntil: "networkidle" })',
+      errors: [{ column: 35, endColumn: 48, line: 1, messageId }],
+    },
+    {
+      code: 'page.goBack(url, { waitUntil: "networkidle" })',
+      errors: [{ column: 31, endColumn: 44, line: 1, messageId }],
+    },
+    {
+      code: 'page.goForward(url, { waitUntil: "networkidle" })',
+      errors: [{ column: 34, endColumn: 47, line: 1, messageId }],
+    },
+  ],
   valid: [
     'foo("networkidle")',
     'foo(url, { waitUntil: "networkidle" })',
@@ -17,43 +55,5 @@ runRuleTester('no-networkidle', rule, {
     // Other options are valid
     'page.waitForLoadState({ waitUntil: "load" })',
     'page.waitForUrl(url, { waitUntil: "load" })',
-  ],
-  invalid: [
-    {
-      code: 'page.waitForLoadState("networkidle")',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 46 }],
-    },
-    {
-      code: 'page.waitForUrl(url, { waitUntil: "networkidle" })',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
-    },
-    {
-      code: 'page["waitForUrl"](url, { waitUntil: "networkidle" })',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
-    },
-    {
-      code: 'page[`waitForUrl`](url, { waitUntil: "networkidle" })',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
-    },
-    {
-      code: 'page.goto(url, { waitUntil: "networkidle" })',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
-    },
-    {
-      code: 'page.reload(url, { waitUntil: "networkidle" })',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
-    },
-    {
-      code: 'page.setContent(url, { waitUntil: "networkidle" })',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
-    },
-    {
-      code: 'page.goBack(url, { waitUntil: "networkidle" })',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
-    },
-    {
-      code: 'page.goForward(url, { waitUntil: "networkidle" })',
-      errors: [{ messageId, line: 1, column: 34, endColumn: 51 }],
-    },
   ],
 });
