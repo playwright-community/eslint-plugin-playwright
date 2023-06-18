@@ -1,8 +1,194 @@
-import { runRuleTester, test } from '../utils/rule-tester';
-import rule from '../../src/rules/missing-playwright-await';
 import * as dedent from 'dedent';
+import rule from '../../src/rules/missing-playwright-await';
+import { runRuleTester, test } from '../utils/rule-tester';
 
 runRuleTester('missing-playwright-await', rule, {
+  invalid: [
+    {
+      code: test('expect(page).toBeChecked()'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 34,
+          endLine: 1,
+          line: 1,
+          messageId: 'expect',
+        },
+      ],
+      output: test('await expect(page).toBeChecked()'),
+    },
+    {
+      code: test('expect(page).not.toBeEnabled()'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 34,
+          endLine: 1,
+          line: 1,
+          messageId: 'expect',
+        },
+      ],
+      output: test('await expect(page).not.toBeEnabled()'),
+    },
+    // Custom matchers
+    {
+      code: test('expect(page).toBeCustomThing(false)'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 34,
+          endLine: 1,
+          line: 1,
+          messageId: 'expect',
+        },
+      ],
+      options: [{ customMatchers: ['toBeCustomThing'] }],
+      output: test('await expect(page).toBeCustomThing(false)'),
+    },
+    {
+      code: test('expect(page)["not"][`toBeCustomThing`](true)'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 34,
+          endLine: 1,
+          line: 1,
+          messageId: 'expect',
+        },
+      ],
+      options: [{ customMatchers: ['toBeCustomThing'] }],
+      output: test('await expect(page)["not"][`toBeCustomThing`](true)'),
+    },
+    // expect.soft
+    {
+      code: test('expect.soft(page).toBeChecked()'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 39,
+          endLine: 1,
+          line: 1,
+          messageId: 'expect',
+        },
+      ],
+      output: test('await expect.soft(page).toBeChecked()'),
+    },
+    {
+      code: test('expect["soft"](page)["toBeChecked"]()'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 42,
+          endLine: 1,
+          line: 1,
+          messageId: 'expect',
+        },
+      ],
+      output: test('await expect["soft"](page)["toBeChecked"]()'),
+    },
+    {
+      code: test('expect[`soft`](page)[`toBeChecked`]()'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 42,
+          endLine: 1,
+          line: 1,
+          messageId: 'expect',
+        },
+      ],
+      output: test('await expect[`soft`](page)[`toBeChecked`]()'),
+    },
+    // expect.poll
+    {
+      code: test('expect.poll(() => foo).toBe(true)'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 39,
+          endLine: 1,
+          line: 1,
+          messageId: 'expectPoll',
+        },
+      ],
+      output: test('await expect.poll(() => foo).toBe(true)'),
+    },
+    {
+      code: test('expect["poll"](() => foo)["toContain"]("bar")'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 42,
+          endLine: 1,
+          line: 1,
+          messageId: 'expectPoll',
+        },
+      ],
+      output: test('await expect["poll"](() => foo)["toContain"]("bar")'),
+    },
+    {
+      code: test('expect[`poll`](() => foo)[`toBeTruthy`]()'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 42,
+          endLine: 1,
+          line: 1,
+          messageId: 'expectPoll',
+        },
+      ],
+      output: test('await expect[`poll`](() => foo)[`toBeTruthy`]()'),
+    },
+    // test.step
+    {
+      code: test("test.step('foo', async () => {})"),
+      errors: [
+        {
+          column: 28,
+          endColumn: 37,
+          endLine: 1,
+          line: 1,
+          messageId: 'testStep',
+        },
+      ],
+      output: test("await test.step('foo', async () => {})"),
+    },
+    {
+      code: test("test['step']('foo', async () => {})"),
+      errors: [
+        {
+          column: 28,
+          endColumn: 40,
+          endLine: 1,
+          line: 1,
+          messageId: 'testStep',
+        },
+      ],
+      output: test("await test['step']('foo', async () => {})"),
+    },
+    {
+      code: dedent(
+        test(`
+          const promises = [
+            expect(page.locator("foo")).toHaveText("bar"),
+            expect(page).toHaveTitle("baz"),
+          ]
+        `)
+      ),
+      errors: [
+        { column: 4, endColumn: 10, endLine: 3, line: 3, messageId: 'expect' },
+        { column: 4, endColumn: 10, endLine: 4, line: 4, messageId: 'expect' },
+      ],
+      output: dedent(
+        test(`
+          const promises = [
+            await expect(page.locator("foo")).toHaveText("bar"),
+            await expect(page).toHaveTitle("baz"),
+          ]
+        `)
+      ),
+    },
+  ],
   valid: [
     { code: test('await expect(page).toBeEditable') },
     { code: test('await expect(page).toEqualTitle("text")') },
@@ -41,192 +227,6 @@ runRuleTester('missing-playwright-await', rule, {
           expect(page).toHaveTitle("baz"),
         ])
       `),
-    },
-  ],
-  invalid: [
-    {
-      code: test('expect(page).toBeChecked()'),
-      output: test('await expect(page).toBeChecked()'),
-      errors: [
-        {
-          messageId: 'expect',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 34,
-        },
-      ],
-    },
-    {
-      code: test('expect(page).not.toBeEnabled()'),
-      output: test('await expect(page).not.toBeEnabled()'),
-      errors: [
-        {
-          messageId: 'expect',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 34,
-        },
-      ],
-    },
-    // Custom matchers
-    {
-      code: test('expect(page).toBeCustomThing(false)'),
-      output: test('await expect(page).toBeCustomThing(false)'),
-      errors: [
-        {
-          messageId: 'expect',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 34,
-        },
-      ],
-      options: [{ customMatchers: ['toBeCustomThing'] }],
-    },
-    {
-      code: test('expect(page)["not"][`toBeCustomThing`](true)'),
-      output: test('await expect(page)["not"][`toBeCustomThing`](true)'),
-      errors: [
-        {
-          messageId: 'expect',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 34,
-        },
-      ],
-      options: [{ customMatchers: ['toBeCustomThing'] }],
-    },
-    // expect.soft
-    {
-      code: test('expect.soft(page).toBeChecked()'),
-      output: test('await expect.soft(page).toBeChecked()'),
-      errors: [
-        {
-          messageId: 'expect',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 39,
-        },
-      ],
-    },
-    {
-      code: test('expect["soft"](page)["toBeChecked"]()'),
-      output: test('await expect["soft"](page)["toBeChecked"]()'),
-      errors: [
-        {
-          messageId: 'expect',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 42,
-        },
-      ],
-    },
-    {
-      code: test('expect[`soft`](page)[`toBeChecked`]()'),
-      output: test('await expect[`soft`](page)[`toBeChecked`]()'),
-      errors: [
-        {
-          messageId: 'expect',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 42,
-        },
-      ],
-    },
-    // expect.poll
-    {
-      code: test('expect.poll(() => foo).toBe(true)'),
-      output: test('await expect.poll(() => foo).toBe(true)'),
-      errors: [
-        {
-          messageId: 'expectPoll',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 39,
-        },
-      ],
-    },
-    {
-      code: test('expect["poll"](() => foo)["toContain"]("bar")'),
-      output: test('await expect["poll"](() => foo)["toContain"]("bar")'),
-      errors: [
-        {
-          messageId: 'expectPoll',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 42,
-        },
-      ],
-    },
-    {
-      code: test('expect[`poll`](() => foo)[`toBeTruthy`]()'),
-      output: test('await expect[`poll`](() => foo)[`toBeTruthy`]()'),
-      errors: [
-        {
-          messageId: 'expectPoll',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 42,
-        },
-      ],
-    },
-    // test.step
-    {
-      code: test("test.step('foo', async () => {})"),
-      output: test("await test.step('foo', async () => {})"),
-      errors: [
-        {
-          messageId: 'testStep',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 37,
-        },
-      ],
-    },
-    {
-      code: test("test['step']('foo', async () => {})"),
-      output: test("await test['step']('foo', async () => {})"),
-      errors: [
-        {
-          messageId: 'testStep',
-          line: 1,
-          column: 28,
-          endLine: 1,
-          endColumn: 40,
-        },
-      ],
-    },
-    {
-      code: dedent(
-        test(`
-          const promises = [
-            expect(page.locator("foo")).toHaveText("bar"),
-            expect(page).toHaveTitle("baz"),
-          ]
-        `)
-      ),
-      output: dedent(
-        test(`
-          const promises = [
-            await expect(page.locator("foo")).toHaveText("bar"),
-            await expect(page).toHaveTitle("baz"),
-          ]
-        `)
-      ),
-      errors: [
-        { messageId: 'expect', line: 3, column: 4, endLine: 3, endColumn: 10 },
-        { messageId: 'expect', line: 4, column: 4, endLine: 4, endColumn: 10 },
-      ],
     },
   ],
 });

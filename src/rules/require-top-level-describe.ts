@@ -1,13 +1,13 @@
 import { Rule } from 'eslint';
-import { getAmountData } from '../utils/misc';
 import * as ESTree from 'estree';
 import { isDescribeCall, isTest, isTestHook } from '../utils/ast';
+import { getAmountData } from '../utils/misc';
 
 export default {
   create(context) {
     const { maxTopLevelDescribes } = {
       maxTopLevelDescribes: Infinity,
-      ...((context.options?.[0] as {}) ?? {}),
+      ...((context.options?.[0] as Record<string, unknown>) ?? {}),
     };
 
     let topLevelDescribeCount = 0;
@@ -23,17 +23,17 @@ export default {
 
             if (topLevelDescribeCount > maxTopLevelDescribes) {
               context.report({
-                node: node.callee,
-                messageId: 'tooManyDescribes',
                 data: getAmountData(maxTopLevelDescribes),
+                messageId: 'tooManyDescribes',
+                node: node.callee,
               });
             }
           }
         } else if (!describeCount) {
           if (isTest(node)) {
-            context.report({ node: node.callee, messageId: 'unexpectedTest' });
+            context.report({ messageId: 'unexpectedTest', node: node.callee });
           } else if (isTestHook(node)) {
-            context.report({ node: node.callee, messageId: 'unexpectedHook' });
+            context.report({ messageId: 'unexpectedHook', node: node.callee });
           }
         }
       },
@@ -55,21 +55,21 @@ export default {
     messages: {
       tooManyDescribes:
         'There should not be more than {{max}} describe{{s}} at the top level',
-      unexpectedTest: 'All test cases must be wrapped in a describe block.',
       unexpectedHook: 'All hooks must be wrapped in a describe block.',
+      unexpectedTest: 'All test cases must be wrapped in a describe block.',
     },
-    type: 'suggestion',
     schema: [
       {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           maxTopLevelDescribes: {
-            type: 'number',
             minimum: 1,
+            type: 'number',
           },
         },
-        additionalProperties: false,
+        type: 'object',
       },
     ],
+    type: 'suggestion',
   },
 } as Rule.RuleModule;
