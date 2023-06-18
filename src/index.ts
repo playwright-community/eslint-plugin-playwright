@@ -28,7 +28,6 @@ const recommended = {
   plugins: ['playwright'],
   rules: {
     'no-empty-pattern': 'off',
-    'no-useless-await': 'warn',
     'playwright/max-nested-describe': 'warn',
     'playwright/missing-playwright-await': 'error',
     'playwright/no-conditional-in-test': 'warn',
@@ -39,6 +38,7 @@ const recommended = {
     'playwright/no-networkidle': 'error',
     'playwright/no-page-pause': 'warn',
     'playwright/no-skipped-test': 'warn',
+    'playwright/no-useless-await': 'warn',
     'playwright/no-useless-not': 'warn',
     'playwright/no-wait-for-timeout': 'warn',
     'playwright/prefer-web-first-assertions': 'error',
