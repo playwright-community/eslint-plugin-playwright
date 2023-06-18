@@ -1,10 +1,149 @@
-import { runRuleTester } from '../utils/rule-tester';
 import rule from '../../src/rules/max-nested-describe';
+import { runRuleTester } from '../utils/rule-tester';
 import dedent = require('dedent');
 
 const messageId = 'exceededMaxDepth';
 
 runRuleTester('max-nested-describe', rule, {
+  invalid: [
+    {
+      code: dedent`
+        test.describe('foo', function() {
+          test.describe('bar', function () {
+            test.describe('baz', function () {
+              test.describe('qux', function () {
+                test.describe('quxx', function () {
+                  test.describe('over limit', function () {
+                    test('should get something', () => {
+                      expect(getSomething()).toBe('Something');
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      `,
+      errors: [{ column: 11, endColumn: 24, endLine: 6, line: 6, messageId }],
+    },
+    {
+      code: dedent`
+        describe('foo', function() {
+          describe('bar', function () {
+            describe('baz', function () {
+              describe('qux', function () {
+                describe('quxx', function () {
+                  describe('over limit', function () {
+                    test('should get something', () => {
+                      expect(getSomething()).toBe('Something');
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      `,
+      errors: [{ column: 11, endColumn: 19, endLine: 6, line: 6, messageId }],
+    },
+    {
+      code: dedent`
+        test.describe('foo', () => {
+          test.describe('bar', () => {
+            test["describe"]('baz', () => {
+              test.describe('baz1', () => {
+                test.describe('baz2', () => {
+                  test[\`describe\`]('baz3', () => {
+                    test('should get something', () => {
+                      expect(getSomething()).toBe('Something');
+                    });
+                  });
+
+                  test.describe('baz4', () => {
+                    it('should get something', () => {
+                      expect(getSomething()).toBe('Something');
+                    });
+                  });
+                });
+              });
+            });
+
+            test.describe('qux', function () {
+              test('should get something', () => {
+                expect(getSomething()).toBe('Something');
+              });
+            });
+          })
+        });
+      `,
+      errors: [
+        { column: 11, endColumn: 27, endLine: 6, line: 6, messageId },
+        { column: 11, endColumn: 24, endLine: 12, line: 12, messageId },
+      ],
+      options: [{ max: 5 }],
+    },
+    {
+      code: dedent`
+        test.describe.only('foo', function() {
+          test.describe('bar', function() {
+            test.describe('baz', function() {
+              test.describe('qux', function() {
+                test.describe('quux', function() {
+                  test.describe.only('quuz', function() { });
+                });
+              });
+            });
+          });
+        });
+      `,
+      errors: [{ column: 11, endColumn: 29, endLine: 6, line: 6, messageId }],
+    },
+    {
+      code: dedent`
+        test.describe.serial.only('foo', function() {
+          test.describe('bar', function() {
+            test.describe('baz', function() {
+              test.describe('qux', function() {
+                test.describe('quux', function() {
+                  test.describe('quuz', function() { });
+                });
+              });
+            });
+          });
+        });
+      `,
+      errors: [{ column: 11, endColumn: 24, endLine: 6, line: 6, messageId }],
+    },
+    {
+      code: dedent`
+        test.describe('qux', () => {
+          test('should get something', () => {
+            expect(getSomething()).toBe('Something');
+          });
+        });
+      `,
+      errors: [{ column: 1, endColumn: 14, endLine: 1, line: 1, messageId }],
+      options: [{ max: 0 }],
+    },
+    {
+      code: dedent`
+        test.describe('foo', () => {
+          test.describe('bar', () => {
+            test.describe('baz', () => {
+              test("test1", () => {
+                expect(true).toBe(true);
+              });
+              test("test2", () => {
+                expect(true).toBe(true);
+              });
+            });
+          });
+        });
+      `,
+      errors: [{ column: 5, endColumn: 18, endLine: 3, line: 3, messageId }],
+      options: [{ max: 2 }],
+    },
+  ],
   valid: [
     'test.describe("describe tests", () => {});',
     'test.describe.only("describe focus tests", () => {});',
@@ -90,145 +229,6 @@ runRuleTester('max-nested-describe', rule, {
         });
       `,
       options: [{ max: 3 }],
-    },
-  ],
-  invalid: [
-    {
-      code: dedent`
-        test.describe('foo', function() {
-          test.describe('bar', function () {
-            test.describe('baz', function () {
-              test.describe('qux', function () {
-                test.describe('quxx', function () {
-                  test.describe('over limit', function () {
-                    test('should get something', () => {
-                      expect(getSomething()).toBe('Something');
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      `,
-      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 24 }],
-    },
-    {
-      code: dedent`
-        describe('foo', function() {
-          describe('bar', function () {
-            describe('baz', function () {
-              describe('qux', function () {
-                describe('quxx', function () {
-                  describe('over limit', function () {
-                    test('should get something', () => {
-                      expect(getSomething()).toBe('Something');
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      `,
-      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 19 }],
-    },
-    {
-      code: dedent`
-        test.describe('foo', () => {
-          test.describe('bar', () => {
-            test["describe"]('baz', () => {
-              test.describe('baz1', () => {
-                test.describe('baz2', () => {
-                  test[\`describe\`]('baz3', () => {
-                    test('should get something', () => {
-                      expect(getSomething()).toBe('Something');
-                    });
-                  });
-
-                  test.describe('baz4', () => {
-                    it('should get something', () => {
-                      expect(getSomething()).toBe('Something');
-                    });
-                  });
-                });
-              });
-            });
-
-            test.describe('qux', function () {
-              test('should get something', () => {
-                expect(getSomething()).toBe('Something');
-              });
-            });
-          })
-        });
-      `,
-      options: [{ max: 5 }],
-      errors: [
-        { messageId, line: 6, column: 11, endLine: 6, endColumn: 27 },
-        { messageId, line: 12, column: 11, endLine: 12, endColumn: 24 },
-      ],
-    },
-    {
-      code: dedent`
-        test.describe.only('foo', function() {
-          test.describe('bar', function() {
-            test.describe('baz', function() {
-              test.describe('qux', function() {
-                test.describe('quux', function() {
-                  test.describe.only('quuz', function() { });
-                });
-              });
-            });
-          });
-        });
-      `,
-      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 29 }],
-    },
-    {
-      code: dedent`
-        test.describe.serial.only('foo', function() {
-          test.describe('bar', function() {
-            test.describe('baz', function() {
-              test.describe('qux', function() {
-                test.describe('quux', function() {
-                  test.describe('quuz', function() { });
-                });
-              });
-            });
-          });
-        });
-      `,
-      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 24 }],
-    },
-    {
-      code: dedent`
-        test.describe('qux', () => {
-          test('should get something', () => {
-            expect(getSomething()).toBe('Something');
-          });
-        });
-      `,
-      errors: [{ messageId, line: 1, column: 1, endLine: 1, endColumn: 14 }],
-      options: [{ max: 0 }],
-    },
-    {
-      code: dedent`
-        test.describe('foo', () => {
-          test.describe('bar', () => {
-            test.describe('baz', () => {
-              test("test1", () => {
-                expect(true).toBe(true);
-              });
-              test("test2", () => {
-                expect(true).toBe(true);
-              });
-            });
-          });
-        });
-      `,
-      errors: [{ messageId, line: 3, column: 5, endLine: 3, endColumn: 18 }],
-      options: [{ max: 2 }],
     },
   ],
 });

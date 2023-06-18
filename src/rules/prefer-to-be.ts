@@ -27,8 +27,6 @@ function reportPreferToBe(
   notModifier?: ESTree.Node
 ) {
   context.report({
-    node: expectCall.matcher,
-    messageId: `useToBe${whatToBe}`,
     fix(fixer) {
       const fixes = [
         replaceAccessorFixer(fixer, expectCall.matcher, `toBe${whatToBe}`),
@@ -45,6 +43,8 @@ function reportPreferToBe(
 
       return fixes;
     },
+    messageId: `useToBe${whatToBe}`,
+    node: expectCall.matcher,
   });
 }
 
@@ -102,15 +102,15 @@ export default {
       recommended: false,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-to-be.md',
     },
+    fixable: 'code',
     messages: {
       useToBe: 'Use `toBe` when expecting primitive literals',
-      useToBeUndefined: 'Use `toBeUndefined` instead',
       useToBeDefined: 'Use `toBeDefined` instead',
-      useToBeNull: 'Use `toBeNull` instead',
       useToBeNaN: 'Use `toBeNaN` instead',
+      useToBeNull: 'Use `toBeNull` instead',
+      useToBeUndefined: 'Use `toBeUndefined` instead',
     },
-    fixable: 'code',
-    type: 'suggestion',
     schema: [],
+    type: 'suggestion',
   },
 } as Rule.RuleModule;

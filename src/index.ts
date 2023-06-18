@@ -1,30 +1,30 @@
+import maxNestedDescribe from './rules/max-nested-describe';
 import missingPlaywrightAwait from './rules/missing-playwright-await';
-import noPagePause from './rules/no-page-pause';
+import noConditionalInTest from './rules/no-conditional-in-test';
 import noElementHandle from './rules/no-element-handle';
 import noEval from './rules/no-eval';
 import noFocusedTest from './rules/no-focused-test';
-import noSkippedTest from './rules/no-skipped-test';
-import noWaitForTimeout from './rules/no-wait-for-timeout';
 import noForceOption from './rules/no-force-option';
-import maxNestedDescribe from './rules/max-nested-describe';
-import noConditionalInTest from './rules/no-conditional-in-test';
+import noNetworkidle from './rules/no-networkidle';
+import noPagePause from './rules/no-page-pause';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
+import noSkippedTest from './rules/no-skipped-test';
 import noUselessNot from './rules/no-useless-not';
+import noWaitForTimeout from './rules/no-wait-for-timeout';
 import preferLowercaseTitle from './rules/prefer-lowercase-title';
+import preferStrictEqual from './rules/prefer-strict-equal';
 import preferToBe from './rules/prefer-to-be';
 import preferToHaveLength from './rules/prefer-to-have-length';
-import preferStrictEqual from './rules/prefer-strict-equal';
+import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
 import requireSoftAssertions from './rules/require-soft-assertions';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validExpect from './rules/valid-expect';
-import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
-import noNetworkidle from './rules/no-networkidle';
 
 const recommended = {
-  plugins: ['playwright'],
   env: {
     'shared-node-browser': true,
   },
+  plugins: ['playwright'],
   rules: {
     'no-empty-pattern': 'off',
     'playwright/max-nested-describe': 'warn',
@@ -46,17 +46,21 @@ const recommended = {
 
 export = {
   configs: {
-    recommended,
-    'playwright-test': recommended,
     'jest-playwright': {
-      plugins: ['jest', 'playwright'],
       env: {
-        'shared-node-browser': true,
         jest: true,
+        'shared-node-browser': true,
       },
+      globals: {
+        browser: true,
+        browserName: true,
+        context: true,
+        deviceName: true,
+        jestPlaywright: true,
+        page: true,
+      },
+      plugins: ['jest', 'playwright'],
       rules: {
-        'playwright/missing-playwright-await': 'error',
-        'playwright/no-page-pause': 'warn',
         'jest/no-standalone-expect': [
           'error',
           {
@@ -70,16 +74,12 @@ export = {
             ],
           },
         ],
-      },
-      globals: {
-        browserName: true,
-        deviceName: true,
-        browser: true,
-        context: true,
-        page: true,
-        jestPlaywright: true,
+        'playwright/missing-playwright-await': 'error',
+        'playwright/no-page-pause': 'warn',
       },
     },
+    'playwright-test': recommended,
+    recommended,
   },
   rules: {
     'max-nested-describe': maxNestedDescribe,
@@ -89,6 +89,7 @@ export = {
     'no-eval': noEval,
     'no-focused-test': noFocusedTest,
     'no-force-option': noForceOption,
+    'no-networkidle': noNetworkidle,
     'no-page-pause': noPagePause,
     'no-restricted-matchers': noRestrictedMatchers,
     'no-skipped-test': noSkippedTest,
@@ -101,7 +102,6 @@ export = {
     'prefer-web-first-assertions': preferWebFirstAssertions,
     'require-soft-assertions': requireSoftAssertions,
     'require-top-level-describe': requireTopLevelDescribe,
-    'no-networkidle': noNetworkidle,
     'valid-expect': validExpect,
   },
 };

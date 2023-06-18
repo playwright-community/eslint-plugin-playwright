@@ -47,11 +47,11 @@ export default {
       recommended: false,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-to-have-length.md',
     },
+    fixable: 'code',
     messages: {
       useToHaveLength: 'Use toHaveLength() instead',
     },
-    fixable: 'code',
-    type: 'suggestion',
     schema: [],
+    type: 'suggestion',
   },
 } as Rule.RuleModule;

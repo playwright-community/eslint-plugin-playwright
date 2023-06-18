@@ -1,6 +1,6 @@
 import { Rule } from 'eslint';
-import { isExpectCall, getMatchers, getStringValue } from './ast';
 import * as ESTree from 'estree';
+import { getMatchers, getStringValue, isExpectCall } from './ast';
 
 const MODIFIER_NAMES = new Set(['not', 'resolves', 'rejects']);
 
@@ -10,11 +10,11 @@ function getExpectArguments(node: Rule.Node): ESTree.Node[] {
 }
 
 export interface ParsedExpectCall {
-  members: ESTree.Node[];
+  args: ESTree.Node[];
   matcher: ESTree.Node;
   matcherName: string;
+  members: ESTree.Node[];
   modifiers: ESTree.Node[];
-  args: ESTree.Node[];
 }
 
 export function parseExpectCall(
@@ -43,10 +43,10 @@ export function parseExpectCall(
   }
 
   return {
-    members,
+    args: getExpectArguments(matcher),
     matcher,
     matcherName: getStringValue(matcher),
+    members,
     modifiers,
-    args: getExpectArguments(matcher),
   };
 }

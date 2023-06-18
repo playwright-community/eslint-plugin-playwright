@@ -8,18 +8,18 @@ export default {
         if (isPageMethod(node, 'waitForTimeout')) {
           context.report({
             messageId: 'noWaitForTimeout',
+            node,
             suggest: [
               {
-                messageId: 'removeWaitForTimeout',
                 fix: (fixer) =>
                   fixer.remove(
                     node.parent && node.parent.type !== 'AwaitExpression'
                       ? node.parent
                       : node.parent.parent
                   ),
+                messageId: 'removeWaitForTimeout',
               },
             ],
-            node,
           });
         }
       },

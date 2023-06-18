@@ -19,12 +19,12 @@ export default {
 
       if (describeCallbackStack.length > max) {
         context.report({
-          node: node.parent.callee,
-          messageId: 'exceededMaxDepth',
           data: {
             depth: describeCallbackStack.length.toString(),
             max: max.toString(),
           },
+          messageId: 'exceededMaxDepth',
+          node: node.parent.callee,
         });
       }
     }
@@ -38,10 +38,10 @@ export default {
     }
 
     return {
-      FunctionExpression: pushDescribeCallback,
-      'FunctionExpression:exit': popDescribeCallback,
       ArrowFunctionExpression: pushDescribeCallback,
       'ArrowFunctionExpression:exit': popDescribeCallback,
+      FunctionExpression: pushDescribeCallback,
+      'FunctionExpression:exit': popDescribeCallback,
     };
   },
   meta: {
@@ -55,18 +55,18 @@ export default {
       exceededMaxDepth:
         'Maximum describe call depth exceeded ({{ depth }}). Maximum allowed is {{ max }}.',
     },
-    type: 'suggestion',
     schema: [
       {
-        type: 'object',
+        additionalProperties: false,
         properties: {
           max: {
-            type: 'integer',
             minimum: 0,
+            type: 'integer',
           },
         },
-        additionalProperties: false,
+        type: 'object',
       },
     ],
+    type: 'suggestion',
   },
 } as Rule.RuleModule;

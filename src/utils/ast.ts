@@ -115,7 +115,7 @@ export function isTestHook(node: ESTree.CallExpression) {
 }
 
 const expectSubCommands = new Set(['soft', 'poll']);
-export type ExpectType = 'standalone' | 'soft' | 'poll';
+export type ExpectType = 'poll' | 'soft' | 'standalone';
 
 export function getExpectType(
   node: ESTree.CallExpression

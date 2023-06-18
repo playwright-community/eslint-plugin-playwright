@@ -7,9 +7,9 @@ export default {
       CallExpression(node) {
         if (getExpectType(node) === 'standalone') {
           context.report({
-            node: node.callee,
-            messageId: 'requireSoft',
             fix: (fixer) => fixer.insertTextAfter(node.callee, '.soft'),
+            messageId: 'requireSoft',
+            node: node.callee,
           });
         }
       },
@@ -21,11 +21,11 @@ export default {
       recommended: false,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/require-soft-assertions.md',
     },
+    fixable: 'code',
     messages: {
       requireSoft: 'Unexpected non-soft assertion',
     },
-    fixable: 'code',
-    type: 'suggestion',
     schema: [],
+    type: 'suggestion',
   },
 } as Rule.RuleModule;
