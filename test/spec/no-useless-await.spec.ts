@@ -5,41 +5,181 @@ const messageId = 'noUselessAwait';
 
 runRuleTester('no-useless-await', rule, {
   invalid: [
+    // Page, frames, and locators
     {
-      code: 'page.waitForLoadState("useless-await")',
-      errors: [{ column: 23, endColumn: 36, line: 1, messageId }],
+      code: 'await page.locator(".my-element")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.locator(".my-element")',
     },
     {
-      code: 'page.waitForURL(url, { waitUntil: "useless-await" })',
-      errors: [{ column: 35, endColumn: 48, line: 1, messageId }],
+      code: 'await frame.locator(".my-element")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'frame.locator(".my-element")',
     },
     {
-      code: 'page["waitForURL"](url, { waitUntil: "useless-await" })',
-      errors: [{ column: 38, endColumn: 51, line: 1, messageId }],
+      code: 'await foo.locator(".my-element")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'foo.locator(".my-element")',
+    },
+
+    // nth methods
+    {
+      code: 'await foo.first()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'foo.first()',
     },
     {
-      code: 'page[`waitForURL`](url, { waitUntil: "useless-await" })',
-      errors: [{ column: 38, endColumn: 51, line: 1, messageId }],
+      code: 'await foo.last()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'foo.last()',
     },
     {
-      code: 'page.goto(url, { waitUntil: "useless-await" })',
-      errors: [{ column: 29, endColumn: 42, line: 1, messageId }],
+      code: 'await foo.nth(3)',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'foo.nth(3)',
     },
     {
-      code: 'page.reload(url, { waitUntil: "useless-await" })',
-      errors: [{ column: 31, endColumn: 44, line: 1, messageId }],
+      code: 'await foo.and(page.locator(".my-element"))',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'foo.and(page.locator(".my-element"))',
     },
     {
-      code: 'page.setContent(url, { waitUntil: "useless-await" })',
-      errors: [{ column: 35, endColumn: 48, line: 1, messageId }],
+      code: 'await foo.or(page.locator(".my-element"))',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'foo.or(page.locator(".my-element"))',
+    },
+
+    // Testing library methods
+    {
+      code: 'await page.getByAltText("foo")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.getByAltText("foo")',
     },
     {
-      code: 'page.goBack(url, { waitUntil: "useless-await" })',
-      errors: [{ column: 31, endColumn: 44, line: 1, messageId }],
+      code: 'await page["getByRole"]("button")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page["getByRole"]("button")',
     },
     {
-      code: 'page.goForward(url, { waitUntil: "useless-await" })',
-      errors: [{ column: 34, endColumn: 47, line: 1, messageId }],
+      code: 'await page[`getByLabel`]("foo")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page[`getByLabel`]("foo")',
+    },
+    {
+      code: 'await page.getByPlaceholder("foo")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.getByPlaceholder("foo")',
+    },
+    {
+      code: 'await page.getByTestId("foo")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.getByTestId("foo")',
+    },
+    {
+      code: 'await page.getByText("foo")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.getByText("foo")',
+    },
+    {
+      code: 'await page.getByTitle("foo")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.getByTitle("foo")',
+    },
+
+    // Event handlers
+    {
+      code: 'await page.on("console", () => {})',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.on("console", () => {})',
+    },
+    {
+      code: 'await frame.on("console", () => {})',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'frame.on("console", () => {})',
+    },
+
+    // Misc page methods
+    {
+      code: 'await page.frame("foo")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.frame("foo")',
+    },
+    {
+      code: 'await page.frameLocator("#foo")',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.frameLocator("#foo")',
+    },
+    {
+      code: 'await page.frames()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.frames()',
+    },
+    {
+      code: 'await page.mainFrame()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.mainFrame()',
+    },
+    {
+      code: 'await page.isClosed()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.isClosed()',
+    },
+    {
+      code: 'await page.setDefaultNavigationTimeout()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.setDefaultNavigationTimeout()',
+    },
+    {
+      code: 'await page.setDefaultTimeout()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.setDefaultTimeout()',
+    },
+    {
+      code: 'await page.url()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.url()',
+    },
+    {
+      code: 'await page.video()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.video()',
+    },
+    {
+      code: 'await page.viewportSize()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.viewportSize()',
+    },
+    {
+      code: 'await page.workers()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'page.workers()',
+    },
+
+    // Misc frame methods
+    {
+      code: 'await frame.childFrames()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'frame.childFrames()',
+    },
+    {
+      code: 'await frame.isDetached()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'frame.isDetached()',
+    },
+    {
+      code: 'await frame.name()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'frame.name()',
+    },
+    {
+      code: 'await frame.page()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'frame.page()',
+    },
+    {
+      code: 'await frame.parentFrame()',
+      errors: [{ column: 1, endColumn: 5, line: 1, messageId }],
+      output: 'frame.parentFrame()',
     },
   ],
   valid: [
