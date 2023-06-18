@@ -18,8 +18,11 @@ export function getRawValue(node: ESTree.Node) {
   return node.type === 'Literal' ? node.raw : undefined;
 }
 
-export function isIdentifier(node: ESTree.Node, name: string) {
-  return node.type === 'Identifier' && node.name === name;
+export function isIdentifier(node: ESTree.Node, name: string | RegExp) {
+  return (
+    node.type === 'Identifier' &&
+    (typeof name === 'string' ? node.name === name : name.test(node.name))
+  );
 }
 
 function isLiteral<T>(node: ESTree.Node, type: string, value?: T) {
@@ -148,12 +151,21 @@ export function getMatchers(
   return chain;
 }
 
+function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
+  return node.type === 'MemberExpression'
+    ? dig(node.property, identifier)
+    : node.type === 'CallExpression'
+    ? dig(node.callee, identifier)
+    : node.type === 'Identifier'
+    ? isIdentifier(node, identifier)
+    : false;
+}
+
+const pageRegex = /(^page|Page$)/;
 export function isPageMethod(node: ESTree.CallExpression, name: string) {
   return (
     node.callee.type === 'MemberExpression' &&
-    (node.callee.object.type === 'MemberExpression'
-      ? isIdentifier(node.callee.object.property, 'page')
-      : isIdentifier(node.callee.object, 'page')) &&
+    dig(node.callee.object, pageRegex) &&
     isPropertyAccessor(node.callee, name)
   );
 }
