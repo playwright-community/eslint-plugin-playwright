@@ -11,6 +11,8 @@ runRuleTester('no-wait-for-timeout', rule, {
     '(async function() { await page.waitForSelector("#foo"); })();',
     'page.waitForSelector("#foo");',
     'page["waitForSelector"]("#foo");',
+    'rampage.waitForTimeout(2000);',
+    'myPage2.waitForTimeout(2000);',
   ],
   invalid: [
     {

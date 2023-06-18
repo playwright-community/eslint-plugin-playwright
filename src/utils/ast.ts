@@ -151,6 +151,10 @@ export function getMatchers(
   return chain;
 }
 
+/**
+ * Digs through a series of MemberExpressions and CallExpressions to find an
+ * Identifier with the given name.
+ */
 function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
   return node.type === 'MemberExpression'
     ? dig(node.property, identifier)
@@ -161,11 +165,10 @@ function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
     : false;
 }
 
-const pageRegex = /(^page|Page$)/;
 export function isPageMethod(node: ESTree.CallExpression, name: string) {
   return (
     node.callee.type === 'MemberExpression' &&
-    dig(node.callee.object, pageRegex) &&
+    dig(node.callee.object, /(^page|Page$)/) &&
     isPropertyAccessor(node.callee, name)
   );
 }
