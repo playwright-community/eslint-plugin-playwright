@@ -9,6 +9,7 @@ import noNetworkidle from './rules/no-networkidle';
 import noPagePause from './rules/no-page-pause';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
 import noSkippedTest from './rules/no-skipped-test';
+import noUselessAwait from './rules/no-useless-await';
 import noUselessNot from './rules/no-useless-not';
 import noWaitForTimeout from './rules/no-wait-for-timeout';
 import preferLowercaseTitle from './rules/prefer-lowercase-title';
@@ -27,6 +28,7 @@ const recommended = {
   plugins: ['playwright'],
   rules: {
     'no-empty-pattern': 'off',
+    'no-useless-await': 'warn',
     'playwright/max-nested-describe': 'warn',
     'playwright/missing-playwright-await': 'error',
     'playwright/no-conditional-in-test': 'warn',
@@ -93,6 +95,7 @@ export = {
     'no-page-pause': noPagePause,
     'no-restricted-matchers': noRestrictedMatchers,
     'no-skipped-test': noSkippedTest,
+    'no-useless-await': noUselessAwait,
     'no-useless-not': noUselessNot,
     'no-wait-for-timeout': noWaitForTimeout,
     'prefer-lowercase-title': preferLowercaseTitle,
