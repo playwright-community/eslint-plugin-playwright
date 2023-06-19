@@ -53,6 +53,8 @@ runRuleTester('no-networkidle', rule, {
     'frame.hi(url, { waitUntil: "networkidle" })',
 
     // Other options are valid
+
+    'this.page.waitForLoadState()',
     'page.waitForLoadState({ waitUntil: "load" })',
     'page.waitForUrl(url, { waitUntil: "load" })',
   ],
