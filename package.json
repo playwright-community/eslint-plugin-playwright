@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-playwright",
   "description": "ESLint plugin for Playwright testing.",
-  "version": "0.14.3",
+  "version": "0.0.0-semantically-released",
   "packageManager": "pnpm@8.4.0",
   "main": "lib/index.js",
   "repository": "https://github.com/playwright-community/eslint-plugin-playwright",
@@ -34,6 +34,7 @@
     "eslint-plugin-sort": "^2.10.0",
     "jest": "^29.5.0",
     "prettier": "^2.8.8",
+    "semantic-release": "^21.0.5",
     "ts-jest": "^29.1.0",
     "typescript": "^5.1.3"
   },
