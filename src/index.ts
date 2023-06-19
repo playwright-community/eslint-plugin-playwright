@@ -1,5 +1,5 @@
 import maxNestedDescribe from './rules/max-nested-describe';
-import maxNestedStep from './rules/max-nested-step';
+import noNestedStep from './rules/no-nested-step';
 import missingPlaywrightAwait from './rules/missing-playwright-await';
 import noConditionalInTest from './rules/no-conditional-in-test';
 import noElementHandle from './rules/no-element-handle';
@@ -30,13 +30,13 @@ const recommended = {
   rules: {
     'no-empty-pattern': 'off',
     'playwright/max-nested-describe': 'warn',
-    'playwright/max-nested-step': 'warn',
     'playwright/missing-playwright-await': 'error',
     'playwright/no-conditional-in-test': 'warn',
     'playwright/no-element-handle': 'warn',
     'playwright/no-eval': 'warn',
     'playwright/no-focused-test': 'error',
     'playwright/no-force-option': 'warn',
+    'playwright/no-nested-step': 'warn',
     'playwright/no-networkidle': 'error',
     'playwright/no-page-pause': 'warn',
     'playwright/no-skipped-test': 'warn',
@@ -87,13 +87,13 @@ export = {
   },
   rules: {
     'max-nested-describe': maxNestedDescribe,
-    'max-nested-step': maxNestedStep,
     'missing-playwright-await': missingPlaywrightAwait,
     'no-conditional-in-test': noConditionalInTest,
     'no-element-handle': noElementHandle,
     'no-eval': noEval,
     'no-focused-test': noFocusedTest,
     'no-force-option': noForceOption,
+    'no-nested-step': noNestedStep,
     'no-networkidle': noNetworkidle,
     'no-page-pause': noPagePause,
     'no-restricted-matchers': noRestrictedMatchers,

@@ -3,8 +3,7 @@ import { isStepCall } from '../utils/ast';
 
 export default {
   create(context) {
-    const { options } = context;
-    const max: number = options[0]?.max ?? 5;
+    const max: number = 1;
     const stepCallbackStack: number[] = [];
 
     function pushStepCallback(node: Rule.Node) {
@@ -17,7 +16,7 @@ export default {
       if (stepCallbackStack.length > max) {
         context.report({
           node: node.parent.callee,
-          messageId: 'exceededMaxDepth',
+          messageId: 'noNestedStep',
           data: {
             depth: stepCallbackStack.length.toString(),
             max: max.toString(),
@@ -44,26 +43,14 @@ export default {
   meta: {
     docs: {
       category: 'Best Practices',
-      description: 'Enforces a maximum depth to nested step calls',
+      description: 'Disallow nested `test.step()` methods',
       recommended: true,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/max-nested-step.md',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-nested-step.md',
     },
     messages: {
-      exceededMaxDepth:
-        'Maximum step call depth exceeded ({{ depth }}). Maximum allowed is {{ max }}.',
+      noNestedStep: 'Do not nest `test.step()` methods.',
     },
-    type: 'suggestion',
-    schema: [
-      {
-        type: 'object',
-        properties: {
-          max: {
-            type: 'integer',
-            minimum: 0,
-          },
-        },
-        additionalProperties: false,
-      },
-    ],
+    type: 'problem',
+    schema: [],
   },
 } as Rule.RuleModule;
