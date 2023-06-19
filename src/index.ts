@@ -7,6 +7,7 @@ import noSkippedTest from './rules/no-skipped-test';
 import noWaitForTimeout from './rules/no-wait-for-timeout';
 import noForceOption from './rules/no-force-option';
 import maxNestedDescribe from './rules/max-nested-describe';
+import maxNestedStep from './rules/max-nested-step';
 import noConditionalInTest from './rules/no-conditional-in-test';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
 import noUselessNot from './rules/no-useless-not';
@@ -84,7 +85,7 @@ export = {
     'no-wait-for-timeout': noWaitForTimeout,
     'no-force-option': noForceOption,
     'max-nested-describe': maxNestedDescribe,
-    'max-nested-step': maxNestedDescribe,
+    'max-nested-step': maxNestedStep,
     'no-conditional-in-test': noConditionalInTest,
     'no-useless-not': noUselessNot,
     'no-restricted-matchers': noRestrictedMatchers,

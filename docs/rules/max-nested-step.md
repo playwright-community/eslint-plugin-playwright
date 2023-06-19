@@ -1,7 +1,6 @@
 # Enforces a maximum depth to nested step calls (`max-nested-step`)
 
-While it's useful to be able to group your tests together within the same file
-using `step()`, having too many levels of nesting throughout your tests make
+While it's useful to be able to describe test procedure using `step()`, having too many levels of nesting throughout your tests make
 them difficult to read.
 
 ## Rule Details
@@ -34,7 +33,13 @@ Examples of **correct** code for this rule (with the default option of
 test('foo', async () => {
   await test.step('step1', async () => {
     await test.step('step2', async () => {
-      await expect(true).toBe(true);
+      await test.step('step3', async () => {
+        await test.step('step4', async () => {
+          await test.step('step5', async () => {
+            await expect(true).toBe(true);
+          });
+        });
+      });
     });
   });
 });
