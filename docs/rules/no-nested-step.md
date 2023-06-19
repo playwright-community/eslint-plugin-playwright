@@ -1,4 +1,4 @@
-# Disallow nested step methods (`no-nested-step`)
+# Disallow nested `test.step()` methods (`no-nested-step`)
 
 Nesting `test.step()` methods can make your tests difficult to read.
 
