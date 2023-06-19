@@ -6,24 +6,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: mskelton/setup-pnpm@v2
         with:
-          node-version: 16
-      - run: npm ci
-      - run: npm test
+          node-version: '18.x'
+      - run: pnpm install
+      - run: pnpm test
 
   publish-npm:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: mskelton/setup-pnpm@v2
         with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm run build
-      - run: npm publish
+          node-version: '18.x'
+      - run: pnpm install
+      - run: pnpm build
+      - run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
