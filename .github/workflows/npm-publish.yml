@@ -6,10 +6,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: mskelton/setup-pnpm@v2
         with:
-          node-version: 16
+          node-version: '18.x'
       - run: pnpm install
       - run: pnpm test
 
@@ -17,11 +16,9 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: mskelton/setup-pnpm@v2
         with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
+          node-version: '18.x'
       - run: pnpm install
       - run: pnpm build
       - run: pnpm publish
