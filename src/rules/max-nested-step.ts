@@ -36,9 +36,9 @@ export default {
 
     return {
       FunctionExpression: pushStepCallback,
-      'FunctionExpression:exit': popStepCallback, // step内に複数のstepがある時用
+      'FunctionExpression:exit': popStepCallback,
       ArrowFunctionExpression: pushStepCallback,
-      'ArrowFunctionExpression:exit': popStepCallback, // step内に複数のstepがある時用
+      'ArrowFunctionExpression:exit': popStepCallback,
     };
   },
   meta: {
