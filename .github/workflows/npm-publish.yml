@@ -19,6 +19,7 @@ jobs:
       - uses: mskelton/setup-pnpm@v2
         with:
           node-version: '18.x'
+          registry-url: https://registry.npmjs.org/
       - run: pnpm install
       - run: pnpm build
       - run: pnpm publish --no-git-checks
