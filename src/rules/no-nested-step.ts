@@ -3,7 +3,7 @@ import { isStepCall } from '../utils/ast';
 
 export default {
   create(context) {
-    const max: number = 1;
+    const max = 1;
     const stepCallbackStack: number[] = [];
 
     function pushStepCallback(node: Rule.Node) {
@@ -15,12 +15,12 @@ export default {
 
       if (stepCallbackStack.length > max) {
         context.report({
-          node: node.parent.callee,
-          messageId: 'noNestedStep',
           data: {
             depth: stepCallbackStack.length.toString(),
             max: max.toString(),
           },
+          messageId: 'noNestedStep',
+          node: node.parent.callee,
         });
       }
     }
@@ -34,10 +34,10 @@ export default {
     }
 
     return {
-      FunctionExpression: pushStepCallback,
-      'FunctionExpression:exit': popStepCallback,
       ArrowFunctionExpression: pushStepCallback,
       'ArrowFunctionExpression:exit': popStepCallback,
+      FunctionExpression: pushStepCallback,
+      'FunctionExpression:exit': popStepCallback,
     };
   },
   meta: {
@@ -50,7 +50,7 @@ export default {
     messages: {
       noNestedStep: 'Do not nest `test.step()` methods.',
     },
-    type: 'problem',
     schema: [],
+    type: 'problem',
   },
 } as Rule.RuleModule;
