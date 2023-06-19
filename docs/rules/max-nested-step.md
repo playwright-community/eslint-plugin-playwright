@@ -1,6 +1,7 @@
 # Enforces a maximum depth to nested step calls (`max-nested-step`)
 
-While it's useful to be able to describe test procedure using `step()`, having too many levels of nesting throughout your tests make
+While it's useful to be able to describe test procedure using `step()`,
+having too many levels of nesting throughout your tests make
 them difficult to read.
 
 ## Rule Details
