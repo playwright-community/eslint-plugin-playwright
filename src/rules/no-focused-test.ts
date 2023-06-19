@@ -14,18 +14,18 @@ export default {
 
           context.report({
             messageId: 'noFocusedTest',
+            node: node.callee.property,
             suggest: [
               {
-                messageId: 'suggestRemoveOnly',
                 // - 1 to remove the `.only` annotation with dot notation
                 fix: (fixer) =>
                   fixer.removeRange([
                     callee.property.range![0] - 1,
                     callee.range![1],
                   ]),
+                messageId: 'suggestRemoveOnly',
               },
             ],
-            node: node.callee.property,
           });
         }
       },

@@ -1,9 +1,191 @@
-import { runRuleTester } from '../utils/rule-tester';
 import rule from '../../src/rules/no-skipped-test';
+import { runRuleTester } from '../utils/rule-tester';
 
 const messageId = 'removeSkippedTestAnnotation';
 
 runRuleTester('no-skipped-test', rule, {
+  invalid: [
+    {
+      code: 'test.skip("skip this test", async ({ page }) => {});',
+      errors: [
+        {
+          column: 6,
+          endColumn: 10,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test("skip this test", async ({ page }) => {});',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'test["skip"]("skip this test", async ({ page }) => {});',
+      errors: [
+        {
+          column: 6,
+          endColumn: 12,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test("skip this test", async ({ page }) => {});',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'test[`skip`]("skip this test", async ({ page }) => {});',
+      errors: [
+        {
+          column: 6,
+          endColumn: 12,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test("skip this test", async ({ page }) => {});',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'test.describe.skip("skip this describe", () => {});',
+      errors: [
+        {
+          column: 15,
+          endColumn: 19,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test.describe("skip this describe", () => {});',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'test.describe["skip"]("skip this describe", () => {});',
+      errors: [
+        {
+          column: 15,
+          endColumn: 21,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test.describe("skip this describe", () => {});',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'test.describe[`skip`]("skip this describe", () => {});',
+      errors: [
+        {
+          column: 15,
+          endColumn: 21,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test.describe("skip this describe", () => {});',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'test.skip(browserName === "firefox");',
+      errors: [
+        {
+          column: 1,
+          endColumn: 37,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [{ messageId, output: '' }],
+        },
+      ],
+    },
+    {
+      code: 'test.skip(browserName === "firefox", "Still working on it");',
+      errors: [
+        {
+          column: 1,
+          endColumn: 60,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [{ messageId, output: '' }],
+        },
+      ],
+    },
+    {
+      code: 'test.describe.parallel("run in parallel", () => { test.skip(); expect(true).toBe(true); })',
+      errors: [
+        {
+          column: 51,
+          endColumn: 62,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output:
+                'test.describe.parallel("run in parallel", () => {  expect(true).toBe(true); })',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'test.skip()',
+      errors: [
+        {
+          column: 1,
+          endColumn: 12,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [{ messageId, output: '' }],
+        },
+      ],
+    },
+    {
+      code: 'test["skip"]()',
+      errors: [
+        {
+          column: 1,
+          endColumn: 15,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [{ messageId, output: '' }],
+        },
+      ],
+    },
+    {
+      code: 'test[`skip`]()',
+      errors: [
+        {
+          column: 1,
+          endColumn: 15,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [{ messageId, output: '' }],
+        },
+      ],
+    },
+  ],
   valid: [
     'test.describe("describe tests", () => {});',
     'test.describe.only("describe focus tests", () => {});',
@@ -19,187 +201,5 @@ runRuleTester('no-skipped-test', rule, {
     'this.skip();',
     'this["skip"]();',
     'this[`skip`]();',
-  ],
-  invalid: [
-    {
-      code: 'test.skip("skip this test", async ({ page }) => {});',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [
-            {
-              messageId,
-              output: 'test("skip this test", async ({ page }) => {});',
-            },
-          ],
-          line: 1,
-          column: 6,
-          endColumn: 10,
-        },
-      ],
-    },
-    {
-      code: 'test["skip"]("skip this test", async ({ page }) => {});',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [
-            {
-              messageId,
-              output: 'test("skip this test", async ({ page }) => {});',
-            },
-          ],
-          line: 1,
-          column: 6,
-          endColumn: 12,
-        },
-      ],
-    },
-    {
-      code: 'test[`skip`]("skip this test", async ({ page }) => {});',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [
-            {
-              messageId,
-              output: 'test("skip this test", async ({ page }) => {});',
-            },
-          ],
-          line: 1,
-          column: 6,
-          endColumn: 12,
-        },
-      ],
-    },
-    {
-      code: 'test.describe.skip("skip this describe", () => {});',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [
-            {
-              messageId,
-              output: 'test.describe("skip this describe", () => {});',
-            },
-          ],
-          line: 1,
-          column: 15,
-          endColumn: 19,
-        },
-      ],
-    },
-    {
-      code: 'test.describe["skip"]("skip this describe", () => {});',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [
-            {
-              messageId,
-              output: 'test.describe("skip this describe", () => {});',
-            },
-          ],
-          line: 1,
-          column: 15,
-          endColumn: 21,
-        },
-      ],
-    },
-    {
-      code: 'test.describe[`skip`]("skip this describe", () => {});',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [
-            {
-              messageId,
-              output: 'test.describe("skip this describe", () => {});',
-            },
-          ],
-          line: 1,
-          column: 15,
-          endColumn: 21,
-        },
-      ],
-    },
-    {
-      code: 'test.skip(browserName === "firefox");',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [{ messageId, output: '' }],
-          line: 1,
-          column: 1,
-          endColumn: 37,
-        },
-      ],
-    },
-    {
-      code: 'test.skip(browserName === "firefox", "Still working on it");',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [{ messageId, output: '' }],
-          line: 1,
-          column: 1,
-          endColumn: 60,
-        },
-      ],
-    },
-    {
-      code: 'test.describe.parallel("run in parallel", () => { test.skip(); expect(true).toBe(true); })',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [
-            {
-              messageId,
-              output:
-                'test.describe.parallel("run in parallel", () => {  expect(true).toBe(true); })',
-            },
-          ],
-          line: 1,
-          column: 51,
-          endColumn: 62,
-        },
-      ],
-    },
-    {
-      code: 'test.skip()',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [{ messageId, output: '' }],
-          line: 1,
-          column: 1,
-          endColumn: 12,
-        },
-      ],
-    },
-    {
-      code: 'test["skip"]()',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [{ messageId, output: '' }],
-          line: 1,
-          column: 1,
-          endColumn: 15,
-        },
-      ],
-    },
-    {
-      code: 'test[`skip`]()',
-      errors: [
-        {
-          messageId: 'noSkippedTest',
-          suggestions: [{ messageId, output: '' }],
-          line: 1,
-          column: 1,
-          endColumn: 15,
-        },
-      ],
-    },
   ],
 });

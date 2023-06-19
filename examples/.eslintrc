@@ -1,5 +1,5 @@
 {
-  "extends": ["plugin:playwright/playwright-test"],
+  "extends": ["plugin:playwright/recommended"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2022

@@ -10,11 +10,10 @@ export default {
 
         if (expectCall?.matcherName === 'toEqual') {
           context.report({
-            node: expectCall.matcher,
             messageId: 'useToStrictEqual',
+            node: expectCall.matcher,
             suggest: [
               {
-                messageId: 'suggestReplaceWithStrictEqual',
                 fix: (fixer) => {
                   return replaceAccessorFixer(
                     fixer,
@@ -22,6 +21,7 @@ export default {
                     'toStrictEqual'
                   );
                 },
+                messageId: 'suggestReplaceWithStrictEqual',
               },
             ],
           });
@@ -36,13 +36,13 @@ export default {
       recommended: false,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-strict-equal.md',
     },
-    messages: {
-      useToStrictEqual: 'Use toStrictEqual() instead',
-      suggestReplaceWithStrictEqual: 'Replace with `toStrictEqual()`',
-    },
     fixable: 'code',
-    type: 'suggestion',
     hasSuggestions: true,
+    messages: {
+      suggestReplaceWithStrictEqual: 'Replace with `toStrictEqual()`',
+      useToStrictEqual: 'Use toStrictEqual() instead',
+    },
     schema: [],
+    type: 'suggestion',
   },
 } as Rule.RuleModule;

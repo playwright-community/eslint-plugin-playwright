@@ -1,11 +1,11 @@
-import * as ESTree from 'estree';
 import { Rule } from 'eslint';
+import * as ESTree from 'estree';
 import {
-  getMatchers,
-  isPropertyAccessor,
   getExpectType,
-  isIdentifier,
+  getMatchers,
   getStringValue,
+  isIdentifier,
+  isPropertyAccessor,
 } from '../utils/ast';
 
 const validTypes = new Set([
@@ -83,7 +83,7 @@ function getCallType(
   const matcherName = getStringValue(lastMatcher);
 
   if (awaitableMatchers.has(matcherName)) {
-    return { messageId: 'expect', data: { matcherName } };
+    return { data: { matcherName }, messageId: 'expect' };
   }
 }
 
@@ -126,9 +126,9 @@ export default {
 
         if (result && reportNode) {
           context.report({
+            data: result.data,
             fix: (fixer) => fixer.insertTextBefore(node, 'await '),
             messageId: result.messageId,
-            data: result.data,
             node: node.callee,
           });
         }

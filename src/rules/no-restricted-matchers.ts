@@ -37,19 +37,19 @@ export default {
                 startIndex !== -1
                   ? chain.slice(startIndex, startIndex + restrictionLinks)
                   : [],
-              restriction,
               message,
+              restriction,
             };
           })
           .filter(({ chain }) => chain.length)
-          .forEach(({ chain, restriction, message }) => {
+          .forEach(({ chain, message, restriction }) => {
             context.report({
-              messageId: message ? 'restrictedWithMessage' : 'restricted',
               data: { message: message ?? '', restriction },
               loc: {
-                start: chain[0].loc!.start,
                 end: chain[chain.length - 1].loc!.end,
+                start: chain[0].loc!.start,
               },
+              messageId: message ? 'restrictedWithMessage' : 'restricted',
             });
           });
       },
@@ -66,14 +66,14 @@ export default {
       restricted: 'Use of `{{restriction}}` is disallowed',
       restrictedWithMessage: '{{message}}',
     },
-    type: 'suggestion',
     schema: [
       {
-        type: 'object',
         additionalProperties: {
           type: ['string', 'null'],
         },
+        type: 'object',
       },
     ],
+    type: 'suggestion',
   },
 } as Rule.RuleModule;

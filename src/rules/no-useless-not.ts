@@ -4,10 +4,10 @@ import { getRangeOffset, replaceAccessorFixer } from '../utils/fixer';
 import { parseExpectCall } from '../utils/parseExpectCall';
 
 const matcherMap: Record<string, string> = {
-  toBeVisible: 'toBeHidden',
-  toBeHidden: 'toBeVisible',
-  toBeEnabled: 'toBeDisabled',
   toBeDisabled: 'toBeEnabled',
+  toBeEnabled: 'toBeDisabled',
+  toBeHidden: 'toBeVisible',
+  toBeVisible: 'toBeHidden',
 };
 
 export default {
@@ -29,6 +29,7 @@ export default {
           const newMatcher = matcherMap[expectCall.matcherName];
 
           context.report({
+            data: { new: newMatcher, old: expectCall.matcherName },
             fix: (fixer) => [
               fixer.removeRange([
                 notModifier.range![0] - getRangeOffset(notModifier),
@@ -36,12 +37,11 @@ export default {
               ]),
               replaceAccessorFixer(fixer, expectCall.matcher, newMatcher),
             ],
-            messageId: 'noUselessNot',
-            data: { old: expectCall.matcherName, new: newMatcher },
             loc: {
-              start: notModifier.loc!.start,
               end: expectCall.matcher.loc!.end,
+              start: notModifier.loc!.start,
             },
+            messageId: 'noUselessNot',
           });
         }
       },

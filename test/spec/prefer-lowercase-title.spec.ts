@@ -5,6 +5,229 @@ import { runRuleTester } from '../utils/rule-tester';
 const messageId = 'unexpectedLowercase';
 
 runRuleTester('prefer-lowercase-title', rule, {
+  invalid: [
+    {
+      code: "test('Foo',  () => {})",
+      errors: [
+        {
+          column: 6,
+          data: { method: 'test' },
+          endColumn: 11,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "test('foo',  () => {})",
+    },
+    {
+      code: 'test(`Foo bar`,  () => {})',
+      errors: [
+        {
+          column: 6,
+          data: { method: 'test' },
+          endColumn: 15,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test(`foo bar`,  () => {})',
+    },
+    {
+      code: "test.skip('Foo Bar',  () => {})",
+      errors: [
+        {
+          column: 11,
+          data: { method: 'test' },
+          endColumn: 20,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "test.skip('foo Bar',  () => {})",
+    },
+    {
+      code: 'test.skip(`Foo`,  () => {})',
+      errors: [
+        {
+          column: 11,
+          data: { method: 'test' },
+          endColumn: 16,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test.skip(`foo`,  () => {})',
+    },
+    {
+      code: "test['fixme']('Foo',  () => {})",
+      errors: [
+        {
+          column: 15,
+          data: { method: 'test' },
+          endColumn: 20,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "test['fixme']('foo',  () => {})",
+    },
+    {
+      code: 'test[`only`](`Foo`,  () => {})',
+      errors: [
+        {
+          column: 14,
+          data: { method: 'test' },
+          endColumn: 19,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test[`only`](`foo`,  () => {})',
+    },
+    {
+      code: "test.describe('Foo bar',  () => {})",
+      errors: [
+        {
+          column: 15,
+          data: { method: 'test.describe' },
+          endColumn: 24,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "test.describe('foo bar',  () => {})",
+    },
+    {
+      code: 'test[`describe`](`Foo Bar`,  () => {})',
+      errors: [
+        {
+          column: 18,
+          data: { method: 'test.describe' },
+          endColumn: 27,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test[`describe`](`foo Bar`,  () => {})',
+    },
+    {
+      code: "test.describe.skip('Foo',  () => {})",
+      errors: [
+        {
+          column: 20,
+          data: { method: 'test.describe' },
+          endColumn: 25,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "test.describe.skip('foo',  () => {})",
+    },
+    {
+      code: "test.describe.fixme('Foo',  () => {})",
+      errors: [
+        {
+          column: 21,
+          data: { method: 'test.describe' },
+          endColumn: 26,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "test.describe.fixme('foo',  () => {})",
+    },
+    {
+      code: 'test[`describe`]["only"]("Foo",  () => {})',
+      errors: [
+        {
+          column: 26,
+          data: { method: 'test.describe' },
+          endColumn: 31,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test[`describe`]["only"]("foo",  () => {})',
+    },
+    {
+      code: "test.describe.parallel.skip('Foo',  () => {})",
+      errors: [
+        {
+          column: 29,
+          data: { method: 'test.describe' },
+          endColumn: 34,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "test.describe.parallel.skip('foo',  () => {})",
+    },
+    {
+      code: 'test.describe.parallel.fixme(`Foo`,  () => {})',
+      errors: [
+        {
+          column: 30,
+          data: { method: 'test.describe' },
+          endColumn: 35,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test.describe.parallel.fixme(`foo`,  () => {})',
+    },
+    {
+      code: 'test.describe.parallel.only("Foo",  () => {})',
+      errors: [
+        {
+          column: 29,
+          data: { method: 'test.describe' },
+          endColumn: 34,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test.describe.parallel.only("foo",  () => {})',
+    },
+    {
+      code: "test.describe.serial.skip('Foo',  () => {})",
+      errors: [
+        {
+          column: 27,
+          data: { method: 'test.describe' },
+          endColumn: 32,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "test.describe.serial.skip('foo',  () => {})",
+    },
+    {
+      code: 'test.describe.serial.fixme(`Foo`,  () => {})',
+      errors: [
+        {
+          column: 28,
+          data: { method: 'test.describe' },
+          endColumn: 33,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test.describe.serial.fixme(`foo`,  () => {})',
+    },
+    {
+      code: 'test.describe.serial.only("Foo",  () => {})',
+      errors: [
+        {
+          column: 27,
+          data: { method: 'test.describe' },
+          endColumn: 32,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: 'test.describe.serial.only("foo",  () => {})',
+    },
+  ],
   valid: [
     'randomFunction()',
     'foo.bar()',
@@ -42,232 +265,25 @@ runRuleTester('prefer-lowercase-title', rule, {
     "test.describe[`serial`].fixme('foo', () => {})",
     "test.describe['serial'].only('foo', () => {})",
   ],
-  invalid: [
-    {
-      code: "test('Foo',  () => {})",
-      output: "test('foo',  () => {})",
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 6,
-          endColumn: 11,
-        },
-      ],
-    },
-    {
-      code: 'test(`Foo bar`,  () => {})',
-      output: 'test(`foo bar`,  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 6,
-          endColumn: 15,
-        },
-      ],
-    },
-    {
-      code: "test.skip('Foo Bar',  () => {})",
-      output: "test.skip('foo Bar',  () => {})",
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 11,
-          endColumn: 20,
-        },
-      ],
-    },
-    {
-      code: 'test.skip(`Foo`,  () => {})',
-      output: 'test.skip(`foo`,  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 11,
-          endColumn: 16,
-        },
-      ],
-    },
-    {
-      code: "test['fixme']('Foo',  () => {})",
-      output: "test['fixme']('foo',  () => {})",
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 15,
-          endColumn: 20,
-        },
-      ],
-    },
-    {
-      code: 'test[`only`](`Foo`,  () => {})',
-      output: 'test[`only`](`foo`,  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 14,
-          endColumn: 19,
-        },
-      ],
-    },
-    {
-      code: "test.describe('Foo bar',  () => {})",
-      output: "test.describe('foo bar',  () => {})",
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 15,
-          endColumn: 24,
-        },
-      ],
-    },
-    {
-      code: 'test[`describe`](`Foo Bar`,  () => {})',
-      output: 'test[`describe`](`foo Bar`,  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 18,
-          endColumn: 27,
-        },
-      ],
-    },
-    {
-      code: "test.describe.skip('Foo',  () => {})",
-      output: "test.describe.skip('foo',  () => {})",
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 20,
-          endColumn: 25,
-        },
-      ],
-    },
-    {
-      code: "test.describe.fixme('Foo',  () => {})",
-      output: "test.describe.fixme('foo',  () => {})",
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 21,
-          endColumn: 26,
-        },
-      ],
-    },
-    {
-      code: 'test[`describe`]["only"]("Foo",  () => {})',
-      output: 'test[`describe`]["only"]("foo",  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 26,
-          endColumn: 31,
-        },
-      ],
-    },
-    {
-      code: "test.describe.parallel.skip('Foo',  () => {})",
-      output: "test.describe.parallel.skip('foo',  () => {})",
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 29,
-          endColumn: 34,
-        },
-      ],
-    },
-    {
-      code: 'test.describe.parallel.fixme(`Foo`,  () => {})',
-      output: 'test.describe.parallel.fixme(`foo`,  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 30,
-          endColumn: 35,
-        },
-      ],
-    },
-    {
-      code: 'test.describe.parallel.only("Foo",  () => {})',
-      output: 'test.describe.parallel.only("foo",  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 29,
-          endColumn: 34,
-        },
-      ],
-    },
-    {
-      code: "test.describe.serial.skip('Foo',  () => {})",
-      output: "test.describe.serial.skip('foo',  () => {})",
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 27,
-          endColumn: 32,
-        },
-      ],
-    },
-    {
-      code: 'test.describe.serial.fixme(`Foo`,  () => {})',
-      output: 'test.describe.serial.fixme(`foo`,  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 28,
-          endColumn: 33,
-        },
-      ],
-    },
-    {
-      code: 'test.describe.serial.only("Foo",  () => {})',
-      output: 'test.describe.serial.only("foo",  () => {})',
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 27,
-          endColumn: 32,
-        },
-      ],
-    },
-  ],
 });
 
 runRuleTester('prefer-lowercase-title with ignore=test.describe', rule, {
+  invalid: [
+    {
+      code: "test('Foo', () => {})",
+      errors: [
+        {
+          column: 6,
+          data: { method: 'test' },
+          endColumn: 11,
+          line: 1,
+          messageId,
+        },
+      ],
+      options: [{ ignore: ['test.describe'] }],
+      output: "test('foo', () => {})",
+    },
+  ],
   valid: [
     {
       code: "test.describe('Foo', () => {})",
@@ -282,25 +298,25 @@ runRuleTester('prefer-lowercase-title with ignore=test.describe', rule, {
       options: [{ ignore: ['test.describe'] }],
     },
   ],
-  invalid: [
-    {
-      code: "test('Foo', () => {})",
-      output: "test('foo', () => {})",
-      options: [{ ignore: ['test.describe'] }],
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 6,
-          endColumn: 11,
-        },
-      ],
-    },
-  ],
 });
 
 runRuleTester('prefer-lowercase-title with ignore=test', rule, {
+  invalid: [
+    {
+      code: "test.describe('Foo', () => {})",
+      errors: [
+        {
+          column: 15,
+          data: { method: 'test.describe' },
+          endColumn: 20,
+          line: 1,
+          messageId,
+        },
+      ],
+      options: [{ ignore: ['test'] }],
+      output: "test.describe('foo', () => {})",
+    },
+  ],
   valid: [
     {
       code: "test('Foo', () => {})",
@@ -315,25 +331,25 @@ runRuleTester('prefer-lowercase-title with ignore=test', rule, {
       options: [{ ignore: ['test'] }],
     },
   ],
-  invalid: [
-    {
-      code: "test.describe('Foo', () => {})",
-      output: "test.describe('foo', () => {})",
-      options: [{ ignore: ['test'] }],
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 1,
-          column: 15,
-          endColumn: 20,
-        },
-      ],
-    },
-  ],
 });
 
 runRuleTester('prefer-lowercase-title with allowedPrefixes', rule, {
+  invalid: [
+    {
+      code: 'test(`POST /live`, () => {})',
+      errors: [
+        {
+          column: 6,
+          data: { method: 'test' },
+          endColumn: 18,
+          line: 1,
+          messageId,
+        },
+      ],
+      options: [{ allowedPrefixes: ['GET'] }],
+      output: 'test(`pOST /live`, () => {})',
+    },
+  ],
   valid: [
     {
       code: "test('GET /live', () => {})",
@@ -348,25 +364,58 @@ runRuleTester('prefer-lowercase-title with allowedPrefixes', rule, {
       options: [{ allowedPrefixes: ['GET', 'PATCH'] }],
     },
   ],
-  invalid: [
-    {
-      code: 'test(`POST /live`, () => {})',
-      output: 'test(`pOST /live`, () => {})',
-      options: [{ allowedPrefixes: ['GET'] }],
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 6,
-          endColumn: 18,
-        },
-      ],
-    },
-  ],
 });
 
 runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
+  invalid: [
+    {
+      code: 'test("Works!", () => {});',
+      errors: [
+        {
+          column: 6,
+          data: { method: 'test' },
+          endColumn: 14,
+          line: 1,
+          messageId,
+        },
+      ],
+      options: [{ ignoreTopLevelDescribe: true }],
+      output: 'test("works!", () => {});',
+    },
+    {
+      code: dedent`
+        test.describe('MyClass', () => {
+          test.describe('MyMethod', () => {
+            test('Does things', () => {});
+          });
+        });
+      `,
+      errors: [
+        {
+          column: 17,
+          data: { method: 'test.describe' },
+          endColumn: 27,
+          line: 2,
+          messageId,
+        },
+        {
+          column: 10,
+          data: { method: 'test' },
+          endColumn: 23,
+          line: 3,
+          messageId,
+        },
+      ],
+      options: [{ ignoreTopLevelDescribe: true }],
+      output: dedent`
+        test.describe('MyClass', () => {
+          test.describe('myMethod', () => {
+            test('does things', () => {});
+          });
+        });
+      `,
+    },
+  ],
   valid: [
     {
       code: 'describe("MyClass", () => {});',
@@ -381,55 +430,6 @@ runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
         });
       `,
       options: [{ ignoreTopLevelDescribe: true }],
-    },
-  ],
-  invalid: [
-    {
-      code: 'test("Works!", () => {});',
-      output: 'test("works!", () => {});',
-      options: [{ ignoreTopLevelDescribe: true }],
-      errors: [
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 1,
-          column: 6,
-          endColumn: 14,
-        },
-      ],
-    },
-    {
-      code: dedent`
-        test.describe('MyClass', () => {
-          test.describe('MyMethod', () => {
-            test('Does things', () => {});
-          });
-        });
-      `,
-      output: dedent`
-        test.describe('MyClass', () => {
-          test.describe('myMethod', () => {
-            test('does things', () => {});
-          });
-        });
-      `,
-      options: [{ ignoreTopLevelDescribe: true }],
-      errors: [
-        {
-          messageId,
-          data: { method: 'test.describe' },
-          line: 2,
-          column: 17,
-          endColumn: 27,
-        },
-        {
-          messageId,
-          data: { method: 'test' },
-          line: 3,
-          column: 10,
-          endColumn: 23,
-        },
-      ],
     },
   ],
 });

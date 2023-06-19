@@ -14,8 +14,15 @@ export function getStringValue(node: ESTree.Node | undefined) {
     : '';
 }
 
-export function isIdentifier(node: ESTree.Node, name: string) {
-  return node.type === 'Identifier' && node.name === name;
+export function getRawValue(node: ESTree.Node) {
+  return node.type === 'Literal' ? node.raw : undefined;
+}
+
+export function isIdentifier(node: ESTree.Node, name: string | RegExp) {
+  return (
+    node.type === 'Identifier' &&
+    (typeof name === 'string' ? node.name === name : name.test(node.name))
+  );
 }
 
 function isLiteral<T>(node: ESTree.Node, type: string, value?: T) {
@@ -122,7 +129,7 @@ export function isTestHook(node: ESTree.CallExpression) {
 }
 
 const expectSubCommands = new Set(['soft', 'poll']);
-export type ExpectType = 'standalone' | 'soft' | 'poll';
+export type ExpectType = 'poll' | 'soft' | 'standalone';
 
 export function getExpectType(
   node: ESTree.CallExpression
@@ -158,12 +165,24 @@ export function getMatchers(
   return chain;
 }
 
+/**
+ * Digs through a series of MemberExpressions and CallExpressions to find an
+ * Identifier with the given name.
+ */
+function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
+  return node.type === 'MemberExpression'
+    ? dig(node.property, identifier)
+    : node.type === 'CallExpression'
+    ? dig(node.callee, identifier)
+    : node.type === 'Identifier'
+    ? isIdentifier(node, identifier)
+    : false;
+}
+
 export function isPageMethod(node: ESTree.CallExpression, name: string) {
   return (
     node.callee.type === 'MemberExpression' &&
-    (node.callee.object.type === 'MemberExpression'
-      ? isIdentifier(node.callee.object.property, 'page')
-      : isIdentifier(node.callee.object, 'page')) &&
+    dig(node.callee.object, /(^(page|frame)|(Page|Frame)$)/) &&
     isPropertyAccessor(node.callee, name)
   );
 }

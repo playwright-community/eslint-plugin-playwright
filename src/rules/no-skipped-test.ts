@@ -1,8 +1,8 @@
 import { Rule } from 'eslint';
 import {
-  isTest,
   isDescribeCall,
   isPropertyAccessor,
+  isTest,
   isTestIdentifier,
 } from '../utils/ast';
 
@@ -21,9 +21,9 @@ export default {
 
           context.report({
             messageId: 'noSkippedTest',
+            node: isHook ? callee.property : node,
             suggest: [
               {
-                messageId: 'removeSkippedTestAnnotation',
                 fix: (fixer) => {
                   return isHook
                     ? fixer.removeRange([
@@ -32,9 +32,9 @@ export default {
                       ])
                     : fixer.remove(node.parent);
                 },
+                messageId: 'removeSkippedTestAnnotation',
               },
             ],
-            node: isHook ? callee.property : node,
           });
         }
       },
