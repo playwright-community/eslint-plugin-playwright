@@ -57,6 +57,7 @@ command line option.\
 
 |  ✔  | 🔧  | 💡  | Rule                                                                                                                                                | Description                                                       |
 | :-: | :-: | :-: | --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+|  ✔  |     |     | [expect-expect](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/expect-expect.md)                             | Enforce assertion to be made in a test body                       |
 |  ✔  |     |     | [max-nested-describe](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/max-nested-describe.md)                 | Enforces a maximum depth to nested describe calls                 |
 |  ✔  | 🔧  |     | [missing-playwright-await](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/missing-playwright-await.md)       | Enforce Playwright APIs to be awaited                             |
 |  ✔  |     |     | [no-conditional-in-test](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-conditional-in-test.md)           | Disallow conditional logic in tests                               |
