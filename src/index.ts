@@ -7,6 +7,7 @@ import noFocusedTest from './rules/no-focused-test';
 import noForceOption from './rules/no-force-option';
 import noNestedStep from './rules/no-nested-step';
 import noNetworkidle from './rules/no-networkidle';
+import noNthMethods from './rules/no-nth-methods';
 import noPagePause from './rules/no-page-pause';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
 import noSkippedTest from './rules/no-skipped-test';
@@ -95,6 +96,7 @@ export = {
     'no-force-option': noForceOption,
     'no-nested-step': noNestedStep,
     'no-networkidle': noNetworkidle,
+    'no-nth-methods': noNthMethods,
     'no-page-pause': noPagePause,
     'no-restricted-matchers': noRestrictedMatchers,
     'no-skipped-test': noSkippedTest,
