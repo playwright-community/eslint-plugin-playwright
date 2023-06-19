@@ -105,7 +105,7 @@ runRuleTester('max-nested-step', rule, {
         });
       });
       `,
-      errors: [{ messageId, line: 6, column: 11, endLine: 6, endColumn: 24 }],
+      errors: [{ messageId, line: 7, column: 19, endLine: 7, endColumn: 28 }],
     },
     {
       code: dedent`
@@ -115,7 +115,7 @@ runRuleTester('max-nested-step', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 1, column: 1, endLine: 1, endColumn: 14 }],
+      errors: [{ messageId, line: 2, column: 9, endLine: 2, endColumn: 18 }],
       options: [{ max: 0 }],
     },
     {
@@ -128,7 +128,7 @@ runRuleTester('max-nested-step', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 1, column: 1, endLine: 1, endColumn: 14 }],
+      errors: [{ messageId, line: 3, column: 11, endLine: 3, endColumn: 20 }],
       options: [{ max: 1 }],
     },
     {
@@ -143,7 +143,7 @@ runRuleTester('max-nested-step', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 3, column: 5, endLine: 3, endColumn: 18 }],
+      errors: [{ messageId, line: 4, column: 13, endLine: 4, endColumn: 22 }],
       options: [{ max: 2 }],
     },
     {
@@ -160,7 +160,7 @@ runRuleTester('max-nested-step', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 3, column: 5, endLine: 3, endColumn: 18 }],
+      errors: [{ messageId, line: 5, column: 15, endLine: 5, endColumn: 24 }],
       options: [{ max: 3 }],
     },
     {
@@ -179,7 +179,7 @@ runRuleTester('max-nested-step', rule, {
           });
         });
       `,
-      errors: [{ messageId, line: 3, column: 5, endLine: 3, endColumn: 18 }],
+      errors: [{ messageId, line: 6, column: 17, endLine: 6, endColumn: 26 }],
       options: [{ max: 4 }],
     },
     {
@@ -205,8 +205,8 @@ runRuleTester('max-nested-step', rule, {
       `,
       options: [{ max: 5 }],
       errors: [
-        { messageId, line: 6, column: 11, endLine: 6, endColumn: 27 },
-        { messageId, line: 12, column: 11, endLine: 12, endColumn: 24 },
+        { messageId, line: 7, column: 19, endLine: 7, endColumn: 28 },
+        { messageId, line: 10, column: 19, endLine: 10, endColumn: 28 },
       ],
     },
   ],
