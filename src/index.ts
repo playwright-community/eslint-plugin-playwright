@@ -1,3 +1,4 @@
+import expectExpect from './rules/expect-expect';
 import maxNestedDescribe from './rules/max-nested-describe';
 import missingPlaywrightAwait from './rules/missing-playwright-await';
 import noConditionalInTest from './rules/no-conditional-in-test';
@@ -30,6 +31,7 @@ const recommended = {
   plugins: ['playwright'],
   rules: {
     'no-empty-pattern': 'off',
+    'playwright/expect-expect': 'warn',
     'playwright/max-nested-describe': 'warn',
     'playwright/missing-playwright-await': 'error',
     'playwright/no-conditional-in-test': 'warn',
@@ -87,6 +89,7 @@ export = {
     recommended,
   },
   rules: {
+    'expect-expect': expectExpect,
     'max-nested-describe': maxNestedDescribe,
     'missing-playwright-await': missingPlaywrightAwait,
     'no-conditional-in-test': noConditionalInTest,
