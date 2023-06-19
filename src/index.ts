@@ -30,6 +30,7 @@ const recommended = {
   rules: {
     'no-empty-pattern': 'off',
     'playwright/max-nested-describe': 'warn',
+    'playwright/max-nested-step': 'warn',
     'playwright/missing-playwright-await': 'error',
     'playwright/no-conditional-in-test': 'warn',
     'playwright/no-element-handle': 'warn',
