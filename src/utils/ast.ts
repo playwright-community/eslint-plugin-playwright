@@ -90,11 +90,7 @@ export function isStepCall(node: ESTree.Node): boolean {
     return false;
   }
 
-  return isPropertyAccessor(inner, 'step')
-    ? true
-    : describeProperties.has(getStringValue(inner.property))
-    ? isStepCall(inner.object)
-    : false;
+  return isPropertyAccessor(inner, 'step') ? true : false;
 }
 
 export function findParent<T extends ESTree.Node['type']>(
