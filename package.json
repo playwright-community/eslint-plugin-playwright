@@ -17,6 +17,7 @@
     "build": "tsc --project tsconfig.build.json",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "jest",
     "ts": "tsc"
   },
