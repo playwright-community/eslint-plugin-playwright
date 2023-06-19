@@ -8,3 +8,7 @@ export type TypedNodeWithParent<T extends ESTree.Node['type']> = Extract<
   { type: T }
 > &
   Rule.NodeParentExtension;
+
+export type KnownCallExpression = ESTree.CallExpression & {
+  callee: ESTree.MemberExpression;
+};
