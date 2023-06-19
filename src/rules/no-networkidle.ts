@@ -26,7 +26,7 @@ export default {
         if (methodName === 'waitForLoadState') {
           const arg = node.arguments[0];
 
-          if (isStringLiteral(arg, 'networkidle')) {
+          if (arg && isStringLiteral(arg, 'networkidle')) {
             context.report({ messageId, node: arg });
           }
 
