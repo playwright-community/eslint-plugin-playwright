@@ -187,6 +187,7 @@ runRuleTester('no-useless-await', rule, {
     'await foo(".my-element")',
     'await foo.bar()',
     'await foo.bar(".my-element")',
+    'await foo.isClosed(".my-selector")',
 
     'page.getByRole(".my-element")',
     'page.locator(".my-element")',
