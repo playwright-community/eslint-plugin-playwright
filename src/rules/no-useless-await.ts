@@ -1,13 +1,10 @@
 import { Rule } from 'eslint';
-import { getStringValue } from '../utils/ast';
+import * as ESTree from 'estree';
+import { getStringValue, isPageMethod } from '../utils/ast';
 
-const methods = new Set([
+const locatorMethods = new Set([
   'and',
-  'childFrames',
   'first',
-  'frame',
-  'frameLocator',
-  'frames',
   'getByAltText',
   'getByLabel',
   'getByPlaceholder',
@@ -15,15 +12,22 @@ const methods = new Set([
   'getByTestId',
   'getByText',
   'getByTitle',
-  'isClosed',
-  'isDetached',
   'last',
   'locator',
+  'nth',
+  'or',
+]);
+
+const pageMethods = new Set([
+  'childFrames',
+  'frame',
+  'frameLocator',
+  'frames',
+  'isClosed',
+  'isDetached',
   'mainFrame',
   'name',
-  'nth',
   'on',
-  'or',
   'page',
   'parentFrame',
   'setDefaultNavigationTimeout',
@@ -33,6 +37,16 @@ const methods = new Set([
   'viewportSize',
   'workers',
 ]);
+
+function isSupportedMethod(node: ESTree.CallExpression) {
+  if (node.callee.type !== 'MemberExpression') return false;
+
+  const name = getStringValue(node.callee.property);
+  return (
+    locatorMethods.has(name) ||
+    (pageMethods.has(name) && isPageMethod(node, name))
+  );
+}
 
 export default {
   create(context) {
@@ -46,8 +60,7 @@ export default {
         if (callee.type !== 'MemberExpression') return;
 
         // Must be a method we care about
-        const { property } = callee;
-        if (!methods.has(getStringValue(property))) return;
+        if (!isSupportedMethod(node.argument)) return;
 
         const start = node.loc!.start;
         const range = node.range!;
