@@ -139,6 +139,31 @@ runRuleTester('missing-playwright-await', rule, {
       ],
       output: test('await expect[`poll`](() => foo)[`toBeTruthy`]()'),
     },
+    // expect.configure
+    {
+      code: dedent`
+        test('test', async () => {
+          const softExpect = expect.configure({ soft: true })
+          softExpect(foo).toBeChecked()
+        })
+     `,
+      errors: [
+        {
+          column: 3,
+          endColumn: 13,
+          endLine: 3,
+          line: 3,
+          messageId: 'expect',
+        },
+      ],
+      only: true,
+      output: dedent`
+        test('test', async () => {
+          const softExpect = expect.configure({ soft: true })
+          await softExpect(foo).toBeChecked()
+        })
+     `,
+    },
     // test.step
     {
       code: test("test.step('foo', async () => {})"),
