@@ -94,10 +94,13 @@ export function findParent<T extends ESTree.Node['type']>(
     : findParent(node.parent, type);
 }
 
-export function isTest(node: ESTree.CallExpression) {
+export function isTest(node: ESTree.CallExpression, modifiers?: string[]) {
   return (
     isTestIdentifier(node.callee) &&
     !isDescribeCall(node) &&
+    (node.callee.type !== 'MemberExpression' ||
+      !modifiers ||
+      modifiers?.includes(getStringValue(node.callee.property))) &&
     node.arguments.length === 2 &&
     ['ArrowFunctionExpression', 'FunctionExpression'].includes(
       node.arguments[1].type

@@ -1,3 +1,4 @@
+import dedent = require('dedent');
 import rule from '../../src/rules/expect-expect';
 import { runRuleTester } from '../utils/rule-tester';
 
@@ -17,5 +18,23 @@ runRuleTester('expect-expect', rule, {
     '["bar"]();',
     'testing("will test something eventually", () => {})',
     'test("should pass", () => expect(true).toBeDefined())',
+    {
+      code: dedent`
+        test('steps', async ({ page }) => {
+          await test.step('first tab', async () => {
+            await expect(page.getByText('Hello')).toBeVisible();
+          });
+        });
+      `,
+    },
+    {
+      code: dedent`
+        test.only('steps', async ({ page }) => {
+          await test.step('first tab', async () => {
+            await expect(page.getByText('Hello')).toBeVisible();
+          });
+        });
+      `,
+    },
   ],
 });

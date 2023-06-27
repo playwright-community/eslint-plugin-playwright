@@ -20,7 +20,7 @@ export default {
 
     return {
       CallExpression(node) {
-        if (isTest(node)) {
+        if (isTest(node, ['fixme', 'only', 'skip'])) {
           unchecked.push(node);
         } else if (isExpectCall(node)) {
           checkExpressions(context.getAncestors());
