@@ -123,7 +123,7 @@ export type ExpectType = 'poll' | 'soft' | 'standalone';
 export function getExpectType(
   node: ESTree.CallExpression
 ): ExpectType | undefined {
-  if (isIdentifier(node.callee, /^expect|Expect$/)) {
+  if (isIdentifier(node.callee, /(^expect|Expect)$/)) {
     return 'standalone';
   }
 
