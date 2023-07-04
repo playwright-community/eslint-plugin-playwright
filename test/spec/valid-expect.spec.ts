@@ -11,6 +11,12 @@ runRuleTester('valid-expect', rule, {
       ],
     },
     {
+      code: 'softExpect(foo)',
+      errors: [
+        { column: 1, endColumn: 16, line: 1, messageId: 'matcherNotFound' },
+      ],
+    },
+    {
       code: 'expect(foo).not',
       errors: [
         { column: 1, endColumn: 12, line: 1, messageId: 'matcherNotFound' },
@@ -210,7 +216,9 @@ runRuleTester('valid-expect', rule, {
     },
   ],
   valid: [
+    'expectPayButtonToBeEnabled()',
     'expect("something").toBe("else")',
+    'softExpect("something").toBe("else")',
     'expect.soft("something").toBe("else")',
     'expect.poll(() => "something").toBe("else")',
     'expect(true).toBeDefined()',
