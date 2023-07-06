@@ -12,6 +12,14 @@ runRuleTester('expect-expect', rule, {
       code: 'test.skip("should fail", () => {});',
       errors: [{ messageId: 'noAssertions' }],
     },
+    {
+      code: dedent`
+        test('should fail', async ({ page }) => {
+          await assertCustomCondition(page)
+        })
+      `,
+      errors: [{ messageId: 'noAssertions' }],
+    },
   ],
   valid: [
     'foo();',
@@ -35,6 +43,14 @@ runRuleTester('expect-expect', rule, {
           });
         });
       `,
+    },
+    {
+      code: dedent`
+        test('should fail', async ({ page }) => {
+          await assertCustomCondition(page)
+        })
+      `,
+      options: [{ additionalAssertFunctionNames: ['assertCustomCondition'] }],
     },
   ],
 });
