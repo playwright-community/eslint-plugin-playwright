@@ -21,7 +21,7 @@ function isAssertionCall(
 
 function getAdditionalAssertFunctionNames(context: Rule.RuleContext): readonly string[] {
   const globalSettings = (context.settings as Settings).playwright?.additionalAssertFunctionNames ?? [] as readonly string[]
-  const ruleSettings = (context.options[0] as Options)?.additionalAssertFunctionNames ?? [] as readonly string[]
+  const ruleSettings = (context.options[0] as Options | undefined)?.additionalAssertFunctionNames ?? [] as readonly string[]
 
   return [...globalSettings, ...ruleSettings]
 }
