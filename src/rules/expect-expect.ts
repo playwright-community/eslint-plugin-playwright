@@ -1,9 +1,10 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import { isExpectCall, isIdentifier, isTest } from '../utils/ast';
+import { Settings } from '../utils/types';
 
 type Options = {
-  additionalAssertFunctionNames: readonly string[];
+  additionalAssertFunctionNames?: readonly string[];
 };
 
 function isAssertionCall(
@@ -18,12 +19,17 @@ function isAssertionCall(
   );
 }
 
+function getAdditionalAssertFunctionNames(context: Rule.RuleContext): readonly string[] {
+  const globalSettings = (context.settings as Settings).playwright?.additionalAssertFunctionNames ?? [] as readonly string[]
+  const ruleSettings = (context.options[0] as Options)?.additionalAssertFunctionNames ?? [] as readonly string[]
+
+  return [...globalSettings, ...ruleSettings]
+}
+
 export default {
   create(context) {
     const unchecked: ESTree.CallExpression[] = [];
-    const { additionalAssertFunctionNames } = (context.options[0] ?? {
-      additionalAssertFunctionNames: [],
-    }) as Options;
+    const additionalAssertFunctionNames = getAdditionalAssertFunctionNames(context)
 
     function checkExpressions(nodes: ESTree.Node[]) {
       for (const node of nodes) {

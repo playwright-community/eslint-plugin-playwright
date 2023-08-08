@@ -12,3 +12,9 @@ export type TypedNodeWithParent<T extends ESTree.Node['type']> = Extract<
 export type KnownCallExpression = ESTree.CallExpression & {
   callee: ESTree.MemberExpression;
 };
+
+export interface Settings {
+  playwright?: {
+    additionalAssertFunctionNames?: readonly string[]
+  }
+}
