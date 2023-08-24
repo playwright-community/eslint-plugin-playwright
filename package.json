@@ -19,7 +19,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "pnpm run build && jest",
+    "test": "jest",
     "ts": "tsc"
   },
   "devDependencies": {
