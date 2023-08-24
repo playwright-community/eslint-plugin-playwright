@@ -43,7 +43,7 @@ test('should work with callbacks/async', async () => {
 
 ### `additionalAssertFunctionNames`
 
-An array of function names to treat as assertion functions. Only standalone functions are supported. Configure globally acceptable assert function names using [the global setting](../global-settings.md). The rule's option is recommended to be used at a module level to add module-specific assert function names. For example: 
+An array of function names to treat as assertion functions. Only standalone functions are supported. Configure globally acceptable assert function names using [the global setting](../global-settings.md). You can also customize assert function names per-file. For example: 
 
 ```ts
 /* eslint playwright/expect-expect: ["error", { "additionalAssertFunctionNames": ["assertScrolledToBottom"] }] */
@@ -65,4 +65,4 @@ describe('scrolling', () => {
 })
 ```
 
-The rule option and the global setting are merged. On a module level, both are considered.
+The rule option and the global setting are merged. On a file level, both are considered.
