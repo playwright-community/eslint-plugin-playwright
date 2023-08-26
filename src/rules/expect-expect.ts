@@ -1,15 +1,11 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import { isExpectCall, isIdentifier, isTest } from '../utils/ast';
-import { Settings } from '../utils/types';
-
-type Options = {
-  additionalAssertFunctionNames?: readonly string[];
-};
+import { getAdditionalAssertFunctionNames } from '../utils/misc';
 
 function isAssertionCall(
   node: ESTree.CallExpression,
-  additionalAssertFunctionNames: readonly string[]
+  additionalAssertFunctionNames: string[]
 ) {
   return (
     isExpectCall(node) ||
@@ -17,13 +13,6 @@ function isAssertionCall(
       isIdentifier(node.callee, name)
     )
   );
-}
-
-function getAdditionalAssertFunctionNames(context: Rule.RuleContext): readonly string[] {
-  const globalSettings = (context.settings as Settings).playwright?.additionalAssertFunctionNames ?? [] as readonly string[]
-  const ruleSettings = (context.options[0] as Options | undefined)?.additionalAssertFunctionNames ?? [] as readonly string[]
-
-  return [...globalSettings, ...ruleSettings]
 }
 
 export default {
