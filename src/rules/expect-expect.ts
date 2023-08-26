@@ -1,10 +1,24 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import { isExpectCall, isTest } from '../utils/ast';
+import { isExpectCall, isIdentifier, isTest } from '../utils/ast';
+import { getAdditionalAssertFunctionNames } from '../utils/misc';
+
+function isAssertionCall(
+  node: ESTree.CallExpression,
+  additionalAssertFunctionNames: string[]
+) {
+  return (
+    isExpectCall(node) ||
+    additionalAssertFunctionNames.find((name) =>
+      isIdentifier(node.callee, name)
+    )
+  );
+}
 
 export default {
   create(context) {
     const unchecked: ESTree.CallExpression[] = [];
+    const additionalAssertFunctionNames = getAdditionalAssertFunctionNames(context)
 
     function checkExpressions(nodes: ESTree.Node[]) {
       for (const node of nodes) {
@@ -22,7 +36,7 @@ export default {
       CallExpression(node) {
         if (isTest(node, ['fixme', 'only', 'skip'])) {
           unchecked.push(node);
-        } else if (isExpectCall(node)) {
+        } else if (isAssertionCall(node, additionalAssertFunctionNames)) {
           checkExpressions(context.getAncestors());
         }
       },
@@ -43,6 +57,18 @@ export default {
     messages: {
       noAssertions: 'Test has no assertions',
     },
+    schema: [
+      {
+        additionalProperties: false,
+        properties: {
+          additionalAssertFunctionNames: {
+            items: [{ type: 'string' }],
+            type: 'array',
+          },
+        },
+        type: 'object',
+      },
+    ],
     type: 'problem',
   },
 } as Rule.RuleModule;
