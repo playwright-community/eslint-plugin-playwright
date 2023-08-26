@@ -29,7 +29,9 @@ runRuleTester('expect-expect', rule, {
       `,
       errors: [{ messageId: 'noAssertions' }],
       settings: {
-        playwright: { additionalAssertFunctionNames: ['wayComplexCustomCondition'] },
+        playwright: {
+          additionalAssertFunctionNames: ['wayComplexCustomCondition'],
+        },
       },
     },
     {
@@ -40,7 +42,9 @@ runRuleTester('expect-expect', rule, {
         })
       `,
       errors: [{ messageId: 'noAssertions' }],
-      options: [{ additionalAssertFunctionNames: ['wayComplexCustomCondition'] }],
+      options: [
+        { additionalAssertFunctionNames: ['wayComplexCustomCondition'] },
+      ],
     },
     {
       name: 'Global settings no false positives',
@@ -51,9 +55,13 @@ runRuleTester('expect-expect', rule, {
       `,
       errors: [{ messageId: 'noAssertions' }],
       settings: {
-        playwright: { additionalAssertFunctionNames: ['wayComplexGlobalCustomCondition'] },
+        playwright: {
+          additionalAssertFunctionNames: ['wayComplexGlobalCustomCondition'],
+        },
       },
-      options: [{ additionalAssertFunctionNames: ['wayComplexRuleCustomCondition'] }],
+      options: [
+        { additionalAssertFunctionNames: ['wayComplexRuleCustomCondition'] },
+      ],
     },
   ],
   valid: [
@@ -87,8 +95,10 @@ runRuleTester('expect-expect', rule, {
         })
       `,
       settings: {
-        playwright: { additionalAssertFunctionNames: ['assertCustomCondition'] }
-      }
+        playwright: {
+          additionalAssertFunctionNames: ['assertCustomCondition'],
+        },
+      },
     },
     {
       name: 'Rule settings only',
@@ -111,9 +121,13 @@ runRuleTester('expect-expect', rule, {
         })
       `,
       settings: {
-        playwright: { additionalAssertFunctionNames: ['assertCustomCondition'] },
+        playwright: {
+          additionalAssertFunctionNames: ['assertCustomCondition'],
+        },
       },
-      options: [{ additionalAssertFunctionNames: ['wayComplexCustomCondition'] }],
+      options: [
+        { additionalAssertFunctionNames: ['wayComplexCustomCondition'] },
+      ],
     },
   ],
 });

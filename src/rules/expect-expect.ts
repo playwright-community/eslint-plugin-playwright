@@ -18,7 +18,8 @@ function isAssertionCall(
 export default {
   create(context) {
     const unchecked: ESTree.CallExpression[] = [];
-    const additionalAssertFunctionNames = getAdditionalAssertFunctionNames(context)
+    const additionalAssertFunctionNames =
+      getAdditionalAssertFunctionNames(context);
 
     function checkExpressions(nodes: ESTree.Node[]) {
       for (const node of nodes) {
