@@ -7,7 +7,7 @@ export const getAmountData = (amount: number) => ({
   s: amount === 1 ? '' : 's',
 });
 
-type AssertFunctionNamesOptions = {
+interface AssertFunctionNamesOptions {
   additionalAssertFunctionNames?: string[];
 };
 
