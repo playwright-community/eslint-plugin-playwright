@@ -1,7 +1,7 @@
 import rule from '../../src/rules/no-raw-locators';
 import { runRuleTester, test } from '../utils/rule-tester';
 
-const messageId = 'noRawSelector';
+const messageId = 'noRawLocator';
 
 runRuleTester('no-raw-locators', rule, {
   invalid: [
