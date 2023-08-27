@@ -1,9 +1,9 @@
-import rule from '../../src/rules/no-raw-selector';
+import rule from '../../src/rules/no-raw-locators';
 import { runRuleTester, test } from '../utils/rule-tester';
 
 const messageId = 'noRawSelector';
 
-runRuleTester('no-raw-selector', rule, {
+runRuleTester('no-raw-locators', rule, {
   invalid: [
     {
       code: test('await page.locator()'),

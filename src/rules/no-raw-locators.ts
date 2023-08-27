@@ -9,7 +9,7 @@ export default {
         const method = getStringValue(node.callee.property);
 
         if (isPageMethod(node, 'locator') || method === 'locator') {
-          context.report({ messageId: 'noRawSelector', node });
+          context.report({ messageId: 'noRawLocator', node });
         }
       },
     };
@@ -17,13 +17,13 @@ export default {
   meta: {
     docs: {
       category: 'Best Practices',
-      description: 'Disallows the usage of raw selectors',
+      description: 'Disallows the usage of raw locators',
       recommended: false,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-raw-selector.md',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-raw-locators.md',
     },
     messages: {
-      noRawSelector:
-        'Usage of raw selector detected. Use methods like .getByRole() or .getByText() instead of raw selectors.',
+      noRawLocator:
+        'Usage of raw locator detected. Use methods like .getByRole() or .getByText() instead of raw locators.',
     },
     type: 'suggestion',
   },

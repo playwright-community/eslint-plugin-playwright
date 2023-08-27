@@ -1,6 +1,6 @@
-## Disallow using raw selectors (`no-raw-selector`)
+## Disallow using raw locators (`no-raw-locators`)
 
-Prefer using user-facing locators over raw selectors to make tests more robust.
+Prefer using user-facing locators over raw locators to make tests more robust.
 
 Check out the [Playwright documentation](https://playwright.dev/docs/locators)
 for more information.

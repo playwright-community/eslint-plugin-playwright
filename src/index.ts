@@ -10,7 +10,7 @@ import noNestedStep from './rules/no-nested-step';
 import noNetworkidle from './rules/no-networkidle';
 import noNthMethods from './rules/no-nth-methods';
 import noPagePause from './rules/no-page-pause';
-import noRawSelector from './rules/no-raw-selector';
+import noRawLocators from './rules/no-raw-locators';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
 import noSkippedTest from './rules/no-skipped-test';
 import noUselessAwait from './rules/no-useless-await';
@@ -103,7 +103,7 @@ export = {
     'no-networkidle': noNetworkidle,
     'no-nth-methods': noNthMethods,
     'no-page-pause': noPagePause,
-    'no-raw-selector': noRawSelector,
+    'no-raw-locators': noRawLocators,
     'no-restricted-matchers': noRestrictedMatchers,
     'no-skipped-test': noSkippedTest,
     'no-useless-await': noUselessAwait,
