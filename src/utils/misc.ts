@@ -1,5 +1,4 @@
 import { Rule } from 'eslint';
-
 import { Settings } from './types';
 
 export const getAmountData = (amount: number) => ({

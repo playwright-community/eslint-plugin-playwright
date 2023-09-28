@@ -21,13 +21,13 @@ runRuleTester('expect-expect', rule, {
       errors: [{ messageId: 'noAssertions' }],
     },
     {
-      name: 'Global settings no false positives',
       code: dedent`
         test('should fail', async ({ page }) => {
           await assertCustomCondition(page)
         })
       `,
       errors: [{ messageId: 'noAssertions' }],
+      name: 'Global settings no false positives',
       settings: {
         playwright: {
           additionalAssertFunctionNames: ['wayComplexCustomCondition'],
@@ -35,33 +35,33 @@ runRuleTester('expect-expect', rule, {
       },
     },
     {
-      name: 'Rule settings no false positives',
       code: dedent`
         test('should fail', async ({ page }) => {
           await assertCustomCondition(page)
         })
       `,
       errors: [{ messageId: 'noAssertions' }],
+      name: 'Rule settings no false positives',
       options: [
         { additionalAssertFunctionNames: ['wayComplexCustomCondition'] },
       ],
     },
     {
-      name: 'Global settings no false positives',
       code: dedent`
         test('should fail', async ({ page }) => {
           await assertCustomCondition(page)
         })
       `,
       errors: [{ messageId: 'noAssertions' }],
+      name: 'Global settings no false positives',
+      options: [
+        { additionalAssertFunctionNames: ['wayComplexRuleCustomCondition'] },
+      ],
       settings: {
         playwright: {
           additionalAssertFunctionNames: ['wayComplexGlobalCustomCondition'],
         },
       },
-      options: [
-        { additionalAssertFunctionNames: ['wayComplexRuleCustomCondition'] },
-      ],
     },
   ],
   valid: [
@@ -88,12 +88,12 @@ runRuleTester('expect-expect', rule, {
       `,
     },
     {
-      name: 'Global settings only',
       code: dedent`
         test('should fail', async ({ page }) => {
           await assertCustomCondition(page)
         })
       `,
+      name: 'Global settings only',
       settings: {
         playwright: {
           additionalAssertFunctionNames: ['assertCustomCondition'],
@@ -101,16 +101,15 @@ runRuleTester('expect-expect', rule, {
       },
     },
     {
-      name: 'Rule settings only',
       code: dedent`
         test('should fail', async ({ page }) => {
           await assertCustomCondition(page)
         })
       `,
+      name: 'Rule settings only',
       options: [{ additionalAssertFunctionNames: ['assertCustomCondition'] }],
     },
     {
-      name: 'Global and rule settings combine rather than override',
       code: dedent`
         test('should fail', async ({ page }) => {
           await assertCustomCondition(page)
@@ -120,14 +119,15 @@ runRuleTester('expect-expect', rule, {
           await wayComplexCustomCondition(page)
         })
       `,
+      name: 'Global and rule settings combine rather than override',
+      options: [
+        { additionalAssertFunctionNames: ['wayComplexCustomCondition'] },
+      ],
       settings: {
         playwright: {
           additionalAssertFunctionNames: ['assertCustomCondition'],
         },
       },
-      options: [
-        { additionalAssertFunctionNames: ['wayComplexCustomCondition'] },
-      ],
     },
   ],
 });
