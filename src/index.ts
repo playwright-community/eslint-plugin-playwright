@@ -20,6 +20,7 @@ import preferLowercaseTitle from './rules/prefer-lowercase-title';
 import preferStrictEqual from './rules/prefer-strict-equal';
 import preferToBe from './rules/prefer-to-be';
 import preferToContain from './rules/prefer-to-contain';
+import preferToHaveCount from './rules/prefer-to-have-count';
 import preferToHaveLength from './rules/prefer-to-have-length';
 import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
 import requireSoftAssertions from './rules/require-soft-assertions';
@@ -113,6 +114,7 @@ export = {
     'prefer-strict-equal': preferStrictEqual,
     'prefer-to-be': preferToBe,
     'prefer-to-contain': preferToContain,
+    'prefer-to-have-count': preferToHaveCount,
     'prefer-to-have-length': preferToHaveLength,
     'prefer-web-first-assertions': preferWebFirstAssertions,
     'require-soft-assertions': requireSoftAssertions,
