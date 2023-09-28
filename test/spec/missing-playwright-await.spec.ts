@@ -1,4 +1,4 @@
-import * as dedent from 'dedent';
+import dedent from 'dedent';
 import rule from '../../src/rules/missing-playwright-await';
 import { runRuleTester, test } from '../utils/rule-tester';
 

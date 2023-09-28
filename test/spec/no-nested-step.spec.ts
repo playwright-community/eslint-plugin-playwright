@@ -1,6 +1,6 @@
+import dedent from 'dedent';
 import rule from '../../src/rules/no-nested-step';
 import { runRuleTester } from '../utils/rule-tester';
-import dedent = require('dedent');
 
 const messageId = 'noNestedStep';
 
