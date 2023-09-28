@@ -13,12 +13,12 @@ export const getRangeOffset = (node: ESTree.Node) =>
 export function replaceAccessorFixer(
   fixer: Rule.RuleFixer,
   node: ESTree.Node,
-  text: string
+  text: string,
 ) {
   const [start, end] = node.range!;
 
   return fixer.replaceTextRange(
     [start + getRangeOffset(node), end - getRangeOffset(node)],
-    text
+    text,
   );
 }

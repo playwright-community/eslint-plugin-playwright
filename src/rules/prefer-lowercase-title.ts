@@ -10,7 +10,7 @@ import {
 type Method = 'test' | 'test.describe';
 
 function isString(
-  node: ESTree.Expression | ESTree.SpreadElement
+  node: ESTree.Expression | ESTree.SpreadElement,
 ): node is ESTree.Literal | ESTree.TemplateLiteral {
   return node && (isStringLiteral(node) || node.type === 'TemplateLiteral');
 }

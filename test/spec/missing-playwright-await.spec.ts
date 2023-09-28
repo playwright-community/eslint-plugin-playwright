@@ -198,7 +198,7 @@ runRuleTester('missing-playwright-await', rule, {
             expect(page.locator("foo")).toHaveText("bar"),
             expect(page).toHaveTitle("baz"),
           ]
-        `)
+        `),
       ),
       errors: [
         { column: 4, endColumn: 10, endLine: 3, line: 3, messageId: 'expect' },
@@ -210,7 +210,7 @@ runRuleTester('missing-playwright-await', rule, {
             await expect(page.locator("foo")).toHaveText("bar"),
             await expect(page).toHaveTitle("baz"),
           ]
-        `)
+        `),
       ),
     },
   ],

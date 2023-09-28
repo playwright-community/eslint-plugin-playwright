@@ -26,7 +26,7 @@ runRuleTester('no-force-option', rule, {
     },
     {
       code: test(
-        'await page[`locator`]("button").locator("btn").click({ force: true })'
+        'await page[`locator`]("button").locator("btn").click({ force: true })',
       ),
       errors: [{ column: 83, endColumn: 94, line: 1, messageId }],
     },
@@ -44,13 +44,13 @@ runRuleTester('no-force-option', rule, {
     },
     {
       code: test(
-        'await page[`locator`]("input").fill("test", { ["force"]: true })'
+        'await page[`locator`]("input").fill("test", { ["force"]: true })',
       ),
       errors: [{ column: 74, endColumn: 89, line: 1, messageId }],
     },
     {
       code: test(
-        'await page["locator"]("input").fill("test", { [`force`]: true })'
+        'await page["locator"]("input").fill("test", { [`force`]: true })',
       ),
       errors: [{ column: 74, endColumn: 89, line: 1, messageId }],
     },
@@ -60,7 +60,7 @@ runRuleTester('no-force-option', rule, {
     },
     {
       code: test(
-        'await page.locator("select").selectOption({ label: "Blue" }, { force: true })'
+        'await page.locator("select").selectOption({ label: "Blue" }, { force: true })',
       ),
       errors: [{ column: 91, endColumn: 102, line: 1, messageId }],
     },
@@ -70,7 +70,7 @@ runRuleTester('no-force-option', rule, {
     },
     {
       code: test(
-        'await page.locator("checkbox").setChecked(true, { force: true })'
+        'await page.locator("checkbox").setChecked(true, { force: true })',
       ),
       errors: [{ column: 78, endColumn: 89, line: 1, messageId }],
     },
@@ -85,7 +85,7 @@ runRuleTester('no-force-option', rule, {
     test("await page.locator('button').click()"),
     test("await page.locator('button').locator('btn').click()"),
     test(
-      "await page.locator('button').click({ delay: 500, noWaitAfter: true })"
+      "await page.locator('button').click({ delay: 500, noWaitAfter: true })",
     ),
     test("await page.locator('button').dblclick()"),
     test("await page.locator('input').dragTo()"),

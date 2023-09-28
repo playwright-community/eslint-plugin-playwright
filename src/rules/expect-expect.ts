@@ -5,12 +5,12 @@ import { getAdditionalAssertFunctionNames } from '../utils/misc';
 
 function isAssertionCall(
   node: ESTree.CallExpression,
-  additionalAssertFunctionNames: string[]
+  additionalAssertFunctionNames: string[],
 ) {
   return (
     isExpectCall(node) ||
     additionalAssertFunctionNames.find((name) =>
-      isIdentifier(node.callee, name)
+      isIdentifier(node.callee, name),
     )
   );
 }

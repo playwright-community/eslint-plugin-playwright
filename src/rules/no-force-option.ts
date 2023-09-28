@@ -11,7 +11,7 @@ function isForceOptionEnabled(node: ESTree.CallExpression) {
       (property) =>
         property.type === 'Property' &&
         getStringValue(property.key) === 'force' &&
-        isBooleanLiteral(property.value, true)
+        isBooleanLiteral(property.value, true),
     )
   );
 }

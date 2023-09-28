@@ -13,7 +13,7 @@ const matchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
 type FixableIncludesCallExpression = KnownCallExpression;
 
 const isFixableIncludesCallExpression = (
-  node: ESTree.Node
+  node: ESTree.Node,
 ): node is FixableIncludesCallExpression =>
   node.type === 'CallExpression' &&
   node.callee.type === 'MemberExpression' &&
@@ -43,7 +43,7 @@ export default {
         }
 
         const notModifier = expectCall.modifiers.find(
-          (node) => getStringValue(node) === 'not'
+          (node) => getStringValue(node) === 'not',
         );
 
         context.report({
@@ -65,12 +65,12 @@ export default {
               // replace the current matcher with "toContain", adding "not" if needed
               fixer.replaceText(
                 matcher,
-                addNotModifier ? 'not.toContain' : 'toContain'
+                addNotModifier ? 'not.toContain' : 'toContain',
               ),
               // replace the matcher argument with the value from the "includes"
               fixer.replaceText(
                 expectCall.args[0],
-                sourceCode.getText(includesCall.arguments[0])
+                sourceCode.getText(includesCall.arguments[0]),
               ),
             ];
 
@@ -80,7 +80,7 @@ export default {
                 fixer.removeRange([
                   notModifier.range![0],
                   notModifier.range![1] + 1,
-                ])
+                ]),
               );
             }
 

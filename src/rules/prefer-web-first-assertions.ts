@@ -80,7 +80,7 @@ export default {
         // Change the matcher
         const { args, matcher } = expectCall;
         const notModifier = expectCall.modifiers.find(
-          (mod) => getStringValue(mod) === 'not'
+          (mod) => getStringValue(mod) === 'not',
         );
 
         const isFalsy =
@@ -121,12 +121,12 @@ export default {
               // Remove the await keyword
               fixer.replaceTextRange(
                 [arg.range![0], arg.argument.range![0]],
-                ''
+                '',
               ),
               // Remove the old Playwright method and any arguments
               fixer.replaceTextRange(
                 [callee.property.range![0] - 1, methodEnd],
-                ''
+                '',
               ),
             ];
 
@@ -151,7 +151,7 @@ export default {
 
             // Add the new matcher arguments if needed
             const hasOtherArgs = !!methodArgs.filter(
-              (arg) => !isBooleanLiteral(arg)
+              (arg) => !isBooleanLiteral(arg),
             ).length;
 
             if (methodArgs) {
@@ -162,7 +162,10 @@ export default {
                 .join(', ');
 
               fixes.push(
-                fixer.insertTextAfterRange([range[0], range[1] + 1], stringArgs)
+                fixer.insertTextAfterRange(
+                  [range[0], range[1] + 1],
+                  stringArgs,
+                ),
               );
             }
 

@@ -15,7 +15,7 @@ export default {
                   fixer.remove(
                     node.parent && node.parent.type !== 'AwaitExpression'
                       ? node.parent
-                      : node.parent.parent
+                      : node.parent.parent,
                   ),
                 messageId: 'removeWaitForTimeout',
               },

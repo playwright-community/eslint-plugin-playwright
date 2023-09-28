@@ -33,7 +33,7 @@ runRuleTester('no-raw-locators', rule, {
 
     {
       code: test(
-        'const section = await page.getByRole("section"); section.locator(".btn")'
+        'const section = await page.getByRole("section"); section.locator(".btn")',
       ),
       errors: [{ column: 77, endColumn: 100, line: 1, messageId }],
     },
@@ -50,13 +50,13 @@ runRuleTester('no-raw-locators', rule, {
     test('await page.getByRole("button", { name: /submit/i })'),
     test('await page.getByTestId("my-test-button").click()'),
     test(
-      'await page.getByRole("button").filter({ hasText: "Add to cart" }).click()'
+      'await page.getByRole("button").filter({ hasText: "Add to cart" }).click()',
     ),
 
     test('await frame.getByRole("button")'),
 
     test(
-      'const section = page.getByRole("section"); section.getByRole("button")'
+      'const section = page.getByRole("section"); section.getByRole("button")',
     ),
 
     // bare calls

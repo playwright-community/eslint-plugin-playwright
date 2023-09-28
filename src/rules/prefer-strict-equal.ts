@@ -18,7 +18,7 @@ export default {
                   return replaceAccessorFixer(
                     fixer,
                     expectCall.matcher,
-                    'toStrictEqual'
+                    'toStrictEqual',
                   );
                 },
                 messageId: 'suggestReplaceWithStrictEqual',

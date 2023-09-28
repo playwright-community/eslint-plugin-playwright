@@ -24,7 +24,7 @@ function reportPreferToBe(
   context: Rule.RuleContext,
   expectCall: ParsedExpectCall,
   whatToBe: string,
-  notModifier?: ESTree.Node
+  notModifier?: ESTree.Node,
 ) {
   context.report({
     fix(fixer) {
@@ -57,7 +57,7 @@ export default {
 
         const notMatchers = ['toBeUndefined', 'toBeDefined'];
         const notModifier = expectCall.modifiers.find(
-          (node) => getStringValue(node) === 'not'
+          (node) => getStringValue(node) === 'not',
         );
 
         if (notModifier && notMatchers.includes(expectCall.matcherName)) {
@@ -65,7 +65,7 @@ export default {
             context,
             expectCall,
             expectCall.matcherName === 'toBeDefined' ? 'Undefined' : 'Defined',
-            notModifier
+            notModifier,
           );
         }
 
