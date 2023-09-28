@@ -1,4 +1,4 @@
-import dedent = require('dedent');
+import dedent from 'dedent';
 import rule from '../../src/rules/expect-expect';
 import { runRuleTester } from '../utils/rule-tester';
 

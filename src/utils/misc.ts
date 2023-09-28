@@ -12,7 +12,7 @@ interface AssertFunctionNamesOptions {
 }
 
 export function getAdditionalAssertFunctionNames(
-  context: Rule.RuleContext
+  context: Rule.RuleContext,
 ): string[] {
   const globalSettings =
     (context.settings as Settings).playwright?.additionalAssertFunctionNames ??

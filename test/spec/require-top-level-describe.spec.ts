@@ -1,4 +1,4 @@
-import * as dedent from 'dedent';
+import dedent from 'dedent';
 import rule from '../../src/rules/require-top-level-describe';
 import { runRuleTester } from '../utils/rule-tester';
 

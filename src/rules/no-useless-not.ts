@@ -20,7 +20,7 @@ export default {
         // As the name implies, this rule only implies if the not modifier is
         // part of the matcher chain
         const notModifier = expectCall.modifiers.find(
-          (mod) => getStringValue(mod) === 'not'
+          (mod) => getStringValue(mod) === 'not',
         );
         if (!notModifier) return;
 

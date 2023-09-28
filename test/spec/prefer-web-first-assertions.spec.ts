@@ -19,7 +19,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator(".tweet").isVisible()).toBe(false)'
+        'expect(await page.locator(".tweet").isVisible()).toBe(false)',
       ),
       errors: [
         {
@@ -34,7 +34,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator(".tweet").isVisible()).toEqual(true)'
+        'expect(await page.locator(".tweet").isVisible()).toEqual(true)',
       ),
       errors: [
         {
@@ -49,7 +49,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator(".tweet").isVisible()).toEqual(false)'
+        'expect(await page.locator(".tweet").isVisible()).toEqual(false)',
       ),
       errors: [
         {
@@ -64,7 +64,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator(".tweet").isVisible()).not.toBe(true)'
+        'expect(await page.locator(".tweet").isVisible()).not.toBe(true)',
       ),
       errors: [
         {
@@ -79,7 +79,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator(".tweet").isVisible()).not.toBe(false)'
+        'expect(await page.locator(".tweet").isVisible()).not.toBe(false)',
       ),
       errors: [
         {
@@ -150,7 +150,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     // getAttribute
     {
       code: test(
-        'expect.soft(await foo.getAttribute("aria-label")).toBe("bar")'
+        'expect.soft(await foo.getAttribute("aria-label")).toBe("bar")',
       ),
       errors: [
         {
@@ -162,12 +162,12 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test(
-        'await expect.soft(foo).toHaveAttribute("aria-label", "bar")'
+        'await expect.soft(foo).toHaveAttribute("aria-label", "bar")',
       ),
     },
     {
       code: test(
-        'expect.soft(await foo.getAttribute("aria-label")).not.toBe("bar")'
+        'expect.soft(await foo.getAttribute("aria-label")).not.toBe("bar")',
       ),
       errors: [
         {
@@ -179,12 +179,12 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test(
-        'await expect.soft(foo).not.toHaveAttribute("aria-label", "bar")'
+        'await expect.soft(foo).not.toHaveAttribute("aria-label", "bar")',
       ),
     },
     {
       code: test(
-        'expect.soft(await page.locator("foo").getAttribute("aria-label")).toBe("bar")'
+        'expect.soft(await page.locator("foo").getAttribute("aria-label")).toBe("bar")',
       ),
       errors: [
         {
@@ -196,12 +196,12 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test(
-        'await expect.soft(page.locator("foo")).toHaveAttribute("aria-label", "bar")'
+        'await expect.soft(page.locator("foo")).toHaveAttribute("aria-label", "bar")',
       ),
     },
     {
       code: test(
-        'expect.soft(await page.locator("foo").getAttribute("aria-label")).not.toBe("bar")'
+        'expect.soft(await page.locator("foo").getAttribute("aria-label")).not.toBe("bar")',
       ),
       errors: [
         {
@@ -213,7 +213,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test(
-        'await expect.soft(page.locator("foo")).not.toHaveAttribute("aria-label", "bar")'
+        'await expect.soft(page.locator("foo")).not.toHaveAttribute("aria-label", "bar")',
       ),
     },
 
@@ -317,7 +317,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator("howdy").isChecked()).toBeTruthy()'
+        'expect(await page.locator("howdy").isChecked()).toBeTruthy()',
       ),
       errors: [
         {
@@ -332,7 +332,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator("howdy").isChecked()).not.toBe(true)'
+        'expect(await page.locator("howdy").isChecked()).not.toBe(true)',
       ),
       errors: [
         {
@@ -373,7 +373,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator("howdy").isChecked()).not.toBe(false)'
+        'expect(await page.locator("howdy").isChecked()).not.toBe(false)',
       ),
       errors: [
         {
@@ -550,7 +550,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator("howdy").isEditable()).not.toBe(true)'
+        'expect(await page.locator("howdy").isEditable()).not.toBe(true)',
       ),
       errors: [
         {
@@ -565,7 +565,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator("howdy").isEditable()).toBe(false)'
+        'expect(await page.locator("howdy").isEditable()).toBe(false)',
       ),
       errors: [
         {
@@ -580,7 +580,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator("howdy").isEditable()).toBeFalsy()'
+        'expect(await page.locator("howdy").isEditable()).toBeFalsy()',
       ),
       errors: [
         {
@@ -595,7 +595,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(
-        'expect(await page.locator("howdy").isEditable()).not.toBe(false)'
+        'expect(await page.locator("howdy").isEditable()).not.toBe(false)',
       ),
       errors: [
         {

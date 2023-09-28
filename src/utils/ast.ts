@@ -44,7 +44,7 @@ export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
 
 export function isPropertyAccessor(
   node: ESTree.MemberExpression,
-  name: string
+  name: string,
 ) {
   return getStringValue(node.property) === name;
 }
@@ -85,7 +85,7 @@ export function isDescribeCall(node: ESTree.Node): boolean {
 
 export function findParent<T extends ESTree.Node['type']>(
   node: NodeWithParent,
-  type: T
+  type: T,
 ): TypedNodeWithParent<T> | undefined {
   if (!node.parent) return;
 
@@ -103,7 +103,7 @@ export function isTest(node: ESTree.CallExpression, modifiers?: string[]) {
       modifiers?.includes(getStringValue(node.callee.property))) &&
     node.arguments.length === 2 &&
     ['ArrowFunctionExpression', 'FunctionExpression'].includes(
-      node.arguments[1].type
+      node.arguments[1].type,
     )
   );
 }
@@ -121,7 +121,7 @@ const expectSubCommands = new Set(['soft', 'poll']);
 export type ExpectType = 'poll' | 'soft' | 'standalone';
 
 export function getExpectType(
-  node: ESTree.CallExpression
+  node: ESTree.CallExpression,
 ): ExpectType | undefined {
   if (isIdentifier(node.callee, /(^expect|Expect)$/)) {
     return 'standalone';
@@ -142,7 +142,7 @@ export function isExpectCall(node: ESTree.CallExpression) {
 
 export function getMatchers(
   node: Rule.Node,
-  chain: Rule.Node[] = []
+  chain: Rule.Node[] = [],
 ): Rule.Node[] {
   if (node.parent.type === 'MemberExpression' && node.parent.object === node) {
     return getMatchers(node.parent, [

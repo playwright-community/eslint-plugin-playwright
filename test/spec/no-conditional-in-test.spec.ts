@@ -1,6 +1,6 @@
+import dedent from 'dedent';
 import rule from '../../src/rules/no-conditional-in-test';
 import { runRuleTester } from '../utils/rule-tester';
-import dedent = require('dedent');
 
 const messageId = 'conditionalInTest';
 

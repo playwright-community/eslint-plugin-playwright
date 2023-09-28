@@ -25,7 +25,7 @@ export default {
                   const fixes = [
                     fixer.replaceTextRange(
                       getPropertyRange(property),
-                      'locator'
+                      'locator',
                     ),
                   ];
 
@@ -33,7 +33,10 @@ export default {
                   // not need to be awaited.
                   if (node.parent.type === 'AwaitExpression') {
                     fixes.push(
-                      fixer.removeRange([node.parent.range![0], node.range![0]])
+                      fixer.removeRange([
+                        node.parent.range![0],
+                        node.range![0],
+                      ]),
                     );
                   }
 

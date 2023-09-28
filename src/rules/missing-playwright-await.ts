@@ -59,7 +59,7 @@ const playwrightTestMatchers = [
 
 function getCallType(
   node: ESTree.CallExpression & Rule.NodeParentExtension,
-  awaitableMatchers: Set<string>
+  awaitableMatchers: Set<string>,
 ) {
   // test.step
   if (

@@ -5,25 +5,25 @@ runRuleTester('no-eval', rule, {
   invalid: [
     {
       code: test(
-        'const searchValue = await page.$eval("#search", el => el.value);'
+        'const searchValue = await page.$eval("#search", el => el.value);',
       ),
       errors: [{ column: 54, endColumn: 64, line: 1, messageId: 'noEval' }],
     },
     {
       code: test(
-        'const searchValue = await this.page.$eval("#search", el => el.value);'
+        'const searchValue = await this.page.$eval("#search", el => el.value);',
       ),
       errors: [{ column: 54, endColumn: 69, line: 1, messageId: 'noEval' }],
     },
     {
       code: test(
-        'const searchValue = await page["$eval"]("#search", el => el.value);'
+        'const searchValue = await page["$eval"]("#search", el => el.value);',
       ),
       errors: [{ column: 54, endColumn: 67, line: 1, messageId: 'noEval' }],
     },
     {
       code: test(
-        'const searchValue = await page[`$eval`]("#search", el => el.value);'
+        'const searchValue = await page[`$eval`]("#search", el => el.value);',
       ),
       errors: [{ column: 54, endColumn: 67, line: 1, messageId: 'noEval' }],
     },
@@ -53,13 +53,13 @@ runRuleTester('no-eval', rule, {
     },
     {
       code: test(
-        'const html = await page.$eval(".main-container", (e, suffix) => e.outerHTML + suffix, "hello");'
+        'const html = await page.$eval(".main-container", (e, suffix) => e.outerHTML + suffix, "hello");',
       ),
       errors: [{ column: 47, endColumn: 57, line: 1, messageId: 'noEval' }],
     },
     {
       code: test(
-        'const divCounts = await page.$$eval("div", (divs, min) => divs.length >= min, 10);'
+        'const divCounts = await page.$$eval("div", (divs, min) => divs.length >= min, 10);',
       ),
       errors: [{ column: 52, endColumn: 63, line: 1, messageId: 'noEvalAll' }],
     },
@@ -70,22 +70,22 @@ runRuleTester('no-eval', rule, {
     test('await page.locator(".tweet")["evaluate"](node => node.innerText)'),
     test('await page.locator(".tweet")[`evaluate`](node => node.innerText)'),
     test(
-      'await (await page.$(".tweet")).$eval(".like", node => node.innerText)'
+      'await (await page.$(".tweet")).$eval(".like", node => node.innerText)',
     ),
     test(
-      'await (await page.$(".tweet"))["$eval"](".like", node => node.innerText)'
+      'await (await page.$(".tweet"))["$eval"](".like", node => node.innerText)',
     ),
     test(
-      'await (await page.$(".tweet")).$$eval(".like", node => node.innerText)'
+      'await (await page.$(".tweet")).$$eval(".like", node => node.innerText)',
     ),
     test(
-      'await (await page.$(".tweet"))[`$$eval`](".like", node => node.innerText)'
+      'await (await page.$(".tweet"))[`$$eval`](".like", node => node.innerText)',
     ),
     test(
-      'await page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
+      'await page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);',
     ),
     test(
-      'await this.page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);'
+      'await this.page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);',
     ),
   ],
 });
