@@ -1,3 +1,4 @@
+import * as globals from 'globals';
 import expectExpect from './rules/expect-expect';
 import maxNestedDescribe from './rules/max-nested-describe';
 import missingPlaywrightAwait from './rules/missing-playwright-await';
@@ -27,70 +28,8 @@ import requireSoftAssertions from './rules/require-soft-assertions';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validExpect from './rules/valid-expect';
 
-const recommended = {
-  env: {
-    'shared-node-browser': true,
-  },
-  plugins: ['playwright'],
-  rules: {
-    'no-empty-pattern': 'off',
-    'playwright/expect-expect': 'warn',
-    'playwright/max-nested-describe': 'warn',
-    'playwright/missing-playwright-await': 'error',
-    'playwright/no-conditional-in-test': 'warn',
-    'playwright/no-element-handle': 'warn',
-    'playwright/no-eval': 'warn',
-    'playwright/no-focused-test': 'error',
-    'playwright/no-force-option': 'warn',
-    'playwright/no-nested-step': 'warn',
-    'playwright/no-networkidle': 'error',
-    'playwright/no-page-pause': 'warn',
-    'playwright/no-skipped-test': 'warn',
-    'playwright/no-useless-await': 'warn',
-    'playwright/no-useless-not': 'warn',
-    'playwright/no-wait-for-timeout': 'warn',
-    'playwright/prefer-web-first-assertions': 'error',
-    'playwright/valid-expect': 'error',
-  },
-};
-
-export = {
-  configs: {
-    'jest-playwright': {
-      env: {
-        jest: true,
-        'shared-node-browser': true,
-      },
-      globals: {
-        browser: true,
-        browserName: true,
-        context: true,
-        deviceName: true,
-        jestPlaywright: true,
-        page: true,
-      },
-      plugins: ['jest', 'playwright'],
-      rules: {
-        'jest/no-standalone-expect': [
-          'error',
-          {
-            additionalTestBlockFunctions: [
-              'test.jestPlaywrightDebug',
-              'it.jestPlaywrightDebug',
-              'test.jestPlaywrightSkip',
-              'it.jestPlaywrightSkip',
-              'test.jestPlaywrightConfig',
-              'it.jestPlaywrightConfig',
-            ],
-          },
-        ],
-        'playwright/missing-playwright-await': 'error',
-        'playwright/no-page-pause': 'warn',
-      },
-    },
-    'playwright-test': recommended,
-    recommended,
-  },
+const index = {
+  configs: {},
   rules: {
     'expect-expect': expectExpect,
     'max-nested-describe': maxNestedDescribe,
@@ -120,5 +59,113 @@ export = {
     'require-soft-assertions': requireSoftAssertions,
     'require-top-level-describe': requireTopLevelDescribe,
     'valid-expect': validExpect,
+  },
+};
+
+const sharedConfig = {
+  rules: {
+    'no-empty-pattern': 'off',
+    'playwright/expect-expect': 'warn',
+    'playwright/max-nested-describe': 'warn',
+    'playwright/missing-playwright-await': 'error',
+    'playwright/no-conditional-in-test': 'warn',
+    'playwright/no-element-handle': 'warn',
+    'playwright/no-eval': 'warn',
+    'playwright/no-focused-test': 'error',
+    'playwright/no-force-option': 'warn',
+    'playwright/no-nested-step': 'warn',
+    'playwright/no-networkidle': 'error',
+    'playwright/no-page-pause': 'warn',
+    'playwright/no-skipped-test': 'warn',
+    'playwright/no-useless-await': 'warn',
+    'playwright/no-useless-not': 'warn',
+    'playwright/no-wait-for-timeout': 'warn',
+    'playwright/prefer-web-first-assertions': 'error',
+    'playwright/valid-expect': 'error',
+  },
+};
+
+const legacyConfig = {
+  ...sharedConfig,
+  env: {
+    'shared-node-browser': true,
+  },
+  plugins: ['playwright'],
+};
+
+const flatConfig = {
+  ...sharedConfig,
+  languageOptions: {
+    globals: globals['shared-node-browser'],
+  },
+  plugins: {
+    playwright: index,
+  },
+};
+
+const sharedJestConfig = {
+  rules: {
+    'jest/no-standalone-expect': [
+      'error',
+      {
+        additionalTestBlockFunctions: [
+          'test.jestPlaywrightDebug',
+          'it.jestPlaywrightDebug',
+          'test.jestPlaywrightSkip',
+          'it.jestPlaywrightSkip',
+          'test.jestPlaywrightConfig',
+          'it.jestPlaywrightConfig',
+        ],
+      },
+    ],
+    'playwright/missing-playwright-await': 'error',
+    'playwright/no-page-pause': 'warn',
+  },
+};
+
+const legacyJestConfig = {
+  ...sharedJestConfig,
+  env: {
+    jest: true,
+    'shared-node-browser': true,
+  },
+  globals: {
+    browser: true,
+    browserName: true,
+    context: true,
+    deviceName: true,
+    jestPlaywright: true,
+    page: true,
+  },
+  plugins: ['jest', 'playwright'],
+};
+
+const jestConfig = {
+  ...sharedJestConfig,
+  languageOptions: {
+    globals: {
+      ...globals['shared-node-browser'],
+      ...globals.jest,
+      browser: 'writable',
+      browserName: 'writable',
+      context: 'writable',
+      deviceName: 'writable',
+      jestPlaywright: 'writable',
+      page: 'writable',
+    },
+  },
+  plugins: {
+    playwright: index,
+  },
+};
+
+export = {
+  ...index,
+  configs: {
+    'flat/jest-playwright': jestConfig,
+    'flat/recommended': flatConfig,
+    'jest-playwright': legacyJestConfig,
+    'playwright-test': legacyConfig,
+    recommended: legacyConfig,
   },
 };
