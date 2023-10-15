@@ -66,10 +66,14 @@ export default [
 
 ```javascript
 import playwright from 'eslint-plugin-playwright';
+import jest from 'eslint-plugin-jest';
 
 export default [
   playwright.configs['flat/jest-playwright'],
   {
+    plugins: {
+      jest,
+    },
     rules: {
       // Customize Playwright rules
       // ...
