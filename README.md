@@ -33,6 +33,26 @@ This plugin bundles two configurations to work with both `@playwright/test` or
 
 ### With [Playwright test runner](https://playwright.dev/docs/writing-tests)
 
+[Flat config](https://eslint.org/docs/latest/use/configure/configuration-files-new)
+(**eslint.config.js**)
+
+```javascript
+import playwright from 'eslint-plugin-playwright';
+
+export default [
+  playwright.configs['flat/recommended'],
+  {
+    rules: {
+      // Customize Playwright rules
+      // ...
+    },
+  },
+];
+```
+
+[Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)
+(**.eslintrc**)
+
 ```json
 {
   "extends": ["plugin:playwright/recommended"]
@@ -40,6 +60,30 @@ This plugin bundles two configurations to work with both `@playwright/test` or
 ```
 
 ### With [Jest Playwright](https://github.com/playwright-community/jest-playwright)
+
+[Flat config](https://eslint.org/docs/latest/use/configure/configuration-files-new)
+(**eslint.config.js**)
+
+```javascript
+import playwright from 'eslint-plugin-playwright';
+import jest from 'eslint-plugin-jest';
+
+export default [
+  playwright.configs['flat/jest-playwright'],
+  {
+    plugins: {
+      jest,
+    },
+    rules: {
+      // Customize Playwright rules
+      // ...
+    },
+  },
+];
+```
+
+[Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)
+(**.eslintrc**)
 
 ```json
 {
@@ -62,6 +106,24 @@ under the `playwright` key. It supports the following settings:
   functions).
 
 You can configure these settings like so:
+
+[Flat config](https://eslint.org/docs/latest/use/configure/configuration-files-new)
+(**eslint.config.js**)
+
+```javascript
+export default [
+  {
+    settings: {
+      playwright: {
+        additionalAssertFunctionNames: ['assertCustomCondition'],
+      },
+    },
+  },
+];
+```
+
+[Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)
+(**.eslintrc**)
 
 ```json
 {

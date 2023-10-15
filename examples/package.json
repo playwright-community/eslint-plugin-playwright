@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@playwright/test": "^1.38.1",
-    "eslint": "^8.50.0",
-    "eslint-plugin-playwright": "workspace:*"
+    "eslint": "^8.51.0",
+    "eslint-plugin-playwright": "file:../"
   }
 }

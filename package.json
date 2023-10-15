@@ -45,5 +45,8 @@
     "eslint-plugin-jest": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "globals": "^13.23.0"
   }
 }
