@@ -101,7 +101,7 @@ under the `playwright` key. It supports the following settings:
   the presence of at least one assertion per test case. This allows such rules
   to recognise custom assertion functions as valid assertions. The global
   setting applies to all modules. The
-  [`expect-expect` rule accepts an option by the same name](./rules/expect-expect.md#additionalassertfunctionnames)
+  [`expect-expect` rule accepts an option by the same name](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/expect-expect.md#additionalassertfunctionnames)
   to enable per-module configuration (.e.g, for module-specific custom assert
   functions).
 
