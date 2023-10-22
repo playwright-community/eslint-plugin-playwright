@@ -1,6 +1,6 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import { isExpectCall, isIdentifier, isTest } from '../utils/ast';
+import { dig, isExpectCall, isTest } from '../utils/ast';
 import { getAdditionalAssertFunctionNames } from '../utils/misc';
 
 function isAssertionCall(
@@ -9,9 +9,7 @@ function isAssertionCall(
 ) {
   return (
     isExpectCall(node) ||
-    additionalAssertFunctionNames.find((name) =>
-      isIdentifier(node.callee, name),
-    )
+    additionalAssertFunctionNames.find((name) => dig(node.callee, name))
   );
 }
 
@@ -38,7 +36,7 @@ export default {
         if (isTest(node, ['fixme', 'only', 'skip'])) {
           unchecked.push(node);
         } else if (isAssertionCall(node, additionalAssertFunctionNames)) {
-          checkExpressions(context.getAncestors());
+          checkExpressions(context.sourceCode.getAncestors(node));
         }
       },
       'Program:exit'() {

@@ -158,7 +158,7 @@ export function getMatchers(
  * Digs through a series of MemberExpressions and CallExpressions to find an
  * Identifier with the given name.
  */
-function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
+export function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
   return node.type === 'MemberExpression'
     ? dig(node.property, identifier)
     : node.type === 'CallExpression'
