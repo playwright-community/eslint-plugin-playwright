@@ -31,3 +31,31 @@ test.describe('two tests', () => {
   test('two', async ({ page }) => {});
 });
 ```
+
+## Options
+
+```json
+{
+  "playwright/no-skipped-test": [
+    "error",
+    {
+      "allowConditional": false
+    }
+  ]
+}
+```
+
+### `allowConditional`
+
+Setting this option to `true` will allow using `test.skip()` to
+[conditionally skip a test](https://playwright.dev/docs/test-annotations#conditionally-skip-a-test).
+This can be helpful if you want to prevent usage of `test.skip` being added by
+mistake but still allow conditional tests based on browser/environment setup.
+
+Example of **correct** code for the `{ "allowConditional": true }` option:
+
+```javascript
+test('foo', ({ browserName }) => {
+  test.skip(browserName === 'firefox', 'Still working on it');
+});
+```

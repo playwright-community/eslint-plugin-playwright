@@ -10,6 +10,8 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
+        const options = context.options[0] || {};
+        const allowConditional = !!options.allowConditional;
         const { callee } = node;
 
         if (
@@ -18,6 +20,12 @@ export default {
           isPropertyAccessor(callee, 'skip')
         ) {
           const isHook = isTest(node) || isDescribeCall(node);
+
+          // If allowConditional is enabled and it's not a test/describe hook,
+          // we ignore any `test.skip` calls that have no arguments.
+          if (!isHook && allowConditional && node.arguments.length) {
+            return;
+          }
 
           context.report({
             messageId: 'noSkippedTest',
@@ -52,6 +60,18 @@ export default {
       noSkippedTest: 'Unexpected use of the `.skip()` annotation.',
       removeSkippedTestAnnotation: 'Remove the `.skip()` annotation.',
     },
+    schema: [
+      {
+        additionalProperties: false,
+        properties: {
+          allowConditional: {
+            default: false,
+            type: 'boolean',
+          },
+        },
+        type: 'object',
+      },
+    ],
     type: 'suggestion',
   },
 } as Rule.RuleModule;
