@@ -93,7 +93,20 @@ runRuleTester('expect-expect', rule, {
           await assertCustomCondition(page)
         })
       `,
-      name: 'Global settings only',
+      name: 'Custom assert function',
+      settings: {
+        playwright: {
+          additionalAssertFunctionNames: ['assertCustomCondition'],
+        },
+      },
+    },
+    {
+      code: dedent`
+        test('should fail', async ({ myPage, page }) => {
+          await myPage.assertCustomCondition(page)
+        })
+      `,
+      name: 'Custom assert class method',
       settings: {
         playwright: {
           additionalAssertFunctionNames: ['assertCustomCondition'],
