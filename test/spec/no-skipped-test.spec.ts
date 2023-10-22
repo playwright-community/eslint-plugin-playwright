@@ -201,5 +201,9 @@ runRuleTester('no-skipped-test', rule, {
     'this.skip();',
     'this["skip"]();',
     'this[`skip`]();',
+    {
+      code: 'test.skip(browserName === "firefox", "Still working on it");',
+      options: [{ allowConditional: true }],
+    },
   ],
 });
