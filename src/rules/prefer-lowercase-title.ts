@@ -3,17 +3,11 @@ import * as ESTree from 'estree';
 import {
   getStringValue,
   isDescribeCall,
-  isStringLiteral,
-  isTest,
+  isStringNode,
+  isTestCall,
 } from '../utils/ast';
 
 type Method = 'test' | 'test.describe';
-
-function isString(
-  node: ESTree.Expression | ESTree.SpreadElement,
-): node is ESTree.Literal | ESTree.TemplateLiteral {
-  return node && (isStringLiteral(node) || node.type === 'TemplateLiteral');
-}
 
 export default {
   create(context) {
@@ -30,7 +24,7 @@ export default {
       CallExpression(node) {
         const method = isDescribeCall(node)
           ? 'test.describe'
-          : isTest(node)
+          : isTestCall(node)
           ? 'test'
           : null;
 
@@ -45,7 +39,7 @@ export default {
         }
 
         const [title] = node.arguments;
-        if (!isString(title)) {
+        if (!isStringNode(title)) {
           return;
         }
 

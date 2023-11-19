@@ -34,12 +34,26 @@ function isLiteral<T>(node: ESTree.Node, type: string, value?: T) {
   );
 }
 
+const isTemplateLiteral = (
+  node: ESTree.Node,
+  value?: string,
+): node is ESTree.TemplateLiteral =>
+  node.type === 'TemplateLiteral' &&
+  node.quasis.length === 1 && // bail out if not simple
+  (value === undefined || node.quasis[0].value.raw === value);
+
 export function isStringLiteral(node: ESTree.Node, value?: string) {
   return isLiteral(node, 'string', value);
 }
 
 export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
   return isLiteral(node, 'boolean', value);
+}
+
+export type StringNode = ESTree.Literal | ESTree.TemplateLiteral;
+
+export function isStringNode(node: ESTree.Node): node is StringNode {
+  return node && (isStringLiteral(node) || isTemplateLiteral(node));
 }
 
 export function isPropertyAccessor(
@@ -94,7 +108,7 @@ export function findParent<T extends ESTree.Node['type']>(
     : findParent(node.parent, type);
 }
 
-export function isTest(node: ESTree.CallExpression, modifiers?: string[]) {
+export function isTestCall(node: ESTree.CallExpression, modifiers?: string[]) {
   return (
     isTestIdentifier(node.callee) &&
     !isDescribeCall(node) &&

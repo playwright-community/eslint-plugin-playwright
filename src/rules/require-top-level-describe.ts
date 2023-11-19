@@ -1,6 +1,6 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import { isDescribeCall, isTest, isTestHook } from '../utils/ast';
+import { isDescribeCall, isTestCall, isTestHook } from '../utils/ast';
 import { getAmountData } from '../utils/misc';
 
 export default {
@@ -30,7 +30,7 @@ export default {
             }
           }
         } else if (!describeCount) {
-          if (isTest(node)) {
+          if (isTestCall(node)) {
             context.report({ messageId: 'unexpectedTest', node: node.callee });
           } else if (isTestHook(node)) {
             context.report({ messageId: 'unexpectedHook', node: node.callee });

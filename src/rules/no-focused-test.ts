@@ -1,12 +1,12 @@
 import { Rule } from 'eslint';
-import { isDescribeCall, isPropertyAccessor, isTest } from '../utils/ast';
+import { isDescribeCall, isPropertyAccessor, isTestCall } from '../utils/ast';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
         if (
-          (isTest(node) || isDescribeCall(node)) &&
+          (isTestCall(node) || isDescribeCall(node)) &&
           node.callee.type === 'MemberExpression' &&
           isPropertyAccessor(node.callee, 'only')
         ) {
