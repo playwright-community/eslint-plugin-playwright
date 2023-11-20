@@ -15,7 +15,7 @@ An empty title is not informative, and serves little purpose.
 
 Examples of **incorrect** code for this rule:
 
-```js
+```javascript
 test.describe('', () => {});
 test.describe('foo', () => {
   test('', () => {});
@@ -25,7 +25,7 @@ test('', () => {});
 
 Examples of **correct** code for this rule:
 
-```js
+```javascript
 test.describe('foo', () => {});
 test.describe('foo', () => {
   test('bar', () => {});
@@ -41,7 +41,7 @@ options.
 
 Examples of **incorrect** code for this rule:
 
-```js
+```javascript
 test(123, () => {});
 test.describe(String(/.+/), () => {});
 test.describe(myFunction, () => {});
@@ -50,14 +50,14 @@ test.describe(6, function () {});
 
 Examples of **correct** code for this rule:
 
-```js
+```javascript
 test('is a string', () => {});
 test.describe('is a string', () => {});
 ```
 
 Examples of **correct** code when `ignoreTypeOfDescribeName` is `true`:
 
-```js
+```javascript
 test('is a string', () => {});
 test.describe('is a string', () => {});
 
@@ -68,7 +68,7 @@ test.describe(6, function () {});
 
 Examples of **correct** code when `ignoreTypeOfTestName` is `true`:
 
-```js
+```javascript
 const myTestName = 'is a string';
 
 test(String(/.+/), () => {});
@@ -83,7 +83,7 @@ A `describe` / `test` block should not start with `duplicatePrefix`
 
 Examples of **incorrect** code for this rule
 
-```js
+```javascript
 test('test foo', () => {});
 
 test.describe('foo', () => {
@@ -97,7 +97,7 @@ test.describe('describe foo', () => {
 
 Examples of **correct** code for this rule
 
-```js
+```javascript
 test('foo', () => {});
 
 test.describe('foo', () => {
@@ -112,7 +112,7 @@ turned off via the `ignoreSpaces` option:
 
 Examples of **incorrect** code for this rule
 
-```js
+```javascript
 test(' foo', () => {});
 
 test.describe('foo', () => {
@@ -130,7 +130,7 @@ test.describe('foo  ', () => {
 
 Examples of **correct** code for this rule
 
-```js
+```javascript
 test('foo', () => {});
 
 test.describe('foo', () => {
@@ -172,7 +172,7 @@ is not case-sensitive, and looks for complete words:
 
 Examples of **incorrect** code when using `disallowedWords`:
 
-```js
+```javascript
 // with disallowedWords: ['correct', 'all', 'every', 'properly']
 test.describe('the correct way to do things', () => {});
 test.describe('every single one of them', () => {});
@@ -182,7 +182,7 @@ test(`that the value is set properly`, () => {});
 
 Examples of **correct** code when using `disallowedWords`:
 
-```js
+```javascript
 // with disallowedWords: ['correct', 'all', 'every', 'properly']
 test('correctly sets the value', () => {});
 test('that everything is as it should be', () => {});
@@ -200,7 +200,7 @@ test function groups (`describe`, `test`).
 
 Examples of **incorrect** code when using `mustMatch`:
 
-```js
+```javascript
 // with mustMatch: '^that'
 test.describe('the correct way to do things', () => {});
 test('this there!', () => {});
@@ -213,7 +213,7 @@ test('errors that are thrown have messages', () => {});
 
 Examples of **correct** code when using `mustMatch`:
 
-```js
+```javascript
 // with mustMatch: '^that'
 test.describe('that thing that needs to be done', () => {});
 test('that this there!', () => {});
@@ -226,7 +226,7 @@ test('that the stuff works', () => {});
 Optionally you can provide a custom message to show for a particular matcher by
 using a tuple at any level where you can provide a matcher:
 
-```js
+```javascript
 const prefixes = ['when', 'with', 'without', 'if', 'unless', 'for'];
 const prefixesList = prefixes.join('  - \n');
 

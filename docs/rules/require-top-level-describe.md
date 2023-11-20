@@ -62,7 +62,7 @@ using the `maxTopLevelDescribes` option:
 
 Examples of **incorrect** code with the above config:
 
-```js
+```javascript
 test.describe('test suite', () => {
   test('test', () => {});
 });
