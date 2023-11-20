@@ -2,7 +2,7 @@ import { Rule } from 'eslint';
 import {
   isDescribeCall,
   isPropertyAccessor,
-  isTest,
+  isTestCall,
   isTestIdentifier,
 } from '../utils/ast';
 
@@ -19,7 +19,7 @@ export default {
           callee.type === 'MemberExpression' &&
           isPropertyAccessor(callee, 'skip')
         ) {
-          const isHook = isTest(node) || isDescribeCall(node);
+          const isHook = isTestCall(node) || isDescribeCall(node);
 
           // If allowConditional is enabled and it's not a test/describe hook,
           // we ignore any `test.skip` calls that have no arguments.

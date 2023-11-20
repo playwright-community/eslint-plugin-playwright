@@ -1,12 +1,12 @@
 import { Rule } from 'eslint';
-import { findParent, isTest } from '../utils/ast';
+import { findParent, isTestCall } from '../utils/ast';
 
 export default {
   create(context) {
     function checkConditional(node: Rule.Node & Rule.NodeParentExtension) {
       const call = findParent(node, 'CallExpression');
 
-      if (call && isTest(call)) {
+      if (call && isTestCall(call)) {
         context.report({ messageId: 'conditionalInTest', node });
       }
     }

@@ -27,6 +27,7 @@ import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
 import requireSoftAssertions from './rules/require-soft-assertions';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validExpect from './rules/valid-expect';
+import validTitle from './rules/valid-title';
 
 const index = {
   configs: {},
@@ -59,6 +60,7 @@ const index = {
     'require-soft-assertions': requireSoftAssertions,
     'require-top-level-describe': requireTopLevelDescribe,
     'valid-expect': validExpect,
+    'valid-title': validTitle,
   },
 };
 
@@ -82,6 +84,7 @@ const sharedConfig = {
     'playwright/no-wait-for-timeout': 'warn',
     'playwright/prefer-web-first-assertions': 'error',
     'playwright/valid-expect': 'error',
+    'playwright/valid-title': 'error',
   },
 };
 
