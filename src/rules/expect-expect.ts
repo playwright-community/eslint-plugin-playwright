@@ -15,6 +15,7 @@ function isAssertionCall(
 
 export default {
   create(context) {
+    const sourceCode = context.sourceCode ?? context.getSourceCode();
     const unchecked: ESTree.CallExpression[] = [];
     const additionalAssertFunctionNames =
       getAdditionalAssertFunctionNames(context);
@@ -36,7 +37,11 @@ export default {
         if (isTestCall(node, ['fixme', 'only', 'skip'])) {
           unchecked.push(node);
         } else if (isAssertionCall(node, additionalAssertFunctionNames)) {
-          checkExpressions(context.sourceCode.getAncestors(node));
+          const ancestors = sourceCode.getAncestors
+            ? sourceCode.getAncestors(node)
+            : context.getAncestors();
+
+          checkExpressions(ancestors);
         }
       },
       'Program:exit'() {
