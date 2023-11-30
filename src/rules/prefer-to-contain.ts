@@ -48,7 +48,7 @@ export default {
 
         context.report({
           fix(fixer) {
-            const sourceCode = context.getSourceCode();
+            const sourceCode = context.sourceCode ?? context.getSourceCode();
 
             // We need to negate the expectation if the current expected
             // value is itself negated by the "not" modifier
