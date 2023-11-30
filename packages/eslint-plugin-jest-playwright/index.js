@@ -1,7 +1,7 @@
 module.exports = {
   configs: {
     recommended: {
-      extends: 'plugin:playwright/jest-playwright'
-    }
-  }
+      extends: 'plugin:playwright/jest-playwright',
+    },
+  },
 };

@@ -1,0 +1,12 @@
+{
+  "name": "examples",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@playwright/test": "^1.38.1",
+    "eslint": "^8.51.0",
+    "eslint-plugin-playwright": "file:../"
+  }
+}
