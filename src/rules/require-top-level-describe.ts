@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import ESTree from 'estree';
 import { isDescribeCall, isTestCall, isTestHook } from '../utils/ast';
 import { getAmountData } from '../utils/misc';
 

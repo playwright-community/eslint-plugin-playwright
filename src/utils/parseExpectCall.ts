@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import ESTree from 'estree';
 import { getMatchers, getStringValue, isExpectCall } from './ast';
 
 const MODIFIER_NAMES = new Set(['not', 'resolves', 'rejects']);

@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import ESTree from 'estree';
 
 export const getRangeOffset = (node: ESTree.Node) =>
   node.type === 'Identifier' ? 0 : 1;

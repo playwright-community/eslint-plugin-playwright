@@ -1,4 +1,4 @@
-import * as globals from 'globals';
+import globals from 'globals';
 import expectExpect from './rules/expect-expect';
 import maxNestedDescribe from './rules/max-nested-describe';
 import missingPlaywrightAwait from './rules/missing-playwright-await';

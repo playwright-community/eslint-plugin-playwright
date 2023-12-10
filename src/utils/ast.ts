@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import ESTree from 'estree';
 import { NodeWithParent, TypedNodeWithParent } from './types';
 
 export function getStringValue(node: ESTree.Node | undefined) {
