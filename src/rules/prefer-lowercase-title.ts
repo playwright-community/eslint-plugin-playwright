@@ -1,5 +1,5 @@
 import { AST, Rule } from 'eslint';
-import * as ESTree from 'estree';
+import ESTree from 'estree';
 import {
   getStringValue,
   isDescribeCall,

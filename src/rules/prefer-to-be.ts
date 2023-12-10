@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import ESTree from 'estree';
 import { getStringValue, isIdentifier } from '../utils/ast';
 import { replaceAccessorFixer } from '../utils/fixer';
 import { ParsedExpectCall, parseExpectCall } from '../utils/parseExpectCall';

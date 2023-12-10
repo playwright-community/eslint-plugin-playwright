@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import ESTree from 'estree';
 import { dig, isExpectCall, isTestCall } from '../utils/ast';
 import { getAdditionalAssertFunctionNames } from '../utils/misc';
 

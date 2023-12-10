@@ -1,5 +1,5 @@
 import { AST, Rule } from 'eslint';
-import * as ESTree from 'estree';
+import ESTree from 'estree';
 import { isPageMethod } from '../utils/ast';
 
 function getPropertyRange(node: ESTree.Node): AST.Range {

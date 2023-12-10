@@ -3,6 +3,12 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   transform: {
-    '^.+\\.ts?$': ['ts-jest', { isolatedModules: true }],
+    '^.+\\.ts?$': [
+      'ts-jest',
+      {
+        isolatedModules: true,
+        tsconfig: { moduleResolution: 'classic' },
+      },
+    ],
   },
 };
