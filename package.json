@@ -4,7 +4,7 @@
   "version": "0.0.0-semantically-released",
   "repository": "https://github.com/playwright-community/eslint-plugin-playwright",
   "author": "Mark Skelton <mark@mskelton.dev>",
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "pnpm@8.12.0",
   "contributors": [
     "Max Schmitt <max@schmitt.mx>"
   ],
@@ -12,6 +12,7 @@
   "workspaces": [
     "examples"
   ],
+  "types": "./dist/index.d.mts",
   "exports": {
     "import": {
       "types": "./dist/index.d.mts",
