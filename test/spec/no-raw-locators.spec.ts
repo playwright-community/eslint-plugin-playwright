@@ -37,6 +37,28 @@ runRuleTester('no-raw-locators', rule, {
       ),
       errors: [{ column: 77, endColumn: 100, line: 1, messageId }],
     },
+
+    // Allowed
+    {
+      code: test('await page.locator("[aria-busy=false]")'),
+      errors: [{ column: 34, endColumn: 67, line: 1, messageId }],
+      options: [{ allowed: ['iframe'] }],
+    },
+    {
+      code: test(`await page.locator("[aria-busy=false]")`),
+      errors: [{ column: 34, endColumn: 67, line: 1, messageId }],
+      options: [{ allowed: ['iframe'] }],
+    },
+    {
+      code: test(`await page.locator("[aria-busy=false]")`),
+      errors: [{ column: 34, endColumn: 67, line: 1, messageId }],
+      options: [{ allowed: [`[aria-busy=true]`] }],
+    },
+    {
+      code: test(`await page.locator("[aria-busy='false']")`),
+      errors: [{ column: 34, endColumn: 69, line: 1, messageId }],
+      options: [{ allowed: [`[aria-busy=true]`] }],
+    },
   ],
   valid: [
     test('await page.click()'),
@@ -61,5 +83,47 @@ runRuleTester('no-raw-locators', rule, {
 
     // bare calls
     test('() => page.locator'),
+
+    // Allowed
+    {
+      code: test('await page.locator("iframe")'),
+      options: [{ allowed: ['iframe'] }],
+    },
+    {
+      code: test(`await page.locator("[aria-busy=false]")`),
+      options: [{ allowed: [`[aria-busy=false]`] }],
+    },
+    {
+      code: test(`await page.locator("[aria-busy='false']")`),
+      options: [{ allowed: [`[aria-busy=false]`] }],
+    },
+    {
+      code: test(`await page.locator('[aria-busy="false"]')`),
+      options: [{ allowed: [`[aria-busy=false]`] }],
+    },
+    {
+      code: test(`await page.locator("[aria-busy=false]")`),
+      options: [{ allowed: [`[aria-busy='false']`] }],
+    },
+    {
+      code: test(`await page.locator('[aria-busy=false]')`),
+      options: [{ allowed: [`[aria-busy="false"]`] }],
+    },
+    {
+      code: test(`await page.locator("[aria-busy='false']")`),
+      options: [{ allowed: [`[aria-busy='false']`] }],
+    },
+    {
+      code: test(`await page.locator('[aria-busy="false"]')`),
+      options: [{ allowed: [`[aria-busy="false"]`] }],
+    },
+    {
+      code: test(`await page.locator("[aria-busy='false']")`),
+      options: [{ allowed: [`[aria-busy="false"]`] }],
+    },
+    {
+      code: test(`await page.locator('[aria-busy="false"]')`),
+      options: [{ allowed: [`[aria-busy='false']`] }],
+    },
   ],
 });
