@@ -24,3 +24,37 @@ await page.getByRole('button', {
   name: 'Submit',
 });
 ```
+
+## Options
+
+```json
+{
+  "playwright/no-raw-locators": [
+    "error",
+    {
+      "allowed": ["iframe", "[aria-busy='false']"]
+    }
+  ]
+}
+```
+
+### `allowed`
+
+An array of raw locators that are allowed. This helps for locators such as
+`iframe` which does not have a ARIA role that you can select using `getByRole`.
+
+By default, no raw locators are allowed (the equivalent of `{ "ignore": [] }`).
+
+Example of **incorrect** code for the `{ "allowed": ["[aria-busy=false]"] }`
+option:
+
+```javascript
+page.getByRole('navigation').and(page.locator('iframe'));
+```
+
+Example of **correct** code for the `{ "allowed": ["[aria-busy=false]"] }`
+option:
+
+```javascript
+page.getByRole('navigation').and(page.locator('[aria-busy="false"]'));
+```
