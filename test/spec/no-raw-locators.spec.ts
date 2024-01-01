@@ -41,22 +41,22 @@ runRuleTester('no-raw-locators', rule, {
     // Allowed
     {
       code: test('await page.locator("[aria-busy=false]")'),
-      errors: [{ column: 77, endColumn: 100, line: 1, messageId }],
+      errors: [{ column: 34, endColumn: 67, line: 1, messageId }],
       options: [{ allowed: ['iframe'] }],
     },
     {
       code: test(`await page.locator("[aria-busy=false]")`),
-      errors: [{ column: 77, endColumn: 100, line: 1, messageId }],
+      errors: [{ column: 34, endColumn: 67, line: 1, messageId }],
       options: [{ allowed: ['iframe'] }],
     },
     {
       code: test(`await page.locator("[aria-busy=false]")`),
-      errors: [{ column: 77, endColumn: 100, line: 1, messageId }],
+      errors: [{ column: 34, endColumn: 67, line: 1, messageId }],
       options: [{ allowed: [`[aria-busy=true]`] }],
     },
     {
       code: test(`await page.locator("[aria-busy='false']")`),
-      errors: [{ column: 77, endColumn: 100, line: 1, messageId }],
+      errors: [{ column: 34, endColumn: 69, line: 1, messageId }],
       options: [{ allowed: [`[aria-busy=true]`] }],
     },
   ],
@@ -118,7 +118,7 @@ runRuleTester('no-raw-locators', rule, {
       options: [{ allowed: [`[aria-busy="false"]`] }],
     },
     {
-      code: test(`await page.locator('[aria-busy='false']')`),
+      code: test(`await page.locator("[aria-busy='false']")`),
       options: [{ allowed: [`[aria-busy="false"]`] }],
     },
     {
