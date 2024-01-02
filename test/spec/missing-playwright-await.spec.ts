@@ -253,7 +253,6 @@ runRuleTester('missing-playwright-await', rule, {
           expect(page).toHaveTitle("baz"),
         ])
       `),
-      // only: true,
     },
     {
       code: dedent(
@@ -266,7 +265,6 @@ runRuleTester('missing-playwright-await', rule, {
           await Promise.all(promises)
         `),
       ),
-      // only: true,
     },
     {
       code: dedent(
@@ -279,7 +277,32 @@ runRuleTester('missing-playwright-await', rule, {
           return promises
         `),
       ),
-      only: true,
+    },
+    {
+      code: dedent(
+        test(`
+          const foo = [
+            expect(page.locator("foo")).toHaveText("bar"),
+            expect(page).toHaveTitle("baz"),
+          ]
+
+          const bar = await Promise.all(foo)
+          return bar
+        `),
+      ),
+    },
+    {
+      code: dedent(
+        test(`
+          const foo = [
+            expect(page.locator("foo")).toHaveText("bar"),
+            expect(page).toHaveTitle("baz"),
+          ]
+
+          const bar = foo
+          return bar
+        `),
+      ),
     },
   ],
 });
