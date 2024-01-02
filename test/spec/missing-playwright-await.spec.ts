@@ -156,7 +156,6 @@ runRuleTester('missing-playwright-await', rule, {
           messageId: 'expect',
         },
       ],
-      only: true,
       output: dedent`
         test('test', async () => {
           const softExpect = expect.configure({ soft: true })
@@ -191,6 +190,8 @@ runRuleTester('missing-playwright-await', rule, {
       ],
       output: test("await test['step']('foo', async () => {})"),
     },
+
+    // Lack of Promise.all
     {
       code: dedent(
         test(`
@@ -252,6 +253,56 @@ runRuleTester('missing-playwright-await', rule, {
           expect(page).toHaveTitle("baz"),
         ])
       `),
+    },
+    {
+      code: dedent(
+        test(`
+          const promises = [
+            expect(page.locator("foo")).toHaveText("bar"),
+            expect(page).toHaveTitle("baz"),
+          ]
+
+          await Promise.all(promises)
+        `),
+      ),
+    },
+    {
+      code: dedent(
+        test(`
+          const promises = [
+            expect(page.locator("foo")).toHaveText("bar"),
+            expect(page).toHaveTitle("baz"),
+          ]
+
+          return promises
+        `),
+      ),
+    },
+    {
+      code: dedent(
+        test(`
+          const foo = [
+            expect(page.locator("foo")).toHaveText("bar"),
+            expect(page).toHaveTitle("baz"),
+          ]
+
+          const bar = await Promise.all(foo)
+          return bar
+        `),
+      ),
+    },
+    {
+      code: dedent(
+        test(`
+          const foo = [
+            expect(page.locator("foo")).toHaveText("bar"),
+            expect(page).toHaveTitle("baz"),
+          ]
+
+          const bar = foo
+          return bar
+        `),
+      ),
     },
   ],
 });

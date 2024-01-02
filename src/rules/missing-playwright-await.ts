@@ -70,50 +70,35 @@ function getCallType(
     isIdentifier(node.callee.object, 'test') &&
     isPropertyAccessor(node.callee, 'step')
   ) {
-    return { messageId: 'testStep' };
+    return { messageId: 'testStep', node };
   }
 
   const expectType = getExpectType(node);
   if (!expectType) return;
 
-  // expect.poll
-  if (expectType === 'poll') {
-    return { messageId: 'expectPoll' };
-  }
-
-  // expect with awaitable matcher
   const [lastMatcher] = getMatchers(node).slice(-1);
+  const grandparent = lastMatcher.parent.parent;
+
+  // If the grandparent is not a CallExpression, then it's an incomplete
+  // expect statement, and we don't need to check it.
+  if (grandparent.type !== 'CallExpression') return;
+
   const matcherName = getStringValue(lastMatcher);
 
-  if (awaitableMatchers.has(matcherName)) {
-    return { data: { matcherName }, messageId: 'expect' };
+  // The node needs to be checked if it's an expect.poll expression or an
+  // awaitable matcher.
+  if (expectType === 'poll' || awaitableMatchers.has(matcherName)) {
+    return {
+      data: { matcherName },
+      messageId: expectType === 'poll' ? 'expectPoll' : 'expect',
+      node: grandparent,
+    };
   }
-}
-
-function isPromiseAll(node: Rule.Node) {
-  return node.type === 'ArrayExpression' &&
-    node.parent.type === 'CallExpression' &&
-    node.parent.callee.type === 'MemberExpression' &&
-    isIdentifier(node.parent.callee.object, 'Promise') &&
-    isIdentifier(node.parent.callee.property, 'all')
-    ? node.parent
-    : null;
-}
-
-function checkValidity(node: Rule.Node): ESTree.Node | undefined {
-  if (validTypes.has(node.parent.type)) return;
-
-  const promiseAll = isPromiseAll(node.parent);
-  return promiseAll
-    ? checkValidity(promiseAll)
-    : node.parent.type === 'MemberExpression' ||
-      (node.parent.type === 'CallExpression' && node.parent.callee === node)
-    ? checkValidity(node.parent)
-    : node;
 }
 
 export default {
   create(context) {
+    const sourceCode = context.sourceCode ?? context.getSourceCode();
     const options = context.options[0] || {};
     const awaitableMatchers = new Set([
       ...expectPlaywrightMatchers,
@@ -122,12 +107,54 @@ export default {
       ...(options.customMatchers || []),
     ]);
 
+    function checkValidity(node: Rule.Node) {
+      // If the parent is a valid type (e.g. return or await), we don't need to
+      // check any further.
+      if (validTypes.has(node.parent.type)) return true;
+
+      // If the parent is an array, we need to check the grandparent to see if
+      // it's a Promise.all, or a variable.
+      if (node.parent.type === 'ArrayExpression') {
+        return checkValidity(node.parent);
+      }
+
+      // If the parent is a call expression, we need to check the grandparent
+      // to see if it's a Promise.all.
+      if (
+        node.parent.type === 'CallExpression' &&
+        node.parent.callee.type === 'MemberExpression' &&
+        isIdentifier(node.parent.callee.object, 'Promise') &&
+        isIdentifier(node.parent.callee.property, 'all')
+      ) {
+        return true;
+      }
+
+      // If the parent is a variable declarator, we need to check the scope to
+      // find where it is referenced. When we find the reference, we can
+      // re-check validity.
+      if (node.parent.type === 'VariableDeclarator') {
+        const scope = sourceCode.getScope(node.parent.parent);
+
+        for (const ref of scope.references) {
+          const refParent = (ref.identifier as Rule.Node).parent;
+
+          // If the parent of the reference is valid, we can immediately return
+          // true. Otherwise, we'll check the validity of the parent to continue
+          // the loop.
+          if (validTypes.has(refParent.type)) return true;
+          if (checkValidity(refParent)) return true;
+        }
+      }
+
+      return false;
+    }
+
     return {
       CallExpression(node) {
         const result = getCallType(node, awaitableMatchers);
-        const reportNode = result ? checkValidity(node) : undefined;
+        const isValid = result ? checkValidity(result.node) : false;
 
-        if (result && reportNode) {
+        if (result && !isValid) {
           context.report({
             data: result.data,
             fix: (fixer) => fixer.insertTextBefore(node, 'await '),
