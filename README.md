@@ -31,6 +31,15 @@ pnpm add -D eslint-plugin-playwright
 This plugin bundles two configurations to work with both `@playwright/test` or
 `jest-playwright`.
 
+---
+📌 **Incomming legacy config deprecation notice**
+
+*Please note that as per eslint 9.0.0, legacy config (**.eslintrc**) will be deprecated. It is advised to use flat config instead (**eslint.config.js**).*
+
+*Learn more:*
+- *https://eslint.org/docs/latest/use/configure/configuration-files*
+- *https://eslint.org/docs/latest/extend/plugin-migration-flat-config*
+---
 ### With [Playwright test runner](https://playwright.dev/docs/writing-tests)
 
 [Flat config](https://eslint.org/docs/latest/use/configure/configuration-files-new)
@@ -51,7 +60,7 @@ export default [
 ```
 
 [Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)
-(**.eslintrc**)
+(**.eslintrc**) -*⚠️Will be deprecated as from eslint 9.0.0*
 
 ```json
 {
@@ -83,7 +92,7 @@ export default [
 ```
 
 [Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)
-(**.eslintrc**)
+(**.eslintrc**) -*⚠️Will be deprecated as from eslint 9.0.0*
 
 ```json
 {
@@ -123,8 +132,7 @@ export default [
 ```
 
 [Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)
-(**.eslintrc**)
-
+(**.eslintrc**) -*⚠️Will be deprecated as from eslint 9.0.0*
 ```json
 {
   "settings": {
