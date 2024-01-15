@@ -16,6 +16,7 @@ import noRestrictedMatchers from './rules/no-restricted-matchers';
 import noSkippedTest from './rules/no-skipped-test';
 import noUselessAwait from './rules/no-useless-await';
 import noUselessNot from './rules/no-useless-not';
+import noWaitForSelector from './rules/no-wait-for-selector';
 import noWaitForTimeout from './rules/no-wait-for-timeout';
 import preferLowercaseTitle from './rules/prefer-lowercase-title';
 import preferStrictEqual from './rules/prefer-strict-equal';
@@ -49,6 +50,7 @@ const index = {
     'no-skipped-test': noSkippedTest,
     'no-useless-await': noUselessAwait,
     'no-useless-not': noUselessNot,
+    'no-wait-for-selector': noWaitForSelector,
     'no-wait-for-timeout': noWaitForTimeout,
     'prefer-lowercase-title': preferLowercaseTitle,
     'prefer-strict-equal': preferStrictEqual,
@@ -81,6 +83,7 @@ const sharedConfig = {
     'playwright/no-skipped-test': 'warn',
     'playwright/no-useless-await': 'warn',
     'playwright/no-useless-not': 'warn',
+    'playwright/no-wait-for-selector': 'warn',
     'playwright/no-wait-for-timeout': 'warn',
     'playwright/prefer-web-first-assertions': 'error',
     'playwright/valid-expect': 'error',
