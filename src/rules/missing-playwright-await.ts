@@ -77,11 +77,11 @@ function getCallType(
   if (!expectType) return;
 
   const [lastMatcher] = getMatchers(node).slice(-1);
-  const grandparent = lastMatcher.parent.parent;
+  const grandparent = lastMatcher?.parent?.parent;
 
   // If the grandparent is not a CallExpression, then it's an incomplete
   // expect statement, and we don't need to check it.
-  if (grandparent.type !== 'CallExpression') return;
+  if (grandparent?.type !== 'CallExpression') return;
 
   const matcherName = getStringValue(lastMatcher);
 
@@ -152,6 +152,7 @@ export default {
     return {
       CallExpression(node) {
         const result = getCallType(node, awaitableMatchers);
+        console.log(result);
         const isValid = result ? checkValidity(result.node) : false;
 
         if (result && !isValid) {

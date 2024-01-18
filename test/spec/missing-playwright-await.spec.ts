@@ -216,9 +216,12 @@ runRuleTester('missing-playwright-await', rule, {
     },
   ],
   valid: [
+    // Basic
     { code: test('await expect(page).toBeEditable') },
     { code: test('await expect(page).toEqualTitle("text")') },
     { code: test('await expect(page).not.toHaveText("text")') },
+    // Invalid expect calls are ignored
+    { code: 'expect.soft(page.locator("foo"))' },
     // Doesn't require an await when returning
     { code: test('return expect(page).toHaveText("text")') },
     {
