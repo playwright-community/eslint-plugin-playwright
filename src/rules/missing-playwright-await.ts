@@ -152,7 +152,6 @@ export default {
     return {
       CallExpression(node) {
         const result = getCallType(node, awaitableMatchers);
-        console.log(result);
         const isValid = result ? checkValidity(result.node) : false;
 
         if (result && !isValid) {
