@@ -31,6 +31,7 @@ const expectPlaywrightMatchers = [
   'toMatchTitle',
   'toMatchURL',
   'toMatchValue',
+  'toPass',
 ];
 
 const playwrightTestMatchers = [
