@@ -31,6 +31,7 @@ const expectPlaywrightMatchers = [
   'toMatchTitle',
   'toMatchURL',
   'toMatchValue',
+  'toPass',
 ];
 
 const playwrightTestMatchers = [
@@ -58,7 +59,6 @@ const playwrightTestMatchers = [
   'toHaveValues',
   'toBeAttached',
   'toBeInViewport',
-  'toPass'
 ];
 
 function getCallType(

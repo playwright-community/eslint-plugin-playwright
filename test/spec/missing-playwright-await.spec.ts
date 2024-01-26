@@ -31,7 +31,11 @@ runRuleTester('missing-playwright-await', rule, {
       output: test('await expect(page).not.toBeEnabled()'),
     },
     {
-      code: test('expect(async () => {expect(await page.evaluate(() => window.foo)).toBe("bar")}).toPass()'),
+      code: dedent(
+        test(`expect(async () => {
+          expect(await page.evaluate(() => window.foo)).toBe('bar')
+        }).toPass()`),
+      ),
       errors: [
         {
           column: 28,
@@ -41,7 +45,11 @@ runRuleTester('missing-playwright-await', rule, {
           messageId: 'expect',
         },
       ],
-      output: test('await expect(async () => {expect(await page.evaluate(() => window.foo)).toBe("bar")}).toPass()'),
+      output: dedent(
+        test(`await expect(async () => {
+          expect(await page.evaluate(() => window.foo)).toBe('bar')
+        }).toPass()`),
+      ),
     },
     // Custom matchers
     {
