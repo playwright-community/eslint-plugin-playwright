@@ -30,6 +30,19 @@ runRuleTester('missing-playwright-await', rule, {
       ],
       output: test('await expect(page).not.toBeEnabled()'),
     },
+    {
+      code: test('expect(async () => {expect(await page.evaluate(() => window.foo)).toBe("bar")}).toPass()'),
+      errors: [
+        {
+          column: 28,
+          endColumn: 34,
+          endLine: 1,
+          line: 1,
+          messageId: 'expect',
+        },
+      ],
+      output: test('await expect(async () => {expect(await page.evaluate(() => window.foo)).toBe("bar")}).toPass()'),
+    },
     // Custom matchers
     {
       code: test('expect(page).toBeCustomThing(false)'),
