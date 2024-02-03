@@ -6,6 +6,7 @@ import { parseExpectCall } from '../utils/parseExpectCall';
 type MethodConfig = {
   inverse?: string;
   matcher: string;
+  prop?: string;
   type: 'boolean' | 'string';
 };
 
@@ -16,7 +17,11 @@ const methods: Record<string, MethodConfig> = {
   },
   innerText: { matcher: 'toHaveText', type: 'string' },
   inputValue: { matcher: 'toHaveValue', type: 'string' },
-  isChecked: { matcher: 'toBeChecked', type: 'boolean' },
+  isChecked: {
+    matcher: 'toBeChecked',
+    prop: 'checked',
+    type: 'boolean',
+  },
   isDisabled: {
     inverse: 'toBeEnabled',
     matcher: 'toBeDisabled',
@@ -147,6 +152,15 @@ export default {
             const [matcherArg] = args ?? [];
             if (matcherArg && isBooleanLiteral(matcherArg)) {
               fixes.push(fixer.remove(matcherArg));
+            }
+
+            // Add the prop argument if needed
+            else if (methodConfig.prop && matcherArg) {
+              const propArg = methodConfig.prop;
+              const variable = getStringValue(matcherArg);
+              const args = `{ ${propArg}: ${variable} }`;
+
+              fixes.push(fixer.replaceText(matcherArg, args));
             }
 
             // Add the new matcher arguments if needed

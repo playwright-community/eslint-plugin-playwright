@@ -316,6 +316,21 @@ runRuleTester('prefer-web-first-assertions', rule, {
       output: test('await expect(page.locator("howdy")).toBeChecked()'),
     },
     {
+      code: test('expect(await page.locator("howdy").isChecked()).toBe(foo)'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeChecked', method: 'isChecked' },
+          endColumn: 75,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(page.locator("howdy")).toBeChecked({ checked: foo })',
+      ),
+    },
+    {
       code: test(
         'expect(await page.locator("howdy").isChecked()).toBeTruthy()',
       ),
@@ -344,6 +359,23 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test('await expect(page.locator("howdy")).not.toBeChecked()'),
+    },
+    {
+      code: test(
+        'expect(await page.locator("howdy").isChecked()).not.toBe(bar)',
+      ),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeChecked', method: 'isChecked' },
+          endColumn: 75,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(page.locator("howdy")).not.toBeChecked({ checked: bar })',
+      ),
     },
     {
       code: test('expect(await page.locator("howdy").isChecked()).toBe(false)'),
