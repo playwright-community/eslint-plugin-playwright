@@ -1,4 +1,5 @@
 import { Rule } from 'eslint';
+import { isPropertyAccessor } from '../utils/ast';
 import { replaceAccessorFixer } from '../utils/fixer';
 import { parseExpectCall } from '../utils/parseExpectCall';
 
@@ -17,7 +18,8 @@ export default {
         if (
           argument.type !== 'AwaitExpression' ||
           argument.argument.type !== 'CallExpression' ||
-          argument.argument.callee.type !== 'MemberExpression'
+          argument.argument.callee.type !== 'MemberExpression' ||
+          !isPropertyAccessor(argument.argument.callee, 'count')
         ) {
           return;
         }
