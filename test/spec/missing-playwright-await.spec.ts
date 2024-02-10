@@ -278,6 +278,17 @@ runRuleTester('missing-playwright-await', rule, {
         ])
       `),
     },
+
+    // Variable references
+    {
+      code: dedent(
+        test(`
+          const promise = expect(page.locator('foo')).toBeHidden();
+          await page.locator('bar').click();
+          await promise;
+        `),
+      ),
+    },
     {
       code: dedent(
         test(`
