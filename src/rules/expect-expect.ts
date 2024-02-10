@@ -1,24 +1,26 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
 import { dig, isExpectCall, isTestCall } from '../utils/ast';
-import { getAdditionalAssertFunctionNames } from '../utils/misc';
 
 function isAssertionCall(
   node: ESTree.CallExpression,
-  additionalAssertFunctionNames: string[],
+  assertFunctionNames: string[],
 ) {
   return (
     isExpectCall(node) ||
-    additionalAssertFunctionNames.find((name) => dig(node.callee, name))
+    assertFunctionNames.find((name) => dig(node.callee, name))
   );
 }
 
 export default {
   create(context) {
+    const options = {
+      assertFunctionNames: [] as string[],
+      ...((context.options?.[0] as Record<string, unknown>) ?? {}),
+    };
+
     const sourceCode = context.sourceCode ?? context.getSourceCode();
     const unchecked: ESTree.CallExpression[] = [];
-    const additionalAssertFunctionNames =
-      getAdditionalAssertFunctionNames(context);
 
     function checkExpressions(nodes: ESTree.Node[]) {
       for (const node of nodes) {
@@ -36,7 +38,7 @@ export default {
       CallExpression(node) {
         if (isTestCall(node, ['fixme', 'only', 'skip'])) {
           unchecked.push(node);
-        } else if (isAssertionCall(node, additionalAssertFunctionNames)) {
+        } else if (isAssertionCall(node, options.assertFunctionNames)) {
           const ancestors = sourceCode.getAncestors
             ? sourceCode.getAncestors(node)
             : context.getAncestors();
@@ -65,7 +67,7 @@ export default {
       {
         additionalProperties: false,
         properties: {
-          additionalAssertFunctionNames: {
+          assertFunctionNames: {
             items: [{ type: 'string' }],
             type: 'array',
           },
