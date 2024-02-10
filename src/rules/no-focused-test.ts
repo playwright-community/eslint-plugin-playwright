@@ -6,7 +6,7 @@ export default {
     return {
       CallExpression(node) {
         if (
-          (isTestCall(node) || isDescribeCall(node)) &&
+          (isTestCall(context, node) || isDescribeCall(node)) &&
           node.callee.type === 'MemberExpression' &&
           isPropertyAccessor(node.callee, 'only')
         ) {

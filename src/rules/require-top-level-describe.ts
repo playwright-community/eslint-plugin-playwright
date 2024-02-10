@@ -30,9 +30,9 @@ export default {
             }
           }
         } else if (!describeCount) {
-          if (isTestCall(node)) {
+          if (isTestCall(context, node)) {
             context.report({ messageId: 'unexpectedTest', node: node.callee });
-          } else if (isTestHook(node)) {
+          } else if (isTestHook(context, node)) {
             context.report({ messageId: 'unexpectedHook', node: node.callee });
           }
         }

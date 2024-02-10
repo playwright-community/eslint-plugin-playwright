@@ -25,7 +25,7 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(node);
+        const expectCall = parseExpectCall(context, node);
         if (!expectCall || expectCall.args.length === 0) return;
 
         const { args, matcher, matcherName } = expectCall;

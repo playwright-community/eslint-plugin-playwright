@@ -30,6 +30,16 @@ runRuleTester('expect-expect', rule, {
       name: 'Custom assert function',
       options: [{ assertFunctionNames: ['wayComplexCustomCondition'] }],
     },
+    {
+      code: 'it("should pass", () => hi(true).toBeDefined())',
+      errors: [{ messageId: 'noAssertions' }],
+      name: 'Global aliases',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'foo();',
@@ -71,6 +81,24 @@ runRuleTester('expect-expect', rule, {
       `,
       name: 'Custom assert class method',
       options: [{ assertFunctionNames: ['assertCustomCondition'] }],
+    },
+    {
+      code: 'it("should pass", () => expect(true).toBeDefined())',
+      name: 'Global alias - test',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+    {
+      code: 'test("should pass", () => assert(true).toBeDefined())',
+      name: 'Global alias - assert',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
     },
   ],
 });

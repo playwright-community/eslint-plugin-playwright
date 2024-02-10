@@ -62,6 +62,7 @@ const playwrightTestMatchers = [
 ];
 
 function getCallType(
+  context: Rule.RuleContext,
   node: ESTree.CallExpression & Rule.NodeParentExtension,
   awaitableMatchers: Set<string>,
 ) {
@@ -74,7 +75,7 @@ function getCallType(
     return { messageId: 'testStep', node };
   }
 
-  const expectType = getExpectType(node);
+  const expectType = getExpectType(context, node);
   if (!expectType) return;
 
   const [lastMatcher] = getMatchers(node).slice(-1);
@@ -152,7 +153,7 @@ export default {
 
     return {
       CallExpression(node) {
-        const result = getCallType(node, awaitableMatchers);
+        const result = getCallType(context, node, awaitableMatchers);
         const isValid = result ? checkValidity(result.node) : false;
 
         if (result && !isValid) {

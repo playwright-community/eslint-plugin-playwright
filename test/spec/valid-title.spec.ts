@@ -64,6 +64,24 @@ runRuleTester('valid-title', rule, {
       ],
       options: [{ disallowedWords: ['properly'] }],
     },
+    // Global aliases
+    {
+      code: 'it("the correct way to properly handle all things", () => {});',
+      errors: [
+        {
+          column: 4,
+          data: { word: 'correct' },
+          line: 1,
+          messageId: 'disallowedWord',
+        },
+      ],
+      options: [{ disallowedWords: ['correct', 'properly', 'all'] }],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test.describe("the correct way to properly handle all the things", () => {});',
@@ -77,6 +95,23 @@ runRuleTester('valid-title', rule, {
     {
       code: 'test("correctly sets the value", () => {});',
       options: [{ disallowedWords: undefined }],
+    },
+    // Global aliases
+    {
+      code: 'test("that all is as it should be", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+    {
+      code: 'test.describe("the correct way to properly handle all the things", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });
@@ -377,6 +412,53 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
         { mustMatch: { describe: /#(?:unit|integration|e2e)/u.source } },
       ],
     },
+    // Global aliases
+    {
+      code: dedent`
+        it.describe('things to test', () => {
+          it.describe('unit tests #unit', () => {
+            it('is true', () => {
+              expect(true).toBe(true);
+            });
+          });
+
+          it.describe('e2e tests #e4e', () => {
+            it('is another test #e2e #playwright4life', () => {});
+          });
+        });
+      `,
+      errors: [
+        {
+          column: 15,
+          data: {
+            functionName: 'describe',
+            pattern: /(?:#(?!unit|e2e))\w+/u,
+          },
+          line: 8,
+          messageId: 'mustNotMatch',
+        },
+        {
+          column: 8,
+          data: {
+            functionName: 'test',
+            pattern: /(?:#(?!unit|e2e))\w+/u,
+          },
+          line: 9,
+          messageId: 'mustNotMatch',
+        },
+      ],
+      options: [
+        {
+          mustMatch: /^[^#]+$|(?:#(?:unit|e2e))/u.source,
+          mustNotMatch: /(?:#(?!unit|e2e))\w+/u.source,
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test.describe("the correct way to properly handle all the things", () => {});',
@@ -422,6 +504,15 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
         });
       `,
       options: [{ mustMatch: { test: /^[^#]+$|(?:#(?:unit|e2e))/u.source } }],
+    },
+    // Global aliases
+    {
+      code: 'it("that all is as it should be", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });
@@ -552,6 +643,23 @@ runRuleTester('title-must-be-string', rule, {
         },
       ],
     },
+    // Global aliases
+    {
+      code: 'it(String(/.+/), () => {});',
+      errors: [
+        {
+          column: 4,
+          line: 1,
+          messageId: 'titleMustBeString',
+        },
+      ],
+      options: [{ ignoreTypeOfTestName: false }],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test("is a string", () => {});',
@@ -582,6 +690,15 @@ runRuleTester('title-must-be-string', rule, {
     {
       code: 'test.describe(skipFunction, () => {});',
       options: [{ disallowedWords: [], ignoreTypeOfDescribeName: true }],
+    },
+    // Global aliases
+    {
+      code: 'it("is a string", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });
@@ -680,6 +797,23 @@ runRuleTester('no-empty-title', rule, {
         },
       ],
     },
+    // Global aliases
+    {
+      code: 'it.describe("", function () {})',
+      errors: [
+        {
+          column: 1,
+          data: { functionName: 'describe' },
+          line: 1,
+          messageId: 'emptyTitle',
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test.describe()',
@@ -692,6 +826,15 @@ runRuleTester('no-empty-title', rule, {
     'test.skip(`foo`, function () {})',
     'test(`${foo}`, function () {})',
     'test.fixme(`${foo}`, function () {})',
+    // Global aliases
+    {
+      code: 'test.describe()',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
 });
 
@@ -838,6 +981,17 @@ runRuleTester('no-accidental-space', rule, {
         })
       `,
     },
+    // Global aliases
+    {
+      code: 'it.describe(" foo", function () {})',
+      errors: [{ column: 13, line: 1, messageId: 'accidentalSpace' }],
+      output: 'it.describe("foo", function () {})',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'someFn("foo", function () {})',
@@ -855,6 +1009,15 @@ runRuleTester('no-accidental-space', rule, {
     {
       code: 'test(`GIVEN... \n  `, () => {});',
       options: [{ ignoreSpaces: true }],
+    },
+    // Global aliases
+    {
+      code: 'it("foo", function () {})',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });
@@ -886,8 +1049,30 @@ runRuleTester('no-duplicate-prefix describe', rule, {
       errors: [{ column: 15, line: 1, messageId: 'duplicatePrefix' }],
       output: 'test.describe(`foo`, function () {})',
     },
+    // Global aliases
+    {
+      code: 'it.describe("describe foo", function () {})',
+      errors: [{ column: 13, line: 1, messageId: 'duplicatePrefix' }],
+      output: 'it.describe("foo", function () {})',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
-  valid: ['test.describe("foo", function () {})'],
+  valid: [
+    'test.describe("foo", function () {})',
+    // Global aliases
+    {
+      code: 'it.describe("foo", function () {})',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+  ],
 });
 
 runRuleTester('no-duplicate-prefix test', rule, {
@@ -907,12 +1092,32 @@ runRuleTester('no-duplicate-prefix test', rule, {
       errors: [{ column: 6, line: 1, messageId: 'duplicatePrefix' }],
       output: 'test(`foo test`, function () {})',
     },
+    // Global aliases
+    {
+      code: 'it("test foo", function () {})',
+      errors: [{ column: 4, line: 1, messageId: 'duplicatePrefix' }],
+      output: 'it("foo", function () {})',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test("foo", function () {})',
     "test('foo', function () {})",
     'test(`foo`, function () {})',
     'test("foo test", function () {})',
+    // Global aliases
+    {
+      code: 'it("foo", function () {})',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
 });
 
@@ -957,6 +1162,25 @@ runRuleTester('no-duplicate-prefix nested', rule, {
         })
       `,
     },
+    // Global aliases
+    {
+      code: dedent`
+        it.describe('describe foo', () => {
+          it('bar', () => {})
+        })
+      `,
+      errors: [{ column: 13, line: 1, messageId: 'duplicatePrefix' }],
+      output: dedent`
+        it.describe('foo', () => {
+          it('bar', () => {})
+        })
+      `,
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     dedent`
@@ -969,5 +1193,18 @@ runRuleTester('no-duplicate-prefix nested', rule, {
         test('describes things correctly', () => {})
       })
     `,
+    // Global aliases
+    {
+      code: dedent`
+        it.describe('foo', () => {
+          it('bar', () => {})
+        })
+      `,
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
 });

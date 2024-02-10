@@ -227,6 +227,43 @@ runRuleTester('prefer-lowercase-title', rule, {
       ],
       output: 'test.describe.serial.only("foo",  () => {})',
     },
+    // Global aliases
+    {
+      code: "it('Foo',  () => {})",
+      errors: [
+        {
+          column: 4,
+          data: { method: 'test' },
+          endColumn: 9,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "it('foo',  () => {})",
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+    {
+      code: "it.describe('Foo',  () => {})",
+      errors: [
+        {
+          column: 13,
+          data: { method: 'test.describe' },
+          endColumn: 18,
+          line: 1,
+          messageId,
+        },
+      ],
+      output: "it.describe('foo',  () => {})",
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'randomFunction()',
@@ -417,6 +454,8 @@ runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
     },
   ],
   valid: [
+    'test("already lower", () => {});',
+    'test.describe("already lower", () => {});',
     {
       code: 'describe("MyClass", () => {});',
       options: [{ ignoreTopLevelDescribe: true }],
@@ -430,6 +469,23 @@ runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
         });
       `,
       options: [{ ignoreTopLevelDescribe: true }],
+    },
+    // Global aliases
+    {
+      code: 'it("already lower", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+    {
+      code: 'it.describe("already lower", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });

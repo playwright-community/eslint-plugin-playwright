@@ -143,6 +143,31 @@ runRuleTester('max-nested-describe', rule, {
       errors: [{ column: 5, endColumn: 18, endLine: 3, line: 3, messageId }],
       options: [{ max: 2 }],
     },
+    {
+      code: dedent`
+        it.describe('foo', function() {
+          it.describe('bar', function () {
+            it.describe('baz', function () {
+              it.describe('qux', function () {
+                it.describe('quxx', function () {
+                  it.describe('over limit', function () {
+                    it('should get something', () => {
+                      expect(getSomething()).toBe('Something');
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      `,
+      errors: [{ column: 11, endColumn: 22, endLine: 6, line: 6, messageId }],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test.describe("describe tests", () => {});',
@@ -229,6 +254,25 @@ runRuleTester('max-nested-describe', rule, {
         });
       `,
       options: [{ max: 3 }],
+    },
+    {
+      code: dedent`
+        it.describe('foo', () => {
+          it.describe.only('bar', () => {
+            it.describe.skip('baz', () => {
+              it('something', async () => {
+                expect('something').toBe('something');
+              });
+            });
+          });
+        });
+      `,
+      options: [{ max: 3 }],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });

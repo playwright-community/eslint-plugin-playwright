@@ -52,6 +52,19 @@ runRuleTester('prefer-to-have-length', rule, {
       ],
       output: 'expect(files).not.toHaveLength(1)',
     },
+    // Global aliases
+    {
+      code: 'assert(files.length).toBe(1)',
+      errors: [
+        { column: 22, endColumn: 26, line: 1, messageId: 'useToHaveLength' },
+      ],
+      output: 'assert(files).toHaveLength(1)',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect(files).toHaveLength(1)',
@@ -62,5 +75,14 @@ runRuleTester('prefer-to-have-length', rule, {
     `expect(user.getUserName(5)).not.toEqual('Paul')`,
     `expect(user.getUserName(5)).not.toEqual('Paul')`,
     'expect(a)',
+    // Global aliases
+    {
+      code: 'assert(files).toHaveLength(1)',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });

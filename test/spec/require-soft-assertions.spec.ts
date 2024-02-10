@@ -20,6 +20,17 @@ runRuleTester('require-soft-assertions', rule, {
       errors: [{ column: 7, endColumn: 13, line: 1, messageId }],
       output: 'await expect.soft(page.locator("foo")).toHaveText("bar")',
     },
+    // Global aliases
+    {
+      code: 'assert(page).toHaveTitle("baz")',
+      errors: [{ column: 1, endColumn: 7, line: 1, messageId }],
+      output: 'assert.soft(page).toHaveTitle("baz")',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect.soft(page).toHaveTitle("baz")',
@@ -29,5 +40,14 @@ runRuleTester('require-soft-assertions', rule, {
     'expect.poll(() => foo).toBe("bar")',
     'expect["poll"](() => foo).toBe("bar")',
     'expect[`poll`](() => foo).toBe("bar")',
+    // Global aliases
+    {
+      code: 'assert.soft(page).toHaveTitle("baz")',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });

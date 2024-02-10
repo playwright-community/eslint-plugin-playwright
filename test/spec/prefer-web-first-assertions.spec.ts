@@ -640,6 +640,25 @@ runRuleTester('prefer-web-first-assertions', rule, {
       ],
       output: test('await expect(page.locator("howdy")).toBeEditable()'),
     },
+    // Global aliases
+    {
+      code: test('assert(await page.locator(".tweet").isVisible()).toBe(true)'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeVisible', method: 'isVisible' },
+          endColumn: 76,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await assert(page.locator(".tweet")).toBeVisible()'),
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     { code: test('await expect(page.locator(".tweet")).toBeVisible()') },
@@ -650,5 +669,14 @@ runRuleTester('prefer-web-first-assertions', rule, {
     { code: test('let visible = await foo.isVisible()') },
     { code: test('const value = await bar["inputValue"]()') },
     { code: test('const isEditable = await baz[`isEditable`]()') },
+    // Global aliases
+    {
+      code: test('await assert(page.locator(".tweet")).toBeVisible()'),
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });

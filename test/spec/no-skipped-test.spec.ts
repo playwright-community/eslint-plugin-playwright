@@ -185,8 +185,54 @@ runRuleTester('no-skipped-test', rule, {
         },
       ],
     },
+    // Global aliases
+    {
+      code: 'it.skip("skip this test", async ({ page }) => {});',
+      errors: [
+        {
+          column: 4,
+          endColumn: 8,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'it("skip this test", async ({ page }) => {});',
+            },
+          ],
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+    {
+      code: 'it.describe.skip("describe a test", async ({ page }) => {});',
+      errors: [
+        {
+          column: 13,
+          endColumn: 17,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'it.describe("describe a test", async ({ page }) => {});',
+            },
+          ],
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
+    'test("a test", () => {});',
     'test.describe("describe tests", () => {});',
     'test.describe.only("describe focus tests", () => {});',
     'test.describ["only"]("describe focus tests", () => {});',
@@ -204,6 +250,23 @@ runRuleTester('no-skipped-test', rule, {
     {
       code: 'test.skip(browserName === "firefox", "Still working on it");',
       options: [{ allowConditional: true }],
+    },
+    // Global aliases
+    {
+      code: 'it("a test", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+    {
+      code: 'it.describe("describe tests", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });

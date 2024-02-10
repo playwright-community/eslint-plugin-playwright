@@ -6,7 +6,7 @@ export default {
     function checkConditional(node: Rule.Node & Rule.NodeParentExtension) {
       const call = findParent(node, 'CallExpression');
 
-      if (call && isTestCall(call)) {
+      if (call && isTestCall(context, call)) {
         context.report({ messageId: 'conditionalInTest', node });
       }
     }

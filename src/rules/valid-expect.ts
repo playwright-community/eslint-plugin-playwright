@@ -39,9 +39,9 @@ export default {
 
     return {
       CallExpression(node) {
-        if (!isExpectCall(node)) return;
+        if (!isExpectCall(context, node)) return;
 
-        const expectCall = parseExpectCall(node);
+        const expectCall = parseExpectCall(context, node);
         if (!expectCall) {
           context.report({ messageId: 'matcherNotFound', node });
         } else {

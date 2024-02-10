@@ -116,6 +116,25 @@ runRuleTester('no-useless-not', rule, {
       ],
       output: 'expect(locator).toBeVisible',
     },
+    // Global aliases
+    {
+      code: 'assert(locator).not.toBeVisible()',
+      errors: [
+        {
+          column: 17,
+          data: { new: 'toBeHidden', old: 'toBeVisible' },
+          endColumn: 32,
+          line: 1,
+          messageId: 'noUselessNot',
+        },
+      ],
+      output: 'assert(locator).toBeHidden()',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect(locator).toBeVisible()',
@@ -134,5 +153,14 @@ runRuleTester('no-useless-not', rule, {
     'expect(locator).not.toBeChecked()',
     'expect(locator).not.toBeChecked({ checked: false })',
     'expect(locator).not.toBeFocused()',
+    // Global aliases
+    {
+      code: 'assert(locator).toBeVisible()',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });

@@ -58,6 +58,17 @@ runRuleTester('prefer-to-be', rule, {
       errors: [{ column: 32, endColumn: 45, line: 1, messageId: 'useToBe' }],
       output: 'expect(loadMessage()).resolves.toBe(false);',
     },
+    // Global aliases
+    {
+      code: 'assert(value).toEqual("my string");',
+      errors: [{ column: 15, endColumn: 22, line: 1, messageId: 'useToBe' }],
+      output: 'assert(value).toBe("my string");',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect(null).toBeNull();',
@@ -74,6 +85,15 @@ runRuleTester('prefer-to-be', rule, {
     'expect(token).toStrictEqual(/[abc]+/g);',
     "expect(token).toStrictEqual(new RegExp('[abc]+', 'g'));",
     'expect(value).toEqual(dedent`my string`);',
+    // Global aliases
+    {
+      code: 'assert(null).toBeNull();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });
 
@@ -135,6 +155,19 @@ runRuleTester('prefer-to-be: null', rule, {
       ],
       output: 'expect("a string").not.toBeNull();',
     },
+    // Global aliases
+    {
+      code: 'assert(null).toBe(null);',
+      errors: [
+        { column: 14, endColumn: 18, line: 1, messageId: 'useToBeNull' },
+      ],
+      output: 'assert(null).toBeNull();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect(null).toBeNull();',
@@ -152,6 +185,15 @@ runRuleTester('prefer-to-be: null', rule, {
     'expect("a string").toMatchSnapshot(null);',
     'expect("a string").not.toMatchSnapshot();',
     'expect(null).toBe',
+    // Global aliases
+    {
+      code: 'assert(null).toBeNull();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });
 
@@ -213,6 +255,19 @@ runRuleTester('prefer-to-be: undefined', rule, {
       ],
       output: 'expect("a string").toBeDefined();',
     },
+    // Global aliases
+    {
+      code: 'assert(undefined).toBe(undefined);',
+      errors: [
+        { column: 19, endColumn: 23, line: 1, messageId: 'useToBeUndefined' },
+      ],
+      output: 'assert(undefined).toBeUndefined();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 
   valid: [
@@ -226,6 +281,15 @@ runRuleTester('prefer-to-be: undefined', rule, {
     'expect(something).not.toEqual(somethingElse)',
     'expect(undefined).toBe',
     'expect("something");',
+    // Global aliases
+    {
+      code: 'assert(undefined).toBeUndefined();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });
 
@@ -271,6 +335,17 @@ runRuleTester('prefer-to-be: NaN', rule, {
       errors: [{ column: 24, endColumn: 37, line: 1, messageId: 'useToBeNaN' }],
       output: 'expect("a string").not.toBeNaN();',
     },
+    // Global aliases
+    {
+      code: 'assert(NaN).toBe(NaN);',
+      errors: [{ column: 13, endColumn: 17, line: 1, messageId: 'useToBeNaN' }],
+      output: 'assert(NaN).toBeNaN();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect(NaN).toBeNaN();',
@@ -283,6 +358,15 @@ runRuleTester('prefer-to-be: NaN', rule, {
     'expect(something).not.toEqual(somethingElse)',
     'expect(undefined).toBe',
     'expect("something");',
+    // Global aliases
+    {
+      code: 'assert(NaN).toBeNaN();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });
 
@@ -323,6 +407,19 @@ runRuleTester('prefer-to-be: undefined vs defined', rule, {
       ],
       output: 'expect("a string").rejects.toBeDefined();',
     },
+    // Global aliases
+    {
+      code: 'assert(undefined).not.toBeDefined();',
+      errors: [
+        { column: 23, endColumn: 34, line: 1, messageId: 'useToBeUndefined' },
+      ],
+      output: 'assert(undefined).toBeUndefined();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect(NaN).toBeNaN();',
@@ -335,5 +432,14 @@ runRuleTester('prefer-to-be: undefined vs defined', rule, {
     'expect(something).not.toEqual(somethingElse)',
     'expect(undefined).toBe',
     'expect("something");',
+    // Global aliases
+    {
+      code: 'assert(NaN).toBeNaN();',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });

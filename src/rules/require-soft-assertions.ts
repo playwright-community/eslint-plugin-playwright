@@ -5,7 +5,7 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (getExpectType(node) === 'standalone') {
+        if (getExpectType(context, node) === 'standalone') {
           context.report({
             fix: (fixer) => fixer.insertTextAfter(node.callee, '.soft'),
             messageId: 'requireSoft',

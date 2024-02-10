@@ -37,10 +37,42 @@ runRuleTester('prefer-strict-equal', rule, {
         },
       ],
     },
+    // Global aliases
+    {
+      code: 'assert(something).toEqual(somethingElse);',
+      errors: [
+        {
+          column: 19,
+          endColumn: 26,
+          line: 1,
+          messageId: 'useToStrictEqual',
+          suggestions: [
+            {
+              messageId: 'suggestReplaceWithStrictEqual',
+              output: 'assert(something).toStrictEqual(somethingElse);',
+            },
+          ],
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect(something).toStrictEqual(somethingElse);',
     "a().toEqual('b')",
     'expect(a);',
+    // Global aliases
+    {
+      code: 'assert(something).toStrictEqual(somethingElse);',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });

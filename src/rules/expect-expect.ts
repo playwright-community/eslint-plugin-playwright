@@ -3,11 +3,12 @@ import ESTree from 'estree';
 import { dig, isExpectCall, isTestCall } from '../utils/ast';
 
 function isAssertionCall(
+  context: Rule.RuleContext,
   node: ESTree.CallExpression,
   assertFunctionNames: string[],
 ) {
   return (
-    isExpectCall(node) ||
+    isExpectCall(context, node) ||
     assertFunctionNames.find((name) => dig(node.callee, name))
   );
 }
@@ -36,9 +37,11 @@ export default {
 
     return {
       CallExpression(node) {
-        if (isTestCall(node, ['fixme', 'only', 'skip'])) {
+        if (isTestCall(context, node, ['fixme', 'only', 'skip'])) {
           unchecked.push(node);
-        } else if (isAssertionCall(node, options.assertFunctionNames)) {
+        } else if (
+          isAssertionCall(context, node, options.assertFunctionNames)
+        ) {
           const ancestors = sourceCode.getAncestors
             ? sourceCode.getAncestors(node)
             : context.getAncestors();

@@ -63,10 +63,14 @@ export function isPropertyAccessor(
   return getStringValue(node.property) === name;
 }
 
-export function isTestIdentifier(node: ESTree.Node) {
+export function isTestIdentifier(context: Rule.RuleContext, node: ESTree.Node) {
+  const aliases = context.settings.playwright?.globalAliases?.test ?? [];
+  const testNames = ['test', ...aliases];
+  const regex = new RegExp(`^(${testNames.join('|')})$`);
+
   return (
-    isIdentifier(node, 'test') ||
-    (node.type === 'MemberExpression' && isIdentifier(node.object, 'test'))
+    isIdentifier(node, regex) ||
+    (node.type === 'MemberExpression' && isIdentifier(node.object, regex))
   );
 }
 
@@ -108,9 +112,13 @@ export function findParent<T extends ESTree.Node['type']>(
     : findParent(node.parent, type);
 }
 
-export function isTestCall(node: ESTree.CallExpression, modifiers?: string[]) {
+export function isTestCall(
+  context: Rule.RuleContext,
+  node: ESTree.CallExpression,
+  modifiers?: string[],
+) {
   return (
-    isTestIdentifier(node.callee) &&
+    isTestIdentifier(context, node.callee) &&
     !isDescribeCall(node) &&
     (node.callee.type !== 'MemberExpression' ||
       !modifiers ||
@@ -123,10 +131,13 @@ export function isTestCall(node: ESTree.CallExpression, modifiers?: string[]) {
 }
 
 const testHooks = new Set(['afterAll', 'afterEach', 'beforeAll', 'beforeEach']);
-export function isTestHook(node: ESTree.CallExpression) {
+export function isTestHook(
+  context: Rule.RuleContext,
+  node: ESTree.CallExpression,
+) {
   return (
     node.callee.type === 'MemberExpression' &&
-    isIdentifier(node.callee.object, 'test') &&
+    isTestIdentifier(context, node.callee.object) &&
     testHooks.has(getStringValue(node.callee.property))
   );
 }
@@ -135,14 +146,20 @@ const expectSubCommands = new Set(['soft', 'poll']);
 export type ExpectType = 'poll' | 'soft' | 'standalone';
 
 export function getExpectType(
+  context: Rule.RuleContext,
   node: ESTree.CallExpression,
 ): ExpectType | undefined {
-  if (isIdentifier(node.callee, /(^expect|Expect)$/)) {
+  const aliases = context.settings.playwright?.globalAliases?.expect ?? [];
+  const expectNames = ['expect', ...aliases];
+  const regex = new RegExp(`(^(${expectNames.join('|')})|Expect)$`);
+
+  if (isIdentifier(node.callee, regex)) {
     return 'standalone';
   }
 
   if (
     node.callee.type === 'MemberExpression' &&
+    // TODO: Maybe
     isIdentifier(node.callee.object, 'expect')
   ) {
     const type = getStringValue(node.callee.property);
@@ -150,8 +167,11 @@ export function getExpectType(
   }
 }
 
-export function isExpectCall(node: ESTree.CallExpression) {
-  return !!getExpectType(node);
+export function isExpectCall(
+  context: Rule.RuleContext,
+  node: ESTree.CallExpression,
+) {
+  return !!getExpectType(context, node);
 }
 
 export function getMatchers(
