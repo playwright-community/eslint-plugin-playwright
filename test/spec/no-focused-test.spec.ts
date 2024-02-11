@@ -141,6 +141,51 @@ runRuleTester('no-focused-test', rule, {
         },
       ],
     },
+    // Global aliases
+    {
+      code: 'it.only("skip this test", () => {});',
+      errors: [
+        {
+          column: 4,
+          endColumn: 8,
+          line: 1,
+          messageId,
+          suggestions: [
+            {
+              messageId: 'suggestRemoveOnly',
+              output: 'it("skip this test", () => {});',
+            },
+          ],
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+    {
+      code: 'it.describe.only("skip this describe", () => {});',
+      errors: [
+        {
+          column: 13,
+          endColumn: 17,
+          line: 1,
+          messageId,
+          suggestions: [
+            {
+              messageId: 'suggestRemoveOnly',
+              output: 'it.describe("skip this describe", () => {});',
+            },
+          ],
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test.describe("describe tests", () => {});',
@@ -155,5 +200,22 @@ runRuleTester('no-focused-test', rule, {
     'const only = true;',
     'function only() {code: return null };',
     'this.only();',
+    // Global aliases
+    {
+      code: 'it("a test", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
+    {
+      code: 'it.describe("a describe", () => {});',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
 });

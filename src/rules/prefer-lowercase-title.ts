@@ -24,7 +24,7 @@ export default {
       CallExpression(node) {
         const method = isDescribeCall(node)
           ? 'test.describe'
-          : isTestCall(node)
+          : isTestCall(context, node)
           ? 'test'
           : null;
 

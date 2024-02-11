@@ -9,7 +9,7 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(node);
+        const expectCall = parseExpectCall(context, node);
         if (!expectCall || !lengthMatchers.has(expectCall.matcherName)) {
           return;
         }

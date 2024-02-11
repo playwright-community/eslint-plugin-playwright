@@ -59,6 +59,19 @@ runRuleTester('prefer-to-have-count', rule, {
       ],
       output: 'await expect(files).toHaveCount(foo)',
     },
+    // Global aliases
+    {
+      code: 'assert(await files.count()).toBe(1)',
+      errors: [
+        { column: 29, endColumn: 33, line: 1, messageId: 'useToHaveCount' },
+      ],
+      output: 'await assert(files).toHaveCount(1)',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     { code: 'await expect(files).toHaveCount(1)' },
@@ -73,6 +86,15 @@ runRuleTester('prefer-to-have-count', rule, {
     { code: 'expect(a)' },
     {
       code: `expect(await page.evaluate(() => document.querySelectorAll("*").length)).toBe(10);`,
+    },
+    // Global aliases
+    {
+      code: 'await assert(files).toHaveCount(1)',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
     },
   ],
 });

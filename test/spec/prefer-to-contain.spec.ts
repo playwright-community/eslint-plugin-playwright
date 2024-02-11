@@ -170,5 +170,14 @@ runRuleTester('prefer-to-contain', rule, {
     'expect(a.includes(...[])).toBe(true)',
     'expect(a.includes(b)).toBe(...true)',
     'expect(a);',
+    // Global aliases
+    {
+      code: 'assert(a).toContain(b);',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
 });

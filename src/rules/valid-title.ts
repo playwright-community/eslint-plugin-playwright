@@ -111,7 +111,7 @@ export default {
     return {
       CallExpression(node) {
         const isDescribe = isDescribeCall(node);
-        const isTest = isTestCall(node);
+        const isTest = isTestCall(context, node);
         if (!isDescribe && !isTest) {
           return;
         }

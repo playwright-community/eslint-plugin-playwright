@@ -27,39 +27,16 @@ runRuleTester('expect-expect', rule, {
         })
       `,
       errors: [{ messageId: 'noAssertions' }],
-      name: 'Global settings no false positives',
-      settings: {
-        playwright: {
-          additionalAssertFunctionNames: ['wayComplexCustomCondition'],
-        },
-      },
+      name: 'Custom assert function',
+      options: [{ assertFunctionNames: ['wayComplexCustomCondition'] }],
     },
     {
-      code: dedent`
-        test('should fail', async ({ page }) => {
-          await assertCustomCondition(page)
-        })
-      `,
+      code: 'it("should pass", () => hi(true).toBeDefined())',
       errors: [{ messageId: 'noAssertions' }],
-      name: 'Rule settings no false positives',
-      options: [
-        { additionalAssertFunctionNames: ['wayComplexCustomCondition'] },
-      ],
-    },
-    {
-      code: dedent`
-        test('should fail', async ({ page }) => {
-          await assertCustomCondition(page)
-        })
-      `,
-      errors: [{ messageId: 'noAssertions' }],
-      name: 'Global settings no false positives',
-      options: [
-        { additionalAssertFunctionNames: ['wayComplexRuleCustomCondition'] },
-      ],
+      name: 'Global aliases',
       settings: {
         playwright: {
-          additionalAssertFunctionNames: ['wayComplexGlobalCustomCondition'],
+          globalAliases: { test: ['it'] },
         },
       },
     },
@@ -94,11 +71,7 @@ runRuleTester('expect-expect', rule, {
         })
       `,
       name: 'Custom assert function',
-      settings: {
-        playwright: {
-          additionalAssertFunctionNames: ['assertCustomCondition'],
-        },
-      },
+      options: [{ assertFunctionNames: ['assertCustomCondition'] }],
     },
     {
       code: dedent`
@@ -107,38 +80,23 @@ runRuleTester('expect-expect', rule, {
         })
       `,
       name: 'Custom assert class method',
+      options: [{ assertFunctionNames: ['assertCustomCondition'] }],
+    },
+    {
+      code: 'it("should pass", () => expect(true).toBeDefined())',
+      name: 'Global alias - test',
       settings: {
         playwright: {
-          additionalAssertFunctionNames: ['assertCustomCondition'],
+          globalAliases: { test: ['it'] },
         },
       },
     },
     {
-      code: dedent`
-        test('should fail', async ({ page }) => {
-          await assertCustomCondition(page)
-        })
-      `,
-      name: 'Rule settings only',
-      options: [{ additionalAssertFunctionNames: ['assertCustomCondition'] }],
-    },
-    {
-      code: dedent`
-        test('should fail', async ({ page }) => {
-          await assertCustomCondition(page)
-        })
-
-        test('complex failure', async ({ page }) => {
-          await wayComplexCustomCondition(page)
-        })
-      `,
-      name: 'Global and rule settings combine rather than override',
-      options: [
-        { additionalAssertFunctionNames: ['wayComplexCustomCondition'] },
-      ],
+      code: 'test("should pass", () => assert(true).toBeDefined())',
+      name: 'Global alias - assert',
       settings: {
         playwright: {
-          additionalAssertFunctionNames: ['assertCustomCondition'],
+          globalAliases: { expect: ['assert'] },
         },
       },
     },

@@ -14,7 +14,7 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(node);
+        const expectCall = parseExpectCall(context, node);
         if (!expectCall) return;
 
         // As the name implies, this rule only implies if the not modifier is

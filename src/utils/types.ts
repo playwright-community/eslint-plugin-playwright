@@ -15,6 +15,9 @@ export type KnownCallExpression = ESTree.CallExpression & {
 
 export interface Settings {
   playwright?: {
-    additionalAssertFunctionNames?: readonly string[];
+    globalAliases?: {
+      expect?: string[];
+      test?: string[];
+    };
   };
 }

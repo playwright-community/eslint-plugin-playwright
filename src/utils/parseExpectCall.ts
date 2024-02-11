@@ -18,9 +18,10 @@ export interface ParsedExpectCall {
 }
 
 export function parseExpectCall(
+  context: Rule.RuleContext,
   node: ESTree.CallExpression & Rule.NodeParentExtension,
 ): ParsedExpectCall | undefined {
-  if (!isExpectCall(node)) {
+  if (!isExpectCall(context, node)) {
     return;
   }
 

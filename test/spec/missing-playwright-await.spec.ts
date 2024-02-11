@@ -235,6 +235,18 @@ runRuleTester('missing-playwright-await', rule, {
         `),
       ),
     },
+    {
+      code: test('assert(page).toBeChecked()'),
+      errors: [
+        { column: 28, endColumn: 34, endLine: 1, line: 1, messageId: 'expect' },
+      ],
+      output: test('await assert(page).toBeChecked()'),
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     // Basic
@@ -338,6 +350,23 @@ runRuleTester('missing-playwright-await', rule, {
           return bar
         `),
       ),
+    },
+    // Global aliases
+    {
+      code: test('await assert(page).toHaveText("text")'),
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
+    {
+      code: test('await assert.soft(page).toHaveText("text")'),
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
     },
   ],
 });

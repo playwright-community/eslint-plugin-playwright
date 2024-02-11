@@ -182,6 +182,15 @@ runRuleTester('no-conditional-in-test', rule, {
       `,
       errors: [{ column: 5, endColumn: 17, endLine: 3, line: 3, messageId }],
     },
+    {
+      code: 'it("foo", () => { if (true) { expect(1).toBe(1); } });',
+      errors: [{ column: 19, endColumn: 51, endLine: 1, line: 1, messageId }],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test("foo", () => { expect(1).toBe(1); });',
@@ -284,5 +293,14 @@ runRuleTester('no-conditional-in-test', rule, {
         await page.waitForRequest(request => request.url() === 'foo' && request.method() === 'GET')
       });
     })`,
+    // Global aliases
+    {
+      code: 'it("foo", () => { expect(1).toBe(1); });',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
 });

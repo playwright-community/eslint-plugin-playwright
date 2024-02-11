@@ -161,6 +161,18 @@ runRuleTester('require-top-level-describe', rule, {
       ],
       options: [{ maxTopLevelDescribes: 1 }],
     },
+    // Global aliases
+    {
+      code: 'it.beforeAll(() => {})',
+      errors: [
+        { column: 1, endColumn: 13, line: 1, messageId: 'unexpectedHook' },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'foo()',
@@ -197,6 +209,15 @@ runRuleTester('require-top-level-describe', rule, {
         });
       `,
       options: [{ maxTopLevelDescribes: 1 }],
+    },
+    // Global aliases
+    {
+      code: 'it.info()',
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });

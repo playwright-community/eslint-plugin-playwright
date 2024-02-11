@@ -214,6 +214,18 @@ runRuleTester('valid-expect', rule, {
         },
       ],
     },
+    // Global aliases
+    {
+      code: 'assert(foo)',
+      errors: [
+        { column: 1, endColumn: 12, line: 1, messageId: 'matcherNotFound' },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expectPayButtonToBeEnabled()',
@@ -246,6 +258,15 @@ runRuleTester('valid-expect', rule, {
     {
       code: 'expect(1, 2, 3).toBe(4)',
       options: [{ maxArgs: 3 }],
+    },
+    // Global aliases
+    {
+      code: 'assert("something").toBe("else")',
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
     },
   ],
 });

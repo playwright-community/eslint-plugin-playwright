@@ -10,7 +10,7 @@ export default {
 
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(node);
+        const expectCall = parseExpectCall(context, node);
         if (!expectCall) return;
 
         Object.entries(restrictedChains)

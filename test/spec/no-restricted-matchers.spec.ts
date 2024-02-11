@@ -125,6 +125,25 @@ runRuleTester('no-restricted-matchers', rule, {
       ],
       options: [{ 'not.toHaveText': 'Use not.toContainText instead' }],
     },
+    // Global aliases
+    {
+      code: 'assert(a).toBe(b)',
+      errors: [
+        {
+          column: 11,
+          data: { message: '', restriction: 'toBe' },
+          endColumn: 15,
+          line: 1,
+          messageId: 'restricted',
+        },
+      ],
+      options: [{ toBe: null }],
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
   ],
   valid: [
     'expect(a)',
@@ -168,6 +187,16 @@ runRuleTester('no-restricted-matchers', rule, {
     {
       code: 'expect(a).nothing(b)',
       options: [{ not: null }],
+    },
+    // Global aliases
+    {
+      code: 'assert(a).nothing(b)',
+      options: [{ not: null }],
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
     },
   ],
 });
