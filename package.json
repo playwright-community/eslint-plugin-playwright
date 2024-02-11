@@ -35,9 +35,11 @@
     "ts": "tsc --noEmit"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@mskelton/eslint-config": "^8.4.0",
     "@types/eslint": "^8.44.3",
     "@types/estree": "^1.0.2",
+    "@types/node": "^20.11.17",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
     "dedent": "^1.5.1",
