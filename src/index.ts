@@ -7,6 +7,7 @@ import noElementHandle from './rules/no-element-handle';
 import noEval from './rules/no-eval';
 import noFocusedTest from './rules/no-focused-test';
 import noForceOption from './rules/no-force-option';
+import noGetByTitle from './rules/no-get-by-title';
 import noNestedStep from './rules/no-nested-step';
 import noNetworkidle from './rules/no-networkidle';
 import noNthMethods from './rules/no-nth-methods';
@@ -41,6 +42,7 @@ const index = {
     'no-eval': noEval,
     'no-focused-test': noFocusedTest,
     'no-force-option': noForceOption,
+    'no-get-by-title': noGetByTitle,
     'no-nested-step': noNestedStep,
     'no-networkidle': noNetworkidle,
     'no-nth-methods': noNthMethods,
