@@ -659,6 +659,45 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       },
     },
+    // Variable references
+    {
+      code: test(`
+        const myValue = await page.locator('.foo').isVisible();
+        expect(myValue).toBe(true);
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toBeVisible', method: 'isVisible' },
+          endColumn: 24,
+          line: 3,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        const myValue = page.locator('.foo');
+        await expect(myValue).toBeVisible();
+      `),
+    },
+    {
+      code: test(`
+        const content = await foo.textContent();
+        expect(content).toBe("bar")
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'textContent' },
+          endColumn: 24,
+          line: 3,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        const content = foo;
+        await expect(content).toHaveText("bar")
+      `),
+    },
   ],
   valid: [
     { code: test('await expect(page.locator(".tweet")).toBeVisible()') },
@@ -677,6 +716,13 @@ runRuleTester('prefer-web-first-assertions', rule, {
           globalAliases: { expect: ['assert'] },
         },
       },
+    },
+    // Variable references
+    {
+      code: test(`
+        const myValue = page.locator('.foo');
+        expect(myValue).toBeVisible();
+      `),
     },
   ],
 });
