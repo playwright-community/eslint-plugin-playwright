@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: mskelton/setup-pnpm@v2
         with:
-          node-version: '18.x'
+          node-version: '20.x'
       - run: pnpm test
   release:
     needs: test
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node
         uses: mskelton/setup-pnpm@v2
         with:
-          node-version: '18.x'
+          node-version: '20.x'
       - name: Build
         run: pnpm build
       - name: Release
