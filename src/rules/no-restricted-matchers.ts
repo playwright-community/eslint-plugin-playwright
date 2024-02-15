@@ -46,7 +46,7 @@ export default {
             context.report({
               data: { message: message ?? '', restriction },
               loc: {
-                end: chain[chain.length - 1].loc!.end,
+                end: chain.at(-1)!.loc!.end,
                 start: chain[0].loc!.start,
               },
               messageId: message ? 'restrictedWithMessage' : 'restricted',
