@@ -7,6 +7,7 @@ import {
   isIdentifier,
   isPropertyAccessor,
 } from '../utils/ast';
+import { getSourceCode } from '../utils/misc';
 
 const validTypes = new Set([
   'AwaitExpression',
@@ -100,7 +101,7 @@ function getCallType(
 
 export default {
   create(context) {
-    const sourceCode = context.sourceCode ?? context.getSourceCode();
+    const sourceCode = getSourceCode(context);
     const options = context.options[0] || {};
     const awaitableMatchers = new Set([
       ...expectPlaywrightMatchers,
