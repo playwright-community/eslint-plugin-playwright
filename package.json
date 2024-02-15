@@ -12,6 +12,9 @@
   "workspaces": [
     "examples"
   ],
+  "engines": {
+    "node": ">=16.6.0"
+  },
   "types": "./dist/index.d.ts",
   "exports": {
     "import": {

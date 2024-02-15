@@ -209,3 +209,13 @@ export function isPageMethod(node: ESTree.CallExpression, name: string) {
     isPropertyAccessor(node.callee, name)
   );
 }
+
+/** Returns a boolean to indicate if the node is a function or arrow function */
+export function isFunction(
+  node: ESTree.Node,
+): node is ESTree.FunctionExpression | ESTree.ArrowFunctionExpression {
+  return (
+    node.type === 'ArrowFunctionExpression' ||
+    node.type === 'FunctionExpression'
+  );
+}
