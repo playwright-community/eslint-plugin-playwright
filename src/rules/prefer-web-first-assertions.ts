@@ -136,7 +136,7 @@ export default {
                 : [];
 
             const methodEnd = methodArgs.length
-              ? methodArgs[methodArgs.length - 1]!.range![1] + 1
+              ? methodArgs.at(-1)!.range![1] + 1
               : callee.property.range![1] + 2;
 
             const fixes = [

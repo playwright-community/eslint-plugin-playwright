@@ -3,7 +3,7 @@ import ESTree from 'estree';
 import { getStringValue, isBooleanLiteral } from '../utils/ast';
 
 function isForceOptionEnabled(node: ESTree.CallExpression) {
-  const arg = node.arguments[node.arguments.length - 1];
+  const arg = node.arguments.at(-1);
 
   return (
     arg?.type === 'ObjectExpression' &&
