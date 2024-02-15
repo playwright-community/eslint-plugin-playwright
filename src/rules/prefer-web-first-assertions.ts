@@ -1,6 +1,7 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
 import { getRawValue, getStringValue, isBooleanLiteral } from '../utils/ast';
+import { getSourceCode } from '../utils/misc';
 import { parseExpectCall } from '../utils/parseExpectCall';
 
 type MethodConfig = {
@@ -53,9 +54,26 @@ const supportedMatchers = new Set([
   'toBeFalsy',
 ]);
 
-export function getMatcherCall(node: ESTree.Node) {
-  const grandparent = (node as any).parent?.parent as ESTree.Node;
-  return grandparent.type === 'CallExpression' ? grandparent : undefined;
+/**
+ * If the expect call argument is a variable reference, finds the variable
+ * initializer.
+ */
+function dereference(context: Rule.RuleContext, node: ESTree.Node) {
+  if (node.type !== 'Identifier') {
+    return node;
+  }
+
+  const sourceCode = getSourceCode(context);
+  const scope = sourceCode.getScope(node);
+
+  // Find the variable declaration and return the initializer
+  for (const ref of scope.references) {
+    const refParent = (ref.identifier as Rule.Node).parent;
+
+    if (refParent.type === 'VariableDeclarator') {
+      return refParent.init;
+    }
+  }
 }
 
 export default {
@@ -65,8 +83,9 @@ export default {
         const expectCall = parseExpectCall(context, node);
         if (!expectCall) return;
 
-        const [arg] = node.arguments;
+        const arg = dereference(context, node.arguments[0]);
         if (
+          !arg ||
           arg.type !== 'AwaitExpression' ||
           arg.argument.type !== 'CallExpression' ||
           arg.argument.callee.type !== 'MemberExpression'

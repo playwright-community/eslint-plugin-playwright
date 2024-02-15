@@ -2,12 +2,12 @@ import { RuleTester } from 'eslint';
 
 /**
  * @example
- * import rule from '../../src/rules/missing-playwright-await';
+ *   import rule from '../../src/rules/missing-playwright-await';
  *
- * runRuleTester('missing-playwright-await', rule, {
+ *   runRuleTester('missing-playwright-await', rule, {
  *   invalid: ['expect(page.locator('checkbox')).toBeChecked()'],
  *   valid: ['await expect(page.locator('checkbox')).toBeChecked()'],
- * });
+ *   });
  */
 export function runRuleTester(...args: Parameters<RuleTester['run']>) {
   const config = {

@@ -5,6 +5,7 @@ import {
   isBooleanLiteral,
   isPropertyAccessor,
 } from '../utils/ast';
+import { getSourceCode } from '../utils/misc';
 import { parseExpectCall } from '../utils/parseExpectCall';
 import { KnownCallExpression } from '../utils/types';
 
@@ -48,7 +49,7 @@ export default {
 
         context.report({
           fix(fixer) {
-            const sourceCode = context.sourceCode ?? context.getSourceCode();
+            const sourceCode = getSourceCode(context);
 
             // We need to negate the expectation if the current expected
             // value is itself negated by the "not" modifier
