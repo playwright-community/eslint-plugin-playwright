@@ -5,7 +5,6 @@ import {
   isBooleanLiteral,
   isPropertyAccessor,
 } from '../utils/ast';
-import { getSourceCode } from '../utils/misc';
 import { parseExpectCall } from '../utils/parseExpectCall';
 import { KnownCallExpression } from '../utils/types';
 
@@ -49,8 +48,6 @@ export default {
 
         context.report({
           fix(fixer) {
-            const sourceCode = getSourceCode(context);
-
             // We need to negate the expectation if the current expected
             // value is itself negated by the "not" modifier
             const addNotModifier =
@@ -71,7 +68,7 @@ export default {
               // replace the matcher argument with the value from the "includes"
               fixer.replaceText(
                 expectCall.args[0],
-                sourceCode.getText(includesCall.arguments[0]),
+                context.sourceCode.getText(includesCall.arguments[0]),
               ),
             ];
 

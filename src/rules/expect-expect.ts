@@ -1,7 +1,6 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
 import { dig, isExpectCall, isTestCall } from '../utils/ast';
-import { getSourceCode } from '../utils/misc';
 
 function isAssertionCall(
   context: Rule.RuleContext,
@@ -21,7 +20,6 @@ export default {
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
     };
 
-    const sourceCode = getSourceCode(context);
     const unchecked: ESTree.CallExpression[] = [];
 
     function checkExpressions(nodes: ESTree.Node[]) {
@@ -43,10 +41,7 @@ export default {
         } else if (
           isAssertionCall(context, node, options.assertFunctionNames)
         ) {
-          const ancestors = sourceCode.getAncestors
-            ? sourceCode.getAncestors(node)
-            : context.getAncestors();
-
+          const ancestors = context.sourceCode.getAncestors(node);
           checkExpressions(ancestors);
         }
       },

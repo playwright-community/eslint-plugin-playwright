@@ -7,7 +7,6 @@ import {
   isIdentifier,
   isPropertyAccessor,
 } from '../utils/ast';
-import { getSourceCode } from '../utils/misc';
 
 const validTypes = new Set([
   'AwaitExpression',
@@ -101,7 +100,6 @@ function getCallType(
 
 export default {
   create(context) {
-    const sourceCode = getSourceCode(context);
     const options = context.options[0] || {};
     const awaitableMatchers = new Set([
       ...expectPlaywrightMatchers,
@@ -136,7 +134,7 @@ export default {
       // find where it is referenced. When we find the reference, we can
       // re-check validity.
       if (node.parent.type === 'VariableDeclarator') {
-        const scope = sourceCode.getScope(node.parent.parent);
+        const scope = context.sourceCode.getScope(node.parent.parent);
 
         for (const ref of scope.references) {
           const refParent = (ref.identifier as Rule.Node).parent;

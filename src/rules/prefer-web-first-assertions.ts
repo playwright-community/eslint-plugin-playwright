@@ -1,7 +1,6 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
 import { getRawValue, getStringValue, isBooleanLiteral } from '../utils/ast';
-import { getSourceCode } from '../utils/misc';
 import { parseExpectCall } from '../utils/parseExpectCall';
 
 type MethodConfig = {
@@ -63,8 +62,7 @@ function dereference(context: Rule.RuleContext, node: ESTree.Node) {
     return node;
   }
 
-  const sourceCode = getSourceCode(context);
-  const scope = sourceCode.getScope(node);
+  const scope = context.sourceCode.getScope(node);
 
   // Find the variable declaration and return the initializer
   for (const ref of scope.references) {

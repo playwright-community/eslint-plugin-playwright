@@ -1,7 +1,7 @@
-import { AST, Rule, Scope, SourceCode } from 'eslint';
+import { AST, Rule, Scope } from 'eslint';
 import * as ESTree from 'estree';
 import { getStringValue, isFunction, isPageMethod } from '../utils/ast';
-import { getSourceCode, truthy } from '../utils/misc';
+import { truthy } from '../utils/misc';
 
 /** Collect all variable references in the parent scopes recursively. */
 function collectVariables(scope: Scope.Scope | null): string[] {
@@ -48,11 +48,14 @@ function addArgument(
 }
 
 /** Get the opening parenthesis of the function. */
-function getParen(sourceCode: SourceCode, node: ESTree.Node): AST.Token | null {
-  let token: AST.Token | null = sourceCode.getFirstToken(node);
+function getParen(
+  context: Rule.RuleContext,
+  node: ESTree.Node,
+): AST.Token | null {
+  let token: AST.Token | null = context.sourceCode.getFirstToken(node);
 
   while (token && token.value !== '(') {
-    token = sourceCode.getTokenAfter(token);
+    token = context.sourceCode.getTokenAfter(token);
   }
 
   return token;
@@ -60,7 +63,7 @@ function getParen(sourceCode: SourceCode, node: ESTree.Node): AST.Token | null {
 
 /** Add a parameter to the function. */
 function addParam(
-  sourceCode: SourceCode,
+  context: Rule.RuleContext,
   fixer: Rule.RuleFixer,
   node: ESTree.ArrowFunctionExpression | ESTree.FunctionExpression,
   refs: string,
@@ -77,7 +80,7 @@ function addParam(
   }
 
   // If the function has no params, add the reference after the opening parenthesis
-  const token = getParen(sourceCode, node);
+  const token = getParen(context, node);
   return token ? fixer.insertTextAfter(token, `[${refs}]`) : null;
 }
 
@@ -90,8 +93,7 @@ export default {
         const [fn] = node.arguments;
         if (!fn || !isFunction(fn)) return;
 
-        const sourceCode = getSourceCode(context);
-        const { through, upper } = sourceCode.getScope(fn.body);
+        const { through, upper } = context.sourceCode.getScope(fn.body);
         const allRefs = new Set(collectVariables(upper));
 
         // This logic is confusing at first. If we find a variable within the
@@ -120,7 +122,7 @@ export default {
 
                 return [
                   addArgument(fixer, node, refs),
-                  addParam(sourceCode, fixer, fn, refs),
+                  addParam(context, fixer, fn, refs),
                 ].filter(truthy);
               },
             });
