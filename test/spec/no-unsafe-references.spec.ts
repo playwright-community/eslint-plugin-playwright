@@ -191,6 +191,56 @@ runRuleTester('no-unsafe-references', rule, {
         })
       `,
     },
+    {
+      code: dedent`
+        const x = 10
+        const y = 12
+        const result = await page.evaluate(([x]) => {
+          return Promise.resolve(x + y);
+        }, [x]);
+      `,
+      errors: [
+        {
+          column: 30,
+          data: { variable: 'y' },
+          line: 4,
+          messageId,
+        },
+      ],
+      name: 'Adding to existing arg list',
+      output: dedent`
+        const x = 10
+        const y = 12
+        const result = await page.evaluate(([x, y]) => {
+          return Promise.resolve(x + y);
+        }, [x, y]);
+      `,
+    },
+    {
+      code: dedent`
+        const x = 10
+        const y = 12
+        const result = await page.evaluate((x) => {
+          return Promise.resolve(x + y);
+        }, x);
+      `,
+      errors: [
+        {
+          column: 30,
+          data: { variable: 'y' },
+          line: 4,
+          messageId,
+        },
+      ],
+      name: 'Converting a single argument to an array',
+      output: dedent`
+        const x = 10
+        const y = 12
+        const result = await page.evaluate(([x, y]) => {
+          return Promise.resolve(x + y);
+        }, [x, y]);
+      `,
+    },
   ],
   valid: [
     { code: 'page.pause()' },
