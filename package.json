@@ -35,6 +35,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
+    "test:watch": "jest --watch --no-verbose",
     "ts": "tsc --noEmit"
   },
   "devDependencies": {
