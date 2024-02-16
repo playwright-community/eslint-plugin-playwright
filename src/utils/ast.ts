@@ -101,6 +101,10 @@ export function isDescribeCall(node: ESTree.Node): boolean {
     : false;
 }
 
+export function getParent(node: ESTree.Node): ESTree.Node | undefined {
+  return (node as any).parent;
+}
+
 export function findParent<T extends ESTree.Node['type']>(
   node: NodeWithParent,
   type: T,

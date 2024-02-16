@@ -1,6 +1,11 @@
 import { AST, Rule, Scope } from 'eslint';
 import * as ESTree from 'estree';
-import { getStringValue, isFunction, isPageMethod } from '../utils/ast';
+import {
+  getParent,
+  getStringValue,
+  isFunction,
+  isPageMethod,
+} from '../utils/ast';
 import { truthy } from '../utils/misc';
 
 /** Collect all variable references in the parent scopes recursively. */
@@ -101,6 +106,10 @@ export default {
         // If a variable is used in the function, but not declared in the parent,
         // then it's likely a global variable such as `Promise` or `console`.
         through
+          .filter((ref) => {
+            const parent = getParent(ref.identifier);
+            return (parent?.type as string) !== 'TSTypeReference';
+          })
           .filter((ref) => allRefs.has(ref.identifier.name))
           .forEach((ref, i, arr) => {
             const descriptor: Rule.ReportDescriptor = {

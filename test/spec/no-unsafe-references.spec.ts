@@ -316,5 +316,39 @@ runRuleTester('no-unsafe-references', rule, {
       `,
       name: 'Multi-level scopes',
     },
+    // TypeScript
+    {
+      code: dedent`
+        type X = number;
+        const result = await page.evaluate(() => {
+          const x = 10 as X;
+          return Promise.resolve(x);
+        });
+      `,
+      name: 'TypeScript - variable assignment of type',
+      parser: require.resolve('@typescript-eslint/parser'),
+    },
+    {
+      code: dedent`
+        type X = number;
+        const result = await page.evaluate(() => {
+          const foo = (bar: X) => bar;
+          return Promise.resolve(foo(10));
+        });
+      `,
+      name: 'TypeScript - parameter type',
+      parser: require.resolve('@typescript-eslint/parser'),
+    },
+    {
+      code: dedent`
+        type X = number;
+        const result = await page.evaluate(() => {
+          const x: X = 10;
+          return Promise.resolve(x);
+        });
+      `,
+      name: 'TypeScript - casting',
+      parser: require.resolve('@typescript-eslint/parser'),
+    },
   ],
 });
