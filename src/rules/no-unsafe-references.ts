@@ -5,7 +5,7 @@ import { getSourceCode, truthy } from '../utils/misc';
 
 /** Collect all variable references in the parent scopes recursively. */
 function collectVariables(scope: Scope.Scope | null): string[] {
-  if (!scope) return [];
+  if (!scope || scope.type === 'global') return [];
 
   return [
     ...collectVariables(scope.upper),
