@@ -1,6 +1,6 @@
 import { AST, Rule, Scope, SourceCode } from 'eslint';
 import * as ESTree from 'estree';
-import { isFunction, isPageMethod } from '../utils/ast';
+import { getStringValue, isFunction, isPageMethod } from '../utils/ast';
 import { getSourceCode, truthy } from '../utils/misc';
 
 /** Collect all variable references in the parent scopes recursively. */
@@ -30,15 +30,21 @@ function addArgument(
 
   // If there are at least two arguments, we can add the references after the
   // last element of the second argument, which should be an array.
-  const arr = node.arguments.at(-1);
-  if (!arr || arr.type !== 'ArrayExpression') return;
+  const arg = node.arguments.at(-1);
+  if (!arg) return;
+
+  // If the second argument is not an array, we have to replace it with an array
+  // containing the existing argument and the new references.
+  if (arg.type !== 'ArrayExpression') {
+    return fixer.replaceText(arg, `[${getStringValue(arg)}, ${refs}]`);
+  }
 
   // It's possible the array is provided but empty, in which case we can just
   // replace it with the references.
-  const lastItem = arr.elements.at(-1);
+  const lastItem = arg.elements.at(-1);
   return lastItem
     ? fixer.insertTextAfter(lastItem, `, ${refs}`)
-    : fixer.replaceText(arr, `[${refs}]`);
+    : fixer.replaceText(arg, `[${refs}]`);
 }
 
 /** Get the opening parenthesis of the function. */
@@ -62,7 +68,12 @@ function addParam(
   // If the function has params, add the reference after the last one
   const lastParam = node.params.at(-1);
   if (lastParam) {
-    return fixer.insertTextAfter(lastParam, `, ${refs}`);
+    // If the last param is an array, add the reference after the last element
+    // otherwise, replace the last param with an array containing the existing
+    // param and the references.
+    return lastParam.type === 'ArrayPattern'
+      ? fixer.insertTextAfter(lastParam.elements.at(-1)!, `, ${refs}`)
+      : fixer.replaceText(lastParam, `[${getStringValue(lastParam)}, ${refs}]`);
   }
 
   // If the function has no params, add the reference after the opening parenthesis
