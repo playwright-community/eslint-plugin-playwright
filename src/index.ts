@@ -16,6 +16,7 @@ import noPagePause from './rules/no-page-pause';
 import noRawLocators from './rules/no-raw-locators';
 import noRestrictedMatchers from './rules/no-restricted-matchers';
 import noSkippedTest from './rules/no-skipped-test';
+import noStandaloneExpect from './rules/no-standalone-expect';
 import noUnsafeReferences from './rules/no-unsafe-references';
 import noUselessAwait from './rules/no-useless-await';
 import noUselessNot from './rules/no-useless-not';
@@ -53,6 +54,7 @@ const index = {
     'no-raw-locators': noRawLocators,
     'no-restricted-matchers': noRestrictedMatchers,
     'no-skipped-test': noSkippedTest,
+    'no-standalone-expect': noStandaloneExpect,
     'no-unsafe-references': noUnsafeReferences,
     'no-useless-await': noUselessAwait,
     'no-useless-not': noUselessNot,
@@ -87,6 +89,7 @@ const sharedConfig = {
     'playwright/no-networkidle': 'error',
     'playwright/no-page-pause': 'warn',
     'playwright/no-skipped-test': 'warn',
+    'playwright/no-standalone-expect': 'error',
     'playwright/no-unsafe-references': 'error',
     'playwright/no-useless-await': 'warn',
     'playwright/no-useless-not': 'warn',

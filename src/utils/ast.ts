@@ -132,9 +132,7 @@ export function isTestCall(
       !modifiers ||
       modifiers?.includes(getStringValue(node.callee.property))) &&
     node.arguments.length === 2 &&
-    ['ArrowFunctionExpression', 'FunctionExpression'].includes(
-      node.arguments[1].type,
-    )
+    isFunction(node.arguments[1])
   );
 }
 
@@ -218,10 +216,14 @@ export function isPageMethod(node: ESTree.CallExpression, name: string) {
   );
 }
 
+export type FunctionExpression = (
+  | ESTree.ArrowFunctionExpression
+  | ESTree.FunctionExpression
+) &
+  Rule.NodeParentExtension;
+
 /** Returns a boolean to indicate if the node is a function or arrow function */
-export function isFunction(
-  node: ESTree.Node,
-): node is ESTree.FunctionExpression | ESTree.ArrowFunctionExpression {
+export function isFunction(node: ESTree.Node): node is FunctionExpression {
   return (
     node.type === 'ArrowFunctionExpression' ||
     node.type === 'FunctionExpression'
