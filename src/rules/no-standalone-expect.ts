@@ -4,10 +4,8 @@ import {
   findParent,
   getExpectType,
   getParent,
-  getStringValue,
   isDescribeCall,
   isFunction,
-  isIdentifier,
   isTestCall,
 } from '../utils/ast';
 
