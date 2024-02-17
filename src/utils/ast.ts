@@ -63,9 +63,13 @@ export function isPropertyAccessor(
   return getStringValue(node.property) === name;
 }
 
-export function isTestIdentifier(context: Rule.RuleContext, node: ESTree.Node) {
+export function getTestNames(context: Rule.RuleContext) {
   const aliases = context.settings.playwright?.globalAliases?.test ?? [];
-  const testNames = ['test', ...aliases];
+  return ['test', ...aliases];
+}
+
+export function isTestIdentifier(context: Rule.RuleContext, node: ESTree.Node) {
+  const testNames = getTestNames(context);
   const regex = new RegExp(`^(${testNames.join('|')})$`);
 
   return (
