@@ -5,6 +5,7 @@ import missingPlaywrightAwait from './rules/missing-playwright-await';
 import noCommentedOutTests from './rules/no-commented-out-tests';
 import noConditionalExpect from './rules/no-conditional-expect';
 import noConditionalInTest from './rules/no-conditional-in-test';
+import noDuplicateHooks from './rules/no-duplicate-hooks';
 import noElementHandle from './rules/no-element-handle';
 import noEval from './rules/no-eval';
 import noFocusedTest from './rules/no-focused-test';
@@ -46,6 +47,7 @@ const index = {
     'no-commented-out-tests': noCommentedOutTests,
     'no-conditional-expect': noConditionalExpect,
     'no-conditional-in-test': noConditionalInTest,
+    'no-duplicate-hooks': noDuplicateHooks,
     'no-element-handle': noElementHandle,
     'no-eval': noEval,
     'no-focused-test': noFocusedTest,
