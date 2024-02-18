@@ -22,6 +22,7 @@ import noUselessAwait from './rules/no-useless-await';
 import noUselessNot from './rules/no-useless-not';
 import noWaitForSelector from './rules/no-wait-for-selector';
 import noWaitForTimeout from './rules/no-wait-for-timeout';
+import preferHooksOnTop from './rules/prefer-hooks-on-top';
 import preferLowercaseTitle from './rules/prefer-lowercase-title';
 import preferStrictEqual from './rules/prefer-strict-equal';
 import preferToBe from './rules/prefer-to-be';
@@ -60,6 +61,7 @@ const index = {
     'no-useless-not': noUselessNot,
     'no-wait-for-selector': noWaitForSelector,
     'no-wait-for-timeout': noWaitForTimeout,
+    'prefer-hooks-on-top': preferHooksOnTop,
     'prefer-lowercase-title': preferLowercaseTitle,
     'prefer-strict-equal': preferStrictEqual,
     'prefer-to-be': preferToBe,
