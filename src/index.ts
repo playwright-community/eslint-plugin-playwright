@@ -1,5 +1,6 @@
 import globals from 'globals';
 import expectExpect from './rules/expect-expect';
+import maxExpects from './rules/max-expects';
 import maxNestedDescribe from './rules/max-nested-describe';
 import missingPlaywrightAwait from './rules/missing-playwright-await';
 import noCommentedOutTests from './rules/no-commented-out-tests';
@@ -42,6 +43,7 @@ const index = {
   configs: {},
   rules: {
     'expect-expect': expectExpect,
+    'max-expects': maxExpects,
     'max-nested-describe': maxNestedDescribe,
     'missing-playwright-await': missingPlaywrightAwait,
     'no-commented-out-tests': noCommentedOutTests,
