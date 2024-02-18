@@ -26,6 +26,7 @@ import noUselessNot from './rules/no-useless-not';
 import noWaitForSelector from './rules/no-wait-for-selector';
 import noWaitForTimeout from './rules/no-wait-for-timeout';
 import preferComparisonMatcher from './rules/prefer-comparison-matcher';
+import preferEqualityMatcher from './rules/prefer-equality-matcher';
 import preferHooksInOrder from './rules/prefer-hooks-in-order';
 import preferHooksOnTop from './rules/prefer-hooks-on-top';
 import preferLowercaseTitle from './rules/prefer-lowercase-title';
@@ -70,6 +71,7 @@ const index = {
     'no-wait-for-selector': noWaitForSelector,
     'no-wait-for-timeout': noWaitForTimeout,
     'prefer-comparison-matcher': preferComparisonMatcher,
+    'prefer-equality-matcher': preferEqualityMatcher,
     'prefer-hooks-in-order': preferHooksInOrder,
     'prefer-hooks-on-top': preferHooksOnTop,
     'prefer-lowercase-title': preferLowercaseTitle,
