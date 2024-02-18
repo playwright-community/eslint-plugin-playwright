@@ -1,0 +1,72 @@
+import { Rule } from 'eslint';
+import * as ESTree from 'estree';
+import { getExpectType, getParent, isTestCall } from '../utils/ast';
+
+export default {
+  create(context) {
+    const options = {
+      max: 5,
+      ...((context.options?.[0] as Record<string, unknown>) ?? {}),
+    };
+
+    let count = 0;
+
+    const maybeResetCount = (node: ESTree.Node) => {
+      const parent = getParent(node);
+      const isTestFn =
+        parent?.type !== 'CallExpression' || isTestCall(context, parent);
+
+      if (isTestFn) {
+        count = 0;
+      }
+    };
+
+    return {
+      ArrowFunctionExpression: maybeResetCount,
+      'ArrowFunctionExpression:exit': maybeResetCount,
+      CallExpression(node) {
+        if (!getExpectType(context, node)) return;
+
+        count += 1;
+
+        if (count > options.max) {
+          context.report({
+            data: {
+              count: count.toString(),
+              max: options.max.toString(),
+            },
+            messageId: 'exceededMaxAssertion',
+            node,
+          });
+        }
+      },
+      FunctionExpression: maybeResetCount,
+      'FunctionExpression:exit': maybeResetCount,
+    };
+  },
+  meta: {
+    docs: {
+      category: 'Best Practices',
+      description: 'Enforces a maximum number assertion calls in a test body',
+      recommended: false,
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/max-expects.md',
+    },
+    messages: {
+      exceededMaxAssertion:
+        'Too many assertion calls ({{ count }}) - maximum allowed is {{ max }}',
+    },
+    schema: [
+      {
+        additionalProperties: false,
+        properties: {
+          max: {
+            minimum: 1,
+            type: 'integer',
+          },
+        },
+        type: 'object',
+      },
+    ],
+    type: 'suggestion',
+  },
+} as Rule.RuleModule;
