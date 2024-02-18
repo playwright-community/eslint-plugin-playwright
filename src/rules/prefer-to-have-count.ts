@@ -1,16 +1,14 @@
 import { Rule } from 'eslint';
-import { isPropertyAccessor } from '../utils/ast';
+import { equalityMatchers, isPropertyAccessor } from '../utils/ast';
 import { replaceAccessorFixer } from '../utils/fixer';
 import { parseExpectCall } from '../utils/parseExpectCall';
-
-const matchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
         const expectCall = parseExpectCall(context, node);
-        if (!expectCall || !matchers.has(expectCall.matcherName)) {
+        if (!expectCall || !equalityMatchers.has(expectCall.matcherName)) {
           return;
         }
 

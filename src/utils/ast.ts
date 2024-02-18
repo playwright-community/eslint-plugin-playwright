@@ -229,3 +229,5 @@ export function isFunction(node: ESTree.Node): node is FunctionExpression {
     node.type === 'FunctionExpression'
   );
 }
+
+export const equalityMatchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);

@@ -1,14 +1,13 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
 import {
+  equalityMatchers,
   getStringValue,
   isBooleanLiteral,
   isPropertyAccessor,
 } from '../utils/ast';
 import { parseExpectCall } from '../utils/parseExpectCall';
 import { KnownCallExpression } from '../utils/types';
-
-const matchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
 
 type FixableIncludesCallExpression = KnownCallExpression;
 
@@ -35,7 +34,7 @@ export default {
         if (
           !includesCall ||
           matcherArg.type === 'SpreadElement' ||
-          !matchers.has(matcherName) ||
+          !equalityMatchers.has(matcherName) ||
           !isBooleanLiteral(matcherArg) ||
           !isFixableIncludesCallExpression(includesCall)
         ) {

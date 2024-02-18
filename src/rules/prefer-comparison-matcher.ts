@@ -1,6 +1,7 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import {
+  equalityMatchers,
   getParent,
   getRawValue,
   getStringValue,
@@ -8,8 +9,6 @@ import {
   isStringLiteral,
 } from '../utils/ast';
 import { parseExpectCall } from '../utils/parseExpectCall';
-
-const equalityMatchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
 
 const isString = (node: ESTree.Node) => {
   return isStringLiteral(node) || node.type === 'TemplateLiteral';

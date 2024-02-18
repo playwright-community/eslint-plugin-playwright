@@ -1,6 +1,6 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
-import { getStringValue, isIdentifier } from '../utils/ast';
+import { equalityMatchers, getStringValue, isIdentifier } from '../utils/ast';
 import { replaceAccessorFixer } from '../utils/fixer';
 import { ParsedExpectCall, parseExpectCall } from '../utils/parseExpectCall';
 
@@ -69,10 +69,8 @@ export default {
           );
         }
 
-        const argumentMatchers = ['toBe', 'toEqual', 'toStrictEqual'];
         const firstArg = expectCall.args[0];
-
-        if (!argumentMatchers.includes(expectCall.matcherName) || !firstArg) {
+        if (!equalityMatchers.has(expectCall.matcherName) || !firstArg) {
           return;
         }
 

@@ -1,5 +1,6 @@
 import { RuleTester } from 'eslint';
 import rule from '../../src/rules/prefer-comparison-matcher';
+import { equalityMatchers } from '../../src/utils/ast';
 import { runRuleTester } from '../utils/rule-tester';
 
 const generateInvalidCases = (
@@ -248,9 +249,7 @@ const testComparisonOperator = (
   preferredMatcherWhenNegated: string,
 ) => {
   runRuleTester(`prefer-comparision-matcher: ${operator}`, rule, {
-    invalid: ['toBe', 'toEqual', 'toStrictEqual'].reduce<
-      RuleTester.InvalidTestCase[]
-    >(
+    invalid: [...equalityMatchers.keys()].reduce<RuleTester.InvalidTestCase[]>(
       (cases, equalityMatcher) => [
         ...cases,
         ...generateInvalidCases(
