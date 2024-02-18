@@ -20,4 +20,16 @@ export function runRuleTester(...args: Parameters<RuleTester['run']>) {
   return new RuleTester(config).run(...args);
 }
 
+export function runTSRuleTester(...args: Parameters<RuleTester['run']>) {
+  const config = {
+    parser: require.resolve('@typescript-eslint/parser'),
+    parserOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+    },
+  };
+
+  return new RuleTester(config).run(...args);
+}
+
 export const test = (input: string) => `test('test', async () => { ${input} })`;

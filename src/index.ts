@@ -37,6 +37,7 @@ import preferToContain from './rules/prefer-to-contain';
 import preferToHaveCount from './rules/prefer-to-have-count';
 import preferToHaveLength from './rules/prefer-to-have-length';
 import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
+import requireHook from './rules/require-hook';
 import requireSoftAssertions from './rules/require-soft-assertions';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validExpect from './rules/valid-expect';
@@ -83,6 +84,7 @@ const index = {
     'prefer-to-have-count': preferToHaveCount,
     'prefer-to-have-length': preferToHaveLength,
     'prefer-web-first-assertions': preferWebFirstAssertions,
+    'require-hook': requireHook,
     'require-soft-assertions': requireSoftAssertions,
     'require-top-level-describe': requireTopLevelDescribe,
     'valid-expect': validExpect,

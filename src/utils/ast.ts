@@ -171,6 +171,13 @@ export function parseFnCall(
       type: 'hook' as const,
     };
   }
+
+  if (isDescribeCall(node)) {
+    return {
+      name: getStringValue(node.callee),
+      type: 'describe' as const,
+    };
+  }
 }
 
 const expectSubCommands = new Set(['soft', 'poll']);
