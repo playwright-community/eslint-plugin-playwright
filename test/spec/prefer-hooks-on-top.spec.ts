@@ -70,6 +70,34 @@ runRuleTester('basic describe block', rule, {
         },
       ],
     },
+    // Global aliases
+    {
+      code: dedent`
+        it.describe('foo', () => {
+          it.beforeEach(() => {});
+          it('bar', () => {
+            someFn();
+          });
+
+          it.beforeAll(() => {});
+          it('bar', () => {
+            someFn();
+          });
+        });
+      `,
+      errors: [
+        {
+          column: 3,
+          line: 7,
+          messageId: 'noHookOnTop',
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     dedent`
@@ -94,6 +122,20 @@ runRuleTester('basic describe block', rule, {
         });
       });
     `,
+    // Global aliases
+    {
+      code: dedent`
+        it.describe('foo', () => {
+          it.beforeEach(() => {});
+          someSetupFn();
+          it.afterEach(() => {});
+
+          it('bar', () => {
+            someFn();
+          });
+        });
+      `,
+    },
   ],
 });
 
