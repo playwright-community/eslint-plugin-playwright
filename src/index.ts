@@ -3,6 +3,7 @@ import expectExpect from './rules/expect-expect';
 import maxNestedDescribe from './rules/max-nested-describe';
 import missingPlaywrightAwait from './rules/missing-playwright-await';
 import noCommentedOutTests from './rules/no-commented-out-tests';
+import noConditionalExpect from './rules/no-conditional-expect';
 import noConditionalInTest from './rules/no-conditional-in-test';
 import noElementHandle from './rules/no-element-handle';
 import noEval from './rules/no-eval';
@@ -43,6 +44,7 @@ const index = {
     'max-nested-describe': maxNestedDescribe,
     'missing-playwright-await': missingPlaywrightAwait,
     'no-commented-out-tests': noCommentedOutTests,
+    'no-conditional-expect': noConditionalExpect,
     'no-conditional-in-test': noConditionalInTest,
     'no-element-handle': noElementHandle,
     'no-eval': noEval,
@@ -84,6 +86,7 @@ const sharedConfig = {
     'playwright/expect-expect': 'warn',
     'playwright/max-nested-describe': 'warn',
     'playwright/missing-playwright-await': 'error',
+    'playwright/no-conditional-expect': 'warn',
     'playwright/no-conditional-in-test': 'warn',
     'playwright/no-element-handle': 'warn',
     'playwright/no-eval': 'warn',
