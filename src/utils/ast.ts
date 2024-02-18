@@ -148,6 +148,31 @@ export function isTestHook(
   );
 }
 
+export function parseFnCall(
+  context: Rule.RuleContext,
+  node: ESTree.CallExpression,
+) {
+  if (isTestCall(context, node)) {
+    return {
+      fn: node.arguments[1] as FunctionExpression,
+      name: getStringValue(node.callee),
+      type: 'test' as const,
+    };
+  }
+
+  if (
+    node.callee.type === 'MemberExpression' &&
+    isTestIdentifier(context, node.callee.object) &&
+    testHooks.has(getStringValue(node.callee.property))
+  ) {
+    return {
+      fn: node.arguments[0] as FunctionExpression,
+      name: getStringValue(node.callee.property),
+      type: 'hook' as const,
+    };
+  }
+}
+
 const expectSubCommands = new Set(['soft', 'poll']);
 export type ExpectType = 'poll' | 'soft' | 'standalone';
 

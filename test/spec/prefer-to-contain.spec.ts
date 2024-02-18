@@ -1,146 +1,148 @@
 import rule from '../../src/rules/prefer-to-contain';
 import { runRuleTester } from '../utils/rule-tester';
 
+const messageId = 'useToContain';
+
 runRuleTester('prefer-to-contain', rule, {
   invalid: [
     {
       code: 'expect(a.includes(b)).toEqual(true);',
-      errors: [{ column: 23, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 23, line: 1, messageId }],
       output: 'expect(a).toContain(b);',
     },
     {
       code: 'expect(a.includes(b,),).toEqual(true,);',
-      errors: [{ column: 25, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 25, line: 1, messageId }],
       output: 'expect(a,).toContain(b,);',
     },
     {
       code: "expect(a['includes'](b)).toEqual(true);",
-      errors: [{ column: 26, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 26, line: 1, messageId }],
       output: 'expect(a).toContain(b);',
     },
     {
       code: "expect(a['includes'](b)).toEqual(false);",
-      errors: [{ column: 26, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 26, line: 1, messageId }],
       output: 'expect(a).not.toContain(b);',
     },
     {
       code: "expect(a['includes'](b)).not.toEqual(false);",
-      errors: [{ column: 30, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 30, line: 1, messageId }],
       output: 'expect(a).toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).toEqual(false);',
-      errors: [{ column: 23, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 23, line: 1, messageId }],
       output: 'expect(a).not.toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).not.toEqual(false);',
-      errors: [{ column: 27, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 27, line: 1, messageId }],
       output: 'expect(a).toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).not.toEqual(true);',
-      errors: [{ column: 27, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 27, line: 1, messageId }],
       output: 'expect(a).not.toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).toBe(true);',
-      errors: [{ column: 23, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 23, line: 1, messageId }],
       output: 'expect(a).toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).toBe(false);',
-      errors: [{ column: 23, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 23, line: 1, messageId }],
       output: 'expect(a).not.toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).not.toBe(false);',
-      errors: [{ column: 27, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 27, line: 1, messageId }],
       output: 'expect(a).toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).not.toBe(true);',
-      errors: [{ column: 27, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 27, line: 1, messageId }],
       output: 'expect(a).not.toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).toStrictEqual(true);',
-      errors: [{ column: 23, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 23, line: 1, messageId }],
       output: 'expect(a).toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).toStrictEqual(false);',
-      errors: [{ column: 23, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 23, line: 1, messageId }],
       output: 'expect(a).not.toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).not.toStrictEqual(false);',
-      errors: [{ column: 27, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 27, line: 1, messageId }],
       output: 'expect(a).toContain(b);',
     },
     {
       code: 'expect(a.includes(b)).not.toStrictEqual(true);',
-      errors: [{ column: 27, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 27, line: 1, messageId }],
       output: 'expect(a).not.toContain(b);',
     },
     {
       code: 'expect(a.test(t).includes(b.test(p))).toEqual(true);',
-      errors: [{ column: 39, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 39, line: 1, messageId }],
       output: 'expect(a.test(t)).toContain(b.test(p));',
     },
     {
       code: 'expect(a.test(t).includes(b.test(p))).toEqual(false);',
-      errors: [{ column: 39, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 39, line: 1, messageId }],
       output: 'expect(a.test(t)).not.toContain(b.test(p));',
     },
     {
       code: 'expect(a.test(t).includes(b.test(p))).not.toEqual(true);',
-      errors: [{ column: 43, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 43, line: 1, messageId }],
       output: 'expect(a.test(t)).not.toContain(b.test(p));',
     },
     {
       code: 'expect(a.test(t).includes(b.test(p))).not.toEqual(false);',
-      errors: [{ column: 43, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 43, line: 1, messageId }],
       output: 'expect(a.test(t)).toContain(b.test(p));',
     },
     {
       code: 'expect([{a:1}].includes({a:1})).toBe(true);',
-      errors: [{ column: 33, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 33, line: 1, messageId }],
       output: 'expect([{a:1}]).toContain({a:1});',
     },
     {
       code: 'expect([{a:1}].includes({a:1})).toBe(false);',
-      errors: [{ column: 33, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 33, line: 1, messageId }],
       output: 'expect([{a:1}]).not.toContain({a:1});',
     },
     {
       code: 'expect([{a:1}].includes({a:1})).not.toBe(true);',
-      errors: [{ column: 37, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 37, line: 1, messageId }],
       output: 'expect([{a:1}]).not.toContain({a:1});',
     },
     {
       code: 'expect([{a:1}].includes({a:1})).not.toBe(false);',
-      errors: [{ column: 37, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 37, line: 1, messageId }],
       output: 'expect([{a:1}]).toContain({a:1});',
     },
     {
       code: 'expect([{a:1}].includes({a:1})).toStrictEqual(true);',
-      errors: [{ column: 33, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 33, line: 1, messageId }],
       output: 'expect([{a:1}]).toContain({a:1});',
     },
     {
       code: 'expect([{a:1}].includes({a:1})).toStrictEqual(false);',
-      errors: [{ column: 33, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 33, line: 1, messageId }],
       output: 'expect([{a:1}]).not.toContain({a:1});',
     },
     {
       code: 'expect([{a:1}].includes({a:1})).not.toStrictEqual(true);',
-      errors: [{ column: 37, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 37, line: 1, messageId }],
       output: 'expect([{a:1}]).not.toContain({a:1});',
     },
     {
       code: 'expect([{a:1}].includes({a:1})).not.toStrictEqual(false);',
-      errors: [{ column: 37, line: 1, messageId: 'useToContain' }],
+      errors: [{ column: 37, line: 1, messageId }],
       output: 'expect([{a:1}]).toContain({a:1});',
     },
   ],
