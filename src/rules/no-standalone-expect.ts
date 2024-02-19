@@ -16,7 +16,7 @@ const getBlockType = (
 
   if (!func) {
     throw new Error(
-      `Unexpected BlockStatement. No parent defined. - please file a github issue at https://github.com/jest-community/eslint-plugin-jest`,
+      `Unexpected BlockStatement. No parent defined. - please file a github issue at https://github.com/playwright-community/eslint-plugin-playwright`,
     );
   }
 
@@ -29,7 +29,10 @@ const getBlockType = (
     const expr = func.parent;
 
     // arrow function or function expr
-    if (expr.type === 'VariableDeclarator') {
+    if (
+      expr.type === 'VariableDeclarator' ||
+      expr.type === 'MethodDefinition'
+    ) {
       return 'function';
     }
 
