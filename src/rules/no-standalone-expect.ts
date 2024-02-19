@@ -116,7 +116,7 @@ export default {
       category: 'Best Practices',
       description: 'Disallow using `expect` outside of `test` blocks',
       recommended: false,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-to-contain.md',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-standalone-expect.md',
     },
     fixable: 'code',
     messages: {
