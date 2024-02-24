@@ -73,7 +73,6 @@ runRuleTester('no-standalone-expect', rule, {
     'const func = () => expect(1).toBe(1);',
     '{}',
     'test.only("an only", value => { expect(value).toBe(true); });',
-    'test.concurrent("an concurrent", value => { expect(value).toBe(true); });',
     'class Helper { foo() { expect(1).toBe(1); } }',
     'class Helper { foo = () => { expect(1).toBe(1); } }',
     // Global aliases

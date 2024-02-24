@@ -117,10 +117,36 @@ runRuleTester('require-hook', rule, {
       errors: [{ column: 1, line: 1, messageId }],
       options: [{ allowedFunctionCalls: ['someOtherName'] }],
     },
+    // Global aliases
+    {
+      code: dedent`
+        it.describe('some tests', () => {
+          setup();
+        });
+      `,
+      errors: [{ column: 3, line: 2, messageId }],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
-    'test.describe()',
-    'test.describe("just a title")',
+    { code: 'test.describe()' },
+    { code: 'test.describe("just a title")' },
+    { code: 'test.describe.configure({ mode: "parallel" })' },
+    {
+      code: dedent`
+        test.describe.configure({ mode: 'parallel' });
+
+        test.describe('A, runs in parallel with B', () => {
+          test.describe.configure({ mode: 'default' });
+          test('in order A1', async ({ page }) => {});
+          test('in order A2', async ({ page }) => {});
+        });
+      `,
+    },
     dedent`
       test.describe('a test', () =>
         test('something', () => {
@@ -240,6 +266,31 @@ runRuleTester('require-hook', rule, {
         });
       `,
       options: [{ allowedFunctionCalls: ['enableAutoDestroy'] }],
+    },
+    // Global aliases
+    {
+      code: dedent`
+        it.beforeEach(() => {
+          initializeCityDatabase();
+        });
+
+        it.afterEach(() => {
+          clearCityDatabase();
+        });
+
+        it('city database has Vienna', () => {
+          expect(isCity('Vienna')).toBeTruthy();
+        });
+
+        it('city database has San Juan', () => {
+          expect(isCity('San Juan')).toBeTruthy();
+        });
+      `,
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
     },
   ],
 });

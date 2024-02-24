@@ -18,10 +18,14 @@ export function getRawValue(node: ESTree.Node) {
   return node.type === 'Literal' ? node.raw : undefined;
 }
 
-export function isIdentifier(node: ESTree.Node, name: string | RegExp) {
+export function isIdentifier(
+  node: ESTree.Node,
+  name: string | RegExp | undefined,
+) {
   return (
     node.type === 'Identifier' &&
-    (typeof name === 'string' ? node.name === name : name.test(node.name))
+    (!name ||
+      (typeof name === 'string' ? node.name === name : name.test(node.name)))
   );
 }
 
@@ -52,8 +56,13 @@ export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
 
 export type StringNode = ESTree.Literal | ESTree.TemplateLiteral;
 
-export function isStringNode(node: ESTree.Node): node is StringNode {
-  return node && (isStringLiteral(node) || isTemplateLiteral(node));
+export function isStringNode(
+  node: ESTree.Node,
+  value?: string,
+): node is StringNode {
+  return (
+    node && (isStringLiteral(node, value) || isTemplateLiteral(node, value))
+  );
 }
 
 export function isPropertyAccessor(
@@ -136,7 +145,12 @@ export function isTestCall(
   );
 }
 
-const testHooks = new Set(['afterAll', 'afterEach', 'beforeAll', 'beforeEach']);
+export const testHooks = new Set([
+  'afterAll',
+  'afterEach',
+  'beforeAll',
+  'beforeEach',
+]);
 export function isTestHook(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
@@ -146,38 +160,6 @@ export function isTestHook(
     isTestIdentifier(context, node.callee.object) &&
     testHooks.has(getStringValue(node.callee.property))
   );
-}
-
-export function parseFnCall(
-  context: Rule.RuleContext,
-  node: ESTree.CallExpression,
-) {
-  if (isTestCall(context, node)) {
-    return {
-      fn: node.arguments[1] as FunctionExpression,
-      name: getStringValue(node.callee),
-      type: 'test' as const,
-    };
-  }
-
-  if (
-    node.callee.type === 'MemberExpression' &&
-    isTestIdentifier(context, node.callee.object) &&
-    testHooks.has(getStringValue(node.callee.property))
-  ) {
-    return {
-      fn: node.arguments[0] as FunctionExpression,
-      name: getStringValue(node.callee.property),
-      type: 'hook' as const,
-    };
-  }
-
-  if (isDescribeCall(node)) {
-    return {
-      name: getStringValue(node.callee),
-      type: 'describe' as const,
-    };
-  }
 }
 
 const expectSubCommands = new Set(['soft', 'poll']);
