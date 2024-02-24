@@ -1,8 +1,8 @@
-import { expect, it } from '@jest/globals';
 import { readdir } from 'node:fs/promises';
+import { expect, test } from 'vitest';
 import plugin from '../../src/index';
 
-it('has all rules', async () => {
+test('has all rules', async () => {
   const files = await readdir('src/rules');
   const { rules } = plugin.configs['flat/recommended'].plugins.playwright;
   const ruleKeys = Object.keys(rules).sort();
