@@ -1,12 +1,7 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import {
-  getStringValue,
-  isDescribeCall,
-  isFunction,
-  isIdentifier,
-  parseFnCall,
-} from '../utils/ast';
+import { getStringValue, isFunction, isIdentifier } from '../utils/ast';
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
 const isNullOrUndefined = (node: ESTree.Expression): boolean => {
   return (
@@ -63,7 +58,10 @@ export default {
 
     return {
       CallExpression(node) {
-        if (!isDescribeCall(node) || node.arguments.length < 2) {
+        if (
+          !isTypeOfFnCall(context, node, ['describe']) ||
+          node.arguments.length < 2
+        ) {
           return;
         }
 

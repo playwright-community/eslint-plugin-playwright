@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { parseFnCall } from '../utils/ast';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
