@@ -9,7 +9,7 @@ Checks that the title of test blocks are valid by ensuring that titles are:
 
 ## Rule details
 
-**emptyTitle**
+### `emptyTitle`
 
 An empty title is not informative, and serves little purpose.
 
@@ -33,7 +33,7 @@ test.describe('foo', () => {
 test('foo', () => {});
 ```
 
-**titleMustBeString**
+### `titleMustBeString`
 
 Titles for `describe` and `test` blocks should always be a string; you can
 disable this with the `ignoreTypeOfDescribeName` and `ignoreTypeOfTestName`
@@ -77,7 +77,7 @@ test(myTestName, () => {});
 test(6, function () {});
 ```
 
-**duplicatePrefix**
+### `duplicatePrefix`
 
 A `describe` / `test` block should not start with `duplicatePrefix`
 
@@ -105,7 +105,7 @@ test.describe('foo', () => {
 });
 ```
 
-**accidentalSpace**
+### `accidentalSpace`
 
 A `describe` / `test` block should not contain accidentalSpace, but can be
 turned off via the `ignoreSpaces` option:
