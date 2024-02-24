@@ -75,6 +75,17 @@ runRuleTester('no-standalone-expect', rule, {
     'test.only("an only", value => { expect(value).toBe(true); });',
     'class Helper { foo() { expect(1).toBe(1); } }',
     'class Helper { foo = () => { expect(1).toBe(1); } }',
+    {
+      code: dedent`
+        test.describe('Test describe', () => {
+          test.beforeAll(async ({ page }) => {
+            await page.goto('https://google.com');
+            await expect(page.getByRole('button')).toBeVisible();
+          });
+        });
+      `,
+      name: 'Allows expect in hooks',
+    },
     // Global aliases
     {
       code: dedent`

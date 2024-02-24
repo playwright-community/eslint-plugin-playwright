@@ -143,6 +143,7 @@ test.describe('foo', () => {
 ```ts
 interface Options {
   ignoreSpaces?: boolean;
+  ignoreTypeOfTestName?: boolean;
   ignoreTypeOfDescribeName?: boolean;
   disallowedWords?: string[];
   mustNotMatch?: Partial<Record<'describe' | 'test', string>> | string;

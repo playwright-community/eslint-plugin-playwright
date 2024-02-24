@@ -7,6 +7,7 @@ import {
   isDescribeCall,
   isFunction,
   isTestCall,
+  isTestHook,
 } from '../utils/ast';
 
 const getBlockType = (
@@ -45,7 +46,13 @@ const getBlockType = (
   return null;
 };
 
-type BlockType = 'arrow' | 'describe' | 'function' | 'template' | 'test';
+type BlockType =
+  | 'arrow'
+  | 'describe'
+  | 'function'
+  | 'hook'
+  | 'template'
+  | 'test';
 
 export default {
   create(context: Rule.RuleContext) {
@@ -93,6 +100,10 @@ export default {
 
         if (isTestCall(context, node)) {
           callStack.push('test');
+        }
+
+        if (isTestHook(context, node)) {
+          callStack.push('hook');
         }
 
         if (node.callee.type === 'TaggedTemplateExpression') {
