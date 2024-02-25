@@ -1,6 +1,6 @@
 import { AST, Rule } from 'eslint';
 import ESTree from 'estree';
-import { getStringValue, isDescribeCall, isStringNode } from '../utils/ast';
+import { getStringValue, isStringNode } from '../utils/ast';
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
 type Method = 'test' | 'test.describe';

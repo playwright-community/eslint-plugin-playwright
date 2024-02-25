@@ -1,12 +1,7 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
-import {
-  getStringValue,
-  isDescribeCall,
-  isStringNode,
-  isTestCall,
-  StringNode,
-} from '../utils/ast';
+import { getStringValue, isStringNode, StringNode } from '../utils/ast';
+import { parseFnCall } from '../utils/parseFnCall';
 
 const doesBinaryExpressionContainStringNode = (
   binaryExp: ESTree.BinaryExpression,
@@ -110,9 +105,8 @@ export default {
 
     return {
       CallExpression(node) {
-        const isDescribe = isDescribeCall(node);
-        const isTest = isTestCall(context, node);
-        if (!isDescribe && !isTest) {
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'test' && call?.type !== 'describe') {
           return;
         }
 
@@ -131,8 +125,8 @@ export default {
 
           if (
             !(
-              (isDescribe && ignoreTypeOfDescribeName) ||
-              (isTest && ignoreTypeOfTestName)
+              (call.type === 'describe' && ignoreTypeOfDescribeName) ||
+              (call.type === 'test' && ignoreTypeOfTestName)
             ) &&
             (argument as ESTree.Node).type !== 'TemplateLiteral'
           ) {
@@ -146,11 +140,11 @@ export default {
         }
 
         const title = getStringValue(argument);
-        const functionName = isDescribe ? 'describe' : 'test';
+        const functionName = call.type;
 
         if (!title) {
           context.report({
-            data: { functionName },
+            data: { functionName: call.type },
             messageId: 'emptyTitle',
             node,
           });
