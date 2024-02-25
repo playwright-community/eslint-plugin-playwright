@@ -7,6 +7,19 @@ const messageId = 'unexpectedExpect';
 runRuleTester('no-standalone-expect', rule, {
   invalid: [
     {
+      code: 'test.describe("a test", () => { expect(1).toBe(1); });',
+      errors: [{ column: 33, endColumn: 50, messageId }],
+    },
+    {
+      code: 'test.describe("a test", () => { expect.soft(1).toBe(1); });',
+      errors: [{ column: 33, endColumn: 55, messageId }],
+    },
+    {
+      code: 'test.describe("a test", () => { expect.poll(() => 1).toBe(1); });',
+      errors: [{ column: 33, endColumn: 61, messageId }],
+      only: true,
+    },
+    {
       code: "(() => {})('testing', () => expect(true).toBe(false))",
       errors: [{ column: 29, endColumn: 53, messageId }],
     },
@@ -26,10 +39,6 @@ runRuleTester('no-standalone-expect', rule, {
         });
       `,
       errors: [{ column: 23, endColumn: 47, messageId }],
-    },
-    {
-      code: 'test.describe("a test", () => { expect(1).toBe(1); });',
-      errors: [{ column: 33, endColumn: 50, messageId }],
     },
     {
       code: 'test.describe("a test", () => expect(6).toBe(1));',
@@ -57,7 +66,24 @@ runRuleTester('no-standalone-expect', rule, {
         test.describe("a test", () => { pleaseExpect(1).toBe(1); });
       `,
       errors: [{ column: 33, endColumn: 56, messageId }],
-      parserOptions: { sourceType: 'module' },
+    },
+    // Global aliases
+    {
+      code: dedent`
+        test.describe('scenario', () => {
+          const t = Math.random() ? test.only : test;
+          t('testing', () => assert(true).toBe(false));
+        });
+      `,
+      errors: [{ column: 22, endColumn: 46, messageId }],
+      settings: {
+        playwright: {
+          globalAliases: {
+            expect: ['assert'],
+            test: ['it'],
+          },
+        },
+      },
     },
   ],
   valid: [
@@ -69,6 +95,8 @@ runRuleTester('no-standalone-expect', rule, {
     'test.describe("a test", () => { function func() { expect(1).toBe(1); }; });',
     'test.describe("a test", () => { const func = function(){ expect(1).toBe(1); }; });',
     'test("an it", () => expect(1).toBe(1))',
+    'test("an it", () => expect.soft(1).toBe(1))',
+    'test("an it", () => expect.poll(() => locator)[`not`][`toBeHidden`]())',
     'const func = function(){ expect(1).toBe(1); };',
     'const func = () => expect(1).toBe(1);',
     '{}',
@@ -90,12 +118,15 @@ runRuleTester('no-standalone-expect', rule, {
     {
       code: dedent`
         it.describe('scenario', () => {
-          it('testing', () => expect(true));
+          it('testing', () => assert(true));
         });
       `,
       settings: {
         playwright: {
-          globalAliases: { test: ['it'] },
+          globalAliases: {
+            expect: ['assert'],
+            test: ['it'],
+          },
         },
       },
     },

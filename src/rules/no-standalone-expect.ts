@@ -1,16 +1,10 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import {
-  findParent,
-  getExpectType,
-  getParent,
-  isDescribeCall,
-  isFunction,
-  isTestCall,
-  isTestHook,
-} from '../utils/ast';
+import { getParent, getStringValue, isFunction } from '../utils/ast';
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
 const getBlockType = (
+  context: Rule.RuleContext,
   statement: ESTree.BlockStatement,
 ): 'function' | 'describe' | null => {
   const func = getParent(statement);
@@ -38,7 +32,10 @@ const getBlockType = (
     }
 
     // if it's not a variable, it will be callExpr, we only care about describe
-    if (expr.type === 'CallExpression' && isDescribeCall(expr)) {
+    if (
+      expr.type === 'CallExpression' &&
+      isTypeOfFnCall(context, expr, ['describe'])
+    ) {
       return 'describe';
     }
   }
@@ -65,44 +62,51 @@ export default {
         }
       },
       'ArrowFunctionExpression:exit'() {
-        if (callStack[callStack.length - 1] === 'arrow') {
+        if (callStack.at(-1) === 'arrow') {
           callStack.pop();
         }
       },
 
       BlockStatement(statement) {
-        const blockType = getBlockType(statement);
+        const blockType = getBlockType(context, statement);
 
         if (blockType) {
           callStack.push(blockType);
         }
       },
       'BlockStatement:exit'(statement: ESTree.BlockStatement) {
-        if (callStack[callStack.length - 1] === getBlockType(statement)) {
+        if (callStack.at(-1) === getBlockType(context, statement)) {
           callStack.pop();
         }
       },
 
       CallExpression(node) {
-        if (getExpectType(context, node)) {
-          const parent = callStack.at(-1);
+        const call = parseFnCall(context, node);
 
+        if (call?.type === 'expect') {
+          if (
+            getParent(call.head.node)?.type === 'MemberExpression' &&
+            call.members.length === 1 &&
+            !['assertions', 'hasAssertions'].includes(
+              getStringValue(call.members[0]),
+            )
+          ) {
+            return;
+          }
+
+          const parent = callStack.at(-1);
           if (!parent || parent === 'describe') {
-            const root = findParent(node, 'CallExpression');
-            context.report({
-              messageId: 'unexpectedExpect',
-              node: root ?? node,
-            });
+            context.report({ messageId: 'unexpectedExpect', node });
           }
 
           return;
         }
 
-        if (isTestCall(context, node)) {
+        if (call?.type === 'test') {
           callStack.push('test');
         }
 
-        if (isTestHook(context, node)) {
+        if (call?.type === 'hook') {
           callStack.push('hook');
         }
 
@@ -111,11 +115,11 @@ export default {
         }
       },
       'CallExpression:exit'(node: ESTree.CallExpression) {
-        const top = callStack[callStack.length - 1];
+        const top = callStack.at(-1);
 
         if (
           (top === 'test' &&
-            isTestCall(context, node) &&
+            isTypeOfFnCall(context, node, ['test']) &&
             node.callee.type !== 'MemberExpression') ||
           (top === 'template' &&
             node.callee.type === 'TaggedTemplateExpression')
