@@ -1,33 +1,35 @@
 import { Rule } from 'eslint';
-import { isDescribeCall, isPropertyAccessor, isTestCall } from '../utils/ast';
+import { getStringValue } from '../utils/ast';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (
-          (isTestCall(context, node) || isDescribeCall(node)) &&
-          node.callee.type === 'MemberExpression' &&
-          isPropertyAccessor(node.callee, 'only')
-        ) {
-          const { callee } = node;
-
-          context.report({
-            messageId: 'noFocusedTest',
-            node: node.callee.property,
-            suggest: [
-              {
-                // - 1 to remove the `.only` annotation with dot notation
-                fix: (fixer) =>
-                  fixer.removeRange([
-                    callee.property.range![0] - 1,
-                    callee.range![1],
-                  ]),
-                messageId: 'suggestRemoveOnly',
-              },
-            ],
-          });
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'test' && call?.type !== 'describe') {
+          return;
         }
+
+        const onlyNode = call.members.find((s) => getStringValue(s) === 'only');
+        if (!onlyNode) return;
+
+        context.report({
+          messageId: 'noFocusedTest',
+          node: onlyNode,
+          suggest: [
+            {
+              fix: (fixer) => {
+                // - 1 to remove the `.only` annotation with dot notation
+                return fixer.removeRange([
+                  onlyNode.range![0] - 1,
+                  onlyNode.range![1] + Number(onlyNode.type !== 'Identifier'),
+                ]);
+              },
+              messageId: 'suggestRemoveOnly',
+            },
+          ],
+        });
       },
     };
   },

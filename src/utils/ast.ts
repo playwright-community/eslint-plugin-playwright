@@ -95,6 +95,7 @@ const describeProperties = new Set([
   'fixme',
 ]);
 
+/** @deprecated */
 export function isDescribeCall(node: ESTree.Node): boolean {
   const inner = node.type === 'CallExpression' ? node.callee : node;
 
@@ -129,6 +130,7 @@ export function findParent<T extends ESTree.Node['type']>(
     : findParent(node.parent, type);
 }
 
+/** @deprecated */
 export function isTestCall(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
