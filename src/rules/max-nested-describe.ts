@@ -1,47 +1,35 @@
 import { Rule } from 'eslint';
-import { isDescribeCall } from '../utils/ast';
+import * as ESTree from 'estree';
+import { isTypeOfFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
     const { options } = context;
     const max: number = options[0]?.max ?? 5;
-    const describeCallbackStack: number[] = [];
-
-    function pushDescribeCallback(node: Rule.Node) {
-      if (
-        node.parent.type !== 'CallExpression' ||
-        !isDescribeCall(node.parent)
-      ) {
-        return;
-      }
-
-      describeCallbackStack.push(0);
-
-      if (describeCallbackStack.length > max) {
-        context.report({
-          data: {
-            depth: describeCallbackStack.length.toString(),
-            max: max.toString(),
-          },
-          messageId: 'exceededMaxDepth',
-          node: node.parent.callee,
-        });
-      }
-    }
-
-    function popDescribeCallback(node: Rule.Node) {
-      const { parent } = node;
-
-      if (parent.type === 'CallExpression' && isDescribeCall(parent)) {
-        describeCallbackStack.pop();
-      }
-    }
+    const describes: ESTree.CallExpression[] = [];
 
     return {
-      ArrowFunctionExpression: pushDescribeCallback,
-      'ArrowFunctionExpression:exit': popDescribeCallback,
-      FunctionExpression: pushDescribeCallback,
-      'FunctionExpression:exit': popDescribeCallback,
+      CallExpression(node) {
+        if (isTypeOfFnCall(context, node, ['describe'])) {
+          describes.unshift(node);
+
+          if (describes.length > max) {
+            context.report({
+              data: {
+                depth: describes.length.toString(),
+                max: max.toString(),
+              },
+              messageId: 'exceededMaxDepth',
+              node: node.callee,
+            });
+          }
+        }
+      },
+      'CallExpression:exit'(node) {
+        if (describes[0] === node) {
+          describes.shift();
+        }
+      },
     };
   },
   meta: {
