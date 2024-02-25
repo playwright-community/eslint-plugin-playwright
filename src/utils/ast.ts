@@ -153,6 +153,8 @@ export const testHooks = new Set([
   'beforeAll',
   'beforeEach',
 ]);
+
+/** @deprecated */
 export function isTestHook(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,

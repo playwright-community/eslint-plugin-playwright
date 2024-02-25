@@ -1,7 +1,7 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
-import { isDescribeCall, isTestCall, isTestHook } from '../utils/ast';
 import { getAmountData } from '../utils/misc';
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
@@ -15,7 +15,10 @@ export default {
 
     return {
       CallExpression(node) {
-        if (isDescribeCall(node)) {
+        const call = parseFnCall(context, node);
+        if (!call) return;
+
+        if (call.type === 'describe') {
           describeCount++;
 
           if (describeCount === 1) {
@@ -30,15 +33,15 @@ export default {
             }
           }
         } else if (!describeCount) {
-          if (isTestCall(context, node)) {
+          if (call.type === 'test') {
             context.report({ messageId: 'unexpectedTest', node: node.callee });
-          } else if (isTestHook(context, node)) {
+          } else if (call.type === 'hook') {
             context.report({ messageId: 'unexpectedHook', node: node.callee });
           }
         }
       },
       'CallExpression:exit'(node: ESTree.CallExpression) {
-        if (isDescribeCall(node)) {
+        if (isTypeOfFnCall(context, node, ['describe'])) {
           describeCount--;
         }
       },
