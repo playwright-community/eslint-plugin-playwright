@@ -133,6 +133,7 @@ runRuleTester('require-hook', rule, {
     },
   ],
   valid: [
+    'test.use({ locale: "en-US" })',
     { code: 'test.describe()' },
     { code: 'test.describe("just a title")' },
     { code: 'test.describe.configure({ mode: "parallel" })' },
