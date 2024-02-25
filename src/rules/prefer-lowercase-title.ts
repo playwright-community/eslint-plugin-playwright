@@ -1,11 +1,7 @@
 import { AST, Rule } from 'eslint';
 import ESTree from 'estree';
-import {
-  getStringValue,
-  isDescribeCall,
-  isStringNode,
-  isTestCall,
-} from '../utils/ast';
+import { getStringValue, isDescribeCall, isStringNode } from '../utils/ast';
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
 type Method = 'test' | 'test.describe';
 
@@ -22,20 +18,17 @@ export default {
 
     return {
       CallExpression(node) {
-        const method = isDescribeCall(node)
-          ? 'test.describe'
-          : isTestCall(context, node)
-          ? 'test'
-          : null;
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'describe' && call?.type !== 'test') {
+          return;
+        }
 
-        if (method === 'test.describe') {
+        if (call.type === 'describe') {
           describeCount++;
 
           if (ignoreTopLevelDescribe && describeCount === 1) {
             return;
           }
-        } else if (!method) {
-          return;
         }
 
         const [title] = node.arguments;
@@ -51,6 +44,7 @@ export default {
           return;
         }
 
+        const method = call.type === 'describe' ? 'test.describe' : 'test';
         const firstCharacter = description.charAt(0);
         if (
           !firstCharacter ||
@@ -79,7 +73,7 @@ export default {
         });
       },
       'CallExpression:exit'(node: ESTree.CallExpression) {
-        if (isDescribeCall(node)) {
+        if (isTypeOfFnCall(context, node, ['describe'])) {
           describeCount--;
         }
       },
