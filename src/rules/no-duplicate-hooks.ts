@@ -1,5 +1,6 @@
 import { Rule } from 'eslint';
-import { getStringValue, isDescribeCall, isTestHook } from '../utils/ast';
+import { getStringValue } from '../utils/ast';
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
@@ -7,11 +8,14 @@ export default {
 
     return {
       CallExpression(node) {
-        if (isDescribeCall(node)) {
+        const call = parseFnCall(context, node);
+        if (!call) return;
+
+        if (call.type === 'describe') {
           hookContexts.push({});
         }
 
-        if (!isTestHook(context, node)) {
+        if (call.type !== 'hook') {
           return;
         }
 
@@ -33,7 +37,7 @@ export default {
         }
       },
       'CallExpression:exit'(node) {
-        if (isDescribeCall(node)) {
+        if (isTypeOfFnCall(context, node, ['describe'])) {
           hookContexts.pop();
         }
       },
