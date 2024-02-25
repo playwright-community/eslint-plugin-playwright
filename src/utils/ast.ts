@@ -239,10 +239,12 @@ export type FunctionExpression = (
   Rule.NodeParentExtension;
 
 /** Returns a boolean to indicate if the node is a function or arrow function */
-export function isFunction(node: ESTree.Node): node is FunctionExpression {
+export function isFunction(
+  node: ESTree.Node | undefined,
+): node is FunctionExpression {
   return (
-    node.type === 'ArrowFunctionExpression' ||
-    node.type === 'FunctionExpression'
+    node?.type === 'ArrowFunctionExpression' ||
+    node?.type === 'FunctionExpression'
   );
 }
 

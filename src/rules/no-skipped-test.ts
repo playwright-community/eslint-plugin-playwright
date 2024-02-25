@@ -1,10 +1,6 @@
 import { Rule } from 'eslint';
-import {
-  isDescribeCall,
-  isPropertyAccessor,
-  isTestCall,
-  isTestIdentifier,
-} from '../utils/ast';
+import { getStringValue, isFunction } from '../utils/ast';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
@@ -12,39 +8,44 @@ export default {
       CallExpression(node) {
         const options = context.options[0] || {};
         const allowConditional = !!options.allowConditional;
-        const { callee } = node;
 
-        if (
-          (isTestIdentifier(context, callee) || isDescribeCall(node)) &&
-          callee.type === 'MemberExpression' &&
-          isPropertyAccessor(callee, 'skip')
-        ) {
-          const isHook = isTestCall(context, node) || isDescribeCall(node);
-
-          // If allowConditional is enabled and it's not a test/describe hook,
-          // we ignore any `test.skip` calls that have no arguments.
-          if (!isHook && allowConditional && node.arguments.length) {
-            return;
-          }
-
-          context.report({
-            messageId: 'noSkippedTest',
-            node: isHook ? callee.property : node,
-            suggest: [
-              {
-                fix: (fixer) => {
-                  return isHook
-                    ? fixer.removeRange([
-                        callee.property.range![0] - 1,
-                        callee.range![1],
-                      ])
-                    : fixer.remove(node.parent);
-                },
-                messageId: 'removeSkippedTestAnnotation',
-              },
-            ],
-          });
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'test' && call?.type !== 'describe') {
+          return;
         }
+
+        const skipNode = call.members.find((s) => getStringValue(s) === 'skip');
+        if (!skipNode) return;
+
+        // If the call is a standalone `test.skip()` call, and not a test
+        // annotation, we have to treat it a bit differently.
+        const isStandalone =
+          call.type === 'test' && !isFunction(node.arguments[1]);
+
+        // If allowConditional is enabled and it's not a test/describe function,
+        // we ignore any `test.skip` calls that have no arguments.
+        if (isStandalone && allowConditional && node.arguments.length) {
+          return;
+        }
+
+        context.report({
+          messageId: 'noSkippedTest',
+          node: isStandalone ? node : skipNode,
+          suggest: [
+            {
+              fix: (fixer) => {
+                return isStandalone
+                  ? fixer.remove(node.parent)
+                  : fixer.removeRange([
+                      skipNode.range![0] - 1,
+                      skipNode.range![1] +
+                        Number(skipNode.type !== 'Identifier'),
+                    ]);
+              },
+              messageId: 'removeSkippedTestAnnotation',
+            },
+          ],
+        });
       },
     };
   },
