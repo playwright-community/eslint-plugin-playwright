@@ -124,7 +124,6 @@ runRuleTester('valid-expect', rule, {
       errors: [
         { column: 44, endColumn: 50, line: 1, messageId: 'matcherNotCalled' },
       ],
-      only: true,
     },
     // minArgs
     {
