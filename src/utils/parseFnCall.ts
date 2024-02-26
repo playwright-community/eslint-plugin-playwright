@@ -159,6 +159,8 @@ function determinePlaywrightFnType(name: string): FnType {
   return 'unknown';
 }
 
+export const modifiers = new Set(['not', 'resolves', 'rejects']);
+
 const findModifiersAndMatcher = (
   members: KnownMemberExpressionProperty[],
 ): ModifiersAndMatcher | string => {
@@ -265,12 +267,19 @@ const parseExpectCall = (
 export const findTopMostCallExpression = (
   node: ESTree.CallExpression,
 ): ESTree.CallExpression => {
-  let topMostCallExpression = node;
+  let top = node;
   let parent = getParent(node);
+  let child: ESTree.Node = node;
 
   while (parent) {
-    if (parent.type === 'CallExpression') {
-      topMostCallExpression = parent;
+    // If the parent is a call expression, then we set that as the new top-most
+    // call expression and continue up the chain. We have to verify though that
+    // the child is the callee of the parent call expression and not an argument
+    // as this is valid: `expect(x).not.resolves.toBe(x)`, but this is not:
+    // `something(expect(x).not.resolves.toBe)`.
+    if (parent.type === 'CallExpression' && parent.callee === child) {
+      top = parent;
+      node = parent;
       parent = getParent(parent);
       continue;
     }
@@ -279,16 +288,14 @@ export const findTopMostCallExpression = (
       break;
     }
 
+    child = parent;
     parent = getParent(parent);
   }
 
-  return topMostCallExpression;
+  return top;
 };
 
-function parseFnCallWithReason(
-  context: Rule.RuleContext,
-  node: ESTree.CallExpression,
-) {
+function parse(context: Rule.RuleContext, node: ESTree.CallExpression) {
   const chain = getNodeChain(node);
 
   if (!chain?.length) {
@@ -371,21 +378,31 @@ function parseFnCallWithReason(
   return { ...parsedFnCall, type };
 }
 
-const cache = new WeakMap<ESTree.CallExpression, ParsedFnCall | null>();
+const cache = new WeakMap<
+  ESTree.CallExpression,
+  ParsedFnCall | string | null
+>();
+
+export function parseFnCallWithReason(
+  context: Rule.RuleContext,
+  node: ESTree.CallExpression,
+): ParsedFnCall | string | null {
+  if (cache.has(node)) {
+    return cache.get(node)!;
+  }
+
+  const call = parse(context, node);
+  cache.set(node, call);
+
+  return call;
+}
 
 export function parseFnCall(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
 ): ParsedFnCall | null {
-  if (cache.has(node)) {
-    return cache.get(node) ?? null;
-  }
-
   const call = parseFnCallWithReason(context, node);
-  const result = typeof call === 'string' ? null : call;
-  cache.set(node, result);
-
-  return result;
+  return typeof call === 'string' ? null : call;
 }
 
 export const isTypeOfFnCall = (

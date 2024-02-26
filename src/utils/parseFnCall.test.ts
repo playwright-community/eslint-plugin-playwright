@@ -6,7 +6,7 @@ import { getStringValue } from './ast';
 import {
   isSupportedAccessor,
   ParsedFnCall,
-  parseFnCall,
+  parseFnCallWithReason,
   ResolvedFnWithNode,
 } from './parseFnCall';
 
@@ -21,9 +21,11 @@ const isNode = (obj: unknown): obj is ESTree.Node => {
 const rule = {
   create: (context) => ({
     CallExpression(node) {
-      const call = parseFnCall(context, node);
+      const call = parseFnCallWithReason(context, node);
 
-      if (call) {
+      if (typeof call === 'string') {
+        context.report({ messageId: call, node });
+      } else if (call) {
         const sorted = sortKeys({
           ...call,
           head: sortKeys(call.head),
@@ -57,6 +59,9 @@ const rule = {
     },
     messages: {
       details: '{{ data }}',
+      'matcher-not-called': 'matcherNotCalled',
+      'matcher-not-found': 'matcherNotFound',
+      'modifier-unknown': 'modifierUnknown',
     },
     schema: [],
     type: 'problem',
@@ -313,6 +318,33 @@ runRuleTester('expect', rule, {
       ],
     },
     {
+      code: 'something(expect(x).not.toBe(y))',
+      errors: [
+        {
+          column: 11,
+          data: expectedParsedFnCallResultData({
+            args: ['y'],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'toBe',
+            members: ['not', 'toBe'],
+            modifiers: ['not'],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'something(expect(x).not.toBe)',
+      errors: [{ column: 11, line: 1, messageId: 'matcher-not-called' }],
+    },
+    {
       code: dedent`
         import { expect } from '@playwright/test';
 
@@ -396,23 +428,6 @@ runRuleTester('expect', rule, {
         },
       ],
     },
-  ],
-  valid: [
-    'expect(x).not(y);',
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
-        expect(x).not.resolves.toBe(x);
-      `,
-    },
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
-        expect(x).is.toBe(x);
-      `,
-    },
     {
       code: dedent`
         import { expect } from '@playwright/test';
@@ -423,8 +438,34 @@ runRuleTester('expect', rule, {
         expect(x).not.toBe;
         //expect(x).toBe(x).not();
       `,
+      errors: [
+        { column: 1, line: 4, messageId: 'matcher-not-found' },
+        { column: 1, line: 5, messageId: 'matcher-not-called' },
+        { column: 1, line: 6, messageId: 'matcher-not-called' },
+      ],
+    },
+    {
+      code: dedent`
+        import { expect } from '@playwright/test';
+
+        expect(x).is.toBe(x);
+      `,
+      errors: [{ column: 1, line: 3, messageId: 'modifier-unknown' }],
+    },
+    {
+      code: 'expect(x).not(y);',
+      errors: [{ column: 1, line: 1, messageId: 'matcher-not-found' }],
+    },
+    {
+      code: dedent`
+        import { expect } from '@playwright/test';
+
+        expect(x).not.resolves.toBe(x);
+      `,
+      errors: [{ column: 1, line: 3, messageId: 'modifier-unknown' }],
     },
   ],
+  valid: [],
 });
 
 runRuleTester('test', rule, {

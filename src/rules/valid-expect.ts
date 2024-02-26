@@ -1,30 +1,30 @@
 import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { isExpectCall } from '../utils/ast';
+import * as ESTree from 'estree';
+import { getParent, getStringValue } from '../utils/ast';
 import { getAmountData } from '../utils/misc';
-import { parseExpectCall } from '../utils/parseExpectCall';
-import { NodeWithParent } from '../utils/types';
+import {
+  isSupportedAccessor,
+  modifiers,
+  parseFnCallWithReason,
+} from '../utils/parseFnCall';
 
-function isMatcherCalled(node: NodeWithParent): {
-  called: boolean;
-  node: ESTree.Node;
-} {
-  if (node.parent.type !== 'MemberExpression') {
-    // Just asserting that the parent is a call expression is not enough as
-    // the node could be an argument of a call expression which doesn't
-    // determine if it is called. To determine if it is called, we verify
-    // that the parent call expression callee is the same as the node.
-    return {
-      called:
-        node.parent.type === 'CallExpression' && node.parent.callee === node,
-      node,
-    };
+const findTopMostMemberExpression = (
+  node: ESTree.MemberExpression,
+): ESTree.MemberExpression => {
+  let topMostMemberExpression = node;
+  let parent = getParent(node);
+
+  while (parent) {
+    if (parent.type !== 'MemberExpression') {
+      break;
+    }
+
+    topMostMemberExpression = parent;
+    parent = parent.parent;
   }
 
-  // If the parent is a member expression, we continue traversing upward to
-  // handle matcher chains of unknown length. e.g. expect().not.something.
-  return isMatcherCalled(node.parent);
-}
+  return topMostMemberExpression;
+};
 
 export default {
   create(context) {
@@ -39,38 +39,90 @@ export default {
 
     return {
       CallExpression(node) {
-        if (!isExpectCall(context, node)) return;
+        const call = parseFnCallWithReason(context, node);
 
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall) {
-          context.report({ messageId: 'matcherNotFound', node });
-        } else {
-          const result = isMatcherCalled(node);
+        if (typeof call === 'string') {
+          const reportingNode =
+            node.parent?.type === 'MemberExpression'
+              ? findTopMostMemberExpression(node.parent)!.property
+              : node;
 
-          if (!result.called) {
+          if (call === 'matcher-not-found') {
             context.report({
-              messageId: 'matcherNotCalled',
-              node:
-                result.node.type === 'MemberExpression'
-                  ? result.node.property
-                  : result.node,
+              messageId: 'matcherNotFound',
+              node: reportingNode,
+            });
+
+            return;
+          }
+
+          if (call === 'matcher-not-called') {
+            context.report({
+              messageId:
+                isSupportedAccessor(reportingNode) &&
+                modifiers.has(getStringValue(reportingNode))
+                  ? 'matcherNotFound'
+                  : 'matcherNotCalled',
+              node: reportingNode,
             });
           }
+
+          if (call === 'modifier-unknown') {
+            context.report({
+              messageId: 'modifierUnknown',
+              node: reportingNode,
+            });
+
+            return;
+          }
+
+          return;
+        } else if (call?.type !== 'expect') {
+          return;
         }
 
-        if (node.arguments.length < minArgs) {
+        const expect = getParent(call.head.node);
+        if (expect?.type !== 'CallExpression') return;
+
+        if (expect.arguments.length < minArgs) {
+          const expectLength = getStringValue(call.head.node).length;
+
+          const loc: ESTree.SourceLocation = {
+            end: {
+              column: expect.loc!.start.column + expectLength + 1,
+              line: expect.loc!.start.line,
+            },
+            start: {
+              column: expect.loc!.start.column + expectLength,
+              line: expect.loc!.start.line,
+            },
+          };
+
           context.report({
             data: getAmountData(minArgs),
+            loc,
             messageId: 'notEnoughArgs',
-            node,
+            node: expect,
           });
         }
 
-        if (node.arguments.length > maxArgs) {
+        if (expect.arguments.length > maxArgs) {
+          const { start } = expect.arguments[maxArgs].loc!;
+          const { end } = expect.arguments.at(-1)!.loc!;
+
+          const loc = {
+            end: {
+              column: end.column,
+              line: end.line,
+            },
+            start,
+          };
+
           context.report({
             data: getAmountData(maxArgs),
+            loc,
             messageId: 'tooManyArgs',
-            node,
+            node: expect,
           });
         }
       },

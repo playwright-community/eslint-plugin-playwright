@@ -87,35 +87,9 @@ export function isTestIdentifier(context: Rule.RuleContext, node: ESTree.Node) {
   );
 }
 
-const describeProperties = new Set([
-  'parallel',
-  'serial',
-  'only',
-  'skip',
-  'fixme',
-]);
-
-/** @deprecated */
-export function isDescribeCall(node: ESTree.Node): boolean {
-  const inner = node.type === 'CallExpression' ? node.callee : node;
-
-  // Allow describe without test prefix
-  if (isIdentifier(inner, 'describe')) {
-    return true;
-  }
-
-  if (inner.type !== 'MemberExpression') {
-    return false;
-  }
-
-  return isPropertyAccessor(inner, 'describe')
-    ? true
-    : describeProperties.has(getStringValue(inner.property))
-    ? isDescribeCall(inner.object)
-    : false;
-}
-
-export function getParent(node: ESTree.Node): ESTree.Node | undefined {
+export function getParent(
+  node: ESTree.Node,
+): (ESTree.Node & Rule.NodeParentExtension) | undefined {
   return (node as any).parent;
 }
 
@@ -128,23 +102,6 @@ export function findParent<T extends ESTree.Node['type']>(
   return node.parent.type === type
     ? (node.parent as unknown as TypedNodeWithParent<T>)
     : findParent(node.parent, type);
-}
-
-/** @deprecated */
-export function isTestCall(
-  context: Rule.RuleContext,
-  node: ESTree.CallExpression,
-  modifiers?: string[],
-) {
-  return (
-    isTestIdentifier(context, node.callee) &&
-    !isDescribeCall(node) &&
-    (node.callee.type !== 'MemberExpression' ||
-      !modifiers ||
-      modifiers?.includes(getStringValue(node.callee.property))) &&
-    node.arguments.length === 2 &&
-    isFunction(node.arguments[1])
-  );
 }
 
 const expectSubCommands = new Set(['soft', 'poll']);

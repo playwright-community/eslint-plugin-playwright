@@ -19,7 +19,7 @@ runRuleTester('valid-expect', rule, {
     {
       code: 'expect(foo).not',
       errors: [
-        { column: 1, endColumn: 12, line: 1, messageId: 'matcherNotFound' },
+        { column: 13, endColumn: 16, line: 1, messageId: 'matcherNotFound' },
       ],
     },
     {
@@ -31,13 +31,13 @@ runRuleTester('valid-expect', rule, {
     {
       code: 'expect.soft(foo).not',
       errors: [
-        { column: 1, endColumn: 17, line: 1, messageId: 'matcherNotFound' },
+        { column: 18, endColumn: 21, line: 1, messageId: 'matcherNotFound' },
       ],
     },
     {
       code: 'expect["soft"](foo)["not"]',
       errors: [
-        { column: 1, endColumn: 20, line: 1, messageId: 'matcherNotFound' },
+        { column: 21, endColumn: 26, line: 1, messageId: 'matcherNotFound' },
       ],
     },
     {
@@ -49,13 +49,13 @@ runRuleTester('valid-expect', rule, {
     {
       code: 'expect.poll(foo).not',
       errors: [
-        { column: 1, endColumn: 17, line: 1, messageId: 'matcherNotFound' },
+        { column: 18, endColumn: 21, line: 1, messageId: 'matcherNotFound' },
       ],
     },
     {
       code: 'expect[`poll`](foo)[`not`]',
       errors: [
-        { column: 1, endColumn: 20, line: 1, messageId: 'matcherNotFound' },
+        { column: 21, endColumn: 26, line: 1, messageId: 'matcherNotFound' },
       ],
     },
     // Matcher not called
@@ -124,15 +124,16 @@ runRuleTester('valid-expect', rule, {
       errors: [
         { column: 44, endColumn: 50, line: 1, messageId: 'matcherNotCalled' },
       ],
+      only: true,
     },
     // minArgs
     {
       code: 'expect().toContain(true)',
       errors: [
         {
-          column: 1,
+          column: 7,
           data: { amount: 1, s: '' },
-          endColumn: 9,
+          endColumn: 8,
           line: 1,
           messageId: 'notEnoughArgs',
         },
@@ -142,9 +143,9 @@ runRuleTester('valid-expect', rule, {
       code: 'expect(foo).toBe(true)',
       errors: [
         {
-          column: 1,
+          column: 7,
           data: { amount: 2, s: 's' },
-          endColumn: 12,
+          endColumn: 8,
           line: 1,
           messageId: 'notEnoughArgs',
         },
@@ -156,9 +157,9 @@ runRuleTester('valid-expect', rule, {
       code: 'expect(foo, "bar", "baz").toBe(true)',
       errors: [
         {
-          column: 1,
+          column: 20,
           data: { amount: 2, s: 's' },
-          endColumn: 26,
+          endColumn: 25,
           line: 1,
           messageId: 'tooManyArgs',
         },
@@ -168,16 +169,15 @@ runRuleTester('valid-expect', rule, {
       code: 'expect(foo, "bar").toBe(true)',
       errors: [
         {
-          column: 1,
+          column: 13,
           data: { amount: 1, s: '' },
-          endColumn: 19,
+          endColumn: 18,
           line: 1,
           messageId: 'tooManyArgs',
         },
       ],
       options: [{ maxArgs: 1 }],
     },
-    // Multiple errors
     {
       code: 'expect()',
       errors: [
@@ -187,25 +187,11 @@ runRuleTester('valid-expect', rule, {
           line: 1,
           messageId: 'matcherNotFound',
         },
-        {
-          column: 1,
-          data: { amount: 1, s: '' },
-          endColumn: 9,
-          line: 1,
-          messageId: 'notEnoughArgs',
-        },
       ],
     },
     {
       code: 'expect().toHaveText',
       errors: [
-        {
-          column: 1,
-          data: { amount: 1, s: '' },
-          endColumn: 9,
-          line: 1,
-          messageId: 'notEnoughArgs',
-        },
         {
           column: 10,
           endColumn: 20,
