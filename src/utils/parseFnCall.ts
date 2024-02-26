@@ -151,55 +151,49 @@ function determinePlaywrightFnType(name: string): FnType {
   return 'unknown';
 }
 
-const modifierNames = new Set(['not', 'resolves', 'rejects']);
-
 const findModifiersAndMatcher = (
   members: KnownMemberExpressionProperty[],
 ): ModifiersAndMatcher | string => {
   const modifiers: KnownMemberExpressionProperty[] = [];
 
   for (const member of members) {
-    // check if the member is being called, which means it is the matcher
-    // (and also the end of the entire "expect" call chain)
-    if (
-      member.parent?.type === 'MemberExpression' &&
-      member.parent.parent?.type === 'CallExpression'
-    ) {
-      return {
-        args: member.parent.parent.arguments,
-        matcher: member,
-        modifiers,
-      };
-    }
-
-    // otherwise, it should be a modifier
+    // Otherwise, it should be a modifier
     const name = getStringValue(member);
 
-    if (modifiers.length === 0) {
-      // the first modifier can be any of the three modifiers
-      if (!modifierNames.has(name)) {
+    if (name === 'soft' || name === 'poll') {
+      // soft and poll must be the first modifier
+      if (modifiers.length > 0) {
         return 'modifier-unknown';
       }
-    } else if (modifiers.length === 1) {
-      // the second modifier can only be "not"
-      if (name !== 'not') {
+    } else if (name === 'resolves' || name === 'rejects') {
+      const lastModifier = getStringValue(modifiers.at(-1));
+
+      // resolves and rejects must be the first modifier following soft or poll
+      if (lastModifier && lastModifier !== 'soft' && lastModifier !== 'poll') {
         return 'modifier-unknown';
+      }
+    } else if (name !== 'not') {
+      // Check if the member is being called, which means it is the matcher
+      // (and also the end of the entire "expect" call chain).
+      if (
+        member.parent?.type === 'MemberExpression' &&
+        member.parent.parent?.type === 'CallExpression'
+      ) {
+        return {
+          args: member.parent.parent.arguments,
+          matcher: member,
+          modifiers,
+        };
       }
 
-      const firstModifier = getStringValue(modifiers[0]);
-
-      // and the first modifier has to be either "resolves" or "rejects"
-      if (firstModifier !== 'resolves' && firstModifier !== 'rejects') {
-        return 'modifier-unknown';
-      }
-    } else {
+      // not is the only other allowed modifier
       return 'modifier-unknown';
     }
 
     modifiers.push(member);
   }
 
-  // this will only really happen if there are no members
+  // This will only really happen if there are no members
   return 'matcher-not-found';
 };
 

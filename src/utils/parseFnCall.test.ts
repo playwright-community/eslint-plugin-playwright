@@ -1,4 +1,3 @@
-/* eslint-disable sort/object-properties */
 import dedent from 'dedent';
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
@@ -25,16 +24,14 @@ const rule = {
       const call = parseFnCall(context, node);
 
       if (call) {
-        const sorted = {
-          head: call.head,
-          members: call.members,
-          name: call.name,
-          type: call.type,
-        };
+        const sorted = sortKeys({
+          ...call,
+          head: sortKeys(call.head),
+        });
 
         context.report({
           data: {
-            data: JSON.stringify(sorted, (_key, value) => {
+            data: JSON.stringify(sortKeys(sorted), (_key, value) => {
               if (isNode(value)) {
                 if (isSupportedAccessor(value)) {
                   return getStringValue(value);
@@ -70,15 +67,25 @@ interface TestResolvedFnWithNode extends Omit<ResolvedFnWithNode, 'node'> {
   node: string;
 }
 
-interface TestParsedFnCall extends Omit<ParsedFnCall, 'head' | 'members'> {
+interface TestParsedFnCall
+  extends Omit<ParsedFnCall, 'head' | 'members' | 'modifiers'> {
+  args?: string[];
   head: TestResolvedFnWithNode;
+  matcher?: string;
   members: string[];
+  modifiers?: string[];
 }
+
+const sortKeys = (obj: unknown) =>
+  Object.fromEntries(Object.entries(obj as Record<string, unknown>).sort());
 
 const expectedParsedFnCallResultData = (result: TestParsedFnCall) => ({
   data: JSON.stringify({
-    head: result.head,
+    args: result.args,
+    head: sortKeys(result.head),
+    matcher: result.matcher,
     members: result.members,
+    modifiers: result.modifiers,
     name: result.name,
     type: result.type,
   }),
@@ -108,7 +115,244 @@ runRuleTester('nonexistent methods', rule, {
 });
 
 runRuleTester('expect', rule, {
+  invalid: [
+    {
+      code: 'expect(x).toBe(y);',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: ['y'],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'toBe',
+            members: ['toBe'],
+            modifiers: [],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'expect.soft(x).toBe(y);',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: ['y'],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'toBe',
+            members: ['soft', 'toBe'],
+            modifiers: ['soft'],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'expect.poll(() => x).toBe(y);',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: ['y'],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'toBe',
+            members: ['poll', 'toBe'],
+            modifiers: ['poll'],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: dedent`
+        import { expect } from '@playwright/test';
+
+        expect.assertions();
+      `,
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: [],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'assertions',
+            members: ['assertions'],
+            modifiers: [],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 3,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: dedent`
+        import { expect } from '@playwright/test';
+
+        expect(x).toBe(y);
+      `,
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: ['y'],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'toBe',
+            members: ['toBe'],
+            modifiers: [],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 3,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: dedent`
+        import { expect } from '@playwright/test';
+
+        expect(x).not.toBe(y);
+      `,
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: ['y'],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'toBe',
+            members: ['not', 'toBe'],
+            modifiers: ['not'],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 3,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: dedent`
+        import { expect } from '@playwright/test';
+
+        expect.assertions();
+        expect.hasAssertions();
+        expect.anything();
+        expect.not.arrayContaining();
+      `,
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: [],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'assertions',
+            members: ['assertions'],
+            modifiers: [],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 3,
+          messageId: 'details',
+        },
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: [],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'hasAssertions',
+            members: ['hasAssertions'],
+            modifiers: [],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 4,
+          messageId: 'details',
+        },
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: [],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'anything',
+            members: ['anything'],
+            modifiers: [],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 5,
+          messageId: 'details',
+        },
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: [],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'arrayContaining',
+            members: ['not', 'arrayContaining'],
+            modifiers: ['not'],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 6,
+          messageId: 'details',
+        },
+      ],
+    },
+  ],
   valid: [
+    'expect(x).not(y);',
     {
       code: dedent`
         import { expect } from '@playwright/test';
@@ -133,196 +377,6 @@ runRuleTester('expect', rule, {
         expect(x).not.toBe;
         //expect(x).toBe(x).not();
       `,
-    },
-  ],
-  invalid: [
-    {
-      code: 'expect(x).toBe(y);',
-      errors: [
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['toBe'],
-          }),
-          column: 1,
-          line: 1,
-        },
-      ],
-    },
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
-        expect.assertions();
-      `,
-      errors: [
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['assertions'],
-          }),
-          column: 1,
-          line: 3,
-        },
-      ],
-    },
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
-        expect(x).toBe(y);
-      `,
-      errors: [
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['toBe'],
-          }),
-          column: 1,
-          line: 3,
-        },
-      ],
-    },
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
-        expect(x).not(y);
-      `,
-      errors: [
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['not'],
-          }),
-          column: 1,
-          line: 3,
-        },
-      ],
-    },
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
-        expect(x).not.toBe(y);
-      `,
-      errors: [
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['not', 'toBe'],
-          }),
-          column: 1,
-          line: 3,
-        },
-      ],
-    },
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
-        expect.assertions();
-        expect.hasAssertions();
-        expect.anything();
-        expect.not.arrayContaining();
-      `,
-      errors: [
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['assertions'],
-          }),
-          column: 1,
-          line: 3,
-        },
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['hasAssertions'],
-          }),
-          column: 1,
-          line: 4,
-        },
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['anything'],
-          }),
-          column: 1,
-          line: 5,
-        },
-        {
-          messageId: 'details',
-          data: expectedParsedFnCallResultData({
-            name: 'expect',
-            type: 'expect',
-            head: {
-              original: null,
-              local: 'expect',
-              node: 'expect',
-            },
-            members: ['not', 'arrayContaining'],
-          }),
-          column: 1,
-          line: 6,
-        },
-      ],
     },
   ],
 });
@@ -368,9 +422,9 @@ runRuleTester('global aliases', rule, {
           column: 1,
           data: expectedParsedFnCallResultData({
             head: {
-              original: 'describe',
               local: 'context',
               node: 'context',
+              original: 'describe',
             },
             members: [],
             name: 'describe',
@@ -389,9 +443,9 @@ runRuleTester('global aliases', rule, {
           column: 1,
           data: expectedParsedFnCallResultData({
             head: {
-              original: 'describe',
               local: 'context',
               node: 'context',
+              original: 'describe',
             },
             members: ['skip'],
             name: 'describe',
@@ -413,9 +467,9 @@ runRuleTester('global aliases', rule, {
           column: 1,
           data: expectedParsedFnCallResultData({
             head: {
-              original: 'describe',
               local: 'context',
               node: 'context',
+              original: 'describe',
             },
             members: [],
             name: 'describe',
@@ -428,9 +482,9 @@ runRuleTester('global aliases', rule, {
           column: 1,
           data: expectedParsedFnCallResultData({
             head: {
-              original: null,
               local: 'describe',
               node: 'describe',
+              original: null,
             },
             members: [],
             name: 'describe',
@@ -465,9 +519,9 @@ runTSRuleTester('typescript', rule, {
           column: 1,
           data: expectedParsedFnCallResultData({
             head: {
-              original: null,
               local: 'test',
               node: 'test',
+              original: null,
             },
             members: [],
             name: 'test',
