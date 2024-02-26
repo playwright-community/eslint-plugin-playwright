@@ -1,17 +1,27 @@
 import { Rule } from 'eslint';
-import { getExpectType } from '../utils/ast';
+import { getStringValue } from '../utils/ast';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (getExpectType(context, node) === 'standalone') {
-          context.report({
-            fix: (fixer) => fixer.insertTextAfter(node.callee, '.soft'),
-            messageId: 'requireSoft',
-            node: node.callee,
-          });
+        const call = parseFnCall(context, node);
+        if (
+          call?.type !== 'expect' ||
+          call.modifiers.some((m) => {
+            const name = getStringValue(m);
+            return name === 'soft' || name === 'poll';
+          })
+        ) {
+          return;
         }
+
+        context.report({
+          fix: (fixer) => fixer.insertTextAfter(call.head.node, '.soft'),
+          messageId: 'requireSoft',
+          node: call.head.node,
+        });
       },
     };
   },

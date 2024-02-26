@@ -32,6 +32,16 @@ runRuleTester('logical conditions', rule, {
     },
     {
       code: `
+        test('foo', async () => {
+          await test.step('bar', async () => {
+            something && expect(something).toHaveBeenCalled();
+          })
+        })
+      `,
+      errors: [{ messageId }],
+    },
+    {
+      code: `
         test('foo', () => {
           a || b && expect(something).toHaveBeenCalled();
         })

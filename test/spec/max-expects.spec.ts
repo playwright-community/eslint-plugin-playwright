@@ -25,6 +25,30 @@ runRuleTester('max-expects', rule, {
     },
     {
       code: dedent`
+        test('should not pass', async () => {
+          await test.step('part 1', async () => {
+            expect(true).toBeDefined();
+            expect(true).toBeDefined();
+            expect(true).toBeDefined();
+          })
+
+          await test.step('part 1', async () => {
+            expect(true).toBeDefined();
+            expect(true).toBeDefined();
+            expect(true).toBeDefined();
+          })
+        });
+      `,
+      errors: [
+        {
+          column: 5,
+          line: 11,
+          messageId: 'exceededMaxAssertion',
+        },
+      ],
+    },
+    {
+      code: dedent`
         test('should not pass', () => {
           expect(true).toBeDefined();
           expect(true).toBeDefined();

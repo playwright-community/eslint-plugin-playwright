@@ -6,8 +6,9 @@ import {
   isIdentifier,
   isStringNode,
   StringNode,
-  testHooks,
 } from './ast';
+
+const testHooks = new Set(['afterAll', 'afterEach', 'beforeAll', 'beforeEach']);
 
 const VALID_CHAINS = new Set([
   // Hooks
@@ -58,8 +59,8 @@ const VALID_CHAINS = new Set([
   'test.fixme',
   'test.only',
   'test.skip',
-  'test.slow',
   'test.step',
+  'test.slow',
   'test.use',
 ]);
 
@@ -141,9 +142,16 @@ const resolveToPlaywrightFn = (
   };
 };
 
-export type FnType = 'describe' | 'expect' | 'hook' | 'test' | 'unknown';
+export type FnType =
+  | 'describe'
+  | 'expect'
+  | 'hook'
+  | 'step'
+  | 'test'
+  | 'unknown';
 
 function determinePlaywrightFnType(name: string): FnType {
+  if (name === 'step') return 'step';
   if (name === 'expect') return 'expect';
   if (name === 'describe') return 'describe';
   if (name === 'test') return 'test';

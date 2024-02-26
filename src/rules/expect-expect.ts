@@ -1,17 +1,7 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
-import { dig, isExpectCall, isTestCall } from '../utils/ast';
-
-function isAssertionCall(
-  context: Rule.RuleContext,
-  node: ESTree.CallExpression,
-  assertFunctionNames: string[],
-) {
-  return (
-    isExpectCall(context, node) ||
-    assertFunctionNames.find((name) => dig(node.callee, name))
-  );
-}
+import { dig } from '../utils/ast';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
@@ -36,10 +26,13 @@ export default {
 
     return {
       CallExpression(node) {
-        if (isTestCall(context, node, ['fixme', 'only', 'skip'])) {
+        const call = parseFnCall(context, node);
+
+        if (call?.type === 'test') {
           unchecked.push(node);
         } else if (
-          isAssertionCall(context, node, options.assertFunctionNames)
+          call?.type === 'expect' ||
+          options.assertFunctionNames.find((name) => dig(node.callee, name))
         ) {
           const ancestors = context.sourceCode.getAncestors(node);
           checkExpressions(ancestors);

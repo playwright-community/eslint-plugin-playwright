@@ -1,6 +1,7 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import { getExpectType, getParent, isTestCall } from '../utils/ast';
+import { getParent } from '../utils/ast';
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
@@ -14,7 +15,8 @@ export default {
     const maybeResetCount = (node: ESTree.Node) => {
       const parent = getParent(node);
       const isTestFn =
-        parent?.type !== 'CallExpression' || isTestCall(context, parent);
+        parent?.type !== 'CallExpression' ||
+        isTypeOfFnCall(context, parent, ['test']);
 
       if (isTestFn) {
         count = 0;
@@ -25,7 +27,14 @@ export default {
       ArrowFunctionExpression: maybeResetCount,
       'ArrowFunctionExpression:exit': maybeResetCount,
       CallExpression(node) {
-        if (!getExpectType(context, node)) return;
+        const call = parseFnCall(context, node);
+
+        if (
+          call?.type !== 'expect' ||
+          getParent(call.head.node)?.type === 'MemberExpression'
+        ) {
+          return;
+        }
 
         count += 1;
 

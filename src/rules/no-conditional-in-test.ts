@@ -1,12 +1,26 @@
 import { Rule } from 'eslint';
-import { findParent, isTestCall } from '../utils/ast';
+import { findParent, getStringValue } from '../utils/ast';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
     function checkConditional(node: Rule.Node & Rule.NodeParentExtension) {
       const call = findParent(node, 'CallExpression');
+      if (!call) return;
 
-      if (call && isTestCall(context, call)) {
+      const fnCall = parseFnCall(context, call);
+
+      // Allow conditional logic in `test.skip()` calls inside of tests
+      // https://playwright.dev/docs/api/class-test#test-skip-3
+      if (
+        fnCall?.type === 'test' &&
+        fnCall.members.some((member) => getStringValue(member) === 'skip') &&
+        call.arguments[0]?.type === 'LogicalExpression'
+      ) {
+        return;
+      }
+
+      if (fnCall?.type === 'test' || fnCall?.type === 'step') {
         context.report({ messageId: 'conditionalInTest', node });
       }
     }

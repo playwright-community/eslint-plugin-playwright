@@ -147,28 +147,10 @@ export function isTestCall(
   );
 }
 
-export const testHooks = new Set([
-  'afterAll',
-  'afterEach',
-  'beforeAll',
-  'beforeEach',
-]);
-
-/** @deprecated */
-export function isTestHook(
-  context: Rule.RuleContext,
-  node: ESTree.CallExpression,
-) {
-  return (
-    node.callee.type === 'MemberExpression' &&
-    isTestIdentifier(context, node.callee.object) &&
-    testHooks.has(getStringValue(node.callee.property))
-  );
-}
-
 const expectSubCommands = new Set(['soft', 'poll']);
 export type ExpectType = 'poll' | 'soft' | 'standalone';
 
+/** @deprecated */
 export function getExpectType(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,

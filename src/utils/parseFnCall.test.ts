@@ -186,6 +186,52 @@ runRuleTester('expect', rule, {
       ],
     },
     {
+      code: 'expect["poll"](() => x).toBe(y);',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: ['y'],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'toBe',
+            members: ['poll', 'toBe'],
+            modifiers: ['poll'],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'expect[`poll`](() => x).toBe(y);',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: ['y'],
+            head: {
+              local: 'expect',
+              node: 'expect',
+              original: null,
+            },
+            matcher: 'toBe',
+            members: ['poll', 'toBe'],
+            modifiers: ['poll'],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
       code: dedent`
         import { expect } from '@playwright/test';
 
@@ -381,40 +427,48 @@ runRuleTester('expect', rule, {
   ],
 });
 
-runRuleTester('esm', rule, {
-  invalid: [],
-  valid: [
-    {
-      code: dedent`
-        import { it } from './test-utils';
-        it('is not a  function', () => {});
-      `,
-    },
-    {
-      code: dedent`
-        import { fn as it } from './test-utils';
-        it('is not a  function', () => {});
-      `,
-    },
-    {
-      code: dedent`
-        import ByDefault from './myfile';
-        ByDefault.sayHello();
-      `,
-    },
-    {
-      code: dedent`
-        async function doSomething() {
-          const build = await rollup(config);
-          build.generate();
-        }
-      `,
-    },
-  ],
-});
-
-runRuleTester('global aliases', rule, {
+runRuleTester('test', rule, {
   invalid: [
+    {
+      code: 'test("a test", () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: [],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.step("a step", () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['step'],
+            name: 'step',
+            type: 'step',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
     {
       code: 'context("when there is an error", () => {})',
       errors: [
@@ -498,6 +552,8 @@ runRuleTester('global aliases', rule, {
     },
   ],
   valid: [
+    'it("is a  function", () => {});',
+    'ByDefault.sayHello();',
     {
       code: 'mycontext("skip this please", () => {});',
       settings: { playwright: { globalAliases: { describe: ['context'] } } },

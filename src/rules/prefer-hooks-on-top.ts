@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { isTestCall, isTestHook } from '../utils/ast';
+import { isTypeOfFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
@@ -7,15 +7,12 @@ export default {
 
     return {
       CallExpression(node) {
-        if (isTestCall(context, node)) {
+        if (isTypeOfFnCall(context, node, ['test'])) {
           stack[stack.length - 1] = true;
         }
 
-        if (stack.at(-1) && isTestHook(context, node)) {
-          context.report({
-            messageId: 'noHookOnTop',
-            node,
-          });
+        if (stack.at(-1) && isTypeOfFnCall(context, node, ['hook'])) {
+          context.report({ messageId: 'noHookOnTop', node });
         }
 
         stack.push(false);

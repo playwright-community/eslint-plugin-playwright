@@ -1,11 +1,7 @@
 import { Rule, Scope } from 'eslint';
 import * as ESTree from 'estree';
-import {
-  getExpectType,
-  getParent,
-  isPropertyAccessor,
-  isTestCall,
-} from '../utils/ast';
+import { getParent, isPropertyAccessor } from '../utils/ast';
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 import { KnownCallExpression } from '../utils/types';
 
 const isCatchCall = (
@@ -25,7 +21,8 @@ const getTestCallExpressionsFromDeclaredVariables = (
         .map(({ identifier }) => getParent(identifier))
         .filter(
           (node): node is ESTree.CallExpression =>
-            node?.type === 'CallExpression' && isTestCall(context, node),
+            node?.type === 'CallExpression' &&
+            isTypeOfFnCall(context, node, ['test']),
         ),
     ],
     [],
@@ -43,7 +40,9 @@ export default {
 
     return {
       CallExpression(node: ESTree.CallExpression) {
-        if (isTestCall(context, node)) {
+        const call = parseFnCall(context, node);
+
+        if (call?.type === 'test') {
           inTestCase = true;
         }
 
@@ -51,15 +50,14 @@ export default {
           inPromiseCatch = true;
         }
 
-        const expectType = getExpectType(context, node);
-        if (inTestCase && expectType && conditionalDepth > 0) {
+        if (inTestCase && call?.type === 'expect' && conditionalDepth > 0) {
           context.report({
             messageId: 'conditionalExpect',
             node,
           });
         }
 
-        if (inPromiseCatch && expectType) {
+        if (inPromiseCatch && call?.type === 'expect') {
           context.report({
             messageId: 'conditionalExpect',
             node,
@@ -67,7 +65,7 @@ export default {
         }
       },
       'CallExpression:exit'(node) {
-        if (isTestCall(context, node)) {
+        if (isTypeOfFnCall(context, node, ['test'])) {
           inTestCase = false;
         }
 

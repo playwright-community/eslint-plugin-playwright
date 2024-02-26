@@ -17,7 +17,6 @@ runRuleTester('no-standalone-expect', rule, {
     {
       code: 'test.describe("a test", () => { expect.poll(() => 1).toBe(1); });',
       errors: [{ column: 33, endColumn: 61, messageId }],
-      only: true,
     },
     {
       code: "(() => {})('testing', () => expect(true).toBe(false))",

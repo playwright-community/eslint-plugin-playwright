@@ -1,7 +1,7 @@
 import { Rule } from 'eslint';
-import { getStringValue, isTestHook } from '../utils/ast';
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
-const HooksOrder = ['beforeAll', 'beforeEach', 'afterEach', 'afterAll'];
+const order = ['beforeAll', 'beforeEach', 'afterEach', 'afterAll'];
 
 export default {
   create(context) {
@@ -13,43 +13,38 @@ export default {
         // Ignore everything that is passed into a hook
         if (inHook) return;
 
-        // Reset the previousHookIndex when encountering something different from a hook
-        if (!isTestHook(context, node)) {
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'hook') {
           previousHookIndex = -1;
           return;
         }
 
         inHook = true;
-        const currentHook =
-          node.callee.type === 'MemberExpression'
-            ? getStringValue(node.callee.property)
-            : '';
-        const currentHookIndex = HooksOrder.indexOf(currentHook);
+        const currentHook = call.name;
+        const currentHookIndex = order.indexOf(currentHook);
 
         if (currentHookIndex < previousHookIndex) {
-          return context.report({
+          context.report({
             data: {
               currentHook,
-              previousHook: HooksOrder[previousHookIndex],
+              previousHook: order[previousHookIndex],
             },
             messageId: 'reorderHooks',
             node,
           });
+
+          return;
         }
 
         previousHookIndex = currentHookIndex;
       },
       'CallExpression:exit'(node) {
-        if (isTestHook(context, node)) {
+        if (isTypeOfFnCall(context, node, ['hook'])) {
           inHook = false;
           return;
         }
 
-        if (inHook) {
-          return;
-        }
-
-        // Reset the previousHookIndex when encountering something different from a hook
+        if (inHook) return;
         previousHookIndex = -1;
       },
     };
