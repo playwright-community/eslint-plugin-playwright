@@ -72,21 +72,6 @@ export function isPropertyAccessor(
   return getStringValue(node.property) === name;
 }
 
-export function getTestNames(context: Rule.RuleContext) {
-  const aliases = context.settings.playwright?.globalAliases?.test ?? [];
-  return ['test', ...aliases];
-}
-
-export function isTestIdentifier(context: Rule.RuleContext, node: ESTree.Node) {
-  const testNames = getTestNames(context);
-  const regex = new RegExp(`^(${testNames.join('|')})$`);
-
-  return (
-    isIdentifier(node, regex) ||
-    (node.type === 'MemberExpression' && isIdentifier(node.object, regex))
-  );
-}
-
 export function getParent(
   node: ESTree.Node,
 ): (ESTree.Node & Rule.NodeParentExtension) | undefined {
