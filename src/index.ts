@@ -40,6 +40,7 @@ import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
 import requireHook from './rules/require-hook';
 import requireSoftAssertions from './rules/require-soft-assertions';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
+import validDescribeCallback from './rules/valid-describe-callback';
 import validExpect from './rules/valid-expect';
 import validTitle from './rules/valid-title';
 
@@ -87,6 +88,7 @@ const index = {
     'require-hook': requireHook,
     'require-soft-assertions': requireSoftAssertions,
     'require-top-level-describe': requireTopLevelDescribe,
+    'valid-describe-callback': validDescribeCallback,
     'valid-expect': validExpect,
     'valid-title': validTitle,
   },
@@ -115,6 +117,7 @@ const sharedConfig = {
     'playwright/no-wait-for-selector': 'warn',
     'playwright/no-wait-for-timeout': 'warn',
     'playwright/prefer-web-first-assertions': 'error',
+    'playwright/valid-describe-callback': 'error',
     'playwright/valid-expect': 'error',
     'playwright/valid-title': 'error',
   },
