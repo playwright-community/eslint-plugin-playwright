@@ -19,7 +19,9 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node, {
+          includeConfigStatements: true,
+        });
         if (call?.type !== 'describe') return;
 
         if (node.arguments.length < 1) {
