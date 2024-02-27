@@ -9,7 +9,9 @@ export default {
         const options = context.options[0] || {};
         const allowConditional = !!options.allowConditional;
 
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node, {
+          includeConfigStatements: true,
+        });
         if (call?.type !== 'test' && call?.type !== 'describe') {
           return;
         }

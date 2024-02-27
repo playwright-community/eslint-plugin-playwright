@@ -4,9 +4,10 @@ import * as ESTree from 'estree';
 import { getStringValue } from './ast';
 import {
   isSupportedAccessor,
-  ParsedFnCall,
+  type ParsedFnCall,
+  type ParseFnCallOptions,
   parseFnCallWithReason,
-  ResolvedFnWithNode,
+  type ResolvedFnWithNode,
 } from './parseFnCall';
 import { runRuleTester, runTSRuleTester } from './rule-tester';
 
@@ -18,55 +19,57 @@ const isNode = (obj: unknown): obj is ESTree.Node => {
   return false;
 };
 
-const rule = {
-  create: (context) => ({
-    CallExpression(node) {
-      const call = parseFnCallWithReason(context, node);
+function rule(options?: ParseFnCallOptions) {
+  return {
+    create: (context) => ({
+      CallExpression(node) {
+        const call = parseFnCallWithReason(context, node, options);
 
-      if (typeof call === 'string') {
-        context.report({ messageId: call, node });
-      } else if (call) {
-        const sorted = sortKeys({
-          ...call,
-          head: sortKeys(call.head),
-        });
+        if (typeof call === 'string') {
+          context.report({ messageId: call, node });
+        } else if (call) {
+          const sorted = sortKeys({
+            ...call,
+            head: sortKeys(call.head),
+          });
 
-        context.report({
-          data: {
-            data: JSON.stringify(sortKeys(sorted), (_key, value) => {
-              if (isNode(value)) {
-                if (isSupportedAccessor(value)) {
-                  return getStringValue(value);
+          context.report({
+            data: {
+              data: JSON.stringify(sortKeys(sorted), (_key, value) => {
+                if (isNode(value)) {
+                  if (isSupportedAccessor(value)) {
+                    return getStringValue(value);
+                  }
+
+                  return undefined;
                 }
 
-                return undefined;
-              }
-
-              return value;
-            }),
-          },
-          messageId: 'details',
-          node,
-        });
-      }
+                return value;
+              }),
+            },
+            messageId: 'details',
+            node,
+          });
+        }
+      },
+    }),
+    meta: {
+      docs: {
+        category: 'Possible Errors',
+        description: 'Fake rule for testing parseFnCall',
+        recommended: false,
+      },
+      messages: {
+        details: '{{ data }}',
+        'matcher-not-called': 'matcherNotCalled',
+        'matcher-not-found': 'matcherNotFound',
+        'modifier-unknown': 'modifierUnknown',
+      },
+      schema: [],
+      type: 'problem',
     },
-  }),
-  meta: {
-    docs: {
-      category: 'Possible Errors',
-      description: 'Fake rule for testing parseFnCall',
-      recommended: false,
-    },
-    messages: {
-      details: '{{ data }}',
-      'matcher-not-called': 'matcherNotCalled',
-      'matcher-not-found': 'matcherNotFound',
-      'modifier-unknown': 'modifierUnknown',
-    },
-    schema: [],
-    type: 'problem',
-  },
-} as Rule.RuleModule;
+  } as Rule.RuleModule;
+}
 
 interface TestResolvedFnWithNode extends Omit<ResolvedFnWithNode, 'node'> {
   node: string;
@@ -100,7 +103,7 @@ const expectedParsedFnCallResultData = (result: TestParsedFnCall) => ({
   }),
 });
 
-runRuleTester('nonexistent methods', rule, {
+runRuleTester('nonexistent methods', rule(), {
   invalid: [],
   valid: [
     'describe.something()',
@@ -123,7 +126,7 @@ runRuleTester('nonexistent methods', rule, {
   ],
 });
 
-runRuleTester('expect', rule, {
+runRuleTester('expect', rule(), {
   invalid: [
     {
       code: 'expect(x).toBe(y);',
@@ -498,7 +501,7 @@ runRuleTester('expect', rule, {
   valid: [],
 });
 
-runRuleTester('test', rule, {
+runRuleTester('test', rule(), {
   invalid: [
     {
       code: 'test("a test", () => {});',
@@ -534,6 +537,168 @@ runRuleTester('test', rule, {
             members: ['step'],
             name: 'step',
             type: 'step',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.only("a test", () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['only'],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.skip("a test", () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['skip'],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.slow("a test", () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['slow'],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+  ],
+  valid: [
+    'test.info()',
+    'test.use({ locale: "en-US" })',
+    // test.skip
+    'test.skip();',
+    'test.skip(true);',
+    'test.skip(({ browserName }) => browserName === "Chrome");',
+    'test.skip(browserName === "Chrome", "This feature is skipped on Chrome")',
+    // test.slow
+    'test.slow();',
+    'test.slow(true);',
+    'test.slow(({ browserName }) => browserName === "Chrome");',
+    'test.slow(browserName === "webkit", "This feature is slow on Mac")',
+    // Other functions
+    'it("is a  function", () => {});',
+    'ByDefault.sayHello();',
+  ],
+});
+
+runRuleTester('describe', rule(), {
+  invalid: [
+    {
+      code: 'describe("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'describe',
+              node: 'describe',
+              original: null,
+            },
+            members: [],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'describe.skip("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'describe',
+              node: 'describe',
+              original: null,
+            },
+            members: ['skip'],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.describe("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['describe'],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.describe.skip("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['describe', 'skip'],
+            name: 'describe',
+            type: 'describe',
           }),
           line: 1,
           messageId: 'details',
@@ -623,8 +788,8 @@ runRuleTester('test', rule, {
     },
   ],
   valid: [
-    'it("is a  function", () => {});',
-    'ByDefault.sayHello();',
+    'describe.configure({ mode: "parallel" })',
+    'test.describe.configure({ mode: "parallel" })',
     {
       code: 'mycontext("skip this please", () => {});',
       settings: { playwright: { globalAliases: { describe: ['context'] } } },
@@ -632,7 +797,7 @@ runRuleTester('test', rule, {
   ],
 });
 
-runTSRuleTester('typescript', rule, {
+runTSRuleTester('typescript', rule(), {
   invalid: [
     {
       code: dedent`
@@ -680,5 +845,180 @@ runTSRuleTester('typescript', rule, {
     },
     "it('is not a  function', () => {});",
     'dedent()',
+  ],
+});
+
+runRuleTester('includeConfigStatements', rule(), {
+  invalid: [
+    {
+      code: 'test("a test", () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: [],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.step("a step", () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['step'],
+            name: 'step',
+            type: 'step',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'describe("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'describe',
+              node: 'describe',
+              original: null,
+            },
+            members: [],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'describe.skip("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'describe',
+              node: 'describe',
+              original: null,
+            },
+            members: ['skip'],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.describe("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['describe'],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.describe.skip("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['describe', 'skip'],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'context("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'context',
+              node: 'context',
+              original: 'describe',
+            },
+            members: [],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+      settings: { playwright: { globalAliases: { describe: ['context'] } } },
+    },
+    {
+      code: 'context.skip("when there is an error", () => {})',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            head: {
+              local: 'context',
+              node: 'context',
+              original: 'describe',
+            },
+            members: ['skip'],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+      settings: { playwright: { globalAliases: { describe: ['context'] } } },
+    },
+  ],
+  valid: [
+    'it("is a  function", () => {});',
+    'ByDefault.sayHello();',
+    {
+      code: 'mycontext("skip this please", () => {});',
+      settings: { playwright: { globalAliases: { describe: ['context'] } } },
+    },
   ],
 });

@@ -4,6 +4,7 @@ import {
   findParent,
   getParent,
   getStringValue,
+  isFunction,
   isIdentifier,
   isStringNode,
   StringNode,
@@ -306,7 +307,15 @@ export const findTopMostCallExpression = (
   return top as ESTree.CallExpression & Rule.NodeParentExtension;
 };
 
-function parse(context: Rule.RuleContext, node: ESTree.CallExpression) {
+export type ParseFnCallOptions = {
+  includeConfigStatements?: boolean;
+};
+
+function parse(
+  context: Rule.RuleContext,
+  node: ESTree.CallExpression,
+  options?: ParseFnCallOptions,
+): ParsedFnCall | string | null {
   const chain = getNodeChain(node);
 
   if (!chain?.length) {
@@ -332,6 +341,18 @@ function parse(context: Rule.RuleContext, node: ESTree.CallExpression) {
 
     if (nextLinkType !== 'unknown') {
       name = nextLinkName;
+    }
+  }
+
+  // If the call is a standalone `test.skip()`, `test.use`, `test.describe.configure()`,
+  // etc. call, and the `includeConfigStatements` option is not enabled, we
+  // should ignore it. Some rules use these statements, but not most.
+  if (
+    (name === 'test' || name === 'describe') &&
+    !options?.includeConfigStatements
+  ) {
+    if (node.arguments.length !== 2 || !isFunction(node.arguments[1])) {
+      return null;
     }
   }
 
@@ -397,12 +418,13 @@ const cache = new WeakMap<
 export function parseFnCallWithReason(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
+  options?: ParseFnCallOptions,
 ): ParsedFnCall | string | null {
   if (cache.has(node)) {
     return cache.get(node)!;
   }
 
-  const call = parse(context, node);
+  const call = parse(context, node, options);
   cache.set(node, call);
 
   return call;
@@ -411,8 +433,9 @@ export function parseFnCallWithReason(
 export function parseFnCall(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
+  options?: ParseFnCallOptions,
 ): ParsedFnCall | null {
-  const call = parseFnCallWithReason(context, node);
+  const call = parseFnCallWithReason(context, node, options);
   return typeof call === 'string' ? null : call;
 }
 
