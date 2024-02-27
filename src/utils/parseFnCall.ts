@@ -144,7 +144,7 @@ const resolveToPlaywrightFn = (
   };
 };
 
-export type FnType =
+export type FnGroup =
   | 'describe'
   | 'expect'
   | 'hook'
@@ -152,7 +152,9 @@ export type FnType =
   | 'test'
   | 'unknown';
 
-function determinePlaywrightFnType(name: string): FnType {
+export type FnType = FnGroup | 'config';
+
+function determinePlaywrightFnGroup(name: string): FnGroup {
   if (name === 'step') return 'step';
   if (name === 'expect') return 'expect';
   if (name === 'describe') return 'describe';
@@ -211,7 +213,7 @@ const findModifiersAndMatcher = (
 };
 
 function getExpectArguments(
-  call: Omit<ParsedFnCall, 'type'>,
+  call: Omit<ParsedFnCall, 'group' | 'type'>,
 ): ESTree.CallExpression['arguments'] {
   return findParent(call.head.node, 'CallExpression')?.arguments ?? [];
 }
@@ -240,6 +242,7 @@ interface BaseParsedFnCall {
 }
 
 interface ParsedGeneralFnCall extends BaseParsedFnCall {
+  group: Exclude<FnGroup, 'expect'>;
   type: Exclude<FnType, 'expect'>;
 }
 
@@ -254,13 +257,14 @@ export interface ParsedExpectFnCall
   extends BaseParsedFnCall,
     ModifiersAndMatcher {
   args: ESTree.CallExpression['arguments'];
+  group: 'expect';
   type: 'expect';
 }
 
 export type ParsedFnCall = ParsedGeneralFnCall | ParsedExpectFnCall;
 
 const parseExpectCall = (
-  call: Omit<ParsedFnCall, 'type'>,
+  call: Omit<ParsedFnCall, 'group' | 'type'>,
 ): ParsedExpectFnCall | string => {
   const modifiersAndMatcher = findModifiersAndMatcher(call.members);
 
@@ -271,6 +275,7 @@ const parseExpectCall = (
   return {
     ...call,
     args: getExpectArguments(call),
+    group: 'expect',
     type: 'expect',
     ...modifiersAndMatcher,
   };
@@ -307,14 +312,9 @@ export const findTopMostCallExpression = (
   return top as ESTree.CallExpression & Rule.NodeParentExtension;
 };
 
-export type ParseFnCallOptions = {
-  includeConfigStatements?: boolean;
-};
-
 function parse(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
-  options?: ParseFnCallOptions,
 ): ParsedFnCall | string | null {
   const chain = getNodeChain(node);
 
@@ -337,26 +337,14 @@ function parse(
   // etc. we need to test the second link in the chain to find the true type.
   if (name === 'test' && links.length > 1) {
     const nextLinkName = links[1];
-    const nextLinkType = determinePlaywrightFnType(nextLinkName);
+    const nextLinkGroup = determinePlaywrightFnGroup(nextLinkName);
 
-    if (nextLinkType !== 'unknown') {
+    if (nextLinkGroup !== 'unknown') {
       name = nextLinkName;
     }
   }
 
-  // If the call is a standalone `test.skip()`, `test.use`, `test.describe.configure()`,
-  // etc. call, and the `includeConfigStatements` option is not enabled, we
-  // should ignore it. Some rules use these statements, but not most.
-  if (
-    (name === 'test' || name === 'describe') &&
-    !options?.includeConfigStatements
-  ) {
-    if (node.arguments.length !== 2 || !isFunction(node.arguments[1])) {
-      return null;
-    }
-  }
-
-  const parsedFnCall: Omit<ParsedFnCall, 'type'> = {
+  const parsedFnCall: Omit<ParsedFnCall, 'group' | 'type'> = {
     head: { ...resolved, node: first },
     // every member node must have a member expression as their parent
     // in order to be part of the call chain we're parsing
@@ -364,9 +352,9 @@ function parse(
     name,
   };
 
-  const type = determinePlaywrightFnType(name);
+  const group = determinePlaywrightFnGroup(name);
 
-  if (type === 'expect') {
+  if (group === 'expect') {
     const result = parseExpectCall(parsedFnCall);
 
     // If the `expect` call chain is not valid, only report on the topmost node
@@ -407,7 +395,21 @@ function parse(
     return null;
   }
 
-  return { ...parsedFnCall, type };
+  // If the call is a configuration hook. E.g., `test.skip(true)`, `test.use()`,
+  // `test.describe.configure()`, etc.
+  let type: FnType = group;
+  if (
+    (name === 'test' || name === 'describe') &&
+    (node.arguments.length !== 2 || !isFunction(node.arguments[1]))
+  ) {
+    type = 'config';
+  }
+
+  return {
+    ...parsedFnCall,
+    group,
+    type,
+  };
 }
 
 const cache = new WeakMap<
@@ -418,13 +420,12 @@ const cache = new WeakMap<
 export function parseFnCallWithReason(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
-  options?: ParseFnCallOptions,
 ): ParsedFnCall | string | null {
   if (cache.has(node)) {
     return cache.get(node)!;
   }
 
-  const call = parse(context, node, options);
+  const call = parse(context, node);
   cache.set(node, call);
 
   return call;
@@ -433,9 +434,8 @@ export function parseFnCallWithReason(
 export function parseFnCall(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
-  options?: ParseFnCallOptions,
 ): ParsedFnCall | null {
-  const call = parseFnCallWithReason(context, node, options);
+  const call = parseFnCallWithReason(context, node);
   return typeof call === 'string' ? null : call;
 }
 

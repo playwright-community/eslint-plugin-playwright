@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { getStringValue, isFunction } from '../utils/ast';
+import { getStringValue } from '../utils/ast';
 import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
@@ -9,10 +9,8 @@ export default {
         const options = context.options[0] || {};
         const allowConditional = !!options.allowConditional;
 
-        const call = parseFnCall(context, node, {
-          includeConfigStatements: true,
-        });
-        if (call?.type !== 'test' && call?.type !== 'describe') {
+        const call = parseFnCall(context, node);
+        if (call?.group !== 'test' && call?.group !== 'describe') {
           return;
         }
 
@@ -21,12 +19,11 @@ export default {
 
         // If the call is a standalone `test.skip()` call, and not a test
         // annotation, we have to treat it a bit differently.
-        const isStandalone =
-          call.type === 'test' && !isFunction(node.arguments[1]);
+        const isStandalone = call.type === 'config';
 
         // If allowConditional is enabled and it's not a test/describe function,
         // we ignore any `test.skip` calls that have no arguments.
-        if (isStandalone && allowConditional && node.arguments.length) {
+        if (isStandalone && allowConditional) {
           return;
         }
 

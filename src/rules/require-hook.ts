@@ -58,10 +58,7 @@ export default {
 
     return {
       CallExpression(node) {
-        if (
-          !isTypeOfFnCall(context, node, ['describe']) ||
-          node.arguments.length < 2
-        ) {
+        if (!isTypeOfFnCall(context, node, ['describe'])) {
           return;
         }
 
