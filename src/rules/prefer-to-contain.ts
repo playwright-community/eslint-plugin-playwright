@@ -2,11 +2,12 @@ import { Rule } from 'eslint';
 import ESTree from 'estree';
 import {
   equalityMatchers,
+  getParent,
   getStringValue,
   isBooleanLiteral,
   isPropertyAccessor,
 } from '../utils/ast';
-import { parseExpectCall } from '../utils/parseExpectCall';
+import { parseFnCall } from '../utils/parseFnCall';
 import { KnownCallExpression } from '../utils/types';
 
 type FixableIncludesCallExpression = KnownCallExpression;
@@ -24,24 +25,27 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall || expectCall.args.length === 0) return;
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'expect' || call.matcherArgs.length === 0) return;
 
-        const { args, matcher, matcherName } = expectCall;
-        const [includesCall] = node.arguments;
-        const [matcherArg] = args;
+        const expect = getParent(call.head.node);
+        if (expect?.type !== 'CallExpression') return;
+
+        const [includesCall] = expect.arguments;
+        const { matcher } = call;
+        const [matcherArg] = call.matcherArgs;
 
         if (
           !includesCall ||
           matcherArg.type === 'SpreadElement' ||
-          !equalityMatchers.has(matcherName) ||
+          !equalityMatchers.has(getStringValue(matcher)) ||
           !isBooleanLiteral(matcherArg) ||
           !isFixableIncludesCallExpression(includesCall)
         ) {
           return;
         }
 
-        const notModifier = expectCall.modifiers.find(
+        const notModifier = call.modifiers.find(
           (node) => getStringValue(node) === 'not',
         );
 
@@ -66,7 +70,7 @@ export default {
               ),
               // replace the matcher argument with the value from the "includes"
               fixer.replaceText(
-                expectCall.args[0],
+                call.matcherArgs[0],
                 context.sourceCode.getText(includesCall.arguments[0]),
               ),
             ];
