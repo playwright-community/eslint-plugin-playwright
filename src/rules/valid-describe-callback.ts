@@ -22,6 +22,11 @@ export default {
         const call = parseFnCall(context, node);
         if (call?.group !== 'describe') return;
 
+        // Ignore `describe.configure()` calls
+        if (call.members.some((s) => getStringValue(s) === 'configure')) {
+          return;
+        }
+
         if (node.arguments.length < 1) {
           return context.report({
             loc: node.loc!,

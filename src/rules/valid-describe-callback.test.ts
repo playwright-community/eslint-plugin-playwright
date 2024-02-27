@@ -158,6 +158,10 @@ runRuleTester('valid-describe-callback', rule, {
     },
   ],
   valid: [
+    'describe.configure({ timeout: 600_000 })',
+    'describe("foo", function() {})',
+    'describe("foo", () => {})',
+    'test.describe.configure({ timeout: 600_000 })',
     'test.describe("foo", function() {})',
     'test.describe("foo", () => {})',
     'test.describe(`foo`, () => {})',
