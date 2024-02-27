@@ -2,7 +2,6 @@ import { Rule } from 'eslint';
 import ESTree from 'estree';
 import {
   findParent,
-  getParent,
   getRawValue,
   getStringValue,
   isBooleanLiteral,
