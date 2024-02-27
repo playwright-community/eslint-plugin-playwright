@@ -1,5 +1,6 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
+import { isSupportedAccessor } from './parseFnCall';
 import { NodeWithParent, TypedNodeWithParent } from './types';
 
 export function getStringValue(node: ESTree.Node | undefined) {
@@ -18,10 +19,7 @@ export function getRawValue(node: ESTree.Node) {
   return node.type === 'Literal' ? node.raw : undefined;
 }
 
-export function isIdentifier(
-  node: ESTree.Node,
-  name: string | RegExp | undefined,
-) {
+export function isIdentifier(node: ESTree.Node, name?: string | RegExp) {
   return (
     node.type === 'Identifier' &&
     (!name ||
@@ -74,7 +72,7 @@ export function isPropertyAccessor(
 
 export function getParent(
   node: ESTree.Node,
-): (ESTree.Node & Rule.NodeParentExtension) | undefined {
+): ESTree.Node & Rule.NodeParentExtension {
   return (node as NodeWithParent).parent;
 }
 
@@ -129,3 +127,24 @@ export function isFunction(
 }
 
 export const equalityMatchers = new Set(['toBe', 'toEqual', 'toStrictEqual']);
+
+const joinNames = (a: string | null, b: string | null): string | null =>
+  a && b ? `${a}.${b}` : null;
+
+export function getNodeName(node: ESTree.Node): string | null {
+  if (isSupportedAccessor(node)) {
+    return getStringValue(node);
+  }
+
+  switch (node.type) {
+    case 'TaggedTemplateExpression':
+      return getNodeName(node.tag);
+    case 'MemberExpression':
+      return joinNames(getNodeName(node.object), getNodeName(node.property));
+    case 'NewExpression':
+    case 'CallExpression':
+      return getNodeName(node.callee);
+  }
+
+  return null;
+}
