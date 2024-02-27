@@ -85,7 +85,18 @@ runRuleTester('valid-title', rule, {
   ],
   valid: [
     'test.describe("the correct way to properly handle all the things", () => {});',
+    'test.describe.configure({ mode: "parallel" })',
     'test("that all is as it should be", () => {});',
+    'test.use({ locale: "en-US" })',
+    'test.only("that all is as it should be", () => {});',
+    'test.skip("that all is as it should be", () => {});',
+    'test.skip(({ browserName }) => browserName === "Chrome");',
+    'test.skip();',
+    'test.skip(browserName === "Chrome", "This feature is skipped on Chrome")',
+    'test.slow("that all is as it should be", () => {});',
+    'test.slow(({ browserName }) => browserName === "Chrome");',
+    'test.slow();',
+    'test.slow(browserName === "webkit", "This feature is slow on Mac")',
     {
       code: 'test("correctly sets the value", () => {});',
       options: [

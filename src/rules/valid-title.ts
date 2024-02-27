@@ -110,6 +110,11 @@ export default {
           return;
         }
 
+        // Ignore statements such as `test.slow()`, `test.describe.configure()`, etc.
+        if (node.arguments.length < 2) {
+          return;
+        }
+
         const [argument] = node.arguments;
         if (!argument) {
           return;
