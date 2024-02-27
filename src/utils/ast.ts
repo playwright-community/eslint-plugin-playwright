@@ -27,7 +27,11 @@ export function isIdentifier(node: ESTree.Node, name?: string | RegExp) {
   );
 }
 
-function isLiteral<T>(node: ESTree.Node, type: string, value?: T) {
+function isLiteral<T>(
+  node: ESTree.Node,
+  type: string,
+  value?: T,
+): node is ESTree.Literal {
   return (
     node.type === 'Literal' &&
     (value === undefined
@@ -44,11 +48,17 @@ const isTemplateLiteral = (
   node.quasis.length === 1 && // bail out if not simple
   (value === undefined || node.quasis[0].value.raw === value);
 
-export function isStringLiteral(node: ESTree.Node, value?: string) {
+export function isStringLiteral(
+  node: ESTree.Node,
+  value?: string,
+): node is ESTree.Literal {
   return isLiteral(node, 'string', value);
 }
 
-export function isBooleanLiteral(node: ESTree.Node, value?: boolean) {
+export function isBooleanLiteral(
+  node: ESTree.Node,
+  value?: boolean,
+): node is ESTree.Literal {
   return isLiteral(node, 'boolean', value);
 }
 

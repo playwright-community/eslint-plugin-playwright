@@ -17,6 +17,92 @@ runRuleTester('no-useless-not', rule, {
       output: 'expect(locator).toBeHidden()',
     },
     {
+      code: 'expect(locator).not.toBeVisible({ visible: true })',
+      errors: [
+        {
+          column: 17,
+          data: { new: 'toBeHidden', old: 'toBeVisible' },
+          endColumn: 32,
+          line: 1,
+          messageId: 'noUselessNot',
+        },
+      ],
+      output: 'expect(locator).toBeHidden()',
+    },
+    {
+      code: 'expect(locator).toBeVisible({ visible: true })',
+      errors: [
+        {
+          column: 31,
+          data: {
+            new: 'toBeVisible',
+            old: 'toBeVisible',
+            property: 'visible',
+          },
+          endColumn: 44,
+          line: 1,
+          messageId: 'noUselessTruthy',
+        },
+      ],
+      output: 'expect(locator).toBeVisible()',
+    },
+    {
+      code: 'expect(locator).toBeVisible({ visible: false })',
+      errors: [
+        {
+          column: 31,
+          data: {
+            new: 'toBeHidden',
+            old: 'toBeVisible',
+            property: 'visible',
+          },
+          endColumn: 45,
+          line: 1,
+          messageId: 'noUselessProperty',
+        },
+      ],
+      output: 'expect(locator).toBeHidden()',
+    },
+    {
+      code: 'expect(locator).not.toBeVisible({ timeout: 1000, visible: true })',
+      errors: [
+        {
+          column: 17,
+          data: { new: 'toBeHidden', old: 'toBeVisible' },
+          endColumn: 32,
+          line: 1,
+          messageId: 'noUselessNot',
+        },
+      ],
+      output: 'expect(locator).toBeHidden({ timeout: 1000 })',
+    },
+    {
+      code: 'expect(locator).not.toBeVisible({ visible: true, timeout: 1000 })',
+      errors: [
+        {
+          column: 17,
+          data: { new: 'toBeHidden', old: 'toBeVisible' },
+          endColumn: 32,
+          line: 1,
+          messageId: 'noUselessNot',
+        },
+      ],
+      output: 'expect(locator).toBeHidden({ timeout: 1000 })',
+    },
+    {
+      code: 'expect(locator).not.toBeVisible({ visible: false })',
+      errors: [
+        {
+          column: 17,
+          data: { new: 'toBeVisible', old: 'toBeVisible' },
+          endColumn: 32,
+          line: 1,
+          messageId: 'noUselessNot',
+        },
+      ],
+      output: 'expect(locator).toBeVisible()',
+    },
+    {
       code: 'expect(locator).not.toBeHidden()',
       errors: [
         {
@@ -41,6 +127,66 @@ runRuleTester('no-useless-not', rule, {
         },
       ],
       output: 'expect(locator).toBeDisabled()',
+    },
+    {
+      code: 'expect(locator).toBeEnabled({ enabled: true })',
+      errors: [
+        {
+          column: 31,
+          data: {
+            new: 'toBeEnabled',
+            old: 'toBeEnabled',
+            property: 'enabled',
+          },
+          endColumn: 44,
+          line: 1,
+          messageId: 'noUselessTruthy',
+        },
+      ],
+      output: 'expect(locator).toBeEnabled()',
+    },
+    {
+      code: 'expect(locator).not.toBeEnabled({ enabled: true })',
+      errors: [
+        {
+          column: 17,
+          data: { new: 'toBeDisabled', old: 'toBeEnabled' },
+          endColumn: 32,
+          line: 1,
+          messageId: 'noUselessNot',
+        },
+      ],
+      output: 'expect(locator).toBeDisabled()',
+    },
+    {
+      code: 'expect(locator).toBeEnabled({ enabled: false })',
+      errors: [
+        {
+          column: 31,
+          data: {
+            new: 'toBeDisabled',
+            old: 'toBeEnabled',
+            property: 'enabled',
+          },
+          endColumn: 45,
+          line: 1,
+          messageId: 'noUselessProperty',
+        },
+      ],
+      output: 'expect(locator).toBeDisabled()',
+    },
+    {
+      code: 'expect(locator).not.toBeEnabled({ enabled: false })',
+      errors: [
+        {
+          column: 17,
+          data: { new: 'toBeEnabled', old: 'toBeEnabled' },
+          endColumn: 32,
+          line: 1,
+          messageId: 'noUselessNot',
+        },
+      ],
+      output: 'expect(locator).toBeEnabled()',
     },
     {
       code: 'expect(locator).not.toBeDisabled()',
@@ -132,6 +278,11 @@ runRuleTester('no-useless-not', rule, {
     'expect.poll(() => locator).toBeDisabled()',
     'expect(locator)[`toBeEnabled`]()',
     'expect(locator)["toBeDisabled"]()',
+    // Ignores matchers with options
+    'expect(locator).toBeVisible({ visible })',
+    'expect(locator).not.toBeVisible({ visible })',
+    'expect(locator).toBeEnabled({ enabled })',
+    'expect(locator).not.toBeEnabled({ enabled })',
     // Incomplete call expression
     'expect(locator).toBeVisible',
     'expect(locator).toBeEnabled',
@@ -139,6 +290,7 @@ runRuleTester('no-useless-not', rule, {
     // Doesn't impact non-complimentary matchers
     "expect(locator).not.toHaveText('foo')",
     'expect(locator).not.toBeChecked()',
+    'expect(locator).not.toBeChecked({ checked })',
     'expect(locator).not.toBeChecked({ checked: false })',
     'expect(locator).not.toBeFocused()',
     // Global aliases
