@@ -39,6 +39,7 @@ import preferToHaveLength from './rules/prefer-to-have-length';
 import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
 import requireHook from './rules/require-hook';
 import requireSoftAssertions from './rules/require-soft-assertions';
+import requireToThrowMessage from './rules/require-to-throw-message';
 import requireTopLevelDescribe from './rules/require-top-level-describe';
 import validDescribeCallback from './rules/valid-describe-callback';
 import validExpect from './rules/valid-expect';
@@ -88,6 +89,7 @@ const index = {
     'prefer-web-first-assertions': preferWebFirstAssertions,
     'require-hook': requireHook,
     'require-soft-assertions': requireSoftAssertions,
+    'require-to-throw-message': requireToThrowMessage,
     'require-top-level-describe': requireTopLevelDescribe,
     'valid-describe-callback': validDescribeCallback,
     'valid-expect': validExpect,

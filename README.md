@@ -164,3 +164,4 @@ CLI option\
 | [valid-expect](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/valid-expect.md)                               | Enforce valid `expect()` usage                                     | ✅  |     |     |
 | [valid-expect-in-promise](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/valid-expect-in-promise.md)         | Require promises that have expectations in their chain to be valid | ✅  |     |     |
 | [valid-title](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/valid-title.md)                                 | Enforce valid titles                                               | ✅  | 🔧  |     |
+| [require-to-throw-message](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/require-to-throw-message.md)       | Require a message for `toThrow()`                                  |     |     |     |
