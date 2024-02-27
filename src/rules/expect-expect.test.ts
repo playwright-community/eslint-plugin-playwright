@@ -46,6 +46,25 @@ runRuleTester('expect-expect', rule, {
     '["bar"]();',
     'testing("will test something eventually", () => {})',
     'test("should pass", () => expect(true).toBeDefined())',
+    'test.slow("should pass", () => expect(true).toBeDefined())',
+    'test.skip("should pass", () => expect(true).toBeDefined())',
+    // Config methods
+    'test.describe.configure({ mode: "parallel" })',
+    'test.info()',
+    'test.use({ locale: "en-US" })',
+    // test.skip
+    'test.skip();',
+    'test.skip(true);',
+    'test.skip(browserName === "Chrome", "This feature is skipped on Chrome")',
+    'test.skip(({ browserName }) => browserName === "Chrome");',
+    'test.skip("foo", () => { expect(true).toBeDefined(); })',
+    // test.slow
+    'test.slow();',
+    'test.slow(true);',
+    'test.slow(browserName === "webkit", "This feature is slow on Mac")',
+    'test.slow(({ browserName }) => browserName === "Chrome");',
+    'test.slow("foo", () => { expect(true).toBeDefined(); })',
+    // test.step
     {
       code: dedent`
         test('steps', async ({ page }) => {
