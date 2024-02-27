@@ -193,7 +193,7 @@ runRuleTester('no-useless-await', rule, {
     'page.locator(".my-element")',
 
     'await page.waitForLoadState({ waitUntil: "load" })',
-    'await page.waitForUrl(url, { waitUntil: "load" })',
+    'await page.waitForURL(url, { waitUntil: "load" })',
     'await page.locator(".hello-world").waitFor()',
   ],
 });

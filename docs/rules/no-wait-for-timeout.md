@@ -14,7 +14,7 @@ Examples of **correct** code for this rule:
 // Use signals such as network events, selectors becoming visible and others instead.
 await page.waitForLoadState();
 
-await page.waitForUrl('/home');
+await page.waitForURL('/home');
 
 await page.waitForFunction(() => window.innerWidth < 100);
 ```

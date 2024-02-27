@@ -56,6 +56,6 @@ runRuleTester('no-networkidle', rule, {
 
     'this.page.waitForLoadState()',
     'page.waitForLoadState({ waitUntil: "load" })',
-    'page.waitForUrl(url, { waitUntil: "load" })',
+    'page.waitForURL(url, { waitUntil: "load" })',
   ],
 });

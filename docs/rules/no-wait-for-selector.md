@@ -12,6 +12,6 @@ Examples of **correct** code for this rule:
 
 ```javascript
 await page.waitForLoadState();
-await page.waitForUrl('/home');
+await page.waitForURL('/home');
 await page.waitForFunction(() => window.innerWidth < 100);
 ```
