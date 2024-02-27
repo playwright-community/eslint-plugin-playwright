@@ -14,18 +14,19 @@ const getTestCallExpressionsFromDeclaredVariables = (
   context: Rule.RuleContext,
   declaredVariables: readonly Scope.Variable[],
 ): ESTree.CallExpression[] => {
-  return declaredVariables.reduce<ESTree.CallExpression[]>(
+  return declaredVariables.reduce(
     (acc, { references }) => [
       ...acc,
       ...references
         .map(({ identifier }) => getParent(identifier))
         .filter(
-          (node): node is ESTree.CallExpression =>
+          // ESLint types are infurating
+          (node): node is any =>
             node?.type === 'CallExpression' &&
             isTypeOfFnCall(context, node, ['test']),
         ),
     ],
-    [],
+    [] as ESTree.CallExpression[],
   );
 };
 
