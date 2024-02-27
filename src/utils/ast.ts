@@ -90,46 +90,6 @@ export function findParent<T extends ESTree.Node['type']>(
     : findParent(parent, type);
 }
 
-const expectSubCommands = new Set(['soft', 'poll']);
-export type ExpectType = 'poll' | 'soft' | 'standalone';
-
-/** @deprecated */
-export function getExpectType(
-  context: Rule.RuleContext,
-  node: ESTree.CallExpression,
-): ExpectType | undefined {
-  const aliases = context.settings.playwright?.globalAliases?.expect ?? [];
-  const expectNames = ['expect', ...aliases];
-  const regex = new RegExp(`(^(${expectNames.join('|')})|Expect)$`);
-
-  if (isIdentifier(node.callee, regex)) {
-    return 'standalone';
-  }
-
-  if (
-    node.callee.type === 'MemberExpression' &&
-    // TODO: Maybe
-    isIdentifier(node.callee.object, 'expect')
-  ) {
-    const type = getStringValue(node.callee.property);
-    return expectSubCommands.has(type) ? (type as ExpectType) : undefined;
-  }
-}
-
-export function getMatchers(
-  node: Rule.Node,
-  chain: Rule.Node[] = [],
-): Rule.Node[] {
-  if (node.parent.type === 'MemberExpression' && node.parent.object === node) {
-    return getMatchers(node.parent, [
-      ...chain,
-      node.parent.property as Rule.Node,
-    ]);
-  }
-
-  return chain;
-}
-
 /**
  * Digs through a series of MemberExpressions and CallExpressions to find an
  * Identifier with the given name.
