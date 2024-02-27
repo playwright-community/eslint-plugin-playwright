@@ -2,7 +2,7 @@ import { Rule } from 'eslint';
 import ESTree from 'estree';
 import {
   equalityMatchers,
-  getParent,
+  findParent,
   getStringValue,
   isBooleanLiteral,
   isPropertyAccessor,
@@ -28,8 +28,8 @@ export default {
         const call = parseFnCall(context, node);
         if (call?.type !== 'expect' || call.matcherArgs.length === 0) return;
 
-        const expect = getParent(call.head.node);
-        if (expect?.type !== 'CallExpression') return;
+        const expect = findParent(call.head.node, 'CallExpression');
+        if (!expect) return;
 
         const [includesCall] = expect.arguments;
         const { matcher } = call;

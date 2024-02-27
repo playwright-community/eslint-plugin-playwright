@@ -193,6 +193,7 @@ const findModifiersAndMatcher = (
         return {
           matcher: member,
           matcherArgs: member.parent.parent.arguments,
+          matcherName: name,
           modifiers,
         };
       }
@@ -244,6 +245,7 @@ interface ParsedGeneralFnCall extends BaseParsedFnCall {
 interface ModifiersAndMatcher {
   matcher: KnownMemberExpressionProperty;
   matcherArgs: ESTree.CallExpression['arguments'];
+  matcherName: string;
   modifiers: KnownMemberExpressionProperty[];
 }
 

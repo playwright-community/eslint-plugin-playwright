@@ -2,13 +2,14 @@ import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import {
   equalityMatchers,
+  findParent,
   getParent,
   getRawValue,
   getStringValue,
   isBooleanLiteral,
   isStringLiteral,
 } from '../utils/ast';
-import { parseExpectCall } from '../utils/parseExpectCall';
+import { parseFnCall } from '../utils/parseFnCall';
 
 const isString = (node: ESTree.Node) => {
   return isStringLiteral(node) || node.type === 'TemplateLiteral';
@@ -44,24 +45,26 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall || expectCall.args.length === 0) return;
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'expect' || call.matcherArgs.length === 0) return;
 
-        const { args, matcher } = expectCall;
-        const [comparison] = node.arguments;
-        const expectCallEnd = node.range![1];
-        const [matcherArg] = args;
+        const expect = findParent(call.head.node, 'CallExpression');
+        if (!expect) return;
+
+        const [comparison] = expect.arguments;
+        const expectCallEnd = expect.range![1];
+        const [matcherArg] = call.matcherArgs;
 
         if (
           comparison?.type !== 'BinaryExpression' ||
           isComparingToString(comparison) ||
-          !equalityMatchers.has(getStringValue(matcher)) ||
+          !equalityMatchers.has(call.matcherName) ||
           !isBooleanLiteral(matcherArg)
         ) {
           return;
         }
 
-        const hasNot = expectCall.modifiers.some(
+        const hasNot = call.modifiers.some(
           (node) => getStringValue(node) === 'not',
         );
 
@@ -78,7 +81,7 @@ export default {
           data: { preferredMatcher },
           fix(fixer) {
             // Preserve the existing modifier if it's not a negation
-            const [modifier] = expectCall.modifiers;
+            const [modifier] = call.modifiers;
             const modifierText =
               modifier && getStringValue(modifier) !== 'not'
                 ? `.${getStringValue(modifier)}`
@@ -92,7 +95,7 @@ export default {
               ),
               // Replace the current matcher & modifier with the preferred matcher
               fixer.replaceTextRange(
-                [expectCallEnd, getParent(matcher)!.range![1]],
+                [expectCallEnd, getParent(call.matcher)!.range![1]],
                 `${modifierText}.${preferredMatcher}`,
               ),
               // Replace the matcher argument with the right-hand side of the comparison
@@ -103,7 +106,7 @@ export default {
             ];
           },
           messageId: 'useToBeComparison',
-          node: matcher,
+          node: call.matcher,
         });
       },
     };

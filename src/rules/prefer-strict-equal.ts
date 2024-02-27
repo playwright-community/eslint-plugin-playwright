@@ -1,23 +1,24 @@
 import { Rule } from 'eslint';
 import { replaceAccessorFixer } from '../utils/fixer';
-import { parseExpectCall } from '../utils/parseExpectCall';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'expect') return;
 
-        if (expectCall?.matcherName === 'toEqual') {
+        if (call.matcherName === 'toEqual') {
           context.report({
             messageId: 'useToStrictEqual',
-            node: expectCall.matcher,
+            node: call.matcher,
             suggest: [
               {
                 fix: (fixer) => {
                   return replaceAccessorFixer(
                     fixer,
-                    expectCall.matcher,
+                    call.matcher,
                     'toStrictEqual',
                   );
                 },

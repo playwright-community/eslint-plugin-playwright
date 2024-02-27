@@ -116,13 +116,6 @@ export function getExpectType(
   }
 }
 
-export function isExpectCall(
-  context: Rule.RuleContext,
-  node: ESTree.CallExpression,
-) {
-  return !!getExpectType(context, node);
-}
-
 export function getMatchers(
   node: Rule.Node,
   chain: Rule.Node[] = [],

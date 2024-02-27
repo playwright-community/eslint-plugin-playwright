@@ -1,18 +1,21 @@
 import { Rule } from 'eslint';
 import { equalityMatchers, isPropertyAccessor } from '../utils/ast';
 import { replaceAccessorFixer } from '../utils/fixer';
-import { parseExpectCall } from '../utils/parseExpectCall';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall || !equalityMatchers.has(expectCall.matcherName)) {
+        const call = parseFnCall(context, node);
+        if (
+          call?.type !== 'expect' ||
+          !equalityMatchers.has(call.matcherName)
+        ) {
           return;
         }
 
-        const [argument] = node.arguments;
+        const [argument] = call.args;
         if (
           argument?.type !== 'MemberExpression' ||
           !isPropertyAccessor(argument, 'length')
@@ -29,11 +32,11 @@ export default {
                 argument.range![1],
               ]),
               // replace the current matcher with "toHaveLength"
-              replaceAccessorFixer(fixer, expectCall.matcher, 'toHaveLength'),
+              replaceAccessorFixer(fixer, call.matcher, 'toHaveLength'),
             ];
           },
           messageId: 'useToHaveLength',
-          node: expectCall.matcher,
+          node: call.matcher,
         });
       },
     };

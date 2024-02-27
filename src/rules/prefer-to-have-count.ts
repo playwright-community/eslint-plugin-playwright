@@ -1,9 +1,5 @@
 import { Rule } from 'eslint';
-import {
-  equalityMatchers,
-  getStringValue,
-  isPropertyAccessor,
-} from '../utils/ast';
+import { equalityMatchers, isPropertyAccessor } from '../utils/ast';
 import { replaceAccessorFixer } from '../utils/fixer';
 import { parseFnCall } from '../utils/parseFnCall';
 
@@ -14,7 +10,7 @@ export default {
         const call = parseFnCall(context, node);
         if (
           call?.type !== 'expect' ||
-          !equalityMatchers.has(getStringValue(call.matcher))
+          !equalityMatchers.has(call.matcherName)
         ) {
           return;
         }

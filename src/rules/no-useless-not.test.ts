@@ -103,19 +103,6 @@ runRuleTester('no-useless-not', rule, {
       ],
       output: 'expect.poll(() => locator)[`toBeVisible`]()',
     },
-    // Incomplete call expression
-    {
-      code: 'expect(locator).not.toBeHidden',
-      errors: [
-        {
-          column: 17,
-          endColumn: 31,
-          line: 1,
-          messageId: 'noUselessNot',
-        },
-      ],
-      output: 'expect(locator).toBeVisible',
-    },
     // Global aliases
     {
       code: 'assert(locator).not.toBeVisible()',
@@ -148,6 +135,7 @@ runRuleTester('no-useless-not', rule, {
     // Incomplete call expression
     'expect(locator).toBeVisible',
     'expect(locator).toBeEnabled',
+    'expect(locator).not.toBeHidden',
     // Doesn't impact non-complimentary matchers
     "expect(locator).not.toHaveText('foo')",
     'expect(locator).not.toBeChecked()',

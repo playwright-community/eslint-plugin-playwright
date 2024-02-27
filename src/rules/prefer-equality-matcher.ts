@@ -1,37 +1,40 @@
 import { Rule } from 'eslint';
 import {
   equalityMatchers,
+  findParent,
   getParent,
   getRawValue,
   getStringValue,
   isBooleanLiteral,
 } from '../utils/ast';
-import { parseExpectCall } from '../utils/parseExpectCall';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall || expectCall.args.length === 0) return;
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'expect' || call.matcherArgs.length === 0) return;
 
-        const { args, matcher } = expectCall;
-        const [comparison] = node.arguments;
-        const expectCallEnd = node.range![1];
-        const [matcherArg] = args;
+        const expect = findParent(call.head.node, 'CallExpression');
+        if (!expect) return;
+
+        const [comparison] = expect.arguments;
+        const expectCallEnd = expect.range![1];
+        const [matcherArg] = call.matcherArgs;
 
         if (
           comparison?.type !== 'BinaryExpression' ||
           (comparison.operator !== '===' && comparison.operator !== '!==') ||
-          !equalityMatchers.has(getStringValue(matcher)) ||
+          !equalityMatchers.has(call.matcherName) ||
           !isBooleanLiteral(matcherArg)
         ) {
           return;
         }
 
         const matcherValue = getRawValue(matcherArg) === 'true';
-        const [modifier] = expectCall.modifiers;
-        const hasNot = expectCall.modifiers.some(
+        const [modifier] = call.modifiers;
+        const hasNot = call.modifiers.some(
           (node) => getStringValue(node) === 'not',
         );
 
@@ -43,7 +46,7 @@ export default {
 
         context.report({
           messageId: 'useEqualityMatcher',
-          node: matcher,
+          node: call.matcher,
           suggest: [...equalityMatchers.keys()].map((equalityMatcher) => ({
             data: { matcher: equalityMatcher },
             fix(fixer) {
@@ -65,7 +68,7 @@ export default {
                 ),
                 // replace the current matcher & modifier with the preferred matcher
                 fixer.replaceTextRange(
-                  [expectCallEnd, getParent(matcher)!.range![1]],
+                  [expectCallEnd, getParent(call.matcher)!.range![1]],
                   `${modifierText}.${equalityMatcher}`,
                 ),
                 // replace the matcher argument with the right-hand side of the comparison

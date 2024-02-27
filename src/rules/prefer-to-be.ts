@@ -2,10 +2,10 @@ import { Rule } from 'eslint';
 import ESTree from 'estree';
 import { equalityMatchers, getStringValue, isIdentifier } from '../utils/ast';
 import { replaceAccessorFixer } from '../utils/fixer';
-import { ParsedExpectCall, parseExpectCall } from '../utils/parseExpectCall';
+import { ParsedExpectFnCall, parseFnCall } from '../utils/parseFnCall';
 
-function shouldUseToBe(expectCall: ParsedExpectCall) {
-  let arg = expectCall.args[0];
+function shouldUseToBe(call: ParsedExpectFnCall) {
+  let arg = call.matcherArgs[0];
 
   if (arg.type === 'UnaryExpression' && arg.operator === '-') {
     arg = arg.argument;
@@ -22,18 +22,18 @@ function shouldUseToBe(expectCall: ParsedExpectCall) {
 
 function reportPreferToBe(
   context: Rule.RuleContext,
-  expectCall: ParsedExpectCall,
+  call: ParsedExpectFnCall,
   whatToBe: string,
   notModifier?: ESTree.Node,
 ) {
   context.report({
     fix(fixer) {
       const fixes = [
-        replaceAccessorFixer(fixer, expectCall.matcher, `toBe${whatToBe}`),
+        replaceAccessorFixer(fixer, call.matcher, `toBe${whatToBe}`),
       ];
 
-      if (expectCall.args?.length && whatToBe !== '') {
-        fixes.push(fixer.remove(expectCall.args[0]));
+      if (call.matcherArgs?.length && whatToBe !== '') {
+        fixes.push(fixer.remove(call.matcherArgs[0]));
       }
 
       if (notModifier) {
@@ -44,7 +44,7 @@ function reportPreferToBe(
       return fixes;
     },
     messageId: `useToBe${whatToBe}`,
-    node: expectCall.matcher,
+    node: call.matcher,
   });
 }
 
@@ -52,43 +52,43 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall) return;
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'expect') return;
 
         const notMatchers = ['toBeUndefined', 'toBeDefined'];
-        const notModifier = expectCall.modifiers.find(
+        const notModifier = call.modifiers.find(
           (node) => getStringValue(node) === 'not',
         );
 
-        if (notModifier && notMatchers.includes(expectCall.matcherName)) {
+        if (notModifier && notMatchers.includes(call.matcherName)) {
           return reportPreferToBe(
             context,
-            expectCall,
-            expectCall.matcherName === 'toBeDefined' ? 'Undefined' : 'Defined',
+            call,
+            call.matcherName === 'toBeDefined' ? 'Undefined' : 'Defined',
             notModifier,
           );
         }
 
-        const firstArg = expectCall.args[0];
-        if (!equalityMatchers.has(expectCall.matcherName) || !firstArg) {
+        const firstArg = call.matcherArgs[0];
+        if (!equalityMatchers.has(call.matcherName) || !firstArg) {
           return;
         }
 
         if (firstArg.type === 'Literal' && firstArg.value === null) {
-          return reportPreferToBe(context, expectCall, 'Null');
+          return reportPreferToBe(context, call, 'Null');
         }
 
         if (isIdentifier(firstArg, 'undefined')) {
           const name = notModifier ? 'Defined' : 'Undefined';
-          return reportPreferToBe(context, expectCall, name, notModifier);
+          return reportPreferToBe(context, call, name, notModifier);
         }
 
         if (isIdentifier(firstArg, 'NaN')) {
-          return reportPreferToBe(context, expectCall, 'NaN');
+          return reportPreferToBe(context, call, 'NaN');
         }
 
-        if (shouldUseToBe(expectCall) && expectCall.matcherName !== 'toBe') {
-          reportPreferToBe(context, expectCall, '');
+        if (shouldUseToBe(call) && call.matcherName !== 'toBe') {
+          reportPreferToBe(context, call, '');
         }
       },
     };

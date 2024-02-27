@@ -1,7 +1,13 @@
 import { Rule } from 'eslint';
 import ESTree from 'estree';
-import { getRawValue, getStringValue, isBooleanLiteral } from '../utils/ast';
-import { parseExpectCall } from '../utils/parseExpectCall';
+import {
+  findParent,
+  getParent,
+  getRawValue,
+  getStringValue,
+  isBooleanLiteral,
+} from '../utils/ast';
+import { parseFnCall } from '../utils/parseFnCall';
 
 type MethodConfig = {
   inverse?: string;
@@ -78,10 +84,13 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall) return;
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'expect') return;
 
-        const arg = dereference(context, node.arguments[0]);
+        const expect = findParent(call.head.node, 'CallExpression');
+        if (!expect) return;
+
+        const arg = dereference(context, call.args[0]);
         if (
           !arg ||
           arg.type !== 'AwaitExpression' ||
@@ -92,7 +101,7 @@ export default {
         }
 
         // Matcher must be supported
-        if (!supportedMatchers.has(expectCall.matcherName)) return;
+        if (!supportedMatchers.has(call.matcherName)) return;
 
         // Playwright method must be supported
         const method = getStringValue(arg.argument.callee.property);
@@ -100,15 +109,15 @@ export default {
         if (!methodConfig) return;
 
         // Change the matcher
-        const { args, matcher } = expectCall;
-        const notModifier = expectCall.modifiers.find(
+        const notModifier = call.modifiers.find(
           (mod) => getStringValue(mod) === 'not',
         );
 
         const isFalsy =
           methodConfig.type === 'boolean' &&
-          ((!!args.length && isBooleanLiteral(args[0], false)) ||
-            expectCall.matcherName === 'toBeFalsy');
+          ((!!call.matcherArgs.length &&
+            isBooleanLiteral(call.matcherArgs[0], false)) ||
+            call.matcherName === 'toBeFalsy');
 
         const isInverse = methodConfig.inverse
           ? notModifier || isFalsy
@@ -139,7 +148,7 @@ export default {
 
             const fixes = [
               // Add await to the expect call
-              fixer.insertTextBefore(node, 'await '),
+              fixer.insertTextBefore(expect, 'await '),
               // Remove the await keyword
               fixer.replaceTextRange(
                 [arg.range![0], arg.argument.range![0]],
@@ -160,13 +169,13 @@ export default {
 
             // Add not to the matcher chain if no inverse matcher exists
             if (!methodConfig.inverse && !notModifier && isFalsy) {
-              fixes.push(fixer.insertTextBefore(matcher, 'not.'));
+              fixes.push(fixer.insertTextBefore(call.matcher, 'not.'));
             }
 
-            fixes.push(fixer.replaceText(matcher, newMatcher));
+            fixes.push(fixer.replaceText(call.matcher, newMatcher));
 
             // Remove boolean argument if it exists
-            const [matcherArg] = args ?? [];
+            const [matcherArg] = call.matcherArgs ?? [];
             if (matcherArg && isBooleanLiteral(matcherArg)) {
               fixes.push(fixer.remove(matcherArg));
             }
@@ -186,7 +195,7 @@ export default {
             ).length;
 
             if (methodArgs) {
-              const range = matcher.range!;
+              const range = call.matcher.range!;
               const stringArgs = methodArgs
                 .map((arg) => getRawValue(arg))
                 .concat(hasOtherArgs ? '' : [])
@@ -203,7 +212,7 @@ export default {
             return fixes;
           },
           messageId: 'useWebFirstAssertion',
-          node,
+          node: expect,
         });
       },
     };

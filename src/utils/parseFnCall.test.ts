@@ -1,7 +1,6 @@
 import dedent from 'dedent';
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import { runRuleTester, runTSRuleTester } from '../../test/utils/rule-tester';
 import { getStringValue } from './ast';
 import {
   isSupportedAccessor,
@@ -9,6 +8,7 @@ import {
   parseFnCallWithReason,
   ResolvedFnWithNode,
 } from './parseFnCall';
+import { runRuleTester, runTSRuleTester } from './rule-tester';
 
 const isNode = (obj: unknown): obj is ESTree.Node => {
   if (typeof obj === 'object' && obj !== null) {
@@ -78,6 +78,7 @@ interface TestParsedFnCall
   head: TestResolvedFnWithNode;
   matcher?: string;
   matcherArgs?: string[];
+  matcherName?: string;
   members: string[];
   modifiers?: string[];
 }
@@ -91,6 +92,7 @@ const expectedParsedFnCallResultData = (result: TestParsedFnCall) => ({
     head: sortKeys(result.head),
     matcher: result.matcher,
     matcherArgs: result.matcherArgs,
+    matcherName: result.matcherName,
     members: result.members,
     modifiers: result.modifiers,
     name: result.name,
@@ -137,6 +139,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'toBe',
             matcherArgs: ['y'],
+            matcherName: 'toBe',
             members: ['toBe'],
             modifiers: [],
             name: 'expect',
@@ -161,6 +164,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'toBe',
             matcherArgs: ['y'],
+            matcherName: 'toBe',
             members: ['soft', 'toBe'],
             modifiers: ['soft'],
             name: 'expect',
@@ -185,6 +189,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'toBe',
             matcherArgs: ['y'],
+            matcherName: 'toBe',
             members: ['poll', 'toBe'],
             modifiers: ['poll'],
             name: 'expect',
@@ -209,6 +214,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'toBe',
             matcherArgs: ['y'],
+            matcherName: 'toBe',
             members: ['poll', 'toBe'],
             modifiers: ['poll'],
             name: 'expect',
@@ -233,6 +239,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'toBe',
             matcherArgs: ['y'],
+            matcherName: 'toBe',
             members: ['poll', 'toBe'],
             modifiers: ['poll'],
             name: 'expect',
@@ -261,6 +268,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'assertions',
             matcherArgs: [],
+            matcherName: 'assertions',
             members: ['assertions'],
             modifiers: [],
             name: 'expect',
@@ -289,6 +297,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'toBe',
             matcherArgs: ['y'],
+            matcherName: 'toBe',
             members: ['toBe'],
             modifiers: [],
             name: 'expect',
@@ -317,6 +326,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'toBe',
             matcherArgs: ['y'],
+            matcherName: 'toBe',
             members: ['not', 'toBe'],
             modifiers: ['not'],
             name: 'expect',
@@ -341,6 +351,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'toBe',
             matcherArgs: ['y'],
+            matcherName: 'toBe',
             members: ['not', 'toBe'],
             modifiers: ['not'],
             name: 'expect',
@@ -376,6 +387,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'assertions',
             matcherArgs: [],
+            matcherName: 'assertions',
             members: ['assertions'],
             modifiers: [],
             name: 'expect',
@@ -395,6 +407,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'hasAssertions',
             matcherArgs: [],
+            matcherName: 'hasAssertions',
             members: ['hasAssertions'],
             modifiers: [],
             name: 'expect',
@@ -414,6 +427,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'anything',
             matcherArgs: [],
+            matcherName: 'anything',
             members: ['anything'],
             modifiers: [],
             name: 'expect',
@@ -433,6 +447,7 @@ runRuleTester('expect', rule, {
             },
             matcher: 'arrayContaining',
             matcherArgs: [],
+            matcherName: 'arrayContaining',
             members: ['not', 'arrayContaining'],
             modifiers: ['not'],
             name: 'expect',
