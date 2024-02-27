@@ -1,6 +1,6 @@
 import { Rule } from 'eslint';
 import { getStringValue } from '../utils/ast';
-import { parseExpectCall } from '../utils/parseExpectCall';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
@@ -10,12 +10,12 @@ export default {
 
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall) return;
+        const call = parseFnCall(context, node);
+        if (call?.type !== 'expect') return;
 
         Object.entries(restrictedChains)
           .map(([restriction, message]) => {
-            const chain = expectCall.members;
+            const chain = call.members;
             const restrictionLinks = restriction.split('.').length;
 
             // Find in the full chain, where the restriction chain starts

@@ -1,6 +1,7 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
 import {
+  findParent,
   getParent,
   getStringValue,
   isIdentifier,
@@ -190,8 +191,8 @@ const findModifiersAndMatcher = (
         member.parent.parent?.type === 'CallExpression'
       ) {
         return {
-          args: member.parent.parent.arguments,
           matcher: member,
+          matcherArgs: member.parent.parent.arguments,
           modifiers,
         };
       }
@@ -206,6 +207,12 @@ const findModifiersAndMatcher = (
   // This will only really happen if there are no members
   return 'matcher-not-found';
 };
+
+function getExpectArguments(
+  call: Omit<ParsedFnCall, 'type'>,
+): ESTree.CallExpression['arguments'] {
+  return findParent(call.head.node, 'CallExpression')?.arguments ?? [];
+}
 
 type KnownMemberExpression = ESTree.MemberExpression & {
   parent: ESTree.CallExpression;
@@ -235,14 +242,15 @@ interface ParsedGeneralFnCall extends BaseParsedFnCall {
 }
 
 interface ModifiersAndMatcher {
-  args: ESTree.CallExpression['arguments'];
   matcher: KnownMemberExpressionProperty;
+  matcherArgs: ESTree.CallExpression['arguments'];
   modifiers: KnownMemberExpressionProperty[];
 }
 
 export interface ParsedExpectFnCall
   extends BaseParsedFnCall,
     ModifiersAndMatcher {
+  args: ESTree.CallExpression['arguments'];
   type: 'expect';
 }
 
@@ -259,6 +267,7 @@ const parseExpectCall = (
 
   return {
     ...call,
+    args: getExpectArguments(call),
     type: 'expect',
     ...modifiersAndMatcher,
   };

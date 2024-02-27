@@ -75,18 +75,19 @@ export function isPropertyAccessor(
 export function getParent(
   node: ESTree.Node,
 ): (ESTree.Node & Rule.NodeParentExtension) | undefined {
-  return (node as any).parent;
+  return (node as NodeWithParent).parent;
 }
 
 export function findParent<T extends ESTree.Node['type']>(
-  node: NodeWithParent,
+  node: ESTree.Node,
   type: T,
 ): TypedNodeWithParent<T> | undefined {
-  if (!node.parent) return;
+  const parent = (node as NodeWithParent).parent;
+  if (!parent) return;
 
-  return node.parent.type === type
-    ? (node.parent as unknown as TypedNodeWithParent<T>)
-    : findParent(node.parent, type);
+  return parent.type === type
+    ? (parent as unknown as TypedNodeWithParent<T>)
+    : findParent(parent, type);
 }
 
 const expectSubCommands = new Set(['soft', 'poll']);

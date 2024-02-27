@@ -74,9 +74,10 @@ interface TestResolvedFnWithNode extends Omit<ResolvedFnWithNode, 'node'> {
 
 interface TestParsedFnCall
   extends Omit<ParsedFnCall, 'head' | 'members' | 'modifiers'> {
-  args?: string[];
+  args?: (string | null)[];
   head: TestResolvedFnWithNode;
   matcher?: string;
+  matcherArgs?: string[];
   members: string[];
   modifiers?: string[];
 }
@@ -89,6 +90,7 @@ const expectedParsedFnCallResultData = (result: TestParsedFnCall) => ({
     args: result.args,
     head: sortKeys(result.head),
     matcher: result.matcher,
+    matcherArgs: result.matcherArgs,
     members: result.members,
     modifiers: result.modifiers,
     name: result.name,
@@ -127,13 +129,14 @@ runRuleTester('expect', rule, {
         {
           column: 1,
           data: expectedParsedFnCallResultData({
-            args: ['y'],
+            args: ['x'],
             head: {
               local: 'expect',
               node: 'expect',
               original: null,
             },
             matcher: 'toBe',
+            matcherArgs: ['y'],
             members: ['toBe'],
             modifiers: [],
             name: 'expect',
@@ -150,13 +153,14 @@ runRuleTester('expect', rule, {
         {
           column: 1,
           data: expectedParsedFnCallResultData({
-            args: ['y'],
+            args: ['x'],
             head: {
               local: 'expect',
               node: 'expect',
               original: null,
             },
             matcher: 'toBe',
+            matcherArgs: ['y'],
             members: ['soft', 'toBe'],
             modifiers: ['soft'],
             name: 'expect',
@@ -173,13 +177,14 @@ runRuleTester('expect', rule, {
         {
           column: 1,
           data: expectedParsedFnCallResultData({
-            args: ['y'],
+            args: [null],
             head: {
               local: 'expect',
               node: 'expect',
               original: null,
             },
             matcher: 'toBe',
+            matcherArgs: ['y'],
             members: ['poll', 'toBe'],
             modifiers: ['poll'],
             name: 'expect',
@@ -196,13 +201,14 @@ runRuleTester('expect', rule, {
         {
           column: 1,
           data: expectedParsedFnCallResultData({
-            args: ['y'],
+            args: [null],
             head: {
               local: 'expect',
               node: 'expect',
               original: null,
             },
             matcher: 'toBe',
+            matcherArgs: ['y'],
             members: ['poll', 'toBe'],
             modifiers: ['poll'],
             name: 'expect',
@@ -219,13 +225,14 @@ runRuleTester('expect', rule, {
         {
           column: 1,
           data: expectedParsedFnCallResultData({
-            args: ['y'],
+            args: [null],
             head: {
               local: 'expect',
               node: 'expect',
               original: null,
             },
             matcher: 'toBe',
+            matcherArgs: ['y'],
             members: ['poll', 'toBe'],
             modifiers: ['poll'],
             name: 'expect',
@@ -253,6 +260,7 @@ runRuleTester('expect', rule, {
               original: null,
             },
             matcher: 'assertions',
+            matcherArgs: [],
             members: ['assertions'],
             modifiers: [],
             name: 'expect',
@@ -273,13 +281,14 @@ runRuleTester('expect', rule, {
         {
           column: 1,
           data: expectedParsedFnCallResultData({
-            args: ['y'],
+            args: ['x'],
             head: {
               local: 'expect',
               node: 'expect',
               original: null,
             },
             matcher: 'toBe',
+            matcherArgs: ['y'],
             members: ['toBe'],
             modifiers: [],
             name: 'expect',
@@ -300,13 +309,14 @@ runRuleTester('expect', rule, {
         {
           column: 1,
           data: expectedParsedFnCallResultData({
-            args: ['y'],
+            args: ['x'],
             head: {
               local: 'expect',
               node: 'expect',
               original: null,
             },
             matcher: 'toBe',
+            matcherArgs: ['y'],
             members: ['not', 'toBe'],
             modifiers: ['not'],
             name: 'expect',
@@ -323,13 +333,14 @@ runRuleTester('expect', rule, {
         {
           column: 11,
           data: expectedParsedFnCallResultData({
-            args: ['y'],
+            args: ['x'],
             head: {
               local: 'expect',
               node: 'expect',
               original: null,
             },
             matcher: 'toBe',
+            matcherArgs: ['y'],
             members: ['not', 'toBe'],
             modifiers: ['not'],
             name: 'expect',
@@ -364,6 +375,7 @@ runRuleTester('expect', rule, {
               original: null,
             },
             matcher: 'assertions',
+            matcherArgs: [],
             members: ['assertions'],
             modifiers: [],
             name: 'expect',
@@ -382,6 +394,7 @@ runRuleTester('expect', rule, {
               original: null,
             },
             matcher: 'hasAssertions',
+            matcherArgs: [],
             members: ['hasAssertions'],
             modifiers: [],
             name: 'expect',
@@ -400,6 +413,7 @@ runRuleTester('expect', rule, {
               original: null,
             },
             matcher: 'anything',
+            matcherArgs: [],
             members: ['anything'],
             modifiers: [],
             name: 'expect',
@@ -418,6 +432,7 @@ runRuleTester('expect', rule, {
               original: null,
             },
             matcher: 'arrayContaining',
+            matcherArgs: [],
             members: ['not', 'arrayContaining'],
             modifiers: ['not'],
             name: 'expect',

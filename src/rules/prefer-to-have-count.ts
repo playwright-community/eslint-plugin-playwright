@@ -1,20 +1,27 @@
 import { Rule } from 'eslint';
-import { equalityMatchers, isPropertyAccessor } from '../utils/ast';
+import {
+  equalityMatchers,
+  getStringValue,
+  isPropertyAccessor,
+} from '../utils/ast';
 import { replaceAccessorFixer } from '../utils/fixer';
-import { parseExpectCall } from '../utils/parseExpectCall';
+import { parseFnCall } from '../utils/parseFnCall';
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const expectCall = parseExpectCall(context, node);
-        if (!expectCall || !equalityMatchers.has(expectCall.matcherName)) {
+        const call = parseFnCall(context, node);
+        if (
+          call?.type !== 'expect' ||
+          !equalityMatchers.has(getStringValue(call.matcher))
+        ) {
           return;
         }
 
-        const [argument] = node.arguments;
+        const [argument] = call.args;
         if (
-          argument.type !== 'AwaitExpression' ||
+          argument?.type !== 'AwaitExpression' ||
           argument.argument.type !== 'CallExpression' ||
           argument.argument.callee.type !== 'MemberExpression' ||
           !isPropertyAccessor(argument.argument.callee, 'count')
@@ -37,13 +44,13 @@ export default {
                 argument.argument.range![1],
               ]),
               // replace the current matcher with "toHaveCount"
-              replaceAccessorFixer(fixer, expectCall.matcher, 'toHaveCount'),
+              replaceAccessorFixer(fixer, call.matcher, 'toHaveCount'),
               // insert "await" to before "expect()"
               fixer.insertTextBefore(node, 'await '),
             ];
           },
           messageId: 'useToHaveCount',
-          node: expectCall.matcher,
+          node: call.matcher,
         });
       },
     };
