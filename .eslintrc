@@ -2,7 +2,7 @@
   "extends": "@mskelton",
   "overrides": [
     {
-      "files": "**/*.spec.ts",
+      "files": "**/*.test.ts",
       "rules": {
         "no-template-curly-in-string": "off"
       }

@@ -29,7 +29,7 @@ pnpm test -- --watch
 When adding new rules, make sure to follow these steps:
 
 1. Add the rule source code in `src/rules`
-1. Add tests for the rule in `test/spec`
+1. Add tests for the rule in `src/rules`
 1. Add docs for the rule to `docs/rules`
 1. Add a short description of the rule in `README.md`
 
