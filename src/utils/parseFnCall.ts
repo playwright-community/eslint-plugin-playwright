@@ -277,7 +277,7 @@ const parseExpectCall = (
 
 export const findTopMostCallExpression = (
   node: ESTree.CallExpression,
-): ESTree.CallExpression => {
+): ESTree.CallExpression & Rule.NodeParentExtension => {
   let top = node;
   let parent = getParent(node);
   let child: ESTree.Node = node;
@@ -303,7 +303,7 @@ export const findTopMostCallExpression = (
     parent = getParent(parent);
   }
 
-  return top;
+  return top as ESTree.CallExpression & Rule.NodeParentExtension;
 };
 
 function parse(context: Rule.RuleContext, node: ESTree.CallExpression) {
