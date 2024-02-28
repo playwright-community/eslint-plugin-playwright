@@ -20,6 +20,14 @@ runRuleTester('require-hook', rule, {
     },
     {
       code: dedent`
+        test.describe('some tests', { tag: '@slow' }, () => {
+          setup();
+        });
+      `,
+      errors: [{ column: 3, line: 2, messageId }],
+    },
+    {
+      code: dedent`
         let { setup } = require('./test-utils');
 
         test.describe('some tests', () => {
@@ -135,11 +143,13 @@ runRuleTester('require-hook', rule, {
   valid: [
     'test.use({ locale: "en-US" })',
     'test("some test", async ({ page }) => { })',
+    'test("some test", { tag: "@slow" }, async ({ page }) => { })',
     'test.only("some test", async ({ page }) => { })',
     'test.skip("some test", async ({ page }) => { })',
     'test.fixme("some test", async ({ page }) => { })',
     { code: 'test.describe()' },
     { code: 'test.describe("just a title")' },
+    { code: 'test.describe("just a title", { tag: "@slow" })' },
     { code: 'test.describe.configure({ mode: "parallel" })' },
     {
       code: dedent`
@@ -149,6 +159,17 @@ runRuleTester('require-hook', rule, {
           test.describe.configure({ mode: 'default' });
           test('in order A1', async ({ page }) => {});
           test('in order A2', async ({ page }) => {});
+        });
+      `,
+    },
+    {
+      code: dedent`
+        test.describe.configure({ mode: 'parallel' });
+
+        test.describe('A, runs in parallel with B', { tag: "@slow" }, () => {
+          test.describe.configure({ mode: 'default' });
+          test('in order A1', async ({ page }) => {});
+          test('in order A2', { tag: "@slow" }, async ({ page }) => {});
         });
       `,
     },

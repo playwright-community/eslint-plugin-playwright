@@ -62,8 +62,7 @@ export default {
           return;
         }
 
-        const [, testFn] = node.arguments;
-
+        const testFn = node.arguments.at(-1);
         if (!isFunction(testFn) || testFn.body.type !== 'BlockStatement') {
           return;
         }
