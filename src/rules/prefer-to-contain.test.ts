@@ -147,9 +147,6 @@ runRuleTester('prefer-to-contain', rule, {
     },
   ],
   valid: [
-    'expect.hasAssertions',
-    'expect.hasAssertions()',
-    'expect.assertions(1)',
     'expect().toBe(false);',
     'expect(a).toContain(b);',
     "expect(a.name).toBe('b');",

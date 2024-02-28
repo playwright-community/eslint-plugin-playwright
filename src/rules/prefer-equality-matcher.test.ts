@@ -157,9 +157,6 @@ runRuleTester('prefer-equality-matcher: ===', rule, {
     },
   ],
   valid: [
-    'expect.hasAssertions',
-    'expect.hasAssertions()',
-    'expect.assertions(1)',
     'expect(true).toBe(...true)',
     'expect(a == 1).toBe(true)',
     'expect(1 == a).toBe(true)',
@@ -272,9 +269,6 @@ runRuleTester('prefer-equality-matcher: !==', rule, {
     },
   ],
   valid: [
-    'expect.hasAssertions',
-    'expect.hasAssertions()',
-    'expect.assertions(1)',
     'expect(true).toBe(...true)',
     'expect(a != 1).toBe(true)',
     'expect(1 != a).toBe(true)',

@@ -287,9 +287,6 @@ testComparisonOperator('<=', 'toBeLessThanOrEqual', 'toBeGreaterThan');
 runRuleTester('prefer-comparision-matcher', rule, {
   invalid: [],
   valid: [
-    'expect.hasAssertions',
-    'expect.hasAssertions()',
-    'expect.assertions(1)',
     'expect(true).toBe(...true)',
     'expect()',
     'expect({}).toStrictEqual({})',

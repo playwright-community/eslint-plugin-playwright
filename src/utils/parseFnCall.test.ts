@@ -380,54 +380,10 @@ runRuleTester('expect', rule, {
       code: dedent`
         import { expect } from '@playwright/test';
 
-        expect.assertions();
-        expect.hasAssertions();
         expect.anything();
         expect.not.arrayContaining();
       `,
       errors: [
-        {
-          column: 1,
-          data: expectedParsedFnCallResultData({
-            args: [],
-            group: 'expect',
-            head: {
-              local: 'expect',
-              node: 'expect',
-              original: null,
-            },
-            matcher: 'assertions',
-            matcherArgs: [],
-            matcherName: 'assertions',
-            members: ['assertions'],
-            modifiers: [],
-            name: 'expect',
-            type: 'expect',
-          }),
-          line: 3,
-          messageId: 'details',
-        },
-        {
-          column: 1,
-          data: expectedParsedFnCallResultData({
-            args: [],
-            group: 'expect',
-            head: {
-              local: 'expect',
-              node: 'expect',
-              original: null,
-            },
-            matcher: 'hasAssertions',
-            matcherArgs: [],
-            matcherName: 'hasAssertions',
-            members: ['hasAssertions'],
-            modifiers: [],
-            name: 'expect',
-            type: 'expect',
-          }),
-          line: 4,
-          messageId: 'details',
-        },
         {
           column: 1,
           data: expectedParsedFnCallResultData({
@@ -446,7 +402,7 @@ runRuleTester('expect', rule, {
             name: 'expect',
             type: 'expect',
           }),
-          line: 5,
+          line: 3,
           messageId: 'details',
         },
         {
@@ -467,7 +423,7 @@ runRuleTester('expect', rule, {
             name: 'expect',
             type: 'expect',
           }),
-          line: 6,
+          line: 4,
           messageId: 'details',
         },
       ],

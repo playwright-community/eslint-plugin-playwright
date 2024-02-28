@@ -1,6 +1,6 @@
 import { Rule } from 'eslint';
 import * as ESTree from 'estree';
-import { getParent, getStringValue, isFunction } from '../utils/ast';
+import { getParent, isFunction } from '../utils/ast';
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
 
 const getBlockType = (
@@ -86,10 +86,7 @@ export default {
         if (call?.type === 'expect') {
           if (
             getParent(call.head.node)?.type === 'MemberExpression' &&
-            call.members.length === 1 &&
-            !['assertions', 'hasAssertions'].includes(
-              getStringValue(call.members[0]),
-            )
+            call.members.length === 1
           ) {
             return;
           }
