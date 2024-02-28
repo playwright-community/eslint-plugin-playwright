@@ -84,6 +84,7 @@ export default {
       category: 'Possible Errors',
       description: 'Disallow unnecessary awaits for Playwright methods',
       recommended: true,
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-useless-await.md',
     },
     fixable: 'code',
     messages: {

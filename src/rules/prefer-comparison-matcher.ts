@@ -116,6 +116,7 @@ export default {
       category: 'Best Practices',
       description: 'Suggest using the built-in comparison matchers',
       recommended: false,
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-comparision-matcher.md',
     },
     fixable: 'code',
     messages: {

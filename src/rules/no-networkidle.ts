@@ -54,6 +54,7 @@ export default {
       category: 'Possible Errors',
       description: 'Prevent usage of the networkidle option',
       recommended: true,
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-networkidle.md',
     },
     messages: {
       noNetworkidle: 'Unexpected use of networkidle.',
