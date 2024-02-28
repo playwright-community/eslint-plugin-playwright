@@ -15,7 +15,7 @@ jobs:
         uses: mskelton/setup-pnpm@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: pnpm format:check
+      - run: pnpm fmt:check
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm ts
