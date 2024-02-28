@@ -1,6 +1,7 @@
 import { RuleTester } from 'eslint'
 import { describe, it } from 'vitest'
 
+// Override the default `it` and `describe` functions to use `vitest`
 ;(RuleTester as any).it = it
 ;(RuleTester as any).describe = describe
 
