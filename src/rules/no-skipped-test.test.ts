@@ -57,6 +57,23 @@ runRuleTester('no-skipped-test', rule, {
       ],
     },
     {
+      code: 'test.skip("a test", { tag: ["@fast", "@login"] }, () => {})',
+      errors: [
+        {
+          column: 6,
+          endColumn: 10,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test("a test", { tag: ["@fast", "@login"] }, () => {})',
+            },
+          ],
+        },
+      ],
+    },
+    {
       code: 'test.describe.skip("skip this describe", () => {});',
       errors: [
         {
@@ -233,6 +250,8 @@ runRuleTester('no-skipped-test', rule, {
   ],
   valid: [
     'test("a test", () => {});',
+    'test("a test", { tag: "@fast" }, () => {});',
+    'test("a test", { tag: ["@fast", "@report"] }, () => {});',
     'test.describe("describe tests", () => {});',
     'test.describe.only("describe focus tests", () => {});',
     'test.describ["only"]("describe focus tests", () => {});',

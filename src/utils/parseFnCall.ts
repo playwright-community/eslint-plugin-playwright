@@ -400,7 +400,7 @@ function parse(
   let type: FnType = group;
   if (
     (name === 'test' || name === 'describe') &&
-    (node.arguments.length !== 2 || !isFunction(node.arguments[1]))
+    (node.arguments.length < 2 || !isFunction(node.arguments.at(-1)))
   ) {
     type = 'config';
   }

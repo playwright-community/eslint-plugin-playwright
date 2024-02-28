@@ -492,6 +492,57 @@ runRuleTester('test', rule, {
       ],
     },
     {
+      code: 'test("a test", { tag: ["@fast", "@login"] }, () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            group: 'test',
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: [],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: dedent`
+        test('test full report', {
+          annotation: [
+            { type: 'issue', description: 'https://github.com/microsoft/playwright/issues/23180' },
+            { type: 'docs', description: 'https://playwright.dev/docs/test-annotations#tag-tests' },
+          ],
+        }, async ({ page }) => {
+          // ...
+        });
+      `,
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            group: 'test',
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: [],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
       code: 'test.step("a step", () => {});',
       errors: [
         {
@@ -854,6 +905,73 @@ runRuleTester('describe', rule, {
             type: 'describe',
           }),
           line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: dedent`
+        test.describe('group', {
+          tag: '@report',
+        }, () => {
+          test('test report header', async ({ page }) => {
+            // ...
+          });
+
+          test('test full report', {
+            tag: ['@slow', '@vrt'],
+          }, async ({ page }) => {
+            // ...
+          });
+        });
+      `,
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            group: 'describe',
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['describe'],
+            name: 'describe',
+            type: 'describe',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+        {
+          column: 3,
+          data: expectedParsedFnCallResultData({
+            group: 'test',
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: [],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 4,
+          messageId: 'details',
+        },
+        {
+          column: 3,
+          data: expectedParsedFnCallResultData({
+            group: 'test',
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: [],
+            name: 'test',
+            type: 'test',
+          }),
+          line: 8,
           messageId: 'details',
         },
       ],

@@ -94,6 +94,12 @@ runRuleTester('require-top-level-describe', rule, {
       ],
     },
     {
+      code: 'test("foo", { tag: ["@fast"] }, () => {})',
+      errors: [
+        { column: 1, endColumn: 5, line: 1, messageId: 'unexpectedTest' },
+      ],
+    },
+    {
       code: dedent`
         test("foo", () => {})
         test.describe("suite", () => {});
@@ -209,6 +215,13 @@ runRuleTester('require-top-level-describe', rule, {
       test.describe('one', () => {});
       test.describe('two', () => {});
       test.describe('three', () => {});
+    `,
+    dedent`
+      test.describe("suite", () => {
+        test("foo", { tag: ["@slow"] }, () => {})
+        test.describe("another suite", { tag: ["@slow"] }, () => {});
+        test("my other test", () => {})
+      });
     `,
     {
       code: dedent`
