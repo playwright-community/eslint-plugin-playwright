@@ -15,6 +15,14 @@ const paramsLocation = (
   };
 };
 
+function parseArgs(node: ESTree.CallExpression) {
+  const [name, b, c] = node.arguments;
+  const options = node.arguments.length === 2 ? b : undefined;
+  const callback = node.arguments.length === 3 ? c : b;
+
+  return [name, options, callback] as const;
+}
+
 export default {
   create(context) {
     return {
@@ -27,6 +35,8 @@ export default {
           return;
         }
 
+        const [name, _, callback] = parseArgs(node);
+
         if (node.arguments.length < 1) {
           return context.report({
             loc: node.loc!,
@@ -34,9 +44,7 @@ export default {
           });
         }
 
-        const [, callback] = node.arguments;
-
-        if (!callback) {
+        if (!name || !callback) {
           context.report({
             loc: paramsLocation(node.arguments),
             messageId: 'nameAndCallback',
@@ -48,7 +56,7 @@ export default {
         if (!isFunction(callback)) {
           context.report({
             loc: paramsLocation(node.arguments),
-            messageId: 'secondArgumentMustBeFunction',
+            messageId: 'invalidCallback',
           });
 
           return;
@@ -61,10 +69,7 @@ export default {
           });
         }
 
-        if (
-          call.members.every((s) => getStringValue(s) !== 'each') &&
-          callback.params.length
-        ) {
+        if (callback.params.length) {
           context.report({
             loc: paramsLocation(callback.params),
             messageId: 'unexpectedDescribeArgument',
@@ -99,9 +104,9 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/valid-describe-callback.md',
     },
     messages: {
+      invalidCallback: 'Callback argument must be a function',
       nameAndCallback: 'Describe requires name and callback arguments',
       noAsyncDescribeCallback: 'No async describe callback',
-      secondArgumentMustBeFunction: 'Second argument must be function',
       unexpectedDescribeArgument: 'Unexpected argument(s) in describe callback',
       unexpectedReturnInDescribe:
         'Unexpected return statement in describe callback',

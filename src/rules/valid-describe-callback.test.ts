@@ -17,10 +17,16 @@ runRuleTester('valid-describe-callback', rule, {
       errors: [{ column: 15, line: 1, messageId: 'nameAndCallback' }],
     },
     {
+      code: 'test.describe("foo", { tag: ["@slow"] });',
+      errors: [{ column: 15, line: 1, messageId: 'invalidCallback' }],
+    },
+    {
       code: 'test.describe("foo", "foo2")',
-      errors: [
-        { column: 15, line: 1, messageId: 'secondArgumentMustBeFunction' },
-      ],
+      errors: [{ column: 15, line: 1, messageId: 'invalidCallback' }],
+    },
+    {
+      code: 'test.describe("foo", foo2)',
+      errors: [{ column: 15, line: 1, messageId: 'invalidCallback' }],
     },
     {
       code: 'test.describe()',
@@ -165,6 +171,7 @@ runRuleTester('valid-describe-callback', rule, {
     'test.describe("foo", function() {})',
     'test.describe("foo", () => {})',
     'test.describe(`foo`, () => {})',
+    'test.describe("another suite", { tag: ["@slow"] }, () => {});',
     'test.describe.only("foo", () => {})',
     'describe("foo", () => {})',
     'describe.only("foo", () => {})',
