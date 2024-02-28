@@ -16,10 +16,6 @@ Additionally, conditionals tend to make tests more brittle and complex, as they
 increase the amount of mental thinking needed to understand what is actually
 being tested.
 
-While `expect.assertions` & `expect.hasAssertions` can help prevent tests from
-silently being skipped, when combined with conditionals they typically result in
-even more complexity being introduced.
-
 The following patterns are warnings:
 
 ```js
@@ -102,9 +98,6 @@ test.describe('when the http request fails', () => {
 
 As stated above, the problem with this is that if `makeRequest()` doesn't throw
 the test will still pass as if the `expect` had been called.
-
-While you can use `expect.assertions` & `expect.hasAssertions` for these
-situations, they only work with `expect`.
 
 A better way to handle this situation is to introduce a wrapper to handle the
 catching, and otherwise return a specific "no error thrown" error if nothing is

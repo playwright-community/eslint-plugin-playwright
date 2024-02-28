@@ -5,15 +5,18 @@ helper function (but outside of a `test` block) will not trigger this rule.
 
 ## Rule details
 
-This rule aims to eliminate `expect` statements that will not be executed. An
-`expect` inside of a `describe` block but outside of a `test` block or outside a
-`test.describe` will not execute and therefore will trigger this rule. It is
-viable, however, to have an `expect` in a helper function that is called from
-within a `test` block so `expect` statements in a function will not trigger this
-rule.
+This rule aims to eliminate `expect` statements outside of `test` blocks to
+encourage good testing practices. Using `expect` statements outside of `test`
+blocks may partially work, but their intent is to be used within a test as doing
+so makes it clear the purpose of each test.
 
-Statements like `expect.hasAssertions()` will NOT trigger this rule since these
-calls will execute if they are not in a test block.
+Using `expect` in helper functions is allowed to support grouping several expect
+statements into a helper function or page object method. Test hooks such as
+`beforeEach` are also allowed to support use cases such as waiting for an
+element on the page before each test is executed. While these uses cases are
+supported, they should be used sparingly as moving too many `expect` statements
+outside of the body of a `test` block can make it difficult to understand the
+purpose and primary assertions being made by a given test.
 
 Examples of **incorrect** code for this rule:
 
@@ -52,10 +55,6 @@ test.describe('a test', () => {
   test('an it', () => {
     helper();
   });
-});
-
-test.describe('a test', () => {
-  expect.hasAssertions(1);
 });
 ```
 
