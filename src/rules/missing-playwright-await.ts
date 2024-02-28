@@ -1,13 +1,13 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { getParent, getStringValue, isIdentifier } from '../utils/ast';
-import { ParsedFnCall, parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
+import { getParent, getStringValue, isIdentifier } from '../utils/ast'
+import { ParsedFnCall, parseFnCall } from '../utils/parseFnCall'
 
 const validTypes = new Set([
   'AwaitExpression',
   'ReturnStatement',
   'ArrowFunctionExpression',
-]);
+])
 
 const expectPlaywrightMatchers = [
   'toBeChecked',
@@ -27,7 +27,7 @@ const expectPlaywrightMatchers = [
   'toMatchURL',
   'toMatchValue',
   'toPass',
-];
+]
 
 const playwrightTestMatchers = [
   'toBeChecked',
@@ -54,20 +54,20 @@ const playwrightTestMatchers = [
   'toHaveValues',
   'toBeAttached',
   'toBeInViewport',
-];
+]
 
 function getReportNode(node: ESTree.Node) {
-  const parent = getParent(node);
-  return parent?.type === 'MemberExpression' ? parent : node;
+  const parent = getParent(node)
+  return parent?.type === 'MemberExpression' ? parent : node
 }
 
 function getCallType(call: ParsedFnCall, awaitableMatchers: Set<string>) {
   if (call.type === 'step') {
-    return { messageId: 'testStep', node: call.head.node };
+    return { messageId: 'testStep', node: call.head.node }
   }
 
   if (call.type === 'expect') {
-    const isPoll = call.modifiers.some((m) => getStringValue(m) === 'poll');
+    const isPoll = call.modifiers.some((m) => getStringValue(m) === 'poll')
 
     // The node needs to be checked if it's an expect.poll expression or an
     // awaitable matcher.
@@ -76,33 +76,33 @@ function getCallType(call: ParsedFnCall, awaitableMatchers: Set<string>) {
         data: { matcherName: call.matcherName },
         messageId: isPoll ? 'expectPoll' : 'expect',
         node: call.head.node,
-      };
+      }
     }
   }
 }
 
 export default {
   create(context) {
-    const options = context.options[0] || {};
+    const options = context.options[0] || {}
     const awaitableMatchers = new Set([
       ...expectPlaywrightMatchers,
       ...playwrightTestMatchers,
       // Add any custom matchers to the set
       ...(options.customMatchers || []),
-    ]);
+    ])
 
     function checkValidity(node: ESTree.Node) {
-      const parent = getParent(node);
-      if (!parent) return false;
+      const parent = getParent(node)
+      if (!parent) return false
 
       // If the parent is a valid type (e.g. return or await), we don't need to
       // check any further.
-      if (validTypes.has(parent.type)) return true;
+      if (validTypes.has(parent.type)) return true
 
       // If the parent is an array, we need to check the grandparent to see if
       // it's a Promise.all, or a variable.
       if (parent.type === 'ArrayExpression') {
-        return checkValidity(parent);
+        return checkValidity(parent)
       }
 
       // If the parent is a call expression, we need to check the grandparent
@@ -113,36 +113,36 @@ export default {
         isIdentifier(parent.callee.object, 'Promise') &&
         isIdentifier(parent.callee.property, 'all')
       ) {
-        return true;
+        return true
       }
 
       // If the parent is a variable declarator, we need to check the scope to
       // find where it is referenced. When we find the reference, we can
       // re-check validity.
       if (parent.type === 'VariableDeclarator') {
-        const scope = context.sourceCode.getScope(parent.parent);
+        const scope = context.sourceCode.getScope(parent.parent)
 
         for (const ref of scope.references) {
-          const refParent = (ref.identifier as Rule.Node).parent;
+          const refParent = (ref.identifier as Rule.Node).parent
 
           // If the parent of the reference is valid, we can immediately return
           // true. Otherwise, we'll check the validity of the parent to continue
           // the loop.
-          if (validTypes.has(refParent.type)) return true;
-          if (checkValidity(refParent)) return true;
+          if (validTypes.has(refParent.type)) return true
+          if (checkValidity(refParent)) return true
         }
       }
 
-      return false;
+      return false
     }
 
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'step' && call?.type !== 'expect') return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'step' && call?.type !== 'expect') return
 
-        const result = getCallType(call, awaitableMatchers);
-        const isValid = result ? checkValidity(node) : false;
+        const result = getCallType(call, awaitableMatchers)
+        const isValid = result ? checkValidity(node) : false
 
         if (result && !isValid) {
           context.report({
@@ -150,10 +150,10 @@ export default {
             fix: (fixer) => fixer.insertTextBefore(node, 'await '),
             messageId: result.messageId,
             node: getReportNode(result.node),
-          });
+          })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -182,4 +182,4 @@ export default {
     ],
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

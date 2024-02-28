@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-force-option';
-import { runRuleTester, test } from '../utils/rule-tester';
+import rule from '../../src/rules/no-force-option'
+import { runRuleTester, test } from '../utils/rule-tester'
 
-const messageId = 'noForceOption';
+const messageId = 'noForceOption'
 
 runRuleTester('no-force-option', rule, {
   invalid: [
@@ -99,4 +99,4 @@ runRuleTester('no-force-option', rule, {
     test('await doSomething({ ["force"]: true })'),
     test('await doSomething({ [`force`]: true })'),
   ],
-});
+})

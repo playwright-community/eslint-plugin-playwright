@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-skipped-test';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-skipped-test'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'removeSkippedTestAnnotation';
+const messageId = 'removeSkippedTestAnnotation'
 
 runRuleTester('no-skipped-test', rule, {
   invalid: [
@@ -288,4 +288,4 @@ runRuleTester('no-skipped-test', rule, {
       },
     },
   ],
-});
+})

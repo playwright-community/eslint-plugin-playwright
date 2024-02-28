@@ -1,18 +1,18 @@
-import { Rule } from 'eslint';
-import { getStringValue } from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { getStringValue } from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
         if (call?.type !== 'test' && call?.type !== 'describe') {
-          return;
+          return
         }
 
-        const onlyNode = call.members.find((s) => getStringValue(s) === 'only');
-        if (!onlyNode) return;
+        const onlyNode = call.members.find((s) => getStringValue(s) === 'only')
+        if (!onlyNode) return
 
         context.report({
           messageId: 'noFocusedTest',
@@ -24,14 +24,14 @@ export default {
                 return fixer.removeRange([
                   onlyNode.range![0] - 1,
                   onlyNode.range![1] + Number(onlyNode.type !== 'Identifier'),
-                ]);
+                ])
               },
               messageId: 'suggestRemoveOnly',
             },
           ],
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -47,4 +47,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

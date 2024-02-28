@@ -11,17 +11,17 @@ being evaluated is executed.
 Example of **incorrect** code for this rule:
 
 ```javascript
-const x = 7;
-const y = 8;
-await page.evaluate(() => Promise.resolve(x * y), []);
+const x = 7
+const y = 8
+await page.evaluate(() => Promise.resolve(x * y), [])
 ```
 
 Example of **correct** code for this rule:
 
 ```javascript
-await page.evaluate(([x, y]) => Promise.resolve(x * y), [7, 8]);
+await page.evaluate(([x, y]) => Promise.resolve(x * y), [7, 8])
 
-const x = 7;
-const y = 8;
-await page.evaluate(([x, y]) => Promise.resolve(x * y), [x, y]);
+const x = 7
+const y = 8
+await page.evaluate(([x, y]) => Promise.resolve(x * y), [x, y])
 ```

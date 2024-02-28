@@ -20,60 +20,60 @@ The following patterns are warnings:
 
 ```js
 test('foo', () => {
-  doTest && expect(1).toBe(2);
-});
+  doTest && expect(1).toBe(2)
+})
 
 test('bar', () => {
   if (!skipTest) {
-    expect(1).toEqual(2);
+    expect(1).toEqual(2)
   }
-});
+})
 
 test('baz', async () => {
   try {
-    await foo();
+    await foo()
   } catch (err) {
-    expect(err).toMatchObject({ code: 'MODULE_NOT_FOUND' });
+    expect(err).toMatchObject({ code: 'MODULE_NOT_FOUND' })
   }
-});
+})
 
 test('throws an error', async () => {
-  await foo().catch((error) => expect(error).toBeInstanceOf(error));
-});
+  await foo().catch((error) => expect(error).toBeInstanceOf(error))
+})
 ```
 
 The following patterns are not warnings:
 
 ```js
 test('foo', () => {
-  expect(!value).toBe(false);
-});
+  expect(!value).toBe(false)
+})
 
 function getValue() {
   if (process.env.FAIL) {
-    return 1;
+    return 1
   }
 
-  return 2;
+  return 2
 }
 
 test('foo', () => {
-  expect(getValue()).toBe(2);
-});
+  expect(getValue()).toBe(2)
+})
 
 test('validates the request', () => {
   try {
-    processRequest(request);
+    processRequest(request)
   } catch {
     // ignore errors
   } finally {
-    expect(validRequest).toHaveBeenCalledWith(request);
+    expect(validRequest).toHaveBeenCalledWith(request)
   }
-});
+})
 
 test('throws an error', async () => {
-  await expect(foo).rejects.toThrow(Error);
-});
+  await expect(foo).rejects.toThrow(Error)
+})
 ```
 
 ### How to catch a thrown error for testing without violating this rule
@@ -88,12 +88,12 @@ Most people write something like this:
 test.describe('when the http request fails', () => {
   test('includes the status code in the error', async () => {
     try {
-      await makeRequest(url);
+      await makeRequest(url)
     } catch (error) {
-      expect(error).toHaveProperty('statusCode', 404);
+      expect(error).toHaveProperty('statusCode', 404)
     }
-  });
-});
+  })
+})
 ```
 
 As stated above, the problem with this is that if `makeRequest()` doesn't throw
@@ -108,21 +108,21 @@ class NoErrorThrownError extends Error {}
 
 const getError = async <TError>(call: () => unknown): Promise<TError> => {
   try {
-    await call();
+    await call()
 
-    throw new NoErrorThrownError();
+    throw new NoErrorThrownError()
   } catch (error: unknown) {
-    return error as TError;
+    return error as TError
   }
-};
+}
 
 test.describe('when the http request fails', () => {
   test('includes the status code in the error', async () => {
-    const error = await getError(async () => makeRequest(url));
+    const error = await getError(async () => makeRequest(url))
 
     // check that the returned error wasn't that no error was thrown
-    expect(error).not.toBeInstanceOf(NoErrorThrownError);
-    expect(error).toHaveProperty('statusCode', 404);
-  });
-});
+    expect(error).not.toBeInstanceOf(NoErrorThrownError)
+    expect(error).toHaveProperty('statusCode', 404)
+  })
+})
 ```

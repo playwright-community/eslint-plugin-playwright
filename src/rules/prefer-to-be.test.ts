@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-to-be';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/prefer-to-be'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('prefer-to-be', rule, {
   invalid: [
@@ -95,7 +95,7 @@ runRuleTester('prefer-to-be', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('prefer-to-be: null', rule, {
   invalid: [
@@ -195,7 +195,7 @@ runRuleTester('prefer-to-be: null', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('prefer-to-be: undefined', rule, {
   invalid: [
@@ -291,7 +291,7 @@ runRuleTester('prefer-to-be: undefined', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('prefer-to-be: NaN', rule, {
   invalid: [
@@ -368,7 +368,7 @@ runRuleTester('prefer-to-be: NaN', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('prefer-to-be: undefined vs defined', rule, {
   invalid: [
@@ -442,4 +442,4 @@ runRuleTester('prefer-to-be: undefined vs defined', rule, {
       },
     },
   ],
-});
+})

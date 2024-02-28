@@ -1,23 +1,23 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
 
-export type NodeWithParent = ESTree.Node & Rule.NodeParentExtension;
+export type NodeWithParent = ESTree.Node & Rule.NodeParentExtension
 
 export type TypedNodeWithParent<T extends ESTree.Node['type']> = Extract<
   ESTree.Node,
   { type: T }
 > &
-  Rule.NodeParentExtension;
+  Rule.NodeParentExtension
 
 export type KnownCallExpression = ESTree.CallExpression & {
-  callee: ESTree.MemberExpression;
-};
+  callee: ESTree.MemberExpression
+}
 
 export interface Settings {
   playwright?: {
     globalAliases?: {
-      expect?: string[];
-      test?: string[];
-    };
-  };
+      expect?: string[]
+      test?: string[]
+    }
+  }
 }

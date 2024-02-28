@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/expect-expect';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/expect-expect'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('expect-expect', rule, {
   invalid: [
@@ -120,4 +120,4 @@ runRuleTester('expect-expect', rule, {
       },
     },
   ],
-});
+})

@@ -1,14 +1,14 @@
-import rule from '../../src/rules/prefer-equality-matcher';
-import { equalityMatchers } from '../../src/utils/ast';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/prefer-equality-matcher'
+import { equalityMatchers } from '../../src/utils/ast'
+import { runRuleTester } from '../utils/rule-tester'
 
 const expectSuggestions = (output: (matcher: string) => string) => {
   return [...equalityMatchers.keys()].map((matcher) => ({
     data: { matcher },
     messageId: 'suggestEqualityMatcher',
     output: output(matcher),
-  }));
-};
+  }))
+}
 
 runRuleTester('prefer-equality-matcher: ===', rule, {
   invalid: [
@@ -171,7 +171,7 @@ runRuleTester('prefer-equality-matcher: ===', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('prefer-equality-matcher: !==', rule, {
   invalid: [
@@ -274,4 +274,4 @@ runRuleTester('prefer-equality-matcher: !==', rule, {
     'expect(1 != a).toBe(true)',
     'expect(a != b).toBe(true)',
   ],
-});
+})

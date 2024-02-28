@@ -1,50 +1,50 @@
-import globals from 'globals';
-import expectExpect from './rules/expect-expect';
-import maxExpects from './rules/max-expects';
-import maxNestedDescribe from './rules/max-nested-describe';
-import missingPlaywrightAwait from './rules/missing-playwright-await';
-import noCommentedOutTests from './rules/no-commented-out-tests';
-import noConditionalExpect from './rules/no-conditional-expect';
-import noConditionalInTest from './rules/no-conditional-in-test';
-import noDuplicateHooks from './rules/no-duplicate-hooks';
-import noElementHandle from './rules/no-element-handle';
-import noEval from './rules/no-eval';
-import noFocusedTest from './rules/no-focused-test';
-import noForceOption from './rules/no-force-option';
-import noGetByTitle from './rules/no-get-by-title';
-import noHooks from './rules/no-hooks';
-import noNestedStep from './rules/no-nested-step';
-import noNetworkidle from './rules/no-networkidle';
-import noNthMethods from './rules/no-nth-methods';
-import noPagePause from './rules/no-page-pause';
-import noRawLocators from './rules/no-raw-locators';
-import noRestrictedMatchers from './rules/no-restricted-matchers';
-import noSkippedTest from './rules/no-skipped-test';
-import noStandaloneExpect from './rules/no-standalone-expect';
-import noUnsafeReferences from './rules/no-unsafe-references';
-import noUselessAwait from './rules/no-useless-await';
-import noUselessNot from './rules/no-useless-not';
-import noWaitForSelector from './rules/no-wait-for-selector';
-import noWaitForTimeout from './rules/no-wait-for-timeout';
-import preferComparisonMatcher from './rules/prefer-comparison-matcher';
-import preferEqualityMatcher from './rules/prefer-equality-matcher';
-import preferHooksInOrder from './rules/prefer-hooks-in-order';
-import preferHooksOnTop from './rules/prefer-hooks-on-top';
-import preferLowercaseTitle from './rules/prefer-lowercase-title';
-import preferStrictEqual from './rules/prefer-strict-equal';
-import preferToBe from './rules/prefer-to-be';
-import preferToContain from './rules/prefer-to-contain';
-import preferToHaveCount from './rules/prefer-to-have-count';
-import preferToHaveLength from './rules/prefer-to-have-length';
-import preferWebFirstAssertions from './rules/prefer-web-first-assertions';
-import requireHook from './rules/require-hook';
-import requireSoftAssertions from './rules/require-soft-assertions';
-import requireToThrowMessage from './rules/require-to-throw-message';
-import requireTopLevelDescribe from './rules/require-top-level-describe';
-import validDescribeCallback from './rules/valid-describe-callback';
-import validExpect from './rules/valid-expect';
-import validExpectInPromise from './rules/valid-expect-in-promise';
-import validTitle from './rules/valid-title';
+import globals from 'globals'
+import expectExpect from './rules/expect-expect'
+import maxExpects from './rules/max-expects'
+import maxNestedDescribe from './rules/max-nested-describe'
+import missingPlaywrightAwait from './rules/missing-playwright-await'
+import noCommentedOutTests from './rules/no-commented-out-tests'
+import noConditionalExpect from './rules/no-conditional-expect'
+import noConditionalInTest from './rules/no-conditional-in-test'
+import noDuplicateHooks from './rules/no-duplicate-hooks'
+import noElementHandle from './rules/no-element-handle'
+import noEval from './rules/no-eval'
+import noFocusedTest from './rules/no-focused-test'
+import noForceOption from './rules/no-force-option'
+import noGetByTitle from './rules/no-get-by-title'
+import noHooks from './rules/no-hooks'
+import noNestedStep from './rules/no-nested-step'
+import noNetworkidle from './rules/no-networkidle'
+import noNthMethods from './rules/no-nth-methods'
+import noPagePause from './rules/no-page-pause'
+import noRawLocators from './rules/no-raw-locators'
+import noRestrictedMatchers from './rules/no-restricted-matchers'
+import noSkippedTest from './rules/no-skipped-test'
+import noStandaloneExpect from './rules/no-standalone-expect'
+import noUnsafeReferences from './rules/no-unsafe-references'
+import noUselessAwait from './rules/no-useless-await'
+import noUselessNot from './rules/no-useless-not'
+import noWaitForSelector from './rules/no-wait-for-selector'
+import noWaitForTimeout from './rules/no-wait-for-timeout'
+import preferComparisonMatcher from './rules/prefer-comparison-matcher'
+import preferEqualityMatcher from './rules/prefer-equality-matcher'
+import preferHooksInOrder from './rules/prefer-hooks-in-order'
+import preferHooksOnTop from './rules/prefer-hooks-on-top'
+import preferLowercaseTitle from './rules/prefer-lowercase-title'
+import preferStrictEqual from './rules/prefer-strict-equal'
+import preferToBe from './rules/prefer-to-be'
+import preferToContain from './rules/prefer-to-contain'
+import preferToHaveCount from './rules/prefer-to-have-count'
+import preferToHaveLength from './rules/prefer-to-have-length'
+import preferWebFirstAssertions from './rules/prefer-web-first-assertions'
+import requireHook from './rules/require-hook'
+import requireSoftAssertions from './rules/require-soft-assertions'
+import requireToThrowMessage from './rules/require-to-throw-message'
+import requireTopLevelDescribe from './rules/require-top-level-describe'
+import validDescribeCallback from './rules/valid-describe-callback'
+import validExpect from './rules/valid-expect'
+import validExpectInPromise from './rules/valid-expect-in-promise'
+import validTitle from './rules/valid-title'
 
 const index = {
   configs: {},
@@ -96,7 +96,7 @@ const index = {
     'valid-expect-in-promise': validExpectInPromise,
     'valid-title': validTitle,
   },
-};
+}
 
 const sharedConfig = {
   rules: {
@@ -126,7 +126,7 @@ const sharedConfig = {
     'playwright/valid-expect-in-promise': 'error',
     'playwright/valid-title': 'error',
   },
-};
+}
 
 const legacyConfig = {
   ...sharedConfig,
@@ -134,7 +134,7 @@ const legacyConfig = {
     'shared-node-browser': true,
   },
   plugins: ['playwright'],
-};
+}
 
 const flatConfig = {
   ...sharedConfig,
@@ -144,7 +144,7 @@ const flatConfig = {
   plugins: {
     playwright: index,
   },
-};
+}
 
 const sharedJestConfig = {
   rules: {
@@ -164,7 +164,7 @@ const sharedJestConfig = {
     'playwright/missing-playwright-await': 'error',
     'playwright/no-page-pause': 'warn',
   },
-};
+}
 
 const legacyJestConfig = {
   ...sharedJestConfig,
@@ -181,7 +181,7 @@ const legacyJestConfig = {
     page: true,
   },
   plugins: ['jest', 'playwright'],
-};
+}
 
 const jestConfig = {
   ...sharedJestConfig,
@@ -200,7 +200,7 @@ const jestConfig = {
   plugins: {
     playwright: index,
   },
-};
+}
 
 export = {
   ...index,
@@ -211,4 +211,4 @@ export = {
     'playwright-test': legacyConfig,
     recommended: legacyConfig,
   },
-};
+}

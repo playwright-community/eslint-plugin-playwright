@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-to-have-length';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/prefer-to-have-length'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('prefer-to-have-length', rule, {
   invalid: [
@@ -85,4 +85,4 @@ runRuleTester('prefer-to-have-length', rule, {
       },
     },
   ],
-});
+})

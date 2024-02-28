@@ -1,19 +1,19 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
 import {
   getNodeName,
   getParent,
   getStringValue,
   isFunction,
   isIdentifier,
-} from '../utils/ast';
+} from '../utils/ast'
 import {
   findTopMostCallExpression,
   isSupportedAccessor,
   isTypeOfFnCall,
   parseFnCall,
-} from '../utils/parseFnCall';
-import { KnownCallExpression } from '../utils/types';
+} from '../utils/parseFnCall'
+import { KnownCallExpression } from '../utils/types'
 
 const isPromiseChainCall = (node: ESTree.Node): node is KnownCallExpression => {
   if (
@@ -23,75 +23,75 @@ const isPromiseChainCall = (node: ESTree.Node): node is KnownCallExpression => {
   ) {
     // promise methods should have at least 1 argument
     if (node.arguments.length === 0) {
-      return false;
+      return false
     }
 
     switch (getStringValue(node.callee.property)) {
       case 'then':
-        return node.arguments.length < 3;
+        return node.arguments.length < 3
       case 'catch':
       case 'finally':
-        return node.arguments.length < 2;
+        return node.arguments.length < 2
     }
   }
 
-  return false;
-};
+  return false
+}
 
 const isTestCaseCallWithCallbackArg = (
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
 ): boolean => {
-  const jestCallFn = parseFnCall(context, node);
+  const jestCallFn = parseFnCall(context, node)
 
   if (jestCallFn?.type !== 'test') {
-    return false;
+    return false
   }
 
   const isJestEach = jestCallFn.members.some(
     (s) => getStringValue(s) === 'each',
-  );
+  )
 
   if (isJestEach && node.callee.type !== 'TaggedTemplateExpression') {
     // isJestEach but not a TaggedTemplateExpression, so this must be
     // the `jest.each([])()` syntax which this rule doesn't support due
     // to its complexity (see jest-community/eslint-plugin-jest#710)
     // so we return true to trigger bailout
-    return true;
+    return true
   }
 
-  const [, callback] = node.arguments;
+  const [, callback] = node.arguments
 
-  const callbackArgIndex = Number(isJestEach);
+  const callbackArgIndex = Number(isJestEach)
 
   return (
     callback &&
     isFunction(callback) &&
     callback.params.length === 1 + callbackArgIndex
-  );
-};
+  )
+}
 
 const isPromiseMethodThatUsesValue = (
   node: ESTree.AwaitExpression | ESTree.ReturnStatement,
   identifier: ESTree.Identifier | ESTree.Pattern,
 ): boolean => {
-  const name = getStringValue(identifier);
-  if (node.argument == null) return false;
+  const name = getStringValue(identifier)
+  if (node.argument == null) return false
 
   if (
     node.argument.type === 'CallExpression' &&
     node.argument.arguments.length > 0
   ) {
-    const nodeName = getNodeName(node.argument);
+    const nodeName = getNodeName(node.argument)
 
     if (['Promise.all', 'Promise.allSettled'].includes(nodeName as string)) {
-      const [firstArg] = node.argument.arguments;
+      const [firstArg] = node.argument.arguments
 
       if (
         firstArg.type === 'ArrayExpression' &&
         firstArg.elements.some((nod) => nod && isIdentifier(nod, name))
       ) {
-        return true;
+        return true
       }
     }
 
@@ -99,12 +99,12 @@ const isPromiseMethodThatUsesValue = (
       ['Promise.resolve', 'Promise.reject'].includes(nodeName as string) &&
       node.argument.arguments.length === 1
     ) {
-      return isIdentifier(node.argument.arguments[0], name);
+      return isIdentifier(node.argument.arguments[0], name)
     }
   }
 
-  return isIdentifier(node.argument, name);
-};
+  return isIdentifier(node.argument, name)
+}
 
 /**
  * Attempts to determine if the runtime value represented by the given
@@ -121,19 +121,19 @@ const isValueAwaitedInElements = (
       element?.type === 'AwaitExpression' &&
       isIdentifier(element.argument, name)
     ) {
-      return true;
+      return true
     }
 
     if (
       element?.type === 'ArrayExpression' &&
       isValueAwaitedInElements(name, element.elements)
     ) {
-      return true;
+      return true
     }
   }
 
-  return false;
-};
+  return false
+}
 
 /**
  * Attempts to determine if the runtime value represented by the given
@@ -143,48 +143,48 @@ const isValueAwaitedInArguments = (
   name: string,
   call: ESTree.CallExpression,
 ): boolean => {
-  let node: ESTree.Node = call;
+  let node: ESTree.Node = call
 
   while (node) {
     if (node.type === 'CallExpression') {
       if (isValueAwaitedInElements(name, node.arguments)) {
-        return true;
+        return true
       }
 
-      node = node.callee;
+      node = node.callee
     }
 
     if (node.type !== 'MemberExpression') {
-      break;
+      break
     }
 
-    node = node.object;
+    node = node.object
   }
 
-  return false;
-};
+  return false
+}
 
 const getLeftMostCallExpression = (
   call: ESTree.CallExpression,
 ): ESTree.CallExpression => {
-  let leftMostCallExpression: ESTree.CallExpression = call;
-  let node: ESTree.Node = call;
+  let leftMostCallExpression: ESTree.CallExpression = call
+  let node: ESTree.Node = call
 
   while (node) {
     if (node.type === 'CallExpression') {
-      leftMostCallExpression = node;
-      node = node.callee;
+      leftMostCallExpression = node
+      node = node.callee
     }
 
     if (node.type !== 'MemberExpression') {
-      break;
+      break
     }
 
-    node = node.object;
+    node = node.object
   }
 
-  return leftMostCallExpression;
-};
+  return leftMostCallExpression
+}
 
 /**
  * Attempts to determine if the runtime value represented by the given
@@ -196,28 +196,28 @@ const isValueAwaitedOrReturned = (
   identifier: ESTree.Identifier | ESTree.Pattern,
   body: ESTree.Statement[],
 ): boolean => {
-  const name = getStringValue(identifier);
+  const name = getStringValue(identifier)
 
   for (const node of body) {
     // skip all nodes that are before this identifier, because they'd probably
     // be affecting a different runtime value (e.g. due to reassignment)
     if (node.range![0] <= identifier.range![0]) {
-      continue;
+      continue
     }
 
     if (node.type === 'ReturnStatement') {
-      return isPromiseMethodThatUsesValue(node, identifier);
+      return isPromiseMethodThatUsesValue(node, identifier)
     }
 
     if (node.type === 'ExpressionStatement') {
       // it's possible that we're awaiting the value as an argument
       if (node.expression.type === 'CallExpression') {
         if (isValueAwaitedInArguments(name, node.expression)) {
-          return true;
+          return true
         }
 
-        const leftMostCall = getLeftMostCallExpression(node.expression);
-        const call = parseFnCall(context, node.expression);
+        const leftMostCall = getLeftMostCallExpression(node.expression)
+        const call = parseFnCall(context, node.expression)
 
         if (
           call?.type === 'expect' &&
@@ -226,12 +226,12 @@ const isValueAwaitedOrReturned = (
         ) {
           if (
             call.members.some((m) => {
-              const v = getStringValue(m);
+              const v = getStringValue(m)
 
-              return v === 'resolves' || v === 'rejects';
+              return v === 'resolves' || v === 'rejects'
             })
           ) {
-            return true;
+            return true
           }
         }
       }
@@ -240,7 +240,7 @@ const isValueAwaitedOrReturned = (
         node.expression.type === 'AwaitExpression' &&
         isPromiseMethodThatUsesValue(node.expression, identifier)
       ) {
-        return true;
+        return true
       }
 
       // (re)assignment changes the runtime value, so if we've not found an
@@ -253,10 +253,10 @@ const isValueAwaitedOrReturned = (
           getNodeName(node.expression.right)?.startsWith(`${name}.`) &&
           isPromiseChainCall(node.expression.right)
         ) {
-          continue;
+          continue
         }
 
-        break;
+        break
       }
     }
 
@@ -264,71 +264,71 @@ const isValueAwaitedOrReturned = (
       node.type === 'BlockStatement' &&
       isValueAwaitedOrReturned(context, identifier, node.body)
     ) {
-      return true;
+      return true
     }
   }
 
-  return false;
-};
+  return false
+}
 
 const findFirstBlockBodyUp = (
   node: ESTree.Node,
 ): ESTree.BlockStatement['body'] => {
-  let parent: ESTree.Node = node;
+  let parent: ESTree.Node = node
 
   while (parent) {
     if (parent.type === 'BlockStatement') {
-      return parent.body;
+      return parent.body
     }
 
-    parent = getParent(parent);
+    parent = getParent(parent)
   }
 
   throw new Error(
     `Could not find BlockStatement - please file a github issue at https://github.com/playwright-community/eslint-plugin-playwright`,
-  );
-};
+  )
+}
 
 const isDirectlyWithinTestCaseCall = (
   context: Rule.RuleContext,
   node: ESTree.Node,
 ): boolean => {
-  let parent: ESTree.Node = node;
+  let parent: ESTree.Node = node
 
   while (parent) {
     if (isFunction(parent)) {
-      parent = parent.parent;
+      parent = parent.parent
 
       return (
         parent?.type === 'CallExpression' &&
         isTypeOfFnCall(context, parent, ['test'])
-      );
+      )
     }
 
-    parent = getParent(parent);
+    parent = getParent(parent)
   }
 
-  return false;
-};
+  return false
+}
 
 const isVariableAwaitedOrReturned = (
   context: Rule.RuleContext,
   variable: ESTree.VariableDeclarator,
 ): boolean => {
-  const body = findFirstBlockBodyUp(variable);
+  const body = findFirstBlockBodyUp(variable)
 
   // it's pretty much impossible for us to track destructuring assignments,
   // so we return true to bailout gracefully
   if (!isIdentifier(variable.id)) {
-    return true;
+    return true
   }
 
-  return isValueAwaitedOrReturned(context, variable.id, body);
-};
+  return isValueAwaitedOrReturned(context, variable.id, body)
+}
 
 export default {
   create(context) {
-    let inTestCaseWithDoneCallback = false;
+    let inTestCaseWithDoneCallback = false
     // an array of booleans representing each promise chain we enter, with the
     // boolean value representing if we think a given chain contains an expect
     // in it's body.
@@ -336,30 +336,30 @@ export default {
     // since we only care about the inner-most chain, we represent the state in
     // reverse with the inner-most being the first item, as that makes it
     // slightly less code to assign to by not needing to know the length
-    const chains: boolean[] = [];
+    const chains: boolean[] = []
 
     return {
       CallExpression(node: ESTree.CallExpression) {
         // there are too many ways that the done argument could be used with
         // promises that contain expect that would make the promise safe for us
         if (isTestCaseCallWithCallbackArg(context, node)) {
-          inTestCaseWithDoneCallback = true;
+          inTestCaseWithDoneCallback = true
 
-          return;
+          return
         }
 
         // if this call expression is a promise chain, add it to the stack with
         // value of "false", as we assume there are no expect calls initially
         if (isPromiseChainCall(node)) {
-          chains.unshift(false);
+          chains.unshift(false)
 
-          return;
+          return
         }
 
         // if we're within a promise chain, and this call expression looks like
         // an expect call, mark the deepest chain as having an expect call
         if (chains.length > 0 && isTypeOfFnCall(context, node, ['expect'])) {
-          chains[0] = true;
+          chains[0] = true
         }
       },
       'CallExpression:exit'(node: ESTree.CallExpression) {
@@ -368,43 +368,43 @@ export default {
         // accurately check, so we just bail out completely if it's present
         if (inTestCaseWithDoneCallback) {
           if (isTypeOfFnCall(context, node, ['test'])) {
-            inTestCaseWithDoneCallback = false;
+            inTestCaseWithDoneCallback = false
           }
 
-          return;
+          return
         }
 
         if (!isPromiseChainCall(node)) {
-          return;
+          return
         }
 
         // since we're exiting this call expression (which is a promise chain)
         // we remove it from the stack of chains, since we're unwinding
-        const hasExpectCall = chains.shift();
+        const hasExpectCall = chains.shift()
 
         // if the promise chain we're exiting doesn't contain an expect,
         // then we don't need to check it for anything
         if (!hasExpectCall) {
-          return;
+          return
         }
 
-        const { parent } = findTopMostCallExpression(node);
+        const { parent } = findTopMostCallExpression(node)
 
         // if we don't have a parent (which is technically impossible at runtime)
         // or our parent is not directly within the test case, we stop checking
         // because we're most likely in the body of a function being defined
         // within the test, which we can't track
         if (!parent || !isDirectlyWithinTestCaseCall(context, parent)) {
-          return;
+          return
         }
 
         switch (parent.type) {
           case 'VariableDeclarator': {
             if (isVariableAwaitedOrReturned(context, parent)) {
-              return;
+              return
             }
 
-            break;
+            break
           }
 
           case 'AssignmentExpression': {
@@ -416,27 +416,27 @@ export default {
                 findFirstBlockBodyUp(parent),
               )
             ) {
-              return;
+              return
             }
 
-            break;
+            break
           }
 
           case 'ExpressionStatement':
-            break;
+            break
 
           case 'ReturnStatement':
           case 'AwaitExpression':
           default:
-            return;
+            return
         }
 
         context.report({
           messageId: 'expectInFloatingPromise',
           node: parent,
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -453,4 +453,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

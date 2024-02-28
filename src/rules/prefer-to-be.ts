@@ -1,23 +1,23 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { equalityMatchers, getStringValue, isIdentifier } from '../utils/ast';
-import { replaceAccessorFixer } from '../utils/fixer';
-import { ParsedExpectFnCall, parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
+import { equalityMatchers, getStringValue, isIdentifier } from '../utils/ast'
+import { replaceAccessorFixer } from '../utils/fixer'
+import { ParsedExpectFnCall, parseFnCall } from '../utils/parseFnCall'
 
 function shouldUseToBe(call: ParsedExpectFnCall) {
-  let arg = call.matcherArgs[0];
+  let arg = call.matcherArgs[0]
 
   if (arg.type === 'UnaryExpression' && arg.operator === '-') {
-    arg = arg.argument;
+    arg = arg.argument
   }
 
   if (arg.type === 'Literal') {
     // regex literals are classed as literals, but they're actually objects
     // which means "toBe" will give different results than other matchers
-    return !('regex' in arg);
+    return !('regex' in arg)
   }
 
-  return arg.type === 'TemplateLiteral';
+  return arg.type === 'TemplateLiteral'
 }
 
 function reportPreferToBe(
@@ -30,35 +30,35 @@ function reportPreferToBe(
     fix(fixer) {
       const fixes = [
         replaceAccessorFixer(fixer, call.matcher, `toBe${whatToBe}`),
-      ];
+      ]
 
       if (call.matcherArgs?.length && whatToBe !== '') {
-        fixes.push(fixer.remove(call.matcherArgs[0]));
+        fixes.push(fixer.remove(call.matcherArgs[0]))
       }
 
       if (notModifier) {
-        const [start, end] = notModifier.range!;
-        fixes.push(fixer.removeRange([start - 1, end]));
+        const [start, end] = notModifier.range!
+        fixes.push(fixer.removeRange([start - 1, end]))
       }
 
-      return fixes;
+      return fixes
     },
     messageId: `useToBe${whatToBe}`,
     node: call.matcher,
-  });
+  })
 }
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'expect') return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'expect') return
 
-        const notMatchers = ['toBeUndefined', 'toBeDefined'];
+        const notMatchers = ['toBeUndefined', 'toBeDefined']
         const notModifier = call.modifiers.find(
           (node) => getStringValue(node) === 'not',
-        );
+        )
 
         if (notModifier && notMatchers.includes(call.matcherName)) {
           return reportPreferToBe(
@@ -66,32 +66,32 @@ export default {
             call,
             call.matcherName === 'toBeDefined' ? 'Undefined' : 'Defined',
             notModifier,
-          );
+          )
         }
 
-        const firstArg = call.matcherArgs[0];
+        const firstArg = call.matcherArgs[0]
         if (!equalityMatchers.has(call.matcherName) || !firstArg) {
-          return;
+          return
         }
 
         if (firstArg.type === 'Literal' && firstArg.value === null) {
-          return reportPreferToBe(context, call, 'Null');
+          return reportPreferToBe(context, call, 'Null')
         }
 
         if (isIdentifier(firstArg, 'undefined')) {
-          const name = notModifier ? 'Defined' : 'Undefined';
-          return reportPreferToBe(context, call, name, notModifier);
+          const name = notModifier ? 'Defined' : 'Undefined'
+          return reportPreferToBe(context, call, name, notModifier)
         }
 
         if (isIdentifier(firstArg, 'NaN')) {
-          return reportPreferToBe(context, call, 'NaN');
+          return reportPreferToBe(context, call, 'NaN')
         }
 
         if (shouldUseToBe(call) && call.matcherName !== 'toBe') {
-          reportPreferToBe(context, call, '');
+          reportPreferToBe(context, call, '')
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -111,4 +111,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

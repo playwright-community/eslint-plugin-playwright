@@ -8,24 +8,24 @@ Examples of **incorrect** code for this rule:
 
 ```javascript
 test('should be a test', () => {
-  console.log('no assertion');
-});
+  console.log('no assertion')
+})
 
-test('should assert something', () => {});
+test('should assert something', () => {})
 ```
 
 Examples of **correct** code for this rule:
 
 ```javascript
 test('should be a test', async () => {
-  await expect(page).toHaveTitle('foo');
-});
+  await expect(page).toHaveTitle('foo')
+})
 
 test('should work with callbacks/async', async () => {
   await test.step('step 1', async () => {
-    await expect(page).toHaveTitle('foo');
-  });
-});
+    await expect(page).toHaveTitle('foo')
+  })
+})
 ```
 
 ## Options
@@ -54,6 +54,6 @@ function assertScrolledToBottom(page) {
 }
 
 test('should scroll', async ({ page }) => {
-  await assertScrolledToBottom(page);
-});
+  await assertScrolledToBottom(page)
+})
 ```

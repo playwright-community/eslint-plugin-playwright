@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-get-by-title';
-import { runRuleTester, test } from '../utils/rule-tester';
+import rule from '../../src/rules/no-get-by-title'
+import { runRuleTester, test } from '../utils/rule-tester'
 
-const messageId = 'noGetByTitle';
+const messageId = 'noGetByTitle'
 
 runRuleTester('no-get-by-title', rule, {
   invalid: [
@@ -18,4 +18,4 @@ runRuleTester('no-get-by-title', rule, {
     test('await page.locator("[title=lorem ipsum]")'),
     test('await page.getByRole("button")'),
   ],
-});
+})

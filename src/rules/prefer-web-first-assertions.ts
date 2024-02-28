@@ -1,19 +1,19 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
 import {
   findParent,
   getRawValue,
   getStringValue,
   isBooleanLiteral,
-} from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
+} from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
 
 type MethodConfig = {
-  inverse?: string;
-  matcher: string;
-  prop?: string;
-  type: 'boolean' | 'string';
-};
+  inverse?: string
+  matcher: string
+  prop?: string
+  type: 'boolean' | 'string'
+}
 
 const methods: Record<string, MethodConfig> = {
   getAttribute: {
@@ -49,14 +49,14 @@ const methods: Record<string, MethodConfig> = {
     type: 'boolean',
   },
   textContent: { matcher: 'toHaveText', type: 'string' },
-};
+}
 
 const supportedMatchers = new Set([
   'toBe',
   'toEqual',
   'toBeTruthy',
   'toBeFalsy',
-]);
+])
 
 /**
  * If the expect call argument is a variable reference, finds the variable
@@ -64,17 +64,17 @@ const supportedMatchers = new Set([
  */
 function dereference(context: Rule.RuleContext, node: ESTree.Node) {
   if (node.type !== 'Identifier') {
-    return node;
+    return node
   }
 
-  const scope = context.sourceCode.getScope(node);
+  const scope = context.sourceCode.getScope(node)
 
   // Find the variable declaration and return the initializer
   for (const ref of scope.references) {
-    const refParent = (ref.identifier as Rule.Node).parent;
+    const refParent = (ref.identifier as Rule.Node).parent
 
     if (refParent.type === 'VariableDeclarator') {
-      return refParent.init;
+      return refParent.init
     }
   }
 }
@@ -83,53 +83,53 @@ export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'expect') return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'expect') return
 
-        const expect = findParent(call.head.node, 'CallExpression');
-        if (!expect) return;
+        const expect = findParent(call.head.node, 'CallExpression')
+        if (!expect) return
 
-        const arg = dereference(context, call.args[0]);
+        const arg = dereference(context, call.args[0])
         if (
           !arg ||
           arg.type !== 'AwaitExpression' ||
           arg.argument.type !== 'CallExpression' ||
           arg.argument.callee.type !== 'MemberExpression'
         ) {
-          return;
+          return
         }
 
         // Matcher must be supported
-        if (!supportedMatchers.has(call.matcherName)) return;
+        if (!supportedMatchers.has(call.matcherName)) return
 
         // Playwright method must be supported
-        const method = getStringValue(arg.argument.callee.property);
-        const methodConfig = methods[method];
-        if (!methodConfig) return;
+        const method = getStringValue(arg.argument.callee.property)
+        const methodConfig = methods[method]
+        if (!methodConfig) return
 
         // Change the matcher
         const notModifier = call.modifiers.find(
           (mod) => getStringValue(mod) === 'not',
-        );
+        )
 
         const isFalsy =
           methodConfig.type === 'boolean' &&
           ((!!call.matcherArgs.length &&
             isBooleanLiteral(call.matcherArgs[0], false)) ||
-            call.matcherName === 'toBeFalsy');
+            call.matcherName === 'toBeFalsy')
 
         const isInverse = methodConfig.inverse
           ? notModifier || isFalsy
-          : notModifier && isFalsy;
+          : notModifier && isFalsy
 
         // Replace the old matcher with the new matcher. The inverse
         // matcher should only be used if the old statement was not a
         // double negation.
         const newMatcher =
           (+!!notModifier ^ +isFalsy && methodConfig.inverse) ||
-          methodConfig.matcher;
+          methodConfig.matcher
 
-        const { callee } = arg.argument;
+        const { callee } = arg.argument
         context.report({
           data: {
             matcher: newMatcher,
@@ -139,11 +139,11 @@ export default {
             const methodArgs =
               arg.argument.type === 'CallExpression'
                 ? arg.argument.arguments
-                : [];
+                : []
 
             const methodEnd = methodArgs.length
               ? methodArgs.at(-1)!.range![1] + 1
-              : callee.property.range![1] + 2;
+              : callee.property.range![1] + 2
 
             const fixes = [
               // Add await to the expect call
@@ -158,63 +158,63 @@ export default {
                 [callee.property.range![0] - 1, methodEnd],
                 '',
               ),
-            ];
+            ]
 
             // Remove not from matcher chain if no longer needed
             if (isInverse && notModifier) {
-              const notRange = notModifier.range!;
-              fixes.push(fixer.removeRange([notRange[0], notRange[1] + 1]));
+              const notRange = notModifier.range!
+              fixes.push(fixer.removeRange([notRange[0], notRange[1] + 1]))
             }
 
             // Add not to the matcher chain if no inverse matcher exists
             if (!methodConfig.inverse && !notModifier && isFalsy) {
-              fixes.push(fixer.insertTextBefore(call.matcher, 'not.'));
+              fixes.push(fixer.insertTextBefore(call.matcher, 'not.'))
             }
 
-            fixes.push(fixer.replaceText(call.matcher, newMatcher));
+            fixes.push(fixer.replaceText(call.matcher, newMatcher))
 
             // Remove boolean argument if it exists
-            const [matcherArg] = call.matcherArgs ?? [];
+            const [matcherArg] = call.matcherArgs ?? []
             if (matcherArg && isBooleanLiteral(matcherArg)) {
-              fixes.push(fixer.remove(matcherArg));
+              fixes.push(fixer.remove(matcherArg))
             }
 
             // Add the prop argument if needed
             else if (methodConfig.prop && matcherArg) {
-              const propArg = methodConfig.prop;
-              const variable = getStringValue(matcherArg);
-              const args = `{ ${propArg}: ${variable} }`;
+              const propArg = methodConfig.prop
+              const variable = getStringValue(matcherArg)
+              const args = `{ ${propArg}: ${variable} }`
 
-              fixes.push(fixer.replaceText(matcherArg, args));
+              fixes.push(fixer.replaceText(matcherArg, args))
             }
 
             // Add the new matcher arguments if needed
             const hasOtherArgs = !!methodArgs.filter(
               (arg) => !isBooleanLiteral(arg),
-            ).length;
+            ).length
 
             if (methodArgs) {
-              const range = call.matcher.range!;
+              const range = call.matcher.range!
               const stringArgs = methodArgs
                 .map((arg) => getRawValue(arg))
                 .concat(hasOtherArgs ? '' : [])
-                .join(', ');
+                .join(', ')
 
               fixes.push(
                 fixer.insertTextAfterRange(
                   [range[0], range[1] + 1],
                   stringArgs,
                 ),
-              );
+              )
             }
 
-            return fixes;
+            return fixes
           },
           messageId: 'useWebFirstAssertion',
           node: expect,
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -229,4 +229,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

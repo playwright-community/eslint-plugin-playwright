@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import { runRuleTester } from '../utils/rule-tester';
-import rule from './valid-describe-callback';
+import dedent from 'dedent'
+import { runRuleTester } from '../utils/rule-tester'
+import rule from './valid-describe-callback'
 
 runRuleTester('valid-describe-callback', rule, {
   invalid: [
@@ -205,4 +205,4 @@ runRuleTester('valid-describe-callback', rule, {
       },
     },
   ],
-});
+})

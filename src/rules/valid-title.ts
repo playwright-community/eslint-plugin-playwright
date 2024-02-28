@@ -1,36 +1,36 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { getStringValue, isStringNode, StringNode } from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
+import { getStringValue, isStringNode, StringNode } from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
 
 const doesBinaryExpressionContainStringNode = (
   binaryExp: ESTree.BinaryExpression,
 ): boolean => {
   if (isStringNode(binaryExp.right)) {
-    return true;
+    return true
   }
 
   if (binaryExp.left.type === 'BinaryExpression') {
-    return doesBinaryExpressionContainStringNode(binaryExp.left);
+    return doesBinaryExpressionContainStringNode(binaryExp.left)
   }
 
-  return isStringNode(binaryExp.left);
-};
+  return isStringNode(binaryExp.left)
+}
 
 const quoteStringValue = (node: StringNode): string =>
   node.type === 'TemplateLiteral'
     ? `\`${node.quasis[0].value.raw}\``
-    : node.raw ?? '';
+    : node.raw ?? ''
 
 const compileMatcherPattern = (
   matcherMaybeWithMessage: MatcherAndMessage | string,
 ): CompiledMatcherAndMessage => {
   const [matcher, message] = Array.isArray(matcherMaybeWithMessage)
     ? matcherMaybeWithMessage
-    : [matcherMaybeWithMessage];
+    : [matcherMaybeWithMessage]
 
-  return [new RegExp(matcher, 'u'), message];
-};
+  return [new RegExp(matcher, 'u'), message]
+}
 
 const compileMatcherPatterns = (
   matchers:
@@ -40,12 +40,12 @@ const compileMatcherPatterns = (
 ): Record<MatcherGroups, CompiledMatcherAndMessage | null> &
   Record<string, CompiledMatcherAndMessage | null> => {
   if (typeof matchers === 'string' || Array.isArray(matchers)) {
-    const compiledMatcher = compileMatcherPattern(matchers);
+    const compiledMatcher = compileMatcherPattern(matchers)
 
     return {
       describe: compiledMatcher,
       test: compiledMatcher,
-    };
+    }
   }
 
   return {
@@ -53,11 +53,11 @@ const compileMatcherPatterns = (
       ? compileMatcherPattern(matchers.describe)
       : null,
     test: matchers.test ? compileMatcherPattern(matchers.test) : null,
-  };
-};
+  }
+}
 
-type CompiledMatcherAndMessage = [matcher: RegExp, message?: string];
-type MatcherAndMessage = [matcher: string, message?: string];
+type CompiledMatcherAndMessage = [matcher: RegExp, message?: string]
+type MatcherAndMessage = [matcher: string, message?: string]
 
 const MatcherAndMessageSchema = {
   additionalItems: false,
@@ -65,28 +65,28 @@ const MatcherAndMessageSchema = {
   maxItems: 2,
   minItems: 1,
   type: 'array',
-} as const;
+} as const
 
-type MatcherGroups = 'describe' | 'test';
+type MatcherGroups = 'describe' | 'test'
 
 interface Options {
-  disallowedWords?: string[];
-  ignoreSpaces?: boolean;
-  ignoreTypeOfDescribeName?: boolean;
-  ignoreTypeOfTestName?: boolean;
+  disallowedWords?: string[]
+  ignoreSpaces?: boolean
+  ignoreTypeOfDescribeName?: boolean
+  ignoreTypeOfTestName?: boolean
   mustMatch?:
     | Partial<Record<MatcherGroups, string | MatcherAndMessage>>
     | MatcherAndMessage
-    | string;
+    | string
   mustNotMatch?:
     | Partial<Record<MatcherGroups, string | MatcherAndMessage>>
     | MatcherAndMessage
-    | string;
+    | string
 }
 
 export default {
   create(context) {
-    const opts: Options = context.options?.[0] ?? {};
+    const opts: Options = context.options?.[0] ?? {}
     const {
       disallowedWords = [],
       ignoreSpaces = false,
@@ -94,31 +94,31 @@ export default {
       ignoreTypeOfTestName = false,
       mustMatch,
       mustNotMatch,
-    } = opts;
+    } = opts
     const disallowedWordsRegexp = new RegExp(
       `\\b(${disallowedWords.join('|')})\\b`,
       'iu',
-    );
+    )
 
-    const mustNotMatchPatterns = compileMatcherPatterns(mustNotMatch ?? {});
-    const mustMatchPatterns = compileMatcherPatterns(mustMatch ?? {});
+    const mustNotMatchPatterns = compileMatcherPatterns(mustNotMatch ?? {})
+    const mustMatchPatterns = compileMatcherPatterns(mustMatch ?? {})
 
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
         if (call?.type !== 'test' && call?.type !== 'describe') {
-          return;
+          return
         }
 
-        const [argument] = node.arguments;
-        if (!argument) return;
+        const [argument] = node.arguments
+        if (!argument) return
 
         if (!isStringNode(argument)) {
           if (
             argument.type === 'BinaryExpression' &&
             doesBinaryExpressionContainStringNode(argument)
           ) {
-            return;
+            return
           }
 
           if (
@@ -131,36 +131,36 @@ export default {
             context.report({
               loc: argument.loc!,
               messageId: 'titleMustBeString',
-            });
+            })
           }
 
-          return;
+          return
         }
 
-        const title = getStringValue(argument);
-        const functionName = call.type;
+        const title = getStringValue(argument)
+        const functionName = call.type
 
         if (!title) {
           context.report({
             data: { functionName: call.type },
             messageId: 'emptyTitle',
             node,
-          });
+          })
 
-          return;
+          return
         }
 
         if (disallowedWords.length > 0) {
-          const disallowedMatch = disallowedWordsRegexp.exec(title);
+          const disallowedMatch = disallowedWordsRegexp.exec(title)
 
           if (disallowedMatch) {
             context.report({
               data: { word: disallowedMatch[1] },
               messageId: 'disallowedWord',
               node: argument,
-            });
+            })
 
-            return;
+            return
           }
         }
 
@@ -176,10 +176,10 @@ export default {
             ],
             messageId: 'accidentalSpace',
             node: argument,
-          });
+          })
         }
 
-        const [firstWord] = title.split(' ');
+        const [firstWord] = title.split(' ')
         if (firstWord.toLowerCase() === functionName) {
           context.report({
             fix: (fixer) => [
@@ -190,11 +190,11 @@ export default {
             ],
             messageId: 'duplicatePrefix',
             node: argument,
-          });
+          })
         }
 
         const [mustNotMatchPattern, mustNotMatchMessage] =
-          mustNotMatchPatterns[functionName] ?? [];
+          mustNotMatchPatterns[functionName] ?? []
 
         if (mustNotMatchPattern && mustNotMatchPattern.test(title)) {
           context.report({
@@ -207,13 +207,13 @@ export default {
               ? 'mustNotMatchCustom'
               : 'mustNotMatch',
             node: argument,
-          });
+          })
 
-          return;
+          return
         }
 
         const [mustMatchPattern, mustMatchMessage] =
-          mustMatchPatterns[functionName] ?? [];
+          mustMatchPatterns[functionName] ?? []
 
         if (mustMatchPattern && !mustMatchPattern.test(title)) {
           context.report({
@@ -224,12 +224,12 @@ export default {
             },
             messageId: mustMatchMessage ? 'mustMatchCustom' : 'mustMatch',
             node: argument,
-          });
+          })
 
-          return;
+          return
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -291,4 +291,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

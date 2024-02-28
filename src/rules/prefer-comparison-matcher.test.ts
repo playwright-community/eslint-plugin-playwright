@@ -1,7 +1,7 @@
-import { RuleTester } from 'eslint';
-import rule from '../../src/rules/prefer-comparison-matcher';
-import { equalityMatchers } from '../../src/utils/ast';
-import { runRuleTester } from '../utils/rule-tester';
+import { RuleTester } from 'eslint'
+import rule from '../../src/rules/prefer-comparison-matcher'
+import { equalityMatchers } from '../../src/utils/ast'
+import { runRuleTester } from '../utils/rule-tester'
 
 const generateInvalidCases = (
   operator: string,
@@ -209,8 +209,8 @@ const generateInvalidCases = (
         },
       },
     },
-  ];
-};
+  ]
+}
 
 const generateValidStringLiteralCases = (operator: string, matcher: string) => {
   return [
@@ -240,8 +240,8 @@ const generateValidStringLiteralCases = (operator: string, matcher: string) => {
       `expect(${b} ${operator} ${b}).resolves.not.${matcher}(false)`,
       `expect(${b} ${operator} ${b}).resolves.${matcher}(false)`,
     ],
-  ]);
-};
+  ])
+}
 
 const testComparisonOperator = (
   operator: string,
@@ -276,13 +276,13 @@ const testComparisonOperator = (
         [],
       ),
     ],
-  });
-};
+  })
+}
 
-testComparisonOperator('>', 'toBeGreaterThan', 'toBeLessThanOrEqual');
-testComparisonOperator('<', 'toBeLessThan', 'toBeGreaterThanOrEqual');
-testComparisonOperator('>=', 'toBeGreaterThanOrEqual', 'toBeLessThan');
-testComparisonOperator('<=', 'toBeLessThanOrEqual', 'toBeGreaterThan');
+testComparisonOperator('>', 'toBeGreaterThan', 'toBeLessThanOrEqual')
+testComparisonOperator('<', 'toBeLessThan', 'toBeGreaterThanOrEqual')
+testComparisonOperator('>=', 'toBeGreaterThanOrEqual', 'toBeLessThan')
+testComparisonOperator('<=', 'toBeLessThanOrEqual', 'toBeGreaterThan')
 
 runRuleTester('prefer-comparision-matcher', rule, {
   invalid: [],
@@ -307,4 +307,4 @@ runRuleTester('prefer-comparision-matcher', rule, {
       },
     },
   ],
-});
+})

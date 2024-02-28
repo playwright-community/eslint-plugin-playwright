@@ -29,39 +29,39 @@ be flagged:
 
 ```js
 const initializeCityDatabase = () => {
-  database.addCity('Vienna');
-  database.addCity('San Juan');
-  database.addCity('Wellington');
-};
+  database.addCity('Vienna')
+  database.addCity('San Juan')
+  database.addCity('Wellington')
+}
 
 const clearCityDatabase = () => {
-  database.clear();
-};
+  database.clear()
+}
 
-initializeCityDatabase();
+initializeCityDatabase()
 
 test('that persists cities', () => {
-  expect(database.cities.length).toHaveLength(3);
-});
+  expect(database.cities.length).toHaveLength(3)
+})
 
 test('city database has Vienna', () => {
-  expect(isCity('Vienna')).toBeTruthy();
-});
+  expect(isCity('Vienna')).toBeTruthy()
+})
 
 test('city database has San Juan', () => {
-  expect(isCity('San Juan')).toBeTruthy();
-});
+  expect(isCity('San Juan')).toBeTruthy()
+})
 
 test.describe('when loading cities from the api', () => {
-  clearCityDatabase();
+  clearCityDatabase()
 
   test('does not duplicate cities', async () => {
-    await database.loadCities();
-    expect(database.cities).toHaveLength(4);
-  });
-});
+    await database.loadCities()
+    expect(database.cities).toHaveLength(4)
+  })
+})
 
-clearCityDatabase();
+clearCityDatabase()
 ```
 
 Here is the same slightly contrived test file showcasing the same common cases
@@ -69,45 +69,45 @@ but in ways that would be **not** flagged:
 
 ```js
 const initializeCityDatabase = () => {
-  database.addCity('Vienna');
-  database.addCity('San Juan');
-  database.addCity('Wellington');
-};
+  database.addCity('Vienna')
+  database.addCity('San Juan')
+  database.addCity('Wellington')
+}
 
 const clearCityDatabase = () => {
-  database.clear();
-};
+  database.clear()
+}
 
 test.beforeEach(() => {
-  initializeCityDatabase();
-});
+  initializeCityDatabase()
+})
 
 test('that persists cities', () => {
-  expect(database.cities.length).toHaveLength(3);
-});
+  expect(database.cities.length).toHaveLength(3)
+})
 
 test('city database has Vienna', () => {
-  expect(isCity('Vienna')).toBeTruthy();
-});
+  expect(isCity('Vienna')).toBeTruthy()
+})
 
 test('city database has San Juan', () => {
-  expect(isCity('San Juan')).toBeTruthy();
-});
+  expect(isCity('San Juan')).toBeTruthy()
+})
 
 test.describe('when loading cities from the api', () => {
   test.beforeEach(() => {
-    clearCityDatabase();
-  });
+    clearCityDatabase()
+  })
 
   test('does not duplicate cities', async () => {
-    await database.loadCities();
-    expect(database.cities).toHaveLength(4);
-  });
-});
+    await database.loadCities()
+    expect(database.cities).toHaveLength(4)
+  })
+})
 
 test.afterEach(() => {
-  clearCityDatabase();
-});
+  clearCityDatabase()
+})
 ```
 
 ## Options
@@ -132,14 +132,14 @@ Examples of **correct** code when using
 ```js
 /* eslint playwright/require-hook: ["error", { "allowedFunctionCalls": ["enableAutoDestroy"] }] */
 
-enableAutoDestroy(test.afterEach);
+enableAutoDestroy(test.afterEach)
 
-test.beforeEach(initDatabase);
-test.afterEach(tearDownDatabase);
+test.beforeEach(initDatabase)
+test.afterEach(tearDownDatabase)
 
 test.describe('Foo', () => {
   test('always returns 42', () => {
-    expect(global.getAnswer()).toBe(42);
-  });
-});
+    expect(global.getAnswer()).toBe(42)
+  })
+})
 ```

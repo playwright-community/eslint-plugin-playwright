@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-networkidle';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-networkidle'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'noNetworkidle';
+const messageId = 'noNetworkidle'
 
 runRuleTester('no-networkidle', rule, {
   invalid: [
@@ -58,4 +58,4 @@ runRuleTester('no-networkidle', rule, {
     'page.waitForLoadState({ waitUntil: "load" })',
     'page.waitForURL(url, { waitUntil: "load" })',
   ],
-});
+})

@@ -1,7 +1,7 @@
-import rule from '../../src/rules/prefer-to-contain';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/prefer-to-contain'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'useToContain';
+const messageId = 'useToContain'
 
 runRuleTester('prefer-to-contain', rule, {
   invalid: [
@@ -179,4 +179,4 @@ runRuleTester('prefer-to-contain', rule, {
       },
     },
   ],
-});
+})

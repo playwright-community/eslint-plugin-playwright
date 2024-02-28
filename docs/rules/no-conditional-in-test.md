@@ -12,33 +12,33 @@ Examples of **incorrect** code for this rule:
 ```javascript
 test('foo', async ({ page }) => {
   if (someCondition) {
-    bar();
+    bar()
   }
-});
+})
 
 test('bar', async ({ page }) => {
   switch (mode) {
     case 'single':
-      generateOne();
-      break;
+      generateOne()
+      break
     case 'double':
-      generateTwo();
-      break;
+      generateTwo()
+      break
     case 'multiple':
-      generateMany();
-      break;
+      generateMany()
+      break
   }
 
-  await expect(page.locator('.my-image').count()).toBeGreaterThan(0);
-});
+  await expect(page.locator('.my-image').count()).toBeGreaterThan(0)
+})
 
 test('baz', async ({ page }) => {
   const hotkey =
-    process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f'];
-  await Promise.all(hotkey.map((x) => page.keyboard.down(x)));
+    process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f']
+  await Promise.all(hotkey.map((x) => page.keyboard.down(x)))
 
-  expect(actionIsPerformed()).toBe(true);
-});
+  expect(actionIsPerformed()).toBe(true)
+})
 ```
 
 Examples of **correct** code for this rule:
@@ -47,35 +47,35 @@ Examples of **correct** code for this rule:
 test.describe('my tests', () => {
   if (someCondition) {
     test('foo', async ({ page }) => {
-      bar();
-    });
+      bar()
+    })
   }
-});
+})
 
 beforeEach(() => {
   switch (mode) {
     case 'single':
-      generateOne();
-      break;
+      generateOne()
+      break
     case 'double':
-      generateTwo();
-      break;
+      generateTwo()
+      break
     case 'multiple':
-      generateMany();
-      break;
+      generateMany()
+      break
   }
-});
+})
 
 test('bar', async ({ page }) => {
-  await expect(page.locator('.my-image').count()).toBeGreaterThan(0);
-});
+  await expect(page.locator('.my-image').count()).toBeGreaterThan(0)
+})
 
 const hotkey =
-  process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f'];
+  process.platform === 'linux' ? ['Control', 'Alt', 'f'] : ['Alt', 'f']
 
 test('baz', async ({ page }) => {
-  await Promise.all(hotkey.map((x) => page.keyboard.down(x)));
+  await Promise.all(hotkey.map((x) => page.keyboard.down(x)))
 
-  expect(actionIsPerformed()).toBe(true);
-});
+  expect(actionIsPerformed()).toBe(true)
+})
 ```

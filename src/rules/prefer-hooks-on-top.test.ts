@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/prefer-hooks-on-top';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/prefer-hooks-on-top'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('basic describe block', rule, {
   invalid: [
@@ -137,7 +137,7 @@ runRuleTester('basic describe block', rule, {
       `,
     },
   ],
-});
+})
 
 runRuleTester('multiple describe blocks', rule, {
   invalid: [
@@ -218,7 +218,7 @@ runRuleTester('multiple describe blocks', rule, {
       });
     `,
   ],
-});
+})
 
 runRuleTester('nested describe blocks', rule, {
   invalid: [
@@ -279,4 +279,4 @@ runRuleTester('nested describe blocks', rule, {
       });
     `,
   ],
-});
+})

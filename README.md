@@ -37,7 +37,7 @@ This plugin bundles two configurations to work with both `@playwright/test` or
 (**eslint.config.js**)
 
 ```javascript
-import playwright from 'eslint-plugin-playwright';
+import playwright from 'eslint-plugin-playwright'
 
 export default [
   playwright.configs['flat/recommended'],
@@ -47,7 +47,7 @@ export default [
       // ...
     },
   },
-];
+]
 ```
 
 [Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)
@@ -65,8 +65,8 @@ export default [
 (**eslint.config.js**)
 
 ```javascript
-import playwright from 'eslint-plugin-playwright';
-import jest from 'eslint-plugin-jest';
+import playwright from 'eslint-plugin-playwright'
+import jest from 'eslint-plugin-jest'
 
 export default [
   playwright.configs['flat/jest-playwright'],
@@ -79,7 +79,7 @@ export default [
       // ...
     },
   },
-];
+]
 ```
 
 [Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)

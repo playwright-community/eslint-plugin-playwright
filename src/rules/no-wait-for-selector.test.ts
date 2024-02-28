@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-wait-for-selector';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-wait-for-selector'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'noWaitForSelector';
+const messageId = 'noWaitForSelector'
 
 runRuleTester('no-wait-for-selector', rule, {
   invalid: [
@@ -245,4 +245,4 @@ runRuleTester('no-wait-for-selector', rule, {
     'rampage.waitForSelector("#foo");',
     'myPage2.waitForSelector("#foo");',
   ],
-});
+})

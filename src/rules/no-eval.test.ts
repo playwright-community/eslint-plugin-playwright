@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-eval';
-import { runRuleTester, test } from '../utils/rule-tester';
+import rule from '../../src/rules/no-eval'
+import { runRuleTester, test } from '../utils/rule-tester'
 
 runRuleTester('no-eval', rule, {
   invalid: [
@@ -88,4 +88,4 @@ runRuleTester('no-eval', rule, {
       'await this.page.locator("div").evaluateAll((divs, min) => divs.length >= min, 10);',
     ),
   ],
-});
+})

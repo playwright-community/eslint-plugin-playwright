@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-element-handle';
-import { runRuleTester, test } from '../utils/rule-tester';
+import rule from '../../src/rules/no-element-handle'
+import { runRuleTester, test } from '../utils/rule-tester'
 
 runRuleTester('no-element-handle', rule, {
   invalid: [
@@ -375,4 +375,4 @@ runRuleTester('no-element-handle', rule, {
     test('this.page.$$$("div");'),
     test('page.$$$("div");'),
   ],
-});
+})

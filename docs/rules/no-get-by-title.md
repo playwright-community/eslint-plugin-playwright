@@ -10,11 +10,11 @@ your code. This rule helps to prevent that by disallowing use of the
 Example of **incorrect** code for this rule:
 
 ```javascript
-await page.getByTitle('Delete product').click();
+await page.getByTitle('Delete product').click()
 ```
 
 Example of **correct** code for this rule:
 
 ```javascript
-await page.getByRole('button', { name: 'Delete product' }).click();
+await page.getByRole('button', { name: 'Delete product' }).click()
 ```

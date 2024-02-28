@@ -12,30 +12,30 @@ The following patterns are considered warnings:
 ```js
 test('promises a person', () => {
   api.getPersonByName('bob').then((person) => {
-    expect(person).toHaveProperty('name', 'Bob');
-  });
-});
+    expect(person).toHaveProperty('name', 'Bob')
+  })
+})
 
 test('promises a counted person', () => {
   const promise = api.getPersonByName('bob').then((person) => {
-    expect(person).toHaveProperty('name', 'Bob');
-  });
+    expect(person).toHaveProperty('name', 'Bob')
+  })
 
   promise.then(() => {
-    expect(analytics.gottenPeopleCount).toBe(1);
-  });
-});
+    expect(analytics.gottenPeopleCount).toBe(1)
+  })
+})
 
 test('promises multiple people', () => {
   const firstPromise = api.getPersonByName('bob').then((person) => {
-    expect(person).toHaveProperty('name', 'Bob');
-  });
+    expect(person).toHaveProperty('name', 'Bob')
+  })
   const secondPromise = api.getPersonByName('alice').then((person) => {
-    expect(person).toHaveProperty('name', 'Alice');
-  });
+    expect(person).toHaveProperty('name', 'Alice')
+  })
 
-  return Promise.any([firstPromise, secondPromise]);
-});
+  return Promise.any([firstPromise, secondPromise])
+})
 ```
 
 The following pattern is not a warning:
@@ -43,30 +43,30 @@ The following pattern is not a warning:
 ```js
 test('promises a person', async () => {
   await api.getPersonByName('bob').then((person) => {
-    expect(person).toHaveProperty('name', 'Bob');
-  });
-});
+    expect(person).toHaveProperty('name', 'Bob')
+  })
+})
 
 test('promises a counted person', () => {
   let promise = api.getPersonByName('bob').then((person) => {
-    expect(person).toHaveProperty('name', 'Bob');
-  });
+    expect(person).toHaveProperty('name', 'Bob')
+  })
 
   promise = promise.then(() => {
-    expect(analytics.gottenPeopleCount).toBe(1);
-  });
+    expect(analytics.gottenPeopleCount).toBe(1)
+  })
 
-  return promise;
-});
+  return promise
+})
 
 test('promises multiple people', () => {
   const firstPromise = api.getPersonByName('bob').then((person) => {
-    expect(person).toHaveProperty('name', 'Bob');
-  });
+    expect(person).toHaveProperty('name', 'Bob')
+  })
   const secondPromise = api.getPersonByName('alice').then((person) => {
-    expect(person).toHaveProperty('name', 'Alice');
-  });
+    expect(person).toHaveProperty('name', 'Alice')
+  })
 
-  return Promise.allSettled([firstPromise, secondPromise]);
-});
+  return Promise.allSettled([firstPromise, secondPromise])
+})
 ```

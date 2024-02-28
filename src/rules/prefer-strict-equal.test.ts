@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-strict-equal';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/prefer-strict-equal'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('prefer-strict-equal', rule, {
   invalid: [
@@ -75,4 +75,4 @@ runRuleTester('prefer-strict-equal', rule, {
       },
     },
   ],
-});
+})

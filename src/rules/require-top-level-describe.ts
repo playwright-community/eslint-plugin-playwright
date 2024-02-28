@@ -1,51 +1,51 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { getAmountData } from '../utils/misc';
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
+import { getAmountData } from '../utils/misc'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     const { maxTopLevelDescribes } = {
       maxTopLevelDescribes: Infinity,
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    };
+    }
 
-    let topLevelDescribeCount = 0;
-    let describeCount = 0;
+    let topLevelDescribeCount = 0
+    let describeCount = 0
 
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (!call) return;
+        const call = parseFnCall(context, node)
+        if (!call) return
 
         if (call.type === 'describe') {
-          describeCount++;
+          describeCount++
 
           if (describeCount === 1) {
-            topLevelDescribeCount++;
+            topLevelDescribeCount++
 
             if (topLevelDescribeCount > maxTopLevelDescribes) {
               context.report({
                 data: getAmountData(maxTopLevelDescribes),
                 messageId: 'tooManyDescribes',
                 node: node.callee,
-              });
+              })
             }
           }
         } else if (!describeCount) {
           if (call.type === 'test') {
-            context.report({ messageId: 'unexpectedTest', node: node.callee });
+            context.report({ messageId: 'unexpectedTest', node: node.callee })
           } else if (call.type === 'hook') {
-            context.report({ messageId: 'unexpectedHook', node: node.callee });
+            context.report({ messageId: 'unexpectedHook', node: node.callee })
           }
         }
       },
       'CallExpression:exit'(node: ESTree.CallExpression) {
         if (isTypeOfFnCall(context, node, ['describe'])) {
-          describeCount--;
+          describeCount--
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -75,4 +75,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

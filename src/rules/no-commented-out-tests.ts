@@ -1,37 +1,37 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
 
 function getTestNames(context: Rule.RuleContext) {
-  const aliases = context.settings.playwright?.globalAliases?.test ?? [];
-  return ['test', ...aliases];
+  const aliases = context.settings.playwright?.globalAliases?.test ?? []
+  return ['test', ...aliases]
 }
 
 function hasTests(context: Rule.RuleContext, node: ESTree.Comment) {
-  const testNames = getTestNames(context);
-  const names = testNames.join('|');
+  const testNames = getTestNames(context)
+  const names = testNames.join('|')
   const regex = new RegExp(
     `^\\s*(${names}|describe)(\\.\\w+|\\[['"]\\w+['"]\\])?\\s*\\(`,
     'mu',
-  );
-  return regex.test(node.value);
+  )
+  return regex.test(node.value)
 }
 
 export default {
   create(context) {
     function checkNode(node: ESTree.Comment) {
-      if (!hasTests(context, node)) return;
+      if (!hasTests(context, node)) return
 
       context.report({
         messageId: 'commentedTests',
         node: node as unknown as ESTree.Node,
-      });
+      })
     }
 
     return {
       Program() {
-        context.sourceCode.getAllComments().forEach(checkNode);
+        context.sourceCode.getAllComments().forEach(checkNode)
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -45,4 +45,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

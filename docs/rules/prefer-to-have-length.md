@@ -11,13 +11,13 @@ used to assert objects length property.
 The following patterns are considered warnings:
 
 ```javascript
-expect(files.length).toBe(1);
-expect(files.length).toEqual(1);
-expect(files.length).toStrictEqual(1);
+expect(files.length).toBe(1)
+expect(files.length).toEqual(1)
+expect(files.length).toStrictEqual(1)
 ```
 
 The following pattern is **not** a warning:
 
 ```javascript
-expect(files).toHaveLength(1);
+expect(files).toHaveLength(1)
 ```

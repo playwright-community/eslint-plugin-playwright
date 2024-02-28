@@ -16,20 +16,20 @@ following built-in comparison matchers:
 Examples of **incorrect** code for this rule:
 
 ```js
-expect(x > 5).toBe(true);
-expect(x < 7).not.toEqual(true);
-expect(x <= y).toStrictEqual(true);
+expect(x > 5).toBe(true)
+expect(x < 7).not.toEqual(true)
+expect(x <= y).toStrictEqual(true)
 ```
 
 Examples of **correct** code for this rule:
 
 ```js
-expect(x).toBeGreaterThan(5);
-expect(x).not.toBeLessThanOrEqual(7);
-expect(x).toBeLessThanOrEqual(y);
+expect(x).toBeGreaterThan(5)
+expect(x).not.toBeLessThanOrEqual(7)
+expect(x).toBeLessThanOrEqual(y)
 
 // special case - see below
-expect(x < 'Carl').toBe(true);
+expect(x < 'Carl').toBe(true)
 ```
 
 Note that these matchers only work with numbers and bigints, and that the rule
@@ -38,7 +38,7 @@ of those types - this means if you're using the comparison operator with
 strings, the fix applied by this rule will result in an error.
 
 ```js
-expect(myName).toBeGreaterThanOrEqual(theirName); // Matcher error: received value must be a number or bigint
+expect(myName).toBeGreaterThanOrEqual(theirName) // Matcher error: received value must be a number or bigint
 ```
 
 The reason for this is that comparing strings with these operators is expected
@@ -51,5 +51,5 @@ disable this rule using an inline
 
 ```js
 // eslint-disable-next-line playwright/prefer-comparison-matcher
-expect(myName > theirName).toBe(true);
+expect(myName > theirName).toBe(true)
 ```

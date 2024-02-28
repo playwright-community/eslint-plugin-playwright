@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-useless-not';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-useless-not'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('no-useless-not', rule, {
   invalid: [
@@ -303,4 +303,4 @@ runRuleTester('no-useless-not', rule, {
       },
     },
   ],
-});
+})

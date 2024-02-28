@@ -27,36 +27,36 @@ function setupBar(options) {
 }
 
 test.describe('foo', () => {
-  let foo;
+  let foo
 
   test.beforeEach(() => {
-    foo = setupFoo();
-  });
+    foo = setupFoo()
+  })
 
   test.afterEach(() => {
-    foo = null;
-  });
+    foo = null
+  })
 
   test('does something', () => {
-    expect(foo.doesSomething()).toBe(true);
-  });
+    expect(foo.doesSomething()).toBe(true)
+  })
 
   test.describe('with bar', () => {
-    let bar;
+    let bar
 
     test.beforeEach(() => {
-      bar = setupBar();
-    });
+      bar = setupBar()
+    })
 
     test.afterEach(() => {
-      bar = null;
-    });
+      bar = null
+    })
 
     test('does something with bar', () => {
-      expect(foo.doesSomething(bar)).toBe(true);
-    });
-  });
-});
+      expect(foo.doesSomething(bar)).toBe(true)
+    })
+  })
+})
 ```
 
 Examples of **correct** code for this rule:
@@ -74,16 +74,16 @@ function setupBar(options) {
 
 test.describe('foo', () => {
   test('does something', () => {
-    const foo = setupFoo();
-    expect(foo.doesSomething()).toBe(true);
-  });
+    const foo = setupFoo()
+    expect(foo.doesSomething()).toBe(true)
+  })
 
   test('does something with bar', () => {
-    const foo = setupFoo();
-    const bar = setupBar();
-    expect(foo.doesSomething(bar)).toBe(true);
-  });
-});
+    const foo = setupFoo()
+    const bar = setupBar()
+    expect(foo.doesSomething(bar)).toBe(true)
+  })
+})
 ```
 
 ## Options
@@ -121,23 +121,23 @@ function setupFoo(options) {
   /* ... */
 }
 
-let foo;
+let foo
 
 test.beforeEach(() => {
-  foo = setupFoo();
-});
+  foo = setupFoo()
+})
 
 test.afterEach(() => {
-  playwright.resetModules();
-});
+  playwright.resetModules()
+})
 
 test('foo does this', () => {
   // ...
-});
+})
 
 test('foo does that', () => {
   // ...
-});
+})
 ```
 
 Examples of **correct** code for the `{ "allow": ["afterEach"] }` option:
@@ -150,18 +150,18 @@ function setupFoo(options) {
 }
 
 test.afterEach(() => {
-  playwright.resetModules();
-});
+  playwright.resetModules()
+})
 
 test('foo does this', () => {
-  const foo = setupFoo();
+  const foo = setupFoo()
   // ...
-});
+})
 
 test('foo does that', () => {
-  const foo = setupFoo();
+  const foo = setupFoo()
   // ...
-});
+})
 ```
 
 ## When Not To Use It

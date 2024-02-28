@@ -1,21 +1,21 @@
-import { AST, Rule, Scope } from 'eslint';
-import * as ESTree from 'estree';
+import { AST, Rule, Scope } from 'eslint'
+import * as ESTree from 'estree'
 import {
   getParent,
   getStringValue,
   isFunction,
   isPageMethod,
-} from '../utils/ast';
-import { truthy } from '../utils/misc';
+} from '../utils/ast'
+import { truthy } from '../utils/misc'
 
 /** Collect all variable references in the parent scopes recursively. */
 function collectVariables(scope: Scope.Scope | null): string[] {
-  if (!scope || scope.type === 'global') return [];
+  if (!scope || scope.type === 'global') return []
 
   return [
     ...collectVariables(scope.upper),
     ...scope.variables.map((ref) => ref.name),
-  ];
+  ]
 }
 
 /** Add the variables from the outer scope as arguments to `page.evaluate()` */
@@ -25,31 +25,31 @@ function addArgument(
   refs: string,
 ) {
   // This should never happen, but just in case
-  if (!node.arguments.length) return;
+  if (!node.arguments.length) return
 
   // If there the only one argument to `page.evaluate()` is the function, we
   // have to add the references as the second argument.
   if (node.arguments.length === 1) {
-    return fixer.insertTextAfter(node.arguments[0], `, [${refs}]`);
+    return fixer.insertTextAfter(node.arguments[0], `, [${refs}]`)
   }
 
   // If there are at least two arguments, we can add the references after the
   // last element of the second argument, which should be an array.
-  const arg = node.arguments.at(-1);
-  if (!arg) return;
+  const arg = node.arguments.at(-1)
+  if (!arg) return
 
   // If the second argument is not an array, we have to replace it with an array
   // containing the existing argument and the new references.
   if (arg.type !== 'ArrayExpression') {
-    return fixer.replaceText(arg, `[${getStringValue(arg)}, ${refs}]`);
+    return fixer.replaceText(arg, `[${getStringValue(arg)}, ${refs}]`)
   }
 
   // It's possible the array is provided but empty, in which case we can just
   // replace it with the references.
-  const lastItem = arg.elements.at(-1);
+  const lastItem = arg.elements.at(-1)
   return lastItem
     ? fixer.insertTextAfter(lastItem, `, ${refs}`)
-    : fixer.replaceText(arg, `[${refs}]`);
+    : fixer.replaceText(arg, `[${refs}]`)
 }
 
 /** Get the opening parenthesis of the function. */
@@ -57,13 +57,13 @@ function getParen(
   context: Rule.RuleContext,
   node: ESTree.Node,
 ): AST.Token | null {
-  let token: AST.Token | null = context.sourceCode.getFirstToken(node);
+  let token: AST.Token | null = context.sourceCode.getFirstToken(node)
 
   while (token && token.value !== '(') {
-    token = context.sourceCode.getTokenAfter(token);
+    token = context.sourceCode.getTokenAfter(token)
   }
 
-  return token;
+  return token
 }
 
 /** Add a parameter to the function. */
@@ -74,32 +74,32 @@ function addParam(
   refs: string,
 ) {
   // If the function has params, add the reference after the last one
-  const lastParam = node.params.at(-1);
+  const lastParam = node.params.at(-1)
   if (lastParam) {
     // If the last param is an array, add the reference after the last element
     // otherwise, replace the last param with an array containing the existing
     // param and the references.
     return lastParam.type === 'ArrayPattern'
       ? fixer.insertTextAfter(lastParam.elements.at(-1)!, `, ${refs}`)
-      : fixer.replaceText(lastParam, `[${getStringValue(lastParam)}, ${refs}]`);
+      : fixer.replaceText(lastParam, `[${getStringValue(lastParam)}, ${refs}]`)
   }
 
   // If the function has no params, add the reference after the opening parenthesis
-  const token = getParen(context, node);
-  return token ? fixer.insertTextAfter(token, `[${refs}]`) : null;
+  const token = getParen(context, node)
+  return token ? fixer.insertTextAfter(token, `[${refs}]`) : null
 }
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (!isPageMethod(node, 'evaluate')) return;
+        if (!isPageMethod(node, 'evaluate')) return
 
-        const [fn] = node.arguments;
-        if (!fn || !isFunction(fn)) return;
+        const [fn] = node.arguments
+        if (!fn || !isFunction(fn)) return
 
-        const { through, upper } = context.sourceCode.getScope(fn.body);
-        const allRefs = new Set(collectVariables(upper));
+        const { through, upper } = context.sourceCode.getScope(fn.body)
+        const allRefs = new Set(collectVariables(upper))
 
         // This logic is confusing at first. If we find a variable within the
         // function that is declared in the parent scope, we want to report it.
@@ -107,8 +107,8 @@ export default {
         // then it's likely a global variable such as `Promise` or `console`.
         through
           .filter((ref) => {
-            const parent = getParent(ref.identifier);
-            return (parent?.type as string) !== 'TSTypeReference';
+            const parent = getParent(ref.identifier)
+            return (parent?.type as string) !== 'TSTypeReference'
           })
           .filter((ref) => allRefs.has(ref.identifier.name))
           .forEach((ref, i, arr) => {
@@ -116,28 +116,28 @@ export default {
               data: { variable: ref.identifier.name },
               messageId: 'noUnsafeReference',
               node: ref.identifier,
-            };
+            }
 
             // We only report on the first unsafe reference since fixes overlap
             if (i !== 0) {
-              context.report(descriptor);
-              return;
+              context.report(descriptor)
+              return
             }
 
             context.report({
               ...descriptor,
               fix(fixer) {
-                const refs = arr.map((ref) => ref.identifier.name).join(', ');
+                const refs = arr.map((ref) => ref.identifier.name).join(', ')
 
                 return [
                   addArgument(fixer, node, refs),
                   addParam(context, fixer, fn, refs),
-                ].filter(truthy);
+                ].filter(truthy)
               },
-            });
-          });
+            })
+          })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -153,4 +153,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

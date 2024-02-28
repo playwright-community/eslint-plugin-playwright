@@ -1,26 +1,26 @@
-import { Rule } from 'eslint';
-import { isTypeOfFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { isTypeOfFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
-    const stack = [false];
+    const stack = [false]
 
     return {
       CallExpression(node) {
         if (isTypeOfFnCall(context, node, ['test'])) {
-          stack[stack.length - 1] = true;
+          stack[stack.length - 1] = true
         }
 
         if (stack.at(-1) && isTypeOfFnCall(context, node, ['hook'])) {
-          context.report({ messageId: 'noHookOnTop', node });
+          context.report({ messageId: 'noHookOnTop', node })
         }
 
-        stack.push(false);
+        stack.push(false)
       },
       'CallExpression:exit'() {
-        stack.pop();
+        stack.pop()
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -34,4 +34,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

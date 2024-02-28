@@ -1,30 +1,30 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { findParent, getParent, getStringValue } from '../utils/ast';
-import { getAmountData } from '../utils/misc';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
+import { findParent, getParent, getStringValue } from '../utils/ast'
+import { getAmountData } from '../utils/misc'
 import {
   isSupportedAccessor,
   modifiers,
   parseFnCallWithReason,
-} from '../utils/parseFnCall';
+} from '../utils/parseFnCall'
 
 const findTopMostMemberExpression = (
   node: ESTree.MemberExpression,
 ): ESTree.MemberExpression => {
-  let topMostMemberExpression = node;
-  let parent = getParent(node);
+  let topMostMemberExpression = node
+  let parent = getParent(node)
 
   while (parent) {
     if (parent.type !== 'MemberExpression') {
-      break;
+      break
     }
 
-    topMostMemberExpression = parent;
-    parent = parent.parent;
+    topMostMemberExpression = parent
+    parent = parent.parent
   }
 
-  return topMostMemberExpression;
-};
+  return topMostMemberExpression
+}
 
 export default {
   create(context) {
@@ -32,28 +32,28 @@ export default {
       maxArgs: 2,
       minArgs: 1,
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    };
+    }
 
-    const minArgs = Math.min(options.minArgs, options.maxArgs);
-    const maxArgs = Math.max(options.minArgs, options.maxArgs);
+    const minArgs = Math.min(options.minArgs, options.maxArgs)
+    const maxArgs = Math.max(options.minArgs, options.maxArgs)
 
     return {
       CallExpression(node) {
-        const call = parseFnCallWithReason(context, node);
+        const call = parseFnCallWithReason(context, node)
 
         if (typeof call === 'string') {
           const reportingNode =
             node.parent?.type === 'MemberExpression'
               ? findTopMostMemberExpression(node.parent)!.property
-              : node;
+              : node
 
           if (call === 'matcher-not-found') {
             context.report({
               messageId: 'matcherNotFound',
               node: reportingNode,
-            });
+            })
 
-            return;
+            return
           }
 
           if (call === 'matcher-not-called') {
@@ -64,28 +64,28 @@ export default {
                   ? 'matcherNotFound'
                   : 'matcherNotCalled',
               node: reportingNode,
-            });
+            })
           }
 
           if (call === 'modifier-unknown') {
             context.report({
               messageId: 'modifierUnknown',
               node: reportingNode,
-            });
+            })
 
-            return;
+            return
           }
 
-          return;
+          return
         } else if (call?.type !== 'expect') {
-          return;
+          return
         }
 
-        const expect = findParent(call.head.node, 'CallExpression');
-        if (!expect) return;
+        const expect = findParent(call.head.node, 'CallExpression')
+        if (!expect) return
 
         if (expect.arguments.length < minArgs) {
-          const expectLength = getStringValue(call.head.node).length;
+          const expectLength = getStringValue(call.head.node).length
 
           const loc: ESTree.SourceLocation = {
             end: {
@@ -96,19 +96,19 @@ export default {
               column: expect.loc!.start.column + expectLength,
               line: expect.loc!.start.line,
             },
-          };
+          }
 
           context.report({
             data: getAmountData(minArgs),
             loc,
             messageId: 'notEnoughArgs',
             node: expect,
-          });
+          })
         }
 
         if (expect.arguments.length > maxArgs) {
-          const { start } = expect.arguments[maxArgs].loc!;
-          const { end } = expect.arguments.at(-1)!.loc!;
+          const { start } = expect.arguments[maxArgs].loc!
+          const { end } = expect.arguments.at(-1)!.loc!
 
           const loc = {
             end: {
@@ -116,17 +116,17 @@ export default {
               line: end.line,
             },
             start,
-          };
+          }
 
           context.report({
             data: getAmountData(maxArgs),
             loc,
             messageId: 'tooManyArgs',
             node: expect,
-          });
+          })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -159,4 +159,4 @@ export default {
     ],
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

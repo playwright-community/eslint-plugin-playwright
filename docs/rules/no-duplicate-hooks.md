@@ -12,34 +12,34 @@ Examples of **incorrect** code for this rule
 test.describe('foo', () => {
   test.beforeEach(() => {
     // some setup
-  });
+  })
   test.beforeEach(() => {
     // some setup
-  });
+  })
   test('foo_test', () => {
     // some test
-  });
-});
+  })
+})
 
 // Nested describe scenario
 test.describe('foo', () => {
   test.beforeEach(() => {
     // some setup
-  });
+  })
   test('foo_test', () => {
     // some test
-  });
+  })
   test.describe('bar', () => {
     test('bar_test', () => {
       test.afterAll(() => {
         // some teardown
-      });
+      })
       test.afterAll(() => {
         // some teardown
-      });
-    });
-  });
-});
+      })
+    })
+  })
+})
 ```
 
 Examples of **correct** code for this rule
@@ -50,26 +50,26 @@ Examples of **correct** code for this rule
 test.describe('foo', () => {
   test.beforeEach(() => {
     // some setup
-  });
+  })
   test('foo_test', () => {
     // some test
-  });
-});
+  })
+})
 
 // Nested describe scenario
 test.describe('foo', () => {
   test.beforeEach(() => {
     // some setup
-  });
+  })
   test('foo_test', () => {
     // some test
-  });
+  })
   test.describe('bar', () => {
     test('bar_test', () => {
       test.beforeEach(() => {
         // some setup
-      });
-    });
-  });
-});
+      })
+    })
+  })
+})
 ```

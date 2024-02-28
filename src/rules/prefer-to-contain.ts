@@ -1,16 +1,16 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
 import {
   equalityMatchers,
   findParent,
   getStringValue,
   isBooleanLiteral,
   isPropertyAccessor,
-} from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
-import { KnownCallExpression } from '../utils/types';
+} from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
+import { KnownCallExpression } from '../utils/types'
 
-type FixableIncludesCallExpression = KnownCallExpression;
+type FixableIncludesCallExpression = KnownCallExpression
 
 const isFixableIncludesCallExpression = (
   node: ESTree.Node,
@@ -19,21 +19,21 @@ const isFixableIncludesCallExpression = (
   node.callee.type === 'MemberExpression' &&
   isPropertyAccessor(node.callee, 'includes') &&
   node.arguments.length === 1 &&
-  node.arguments[0].type !== 'SpreadElement';
+  node.arguments[0].type !== 'SpreadElement'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'expect' || call.matcherArgs.length === 0) return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'expect' || call.matcherArgs.length === 0) return
 
-        const expect = findParent(call.head.node, 'CallExpression');
-        if (!expect) return;
+        const expect = findParent(call.head.node, 'CallExpression')
+        if (!expect) return
 
-        const [includesCall] = expect.arguments;
-        const { matcher } = call;
-        const [matcherArg] = call.matcherArgs;
+        const [includesCall] = expect.arguments
+        const { matcher } = call
+        const [matcherArg] = call.matcherArgs
 
         if (
           !includesCall ||
@@ -42,12 +42,12 @@ export default {
           !isBooleanLiteral(matcherArg) ||
           !isFixableIncludesCallExpression(includesCall)
         ) {
-          return;
+          return
         }
 
         const notModifier = call.modifiers.find(
           (node) => getStringValue(node) === 'not',
-        );
+        )
 
         context.report({
           fix(fixer) {
@@ -55,7 +55,7 @@ export default {
             // value is itself negated by the "not" modifier
             const addNotModifier =
               matcherArg.type === 'Literal' &&
-              matcherArg.value === !!notModifier;
+              matcherArg.value === !!notModifier
 
             const fixes = [
               // remove the "includes" call entirely
@@ -73,7 +73,7 @@ export default {
                 call.matcherArgs[0],
                 context.sourceCode.getText(includesCall.arguments[0]),
               ),
-            ];
+            ]
 
             // Remove the "not" modifier if needed
             if (notModifier) {
@@ -82,16 +82,16 @@ export default {
                   notModifier.range![0],
                   notModifier.range![1] + 1,
                 ]),
-              );
+              )
             }
 
-            return fixes;
+            return fixes
           },
           messageId: 'useToContain',
           node: matcher,
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -106,4 +106,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

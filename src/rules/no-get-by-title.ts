@@ -1,15 +1,15 @@
-import { Rule } from 'eslint';
-import { isPageMethod } from '../utils/ast';
+import { Rule } from 'eslint'
+import { isPageMethod } from '../utils/ast'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
         if (isPageMethod(node, 'getByTitle')) {
-          context.report({ messageId: 'noGetByTitle', node });
+          context.report({ messageId: 'noGetByTitle', node })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -24,4 +24,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

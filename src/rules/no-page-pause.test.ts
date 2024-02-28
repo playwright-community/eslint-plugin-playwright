@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-page-pause';
-import { runRuleTester, test } from '../utils/rule-tester';
+import rule from '../../src/rules/no-page-pause'
+import { runRuleTester, test } from '../utils/rule-tester'
 
-const messageId = 'noPagePause';
+const messageId = 'noPagePause'
 
 runRuleTester('no-page-pause', rule, {
   invalid: [
@@ -29,4 +29,4 @@ runRuleTester('no-page-pause', rule, {
     test('await page[`check`]()'),
     test('await expect(page).toBePaused()'),
   ],
-});
+})

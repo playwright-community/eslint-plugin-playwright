@@ -5,16 +5,16 @@
 Example of **incorrect** code for this rule:
 
 ```javascript
-await page.waitForTimeout(5000);
+await page.waitForTimeout(5000)
 ```
 
 Examples of **correct** code for this rule:
 
 ```javascript
 // Use signals such as network events, selectors becoming visible and others instead.
-await page.waitForLoadState();
+await page.waitForLoadState()
 
-await page.waitForURL('/home');
+await page.waitForURL('/home')
 
-await page.waitForFunction(() => window.innerWidth < 100);
+await page.waitForFunction(() => window.innerWidth < 100)
 ```

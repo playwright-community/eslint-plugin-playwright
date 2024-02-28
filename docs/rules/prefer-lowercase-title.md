@@ -10,16 +10,16 @@ The following pattern is considered a warning:
 
 ```javascript
 test('Adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3);
-});
+  expect(sum(1, 2)).toBe(3)
+})
 ```
 
 The following pattern is **not** considered a warning:
 
 ```javascript
 test('adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3);
-});
+  expect(sum(1, 2)).toBe(3)
+})
 ```
 
 ## Options
@@ -51,13 +51,13 @@ By default, none of these options are enabled (the equivalent of
 Example of **correct** code for the `{ "ignore": ["test.describe"] }` option:
 
 ```javascript
-test.describe('Uppercase description');
+test.describe('Uppercase description')
 ```
 
 Example of **correct** code for the `{ "ignore": ["test"] }` option:
 
 ```javascript
-test('Uppercase description');
+test('Uppercase description')
 ```
 
 ### `allowedPrefixes`
@@ -71,7 +71,7 @@ By default, nothing is allowed (the equivalent of `{ "allowedPrefixes": [] }`).
 Example of **correct** code for the `{ "allowedPrefixes": ["GET"] }` option:
 
 ```javascript
-test.describe('GET /live');
+test.describe('GET /live')
 ```
 
 ### `ignoreTopLevelDescribe`
@@ -84,7 +84,7 @@ Example of **correct** code for the `{ "ignoreTopLevelDescribe": true }` option:
 ```javascript
 test.describe('MyClass', () => {
   test.describe('#myMethod', () => {
-    test('does things', () => {});
-  });
-});
+    test('does things', () => {})
+  })
+})
 ```

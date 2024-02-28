@@ -1,53 +1,53 @@
-import dedent from 'dedent';
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { getStringValue } from './ast';
+import dedent from 'dedent'
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
+import { getStringValue } from './ast'
 import {
   isSupportedAccessor,
   type ParsedFnCall,
   parseFnCallWithReason,
   type ResolvedFnWithNode,
-} from './parseFnCall';
-import { runRuleTester, runTSRuleTester } from './rule-tester';
+} from './parseFnCall'
+import { runRuleTester, runTSRuleTester } from './rule-tester'
 
 const isNode = (obj: unknown): obj is ESTree.Node => {
   if (typeof obj === 'object' && obj !== null) {
-    return ['type', 'loc', 'range', 'parent'].every((p) => p in obj);
+    return ['type', 'loc', 'range', 'parent'].every((p) => p in obj)
   }
 
-  return false;
-};
+  return false
+}
 
 const rule = {
   create: (context) => ({
     CallExpression(node) {
-      const call = parseFnCallWithReason(context, node);
+      const call = parseFnCallWithReason(context, node)
 
       if (typeof call === 'string') {
-        context.report({ messageId: call, node });
+        context.report({ messageId: call, node })
       } else if (call) {
         const sorted = sortKeys({
           ...call,
           head: sortKeys(call.head),
-        });
+        })
 
         context.report({
           data: {
             data: JSON.stringify(sortKeys(sorted), (_key, value) => {
               if (isNode(value)) {
                 if (isSupportedAccessor(value)) {
-                  return getStringValue(value);
+                  return getStringValue(value)
                 }
 
-                return undefined;
+                return undefined
               }
 
-              return value;
+              return value
             }),
           },
           messageId: 'details',
           node,
-        });
+        })
       }
     },
   }),
@@ -66,25 +66,25 @@ const rule = {
     schema: [],
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule
 
 interface TestResolvedFnWithNode extends Omit<ResolvedFnWithNode, 'node'> {
-  node: string;
+  node: string
 }
 
 interface TestParsedFnCall
   extends Omit<ParsedFnCall, 'head' | 'members' | 'modifiers'> {
-  args?: (string | null)[];
-  head: TestResolvedFnWithNode;
-  matcher?: string;
-  matcherArgs?: string[];
-  matcherName?: string;
-  members: string[];
-  modifiers?: string[];
+  args?: (string | null)[]
+  head: TestResolvedFnWithNode
+  matcher?: string
+  matcherArgs?: string[]
+  matcherName?: string
+  members: string[]
+  modifiers?: string[]
 }
 
 const sortKeys = (obj: unknown) =>
-  Object.fromEntries(Object.entries(obj as Record<string, unknown>).sort());
+  Object.fromEntries(Object.entries(obj as Record<string, unknown>).sort())
 
 const expectedParsedFnCallResultData = (result: TestParsedFnCall) => ({
   data: JSON.stringify({
@@ -99,7 +99,7 @@ const expectedParsedFnCallResultData = (result: TestParsedFnCall) => ({
     name: result.name,
     type: result.type,
   }),
-});
+})
 
 runRuleTester('nonexistent methods', rule, {
   invalid: [],
@@ -122,7 +122,7 @@ runRuleTester('nonexistent methods', rule, {
     '``.test()',
     'test``.only()',
   ],
-});
+})
 
 runRuleTester('expect', rule, {
   invalid: [
@@ -466,7 +466,7 @@ runRuleTester('expect', rule, {
     },
   ],
   valid: [],
-});
+})
 
 runRuleTester('test', rule, {
   invalid: [
@@ -821,7 +821,7 @@ runRuleTester('test', rule, {
     'it("is a  function", () => {});',
     'ByDefault.sayHello();',
   ],
-});
+})
 
 runRuleTester('describe', rule, {
   invalid: [
@@ -1110,7 +1110,7 @@ runRuleTester('describe', rule, {
       settings: { playwright: { globalAliases: { describe: ['context'] } } },
     },
   ],
-});
+})
 
 runTSRuleTester('typescript', rule, {
   invalid: [
@@ -1162,4 +1162,4 @@ runTSRuleTester('typescript', rule, {
     "it('is not a  function', () => {});",
     'dedent()',
   ],
-});
+})

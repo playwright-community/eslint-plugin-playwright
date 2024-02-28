@@ -1,49 +1,49 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { dig } from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
+import { dig } from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     const options = {
       assertFunctionNames: [] as string[],
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    };
+    }
 
-    const unchecked: ESTree.CallExpression[] = [];
+    const unchecked: ESTree.CallExpression[] = []
 
     function checkExpressions(nodes: ESTree.Node[]) {
       for (const node of nodes) {
         const index =
-          node.type === 'CallExpression' ? unchecked.indexOf(node) : -1;
+          node.type === 'CallExpression' ? unchecked.indexOf(node) : -1
 
         if (index !== -1) {
-          unchecked.splice(index, 1);
-          break;
+          unchecked.splice(index, 1)
+          break
         }
       }
     }
 
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
 
         if (call?.type === 'test') {
-          unchecked.push(node);
+          unchecked.push(node)
         } else if (
           call?.type === 'expect' ||
           options.assertFunctionNames.find((name) => dig(node.callee, name))
         ) {
-          const ancestors = context.sourceCode.getAncestors(node);
-          checkExpressions(ancestors);
+          const ancestors = context.sourceCode.getAncestors(node)
+          checkExpressions(ancestors)
         }
       },
       'Program:exit'() {
         unchecked.forEach((node) => {
-          context.report({ messageId: 'noAssertions', node });
-        });
+          context.report({ messageId: 'noAssertions', node })
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -69,4 +69,4 @@ export default {
     ],
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

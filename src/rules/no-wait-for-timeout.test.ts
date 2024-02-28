@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-wait-for-timeout';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-wait-for-timeout'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'noWaitForTimeout';
+const messageId = 'noWaitForTimeout'
 
 runRuleTester('no-wait-for-timeout', rule, {
   invalid: [
@@ -245,4 +245,4 @@ runRuleTester('no-wait-for-timeout', rule, {
     'rampage.waitForTimeout(2000);',
     'myPage2.waitForTimeout(2000);',
   ],
-});
+})

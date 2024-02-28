@@ -14,22 +14,22 @@ The following patterns are considered warnings:
 
 ```js
 test('all the things', async () => {
-  expect(() => a()).toThrow();
-  expect(() => a()).toThrowError();
+  expect(() => a()).toThrow()
+  expect(() => a()).toThrowError()
 
-  await expect(a()).rejects.toThrow();
-  await expect(a()).rejects.toThrowError();
-});
+  await expect(a()).rejects.toThrow()
+  await expect(a()).rejects.toThrowError()
+})
 ```
 
 The following patterns are **not** considered warnings:
 
 ```js
 test('all the things', async () => {
-  expect(() => a()).toThrow('a');
-  expect(() => a()).toThrowError('a');
+  expect(() => a()).toThrow('a')
+  expect(() => a()).toThrowError('a')
 
-  await expect(a()).rejects.toThrow('a');
-  await expect(a()).rejects.toThrowError('a');
-});
+  await expect(a()).rejects.toThrow('a')
+  await expect(a()).rejects.toThrowError('a')
+})
 ```

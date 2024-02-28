@@ -1,17 +1,17 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { isTypeOfFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
+import { isTypeOfFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
-    const { options } = context;
-    const max: number = options[0]?.max ?? 5;
-    const describes: ESTree.CallExpression[] = [];
+    const { options } = context
+    const max: number = options[0]?.max ?? 5
+    const describes: ESTree.CallExpression[] = []
 
     return {
       CallExpression(node) {
         if (isTypeOfFnCall(context, node, ['describe'])) {
-          describes.unshift(node);
+          describes.unshift(node)
 
           if (describes.length > max) {
             context.report({
@@ -21,16 +21,16 @@ export default {
               },
               messageId: 'exceededMaxDepth',
               node: node.callee,
-            });
+            })
           }
         }
       },
       'CallExpression:exit'(node) {
         if (describes[0] === node) {
-          describes.shift();
+          describes.shift()
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -57,4 +57,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

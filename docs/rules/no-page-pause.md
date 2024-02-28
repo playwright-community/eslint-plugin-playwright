@@ -7,12 +7,12 @@ Prevent usage of `page.pause()`.
 Example of **incorrect** code for this rule:
 
 ```javascript
-await page.click('button');
-await page.pause();
+await page.click('button')
+await page.pause()
 ```
 
 Example of **correct** code for this rule:
 
 ```javascript
-await page.click('button');
+await page.click('button')
 ```

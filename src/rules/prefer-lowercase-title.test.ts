@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/prefer-lowercase-title';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/prefer-lowercase-title'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'unexpectedLowercase';
+const messageId = 'unexpectedLowercase'
 
 runRuleTester('prefer-lowercase-title', rule, {
   invalid: [
@@ -302,7 +302,7 @@ runRuleTester('prefer-lowercase-title', rule, {
     "test.describe[`serial`].fixme('foo', () => {})",
     "test.describe['serial'].only('foo', () => {})",
   ],
-});
+})
 
 runRuleTester('prefer-lowercase-title with ignore=test.describe', rule, {
   invalid: [
@@ -335,7 +335,7 @@ runRuleTester('prefer-lowercase-title with ignore=test.describe', rule, {
       options: [{ ignore: ['test.describe'] }],
     },
   ],
-});
+})
 
 runRuleTester('prefer-lowercase-title with ignore=test', rule, {
   invalid: [
@@ -368,7 +368,7 @@ runRuleTester('prefer-lowercase-title with ignore=test', rule, {
       options: [{ ignore: ['test'] }],
     },
   ],
-});
+})
 
 runRuleTester('prefer-lowercase-title with allowedPrefixes', rule, {
   invalid: [
@@ -401,7 +401,7 @@ runRuleTester('prefer-lowercase-title with allowedPrefixes', rule, {
       options: [{ allowedPrefixes: ['GET', 'PATCH'] }],
     },
   ],
-});
+})
 
 runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
   invalid: [
@@ -488,4 +488,4 @@ runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
       },
     },
   ],
-});
+})

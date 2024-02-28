@@ -16,19 +16,19 @@ assert a primitive literal value such as numbers, strings, and booleans.
 The following patterns are considered warnings:
 
 ```javascript
-expect(value).not.toEqual(5);
-expect(getMessage()).toStrictEqual('hello world');
-expect(loadMessage()).resolves.toEqual('hello world');
+expect(value).not.toEqual(5)
+expect(getMessage()).toStrictEqual('hello world')
+expect(loadMessage()).resolves.toEqual('hello world')
 ```
 
 The following pattern is not warning:
 
 ```javascript
-expect(value).not.toBe(5);
-expect(getMessage()).toBe('hello world');
-expect(loadMessage()).resolves.toBe('hello world');
-expect(didError).not.toBe(true);
-expect(catchError()).toStrictEqual({ message: 'oh noes!' });
+expect(value).not.toBe(5)
+expect(getMessage()).toBe('hello world')
+expect(loadMessage()).resolves.toBe('hello world')
+expect(didError).not.toBe(true)
+expect(catchError()).toStrictEqual({ message: 'oh noes!' })
 ```
 
 For `null`, `undefined`, and `NaN`, this rule triggers a warning if `toBe` is
@@ -36,16 +36,16 @@ used to assert against those literal values instead of their more specific
 `toBe` counterparts:
 
 ```javascript
-expect(value).not.toBe(undefined);
-expect(getMessage()).toBe(null);
-expect(countMessages()).resolves.not.toBe(NaN);
+expect(value).not.toBe(undefined)
+expect(getMessage()).toBe(null)
+expect(countMessages()).resolves.not.toBe(NaN)
 ```
 
 The following pattern is not warning:
 
 ```javascript
-expect(value).toBeDefined();
-expect(getMessage()).toBeNull();
-expect(countMessages()).resolves.not.toBeNaN();
-expect(catchError()).toStrictEqual({ message: undefined });
+expect(value).toBeDefined()
+expect(getMessage()).toBeNull()
+expect(countMessages()).resolves.not.toBeNaN()
+expect(catchError()).toStrictEqual({ message: undefined })
 ```

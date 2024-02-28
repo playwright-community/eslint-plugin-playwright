@@ -4,4 +4,4 @@ module.exports = {
       extends: 'plugin:playwright/jest-playwright',
     },
   },
-};
+}

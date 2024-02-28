@@ -1,6 +1,6 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { getStringValue, isPageMethod } from '../utils/ast';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
+import { getStringValue, isPageMethod } from '../utils/ast'
 
 const locatorMethods = new Set([
   'and',
@@ -16,7 +16,7 @@ const locatorMethods = new Set([
   'locator',
   'nth',
   'or',
-]);
+])
 
 const pageMethods = new Set([
   'childFrames',
@@ -36,16 +36,16 @@ const pageMethods = new Set([
   'video',
   'viewportSize',
   'workers',
-]);
+])
 
 function isSupportedMethod(node: ESTree.CallExpression) {
-  if (node.callee.type !== 'MemberExpression') return false;
+  if (node.callee.type !== 'MemberExpression') return false
 
-  const name = getStringValue(node.callee.property);
+  const name = getStringValue(node.callee.property)
   return (
     locatorMethods.has(name) ||
     (pageMethods.has(name) && isPageMethod(node, name))
-  );
+  )
 }
 
 export default {
@@ -53,17 +53,17 @@ export default {
     return {
       AwaitExpression(node) {
         // Must be a call expression
-        if (node.argument.type !== 'CallExpression') return;
+        if (node.argument.type !== 'CallExpression') return
 
         // Must be a foo.bar() call, bare calls are ignored
-        const { callee } = node.argument;
-        if (callee.type !== 'MemberExpression') return;
+        const { callee } = node.argument
+        if (callee.type !== 'MemberExpression') return
 
         // Must be a method we care about
-        if (!isSupportedMethod(node.argument)) return;
+        if (!isSupportedMethod(node.argument)) return
 
-        const start = node.loc!.start;
-        const range = node.range!;
+        const start = node.loc!.start
+        const range = node.range!
 
         context.report({
           fix: (fixer) => fixer.removeRange([range[0], range[0] + 6]),
@@ -75,9 +75,9 @@ export default {
             start,
           },
           messageId: 'noUselessAwait',
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -93,4 +93,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

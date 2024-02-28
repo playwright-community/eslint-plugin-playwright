@@ -32,14 +32,14 @@ Examples of **incorrect** code for this rule with the above configuration
 
 ```javascript
 test('is false', () => {
-  expect(a).toBeFalsy();
-});
+  expect(a).toBeFalsy()
+})
 
 test('not', () => {
-  expect(a).not.toBe(true);
-});
+  expect(a).not.toBe(true)
+})
 
 test('chain', async () => {
-  await expect(foo).not.toHaveText('bar');
-});
+  await expect(foo).not.toHaveText('bar')
+})
 ```

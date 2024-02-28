@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import { runRuleTester } from '../utils/rule-tester';
-import rule from './require-to-throw-message';
+import dedent from 'dedent'
+import { runRuleTester } from '../utils/rule-tester'
+import rule from './require-to-throw-message'
 
 runRuleTester('require-to-throw-message', rule, {
   invalid: [
@@ -140,4 +140,4 @@ runRuleTester('require-to-throw-message', rule, {
       },
     },
   ],
-});
+})

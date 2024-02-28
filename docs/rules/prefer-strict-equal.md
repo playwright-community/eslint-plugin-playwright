@@ -14,11 +14,11 @@ This rule triggers a warning if `toEqual()` is used to assert equality.
 The following pattern is considered warning:
 
 ```javascript
-expect({ a: 'a', b: undefined }).toEqual({ a: 'a' }); // true
+expect({ a: 'a', b: undefined }).toEqual({ a: 'a' }) // true
 ```
 
 The following pattern is not warning:
 
 ```javascript
-expect({ a: 'a', b: undefined }).toStrictEqual({ a: 'a' }); // false
+expect({ a: 'a', b: undefined }).toStrictEqual({ a: 'a' }) // false
 ```

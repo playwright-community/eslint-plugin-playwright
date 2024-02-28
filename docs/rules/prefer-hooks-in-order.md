@@ -20,52 +20,52 @@ Examples of **incorrect** code for this rule
 
 test.describe('foo', () => {
   test.beforeEach(() => {
-    seedMyDatabase();
-  });
+    seedMyDatabase()
+  })
 
   test.beforeAll(() => {
-    createMyDatabase();
-  });
+    createMyDatabase()
+  })
 
   test('accepts this input', () => {
     // ...
-  });
+  })
 
   test('returns that value', () => {
     // ...
-  });
+  })
 
   test.describe('when the database has specific values', () => {
-    const specificValue = '...';
+    const specificValue = '...'
 
     test.beforeEach(() => {
-      seedMyDatabase(specificValue);
-    });
+      seedMyDatabase(specificValue)
+    })
 
     test('accepts that input', () => {
       // ...
-    });
+    })
 
     test('throws an error', () => {
       // ...
-    });
+    })
 
     test.afterEach(() => {
-      clearLogger();
-    });
+      clearLogger()
+    })
     test.beforeEach(() => {
-      mockLogger();
-    });
+      mockLogger()
+    })
 
     test('logs a message', () => {
       // ...
-    });
-  });
+    })
+  })
 
   test.afterAll(() => {
-    removeMyDatabase();
-  });
-});
+    removeMyDatabase()
+  })
+})
 ```
 
 Examples of **correct** code for this rule
@@ -75,53 +75,53 @@ Examples of **correct** code for this rule
 
 test.describe('foo', () => {
   test.beforeAll(() => {
-    createMyDatabase();
-  });
+    createMyDatabase()
+  })
 
   test.beforeEach(() => {
-    seedMyDatabase();
-  });
+    seedMyDatabase()
+  })
 
   test('accepts this input', () => {
     // ...
-  });
+  })
 
   test('returns that value', () => {
     // ...
-  });
+  })
 
   test.describe('when the database has specific values', () => {
-    const specificValue = '...';
+    const specificValue = '...'
 
     test.beforeEach(() => {
-      seedMyDatabase(specificValue);
-    });
+      seedMyDatabase(specificValue)
+    })
 
     test('accepts that input', () => {
       // ...
-    });
+    })
 
     test('throws an error', () => {
       // ...
-    });
+    })
 
     test.beforeEach(() => {
-      mockLogger();
-    });
+      mockLogger()
+    })
 
     test.afterEach(() => {
-      clearLogger();
-    });
+      clearLogger()
+    })
 
     test('logs a message', () => {
       // ...
-    });
-  });
+    })
+  })
 
   test.afterAll(() => {
-    removeMyDatabase();
-  });
-});
+    removeMyDatabase()
+  })
+})
 ```
 
 ## Also See

@@ -1,22 +1,22 @@
-import { Rule } from 'eslint';
-import { getStringValue } from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { getStringValue } from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     const restrictedChains = (context.options?.[0] ?? {}) as {
-      [key: string]: string | null;
-    };
+      [key: string]: string | null
+    }
 
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'expect') return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'expect') return
 
         Object.entries(restrictedChains)
           .map(([restriction, message]) => {
-            const chain = call.members;
-            const restrictionLinks = restriction.split('.').length;
+            const chain = call.members
+            const restrictionLinks = restriction.split('.').length
 
             // Find in the full chain, where the restriction chain starts
             const startIndex = chain.findIndex((_, i) => {
@@ -25,10 +25,10 @@ export default {
               const partial = chain
                 .slice(i, i + restrictionLinks)
                 .map(getStringValue)
-                .join('.');
+                .join('.')
 
-              return partial === restriction;
-            });
+              return partial === restriction
+            })
 
             return {
               // If the restriction chain was found, return the portion of the
@@ -39,7 +39,7 @@ export default {
                   : [],
               message,
               restriction,
-            };
+            }
           })
           .filter(({ chain }) => chain.length)
           .forEach(({ chain, message, restriction }) => {
@@ -50,10 +50,10 @@ export default {
                 start: chain[0].loc!.start,
               },
               messageId: message ? 'restrictedWithMessage' : 'restricted',
-            });
-          });
+            })
+          })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -76,4 +76,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

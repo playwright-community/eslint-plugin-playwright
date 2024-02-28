@@ -1,27 +1,27 @@
-import { Rule } from 'eslint';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     const options = {
       allow: [] as string[],
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    };
+    }
 
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (!call) return;
+        const call = parseFnCall(context, node)
+        if (!call) return
 
         if (call.type === 'hook' && !options.allow.includes(call.name)) {
           context.report({
             data: { hookName: call.name },
             messageId: 'unexpectedHook',
             node,
-          });
+          })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -47,4 +47,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

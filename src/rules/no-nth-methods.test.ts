@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-nth-methods';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-nth-methods'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'noNthMethod';
+const messageId = 'noNthMethod'
 
 runRuleTester('no-nth-methods', rule, {
   invalid: [
@@ -70,4 +70,4 @@ runRuleTester('no-nth-methods', rule, {
     'foo.locator("button").click()',
     'foo.click()',
   ],
-});
+})

@@ -23,17 +23,17 @@ Examples of **incorrect** code for this rule:
 ```js
 // in describe
 test.describe('a test', () => {
-  expect(1).toBe(1);
-});
+  expect(1).toBe(1)
+})
 
 // below other tests
 test.describe('a test', () => {
   test('an it', () => {
-    expect(1).toBe(1);
-  });
+    expect(1).toBe(1)
+  })
 
-  expect(1).toBe(1);
-});
+  expect(1).toBe(1)
+})
 ```
 
 Examples of **correct** code for this rule:
@@ -42,20 +42,20 @@ Examples of **correct** code for this rule:
 // in it block
 test.describe('a test', () => {
   test('an it', () => {
-    expect(1).toBe(1);
-  });
-});
+    expect(1).toBe(1)
+  })
+})
 
 // in helper function
 test.describe('a test', () => {
   const helper = () => {
-    expect(1).toBe(1);
-  };
+    expect(1).toBe(1)
+  }
 
   test('an it', () => {
-    helper();
-  });
-});
+    helper()
+  })
+})
 ```
 
 _Note that this rule will not trigger if the helper function is never used even

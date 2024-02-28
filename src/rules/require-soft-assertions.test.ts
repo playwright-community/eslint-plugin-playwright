@@ -1,7 +1,7 @@
-import rule from '../../src/rules/require-soft-assertions';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/require-soft-assertions'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'requireSoft';
+const messageId = 'requireSoft'
 
 runRuleTester('require-soft-assertions', rule, {
   invalid: [
@@ -50,4 +50,4 @@ runRuleTester('require-soft-assertions', rule, {
       },
     },
   ],
-});
+})

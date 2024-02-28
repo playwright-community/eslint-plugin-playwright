@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/valid-title';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/valid-title'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('valid-title', rule, {
   invalid: [
@@ -129,7 +129,7 @@ runRuleTester('valid-title', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('mustMatch & mustNotMatch options', rule, {
   invalid: [
@@ -530,7 +530,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('title-must-be-string', rule, {
   invalid: [
@@ -716,7 +716,7 @@ runRuleTester('title-must-be-string', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('no-empty-title', rule, {
   invalid: [
@@ -851,7 +851,7 @@ runRuleTester('no-empty-title', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('no-accidental-space', rule, {
   invalid: [
@@ -1035,7 +1035,7 @@ runRuleTester('no-accidental-space', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('no-duplicate-prefix describe', rule, {
   invalid: [
@@ -1088,7 +1088,7 @@ runRuleTester('no-duplicate-prefix describe', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('no-duplicate-prefix test', rule, {
   invalid: [
@@ -1134,7 +1134,7 @@ runRuleTester('no-duplicate-prefix test', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('no-duplicate-prefix nested', rule, {
   invalid: [
@@ -1222,4 +1222,4 @@ runRuleTester('no-duplicate-prefix nested', rule, {
       },
     },
   ],
-});
+})

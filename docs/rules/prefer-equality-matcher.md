@@ -15,15 +15,15 @@ could be replaced with one of the following built-in equality matchers:
 Examples of **incorrect** code for this rule:
 
 ```js
-expect(x === 5).toBe(true);
-expect(name === 'Carl').not.toEqual(true);
-expect(myObj !== thatObj).toStrictEqual(true);
+expect(x === 5).toBe(true)
+expect(name === 'Carl').not.toEqual(true)
+expect(myObj !== thatObj).toStrictEqual(true)
 ```
 
 Examples of **correct** code for this rule:
 
 ```js
-expect(x).toBe(5);
-expect(name).not.toEqual('Carl');
-expect(myObj).toStrictEqual(thatObj);
+expect(x).toBe(5)
+expect(name).not.toEqual('Carl')
+expect(myObj).toStrictEqual(thatObj)
 ```

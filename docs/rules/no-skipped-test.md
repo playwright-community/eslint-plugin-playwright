@@ -5,31 +5,31 @@
 Examples of **incorrect** code for this rule:
 
 ```javascript
-test.skip('skip this test', async ({ page }) => {});
+test.skip('skip this test', async ({ page }) => {})
 
 test.describe.skip('skip two tests', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
+  test('one', async ({ page }) => {})
+  test('two', async ({ page }) => {})
+})
 
 test.describe('skip test inside describe', () => {
-  test.skip();
-});
+  test.skip()
+})
 
 test.describe('skip test conditionally', async ({ browserName }) => {
-  test.skip(browserName === 'firefox', 'Working on it');
-});
+  test.skip(browserName === 'firefox', 'Working on it')
+})
 ```
 
 Examples of **correct** code for this rule:
 
 ```javascript
-test('this test', async ({ page }) => {});
+test('this test', async ({ page }) => {})
 
 test.describe('two tests', () => {
-  test('one', async ({ page }) => {});
-  test('two', async ({ page }) => {});
-});
+  test('one', async ({ page }) => {})
+  test('two', async ({ page }) => {})
+})
 ```
 
 ## Options
@@ -56,6 +56,6 @@ Example of **correct** code for the `{ "allowConditional": true }` option:
 
 ```javascript
 test('foo', ({ browserName }) => {
-  test.skip(browserName === 'firefox', 'Still working on it');
-});
+  test.skip(browserName === 'firefox', 'Still working on it')
+})
 ```

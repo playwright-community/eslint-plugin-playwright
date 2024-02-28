@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-useless-await';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-useless-await'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'noUselessAwait';
+const messageId = 'noUselessAwait'
 
 runRuleTester('no-useless-await', rule, {
   invalid: [
@@ -196,4 +196,4 @@ runRuleTester('no-useless-await', rule, {
     'await page.waitForURL(url, { waitUntil: "load" })',
     'await page.locator(".hello-world").waitFor()',
   ],
-});
+})

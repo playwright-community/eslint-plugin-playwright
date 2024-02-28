@@ -1,26 +1,26 @@
-import { Rule } from 'eslint';
-import { equalityMatchers, isPropertyAccessor } from '../utils/ast';
-import { replaceAccessorFixer } from '../utils/fixer';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { equalityMatchers, isPropertyAccessor } from '../utils/ast'
+import { replaceAccessorFixer } from '../utils/fixer'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
         if (
           call?.type !== 'expect' ||
           !equalityMatchers.has(call.matcherName)
         ) {
-          return;
+          return
         }
 
-        const [argument] = call.args;
+        const [argument] = call.args
         if (
           argument?.type !== 'MemberExpression' ||
           !isPropertyAccessor(argument, 'length')
         ) {
-          return;
+          return
         }
 
         context.report({
@@ -33,13 +33,13 @@ export default {
               ]),
               // replace the current matcher with "toHaveLength"
               replaceAccessorFixer(fixer, call.matcher, 'toHaveLength'),
-            ];
+            ]
           },
           messageId: 'useToHaveLength',
           node: call.matcher,
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -55,4 +55,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

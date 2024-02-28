@@ -1,13 +1,13 @@
-import { Rule } from 'eslint';
-import { getStringValue } from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { getStringValue } from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'expect') return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'expect') return
 
         if (
           call.matcherArgs.length === 0 &&
@@ -19,10 +19,10 @@ export default {
             data: { matcherName: call.matcherName },
             messageId: 'addErrorMessage',
             node: call.matcher,
-          });
+          })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -37,4 +37,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

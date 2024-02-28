@@ -1,16 +1,16 @@
-import { Rule } from 'eslint';
-import { getStringValue } from '../utils/ast';
+import { Rule } from 'eslint'
+import { getStringValue } from '../utils/ast'
 
-const methods = new Set(['first', 'last', 'nth']);
+const methods = new Set(['first', 'last', 'nth'])
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        if (node.callee.type !== 'MemberExpression') return;
+        if (node.callee.type !== 'MemberExpression') return
 
-        const method = getStringValue(node.callee.property);
-        if (!methods.has(method)) return;
+        const method = getStringValue(node.callee.property)
+        if (!methods.has(method)) return
 
         context.report({
           data: { method },
@@ -19,9 +19,9 @@ export default {
             start: node.callee.property.loc!.start,
           },
           messageId: 'noNthMethod',
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -35,4 +35,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

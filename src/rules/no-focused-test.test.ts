@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-focused-test';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-focused-test'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'noFocusedTest';
+const messageId = 'noFocusedTest'
 
 runRuleTester('no-focused-test', rule, {
   invalid: [
@@ -218,4 +218,4 @@ runRuleTester('no-focused-test', rule, {
       },
     },
   ],
-});
+})

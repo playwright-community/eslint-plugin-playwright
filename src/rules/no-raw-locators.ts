@@ -1,10 +1,10 @@
-import { Rule } from 'eslint';
-import { getStringValue, isPageMethod } from '../utils/ast';
+import { Rule } from 'eslint'
+import { getStringValue, isPageMethod } from '../utils/ast'
 
 /** Normalize data attribute locators */
 function normalize(str: string) {
-  const match = /\[([^=]+?)=['"]?([^'"]+?)['"]?\]/.exec(str);
-  return match ? `[${match[1]}=${match[2]}]` : str;
+  const match = /\[([^=]+?)=['"]?([^'"]+?)['"]?\]/.exec(str)
+  return match ? `[${match[1]}=${match[2]}]` : str
 }
 
 export default {
@@ -12,24 +12,24 @@ export default {
     const options = {
       allowed: [] as string[],
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    };
+    }
 
     function isAllowed(arg: string) {
-      return options.allowed.some((a) => normalize(a) === normalize(arg));
+      return options.allowed.some((a) => normalize(a) === normalize(arg))
     }
 
     return {
       CallExpression(node) {
-        if (node.callee.type !== 'MemberExpression') return;
-        const method = getStringValue(node.callee.property);
-        const arg = getStringValue(node.arguments[0]);
-        const isLocator = isPageMethod(node, 'locator') || method === 'locator';
+        if (node.callee.type !== 'MemberExpression') return
+        const method = getStringValue(node.callee.property)
+        const arg = getStringValue(node.arguments[0])
+        const isLocator = isPageMethod(node, 'locator') || method === 'locator'
 
         if (isLocator && !isAllowed(arg)) {
-          context.report({ messageId: 'noRawLocator', node });
+          context.report({ messageId: 'noRawLocator', node })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -56,4 +56,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

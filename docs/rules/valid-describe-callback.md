@@ -19,27 +19,27 @@ The following patterns are considered warnings:
 // Async callback functions are not allowed
 test.describe('myFunction()', async () => {
   // ...
-});
+})
 
 // Callback function parameters are not allowed
 test.describe('myFunction()', (done) => {
   // ...
-});
+})
 
 // No return statements are allowed in block of a callback function
 test.describe('myFunction', () => {
   return Promise.resolve().then(() => {
     test('breaks', () => {
-      throw new Error('Fail');
-    });
-  });
-});
+      throw new Error('Fail')
+    })
+  })
+})
 
 // Returning a value from a describe block is not allowed
 test.describe('myFunction', () =>
   test('returns a truthy value', () => {
-    expect(myFunction()).toBeTruthy();
-  }));
+    expect(myFunction()).toBeTruthy()
+  }))
 ```
 
 The following patterns are **not** considered warnings:
@@ -47,7 +47,7 @@ The following patterns are **not** considered warnings:
 ```js
 test.describe('myFunction()', () => {
   test('returns a truthy value', () => {
-    expect(myFunction()).toBeTruthy();
-  });
-});
+    expect(myFunction()).toBeTruthy()
+  })
+})
 ```

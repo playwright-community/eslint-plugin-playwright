@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-restricted-matchers';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/no-restricted-matchers'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('no-restricted-matchers', rule, {
   invalid: [
@@ -199,4 +199,4 @@ runRuleTester('no-restricted-matchers', rule, {
       },
     },
   ],
-});
+})

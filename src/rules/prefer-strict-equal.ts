@@ -1,13 +1,13 @@
-import { Rule } from 'eslint';
-import { replaceAccessorFixer } from '../utils/fixer';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { replaceAccessorFixer } from '../utils/fixer'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'expect') return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'expect') return
 
         if (call.matcherName === 'toEqual') {
           context.report({
@@ -20,15 +20,15 @@ export default {
                     fixer,
                     call.matcher,
                     'toStrictEqual',
-                  );
+                  )
                 },
                 messageId: 'suggestReplaceWithStrictEqual',
               },
             ],
-          });
+          })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -46,4 +46,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

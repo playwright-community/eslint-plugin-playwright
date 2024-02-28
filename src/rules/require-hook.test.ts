@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/require-hook';
-import { runRuleTester, runTSRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/require-hook'
+import { runRuleTester, runTSRuleTester } from '../utils/rule-tester'
 
-const messageId = 'useHook';
+const messageId = 'useHook'
 
 runRuleTester('require-hook', rule, {
   invalid: [
@@ -319,7 +319,7 @@ runRuleTester('require-hook', rule, {
       },
     },
   ],
-});
+})
 
 runTSRuleTester('require-hook - TypeScript', rule, {
   invalid: [
@@ -361,4 +361,4 @@ runTSRuleTester('require-hook - TypeScript', rule, {
       });
     `,
   ],
-});
+})

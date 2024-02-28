@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-web-first-assertions';
-import { runRuleTester, test } from '../utils/rule-tester';
+import rule from '../../src/rules/prefer-web-first-assertions'
+import { runRuleTester, test } from '../utils/rule-tester'
 
 runRuleTester('prefer-web-first-assertions', rule, {
   invalid: [
@@ -725,4 +725,4 @@ runRuleTester('prefer-web-first-assertions', rule, {
       `),
     },
   ],
-});
+})

@@ -16,13 +16,13 @@ test.describe('foo', () => {
       test.describe('qux', () => {
         test.describe('quxx', () => {
           test.describe('too many', () => {
-            test('this test', async ({ page }) => {});
-          });
-        });
-      });
-    });
-  });
-});
+            test('this test', async ({ page }) => {})
+          })
+        })
+      })
+    })
+  })
+})
 ```
 
 Examples of **correct** code for this rule (with the default option of
@@ -31,9 +31,9 @@ Examples of **correct** code for this rule (with the default option of
 ```javascript
 test.describe('foo', () => {
   test.describe('bar', () => {
-    test('this test', async ({ page }) => {});
-  });
-});
+    test('this test', async ({ page }) => {})
+  })
+})
 ```
 
 ## Options
@@ -55,7 +55,7 @@ Examples of **correct** code with options set to `{ "max": 2 }`:
 ```javascript
 test.describe('foo', () => {
   test.describe('bar', () => {
-    test('this test', async ({ page }) => {});
-  });
-});
+    test('this test', async ({ page }) => {})
+  })
+})
 ```

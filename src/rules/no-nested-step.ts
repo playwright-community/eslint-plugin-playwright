@@ -1,41 +1,41 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { isPropertyAccessor } from '../utils/ast';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
+import { isPropertyAccessor } from '../utils/ast'
 
 function isStepCall(node: ESTree.Node): boolean {
-  const inner = node.type === 'CallExpression' ? node.callee : node;
+  const inner = node.type === 'CallExpression' ? node.callee : node
 
   if (inner.type !== 'MemberExpression') {
-    return false;
+    return false
   }
 
-  return isPropertyAccessor(inner, 'step');
+  return isPropertyAccessor(inner, 'step')
 }
 
 export default {
   create(context) {
-    const stack: number[] = [];
+    const stack: number[] = []
 
     function pushStepCallback(node: Rule.Node) {
       if (node.parent.type !== 'CallExpression' || !isStepCall(node.parent)) {
-        return;
+        return
       }
 
-      stack.push(0);
+      stack.push(0)
 
       if (stack.length > 1) {
         context.report({
           messageId: 'noNestedStep',
           node: node.parent.callee,
-        });
+        })
       }
     }
 
     function popStepCallback(node: Rule.Node) {
-      const { parent } = node;
+      const { parent } = node
 
       if (parent.type === 'CallExpression' && isStepCall(parent)) {
-        stack.pop();
+        stack.pop()
       }
     }
 
@@ -44,7 +44,7 @@ export default {
       'ArrowFunctionExpression:exit': popStepCallback,
       FunctionExpression: pushStepCallback,
       'FunctionExpression:exit': popStepCallback,
-    };
+    }
   },
   meta: {
     docs: {
@@ -59,4 +59,4 @@ export default {
     schema: [],
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

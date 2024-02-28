@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/max-expects';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/max-expects'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('max-expects', rule, {
   invalid: [
@@ -338,4 +338,4 @@ runRuleTester('max-expects', rule, {
       },
     },
   ],
-});
+})

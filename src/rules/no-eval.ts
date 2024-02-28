@@ -1,20 +1,20 @@
-import { Rule } from 'eslint';
-import { isPageMethod } from '../utils/ast';
+import { Rule } from 'eslint'
+import { isPageMethod } from '../utils/ast'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const isEval = isPageMethod(node, '$eval');
+        const isEval = isPageMethod(node, '$eval')
 
         if (isEval || isPageMethod(node, '$$eval')) {
           context.report({
             messageId: isEval ? 'noEval' : 'noEvalAll',
             node: node.callee,
-          });
+          })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -30,4 +30,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

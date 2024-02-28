@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/no-commented-out-tests';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/no-commented-out-tests'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'commentedTests';
+const messageId = 'commentedTests'
 
 runRuleTester('no-commented-out-tests', rule, {
   invalid: [
@@ -155,4 +155,4 @@ runRuleTester('no-commented-out-tests', rule, {
       },
     },
   ],
-});
+})

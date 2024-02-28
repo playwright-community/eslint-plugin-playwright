@@ -1,47 +1,47 @@
-import { Rule } from 'eslint';
-import { getStringValue } from '../utils/ast';
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { getStringValue } from '../utils/ast'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
-    const hookContexts: Array<Record<string, number>> = [{}];
+    const hookContexts: Array<Record<string, number>> = [{}]
 
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (!call) return;
+        const call = parseFnCall(context, node)
+        if (!call) return
 
         if (call.type === 'describe') {
-          hookContexts.push({});
+          hookContexts.push({})
         }
 
         if (call.type !== 'hook') {
-          return;
+          return
         }
 
-        const currentLayer = hookContexts[hookContexts.length - 1];
+        const currentLayer = hookContexts[hookContexts.length - 1]
         const name =
           node.callee.type === 'MemberExpression'
             ? getStringValue(node.callee.property)
-            : '';
+            : ''
 
-        currentLayer[name] ||= 0;
-        currentLayer[name] += 1;
+        currentLayer[name] ||= 0
+        currentLayer[name] += 1
 
         if (currentLayer[name] > 1) {
           context.report({
             data: { hook: name },
             messageId: 'noDuplicateHook',
             node,
-          });
+          })
         }
       },
       'CallExpression:exit'(node) {
         if (isTypeOfFnCall(context, node, ['describe'])) {
-          hookContexts.pop();
+          hookContexts.pop()
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -55,4 +55,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

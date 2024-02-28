@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/max-nested-describe';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/max-nested-describe'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'exceededMaxDepth';
+const messageId = 'exceededMaxDepth'
 
 runRuleTester('max-nested-describe', rule, {
   invalid: [
@@ -275,4 +275,4 @@ runRuleTester('max-nested-describe', rule, {
       },
     },
   ],
-});
+})

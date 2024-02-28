@@ -1,30 +1,30 @@
-import { Rule } from 'eslint';
-import { getStringValue } from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { getStringValue } from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const options = context.options[0] || {};
-        const allowConditional = !!options.allowConditional;
+        const options = context.options[0] || {}
+        const allowConditional = !!options.allowConditional
 
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
         if (call?.group !== 'test' && call?.group !== 'describe') {
-          return;
+          return
         }
 
-        const skipNode = call.members.find((s) => getStringValue(s) === 'skip');
-        if (!skipNode) return;
+        const skipNode = call.members.find((s) => getStringValue(s) === 'skip')
+        if (!skipNode) return
 
         // If the call is a standalone `test.skip()` call, and not a test
         // annotation, we have to treat it a bit differently.
-        const isStandalone = call.type === 'config';
+        const isStandalone = call.type === 'config'
 
         // If allowConditional is enabled and it's not a test/describe function,
         // we ignore any `test.skip` calls that have no arguments.
         if (isStandalone && allowConditional) {
-          return;
+          return
         }
 
         context.report({
@@ -39,14 +39,14 @@ export default {
                       skipNode.range![0] - 1,
                       skipNode.range![1] +
                         Number(skipNode.type !== 'Identifier'),
-                    ]);
+                    ])
               },
               messageId: 'removeSkippedTestAnnotation',
             },
           ],
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -74,4 +74,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

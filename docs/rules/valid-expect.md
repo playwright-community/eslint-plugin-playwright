@@ -7,17 +7,17 @@ Ensure `expect()` is called with a matcher.
 Examples of **incorrect** code for this rule:
 
 ```javascript
-expect();
-expect('something');
-expect(true).toBeDefined;
+expect()
+expect('something')
+expect(true).toBeDefined
 ```
 
 Example of **correct** code for this rule:
 
 ```javascript
-expect(locator).toHaveText('howdy');
-expect('something').toBe('something');
-expect(true).toBeDefined();
+expect(locator).toHaveText('howdy')
+expect('something').toBe('something')
+expect(true).toBeDefined()
 ```
 
 ## Options

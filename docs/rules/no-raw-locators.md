@@ -10,19 +10,19 @@ for more information.
 Example of **incorrect** code for this rule:
 
 ```javascript
-await page.locator('button').click();
+await page.locator('button').click()
 ```
 
 Example of **correct** code for this rule:
 
 ```javascript
-await page.getByRole('button').click();
+await page.getByRole('button').click()
 ```
 
 ```javascript
 await page.getByRole('button', {
   name: 'Submit',
-});
+})
 ```
 
 ## Options
@@ -49,12 +49,12 @@ Example of **incorrect** code for the `{ "allowed": ["[aria-busy=false]"] }`
 option:
 
 ```javascript
-page.getByRole('navigation').and(page.locator('iframe'));
+page.getByRole('navigation').and(page.locator('iframe'))
 ```
 
 Example of **correct** code for the `{ "allowed": ["[aria-busy=false]"] }`
 option:
 
 ```javascript
-page.getByRole('navigation').and(page.locator('[aria-busy="false"]'));
+page.getByRole('navigation').and(page.locator('[aria-busy="false"]'))
 ```

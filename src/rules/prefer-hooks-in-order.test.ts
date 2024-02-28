@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/prefer-hooks-in-order';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/prefer-hooks-in-order'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('prefer-hooks-in-order', rule, {
   invalid: [
@@ -714,4 +714,4 @@ runRuleTester('prefer-hooks-in-order', rule, {
       },
     },
   ],
-});
+})

@@ -1,9 +1,9 @@
-import { Rule } from 'eslint';
-import ESTree from 'estree';
-import { getStringValue, isBooleanLiteral } from '../utils/ast';
+import { Rule } from 'eslint'
+import ESTree from 'estree'
+import { getStringValue, isBooleanLiteral } from '../utils/ast'
 
 function isForceOptionEnabled(node: ESTree.CallExpression) {
-  const arg = node.arguments.at(-1);
+  const arg = node.arguments.at(-1)
 
   return (
     arg?.type === 'ObjectExpression' &&
@@ -13,7 +13,7 @@ function isForceOptionEnabled(node: ESTree.CallExpression) {
         getStringValue(property.key) === 'force' &&
         isBooleanLiteral(property.value, true),
     )
-  );
+  )
 }
 
 // https://playwright.dev/docs/api/class-locator
@@ -29,7 +29,7 @@ const methodsWithForceOption = new Set([
   'selectText',
   'setChecked',
   'tap',
-]);
+])
 
 export default {
   create(context) {
@@ -39,14 +39,14 @@ export default {
           methodsWithForceOption.has(getStringValue(node.property)) &&
           node.parent.type === 'CallExpression'
         ) {
-          const reportNode = isForceOptionEnabled(node.parent);
+          const reportNode = isForceOptionEnabled(node.parent)
 
           if (reportNode) {
-            context.report({ messageId: 'noForceOption', node: reportNode });
+            context.report({ messageId: 'noForceOption', node: reportNode })
           }
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -60,4 +60,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

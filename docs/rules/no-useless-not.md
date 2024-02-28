@@ -9,17 +9,17 @@ matchers can be used, it's preferred to use the complimentary matcher instead.
 Examples of **incorrect** code for this rule:
 
 ```javascript
-expect(locator).not.toBeVisible();
-expect(locator).not.toBeHidden();
-expect(locator).not.toBeEnabled();
-expect(locator).not.toBeDisabled();
+expect(locator).not.toBeVisible()
+expect(locator).not.toBeHidden()
+expect(locator).not.toBeEnabled()
+expect(locator).not.toBeDisabled()
 ```
 
 Example of **correct** code for this rule:
 
 ```javascript
-expect(locator).toBeHidden();
-expect(locator).toBeVisible();
-expect(locator).toBeDisabled();
-expect(locator).toBeEnabled();
+expect(locator).toBeHidden()
+expect(locator).toBeVisible()
+expect(locator).toBeDisabled()
+expect(locator).toBeEnabled()
 ```

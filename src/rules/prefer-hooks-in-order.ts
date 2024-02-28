@@ -1,27 +1,27 @@
-import { Rule } from 'eslint';
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
-const order = ['beforeAll', 'beforeEach', 'afterEach', 'afterAll'];
+const order = ['beforeAll', 'beforeEach', 'afterEach', 'afterAll']
 
 export default {
   create(context) {
-    let previousHookIndex = -1;
-    let inHook = false;
+    let previousHookIndex = -1
+    let inHook = false
 
     return {
       CallExpression(node) {
         // Ignore everything that is passed into a hook
-        if (inHook) return;
+        if (inHook) return
 
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
         if (call?.type !== 'hook') {
-          previousHookIndex = -1;
-          return;
+          previousHookIndex = -1
+          return
         }
 
-        inHook = true;
-        const currentHook = call.name;
-        const currentHookIndex = order.indexOf(currentHook);
+        inHook = true
+        const currentHook = call.name
+        const currentHookIndex = order.indexOf(currentHook)
 
         if (currentHookIndex < previousHookIndex) {
           context.report({
@@ -31,23 +31,23 @@ export default {
             },
             messageId: 'reorderHooks',
             node,
-          });
+          })
 
-          return;
+          return
         }
 
-        previousHookIndex = currentHookIndex;
+        previousHookIndex = currentHookIndex
       },
       'CallExpression:exit'(node) {
         if (isTypeOfFnCall(context, node, ['hook'])) {
-          inHook = false;
-          return;
+          inHook = false
+          return
         }
 
-        if (inHook) return;
-        previousHookIndex = -1;
+        if (inHook) return
+        previousHookIndex = -1
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -62,4 +62,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

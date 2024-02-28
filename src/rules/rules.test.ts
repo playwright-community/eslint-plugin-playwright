@@ -1,15 +1,15 @@
-import { readdir } from 'node:fs/promises';
-import { expect, test } from 'vitest';
-import plugin from '../../src/index';
+import { readdir } from 'node:fs/promises'
+import { expect, test } from 'vitest'
+import plugin from '../../src/index'
 
 test('has all rules', async () => {
-  const files = await readdir('src/rules');
-  const { rules } = plugin.configs['flat/recommended'].plugins.playwright;
-  const ruleKeys = Object.keys(rules).sort();
+  const files = await readdir('src/rules')
+  const { rules } = plugin.configs['flat/recommended'].plugins.playwright
+  const ruleKeys = Object.keys(rules).sort()
   const fileKeys = files
     .filter((file) => !file.endsWith('.test.ts'))
     .map((file) => file.replace('.ts', ''))
-    .sort();
+    .sort()
 
-  expect(ruleKeys).toEqual(fileKeys);
-});
+  expect(ruleKeys).toEqual(fileKeys)
+})

@@ -1,14 +1,14 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { getStringValue, isFunction, isIdentifier } from '../utils/ast';
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
+import { getStringValue, isFunction, isIdentifier } from '../utils/ast'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 const isNullOrUndefined = (node: ESTree.Expression): boolean => {
   return (
     (node.type === 'Literal' && node.value === null) ||
     isIdentifier(node, 'undefined')
-  );
-};
+  )
+}
 
 const shouldBeInHook = (
   context: Rule.RuleContext,
@@ -17,33 +17,33 @@ const shouldBeInHook = (
 ): boolean => {
   switch (node.type) {
     case 'ExpressionStatement':
-      return shouldBeInHook(context, node.expression, allowedFunctionCalls);
+      return shouldBeInHook(context, node.expression, allowedFunctionCalls)
     case 'CallExpression':
       return !(
         parseFnCall(context, node) ||
         allowedFunctionCalls.includes(getStringValue(node.callee))
-      );
+      )
     case 'VariableDeclaration': {
       if (node.kind === 'const') {
-        return false;
+        return false
       }
 
       return node.declarations.some(
         ({ init }) => init != null && !isNullOrUndefined(init),
-      );
+      )
     }
 
     default:
-      return false;
+      return false
   }
-};
+}
 
 export default {
   create(context) {
     const options = {
       allowedFunctionCalls: [] as string[],
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    };
+    }
 
     const checkBlockBody = (body: ESTree.Program['body']) => {
       for (const statement of body) {
@@ -51,28 +51,28 @@ export default {
           context.report({
             messageId: 'useHook',
             node: statement,
-          });
+          })
         }
       }
-    };
+    }
 
     return {
       CallExpression(node) {
         if (!isTypeOfFnCall(context, node, ['describe'])) {
-          return;
+          return
         }
 
-        const testFn = node.arguments.at(-1);
+        const testFn = node.arguments.at(-1)
         if (!isFunction(testFn) || testFn.body.type !== 'BlockStatement') {
-          return;
+          return
         }
 
-        checkBlockBody(testFn.body.body);
+        checkBlockBody(testFn.body.body)
       },
       Program(program) {
-        checkBlockBody(program.body);
+        checkBlockBody(program.body)
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -98,4 +98,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

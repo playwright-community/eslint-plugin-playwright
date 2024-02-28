@@ -14,13 +14,13 @@ shouldn't 🙂.
 Examples of **incorrect** code for this rule:
 
 ```javascript
-await expect(page.locator('foo')).toHaveText('bar');
-await expect(page).toHaveTitle('baz');
+await expect(page.locator('foo')).toHaveText('bar')
+await expect(page).toHaveTitle('baz')
 ```
 
 Examples of **correct** code for this rule:
 
 ```javascript
-await expect.soft(page.locator('foo')).toHaveText('bar');
-await expect.soft(page).toHaveTitle('baz');
+await expect.soft(page.locator('foo')).toHaveText('bar')
+await expect.soft(page).toHaveTitle('baz')
 ```

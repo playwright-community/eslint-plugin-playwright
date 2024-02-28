@@ -1,13 +1,13 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { getStringValue, isBooleanLiteral } from '../utils/ast';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
+import { getStringValue, isBooleanLiteral } from '../utils/ast'
 import {
   getRangeOffset,
   removePropertyFixer,
   replaceAccessorFixer,
-} from '../utils/fixer';
-import { truthy } from '../utils/misc';
-import { type ParsedExpectFnCall, parseFnCall } from '../utils/parseFnCall';
+} from '../utils/fixer'
+import { truthy } from '../utils/misc'
+import { type ParsedExpectFnCall, parseFnCall } from '../utils/parseFnCall'
 
 const matcherConfig: Record<string, { argName?: string; inverse: string }> = {
   toBeDisabled: { inverse: 'toBeEnabled' },
@@ -20,59 +20,59 @@ const matcherConfig: Record<string, { argName?: string; inverse: string }> = {
     argName: 'visible',
     inverse: 'toBeHidden',
   },
-};
+}
 
 function getOptions(call: ParsedExpectFnCall, name: string) {
-  const [arg] = call.matcherArgs;
-  if (arg?.type !== 'ObjectExpression') return;
+  const [arg] = call.matcherArgs
+  if (arg?.type !== 'ObjectExpression') return
 
   const property = arg.properties.find(
     (p): p is ESTree.Property =>
       p.type === 'Property' &&
       getStringValue(p.key) === name &&
       isBooleanLiteral(p.value),
-  );
+  )
 
   return {
     arg,
     property,
     value: (property?.value as { value: boolean })?.value,
-  };
+  }
 }
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'expect') return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'expect') return
 
         // This rule only applies to specific matchers that have opposites
-        const config = matcherConfig[call.matcherName];
-        if (!config) return;
+        const config = matcherConfig[call.matcherName]
+        if (!config) return
 
         // If the matcher has an options argument, we need to check if it has
         // a `visible` or `enabled` property that is a boolean literal.
         const options = config.argName
           ? getOptions(call, config.argName)
-          : undefined;
+          : undefined
 
         // If an argument is provided to the `visible` or `enabled` property, but
         // we can't determine it's value, we can't safely remove the `not` modifier.
-        if (options?.arg && options.value === undefined) return;
+        if (options?.arg && options.value === undefined) return
 
         const notModifier = call.modifiers.find(
           (mod) => getStringValue(mod) === 'not',
-        );
+        )
 
         // If the matcher is not negated, or the matcher has no options, we can
         // safely ignore it.
-        if (!notModifier && !options?.property) return;
+        if (!notModifier && !options?.property) return
 
         // If the matcher is inverted, we need to remove the `not` modifier and
         // replace the matcher with it's inverse.
-        const isInverted = !!notModifier !== (options?.value === false);
-        const newMatcherName = isInverted ? config.inverse : call.matcherName;
+        const isInverted = !!notModifier !== (options?.value === false)
+        const newMatcherName = isInverted ? config.inverse : call.matcherName
 
         context.report({
           data: {
@@ -93,7 +93,7 @@ export default {
               // Swap the matcher name if it's different
               call.matcherName !== newMatcherName &&
                 replaceAccessorFixer(fixer, call.matcher, newMatcherName),
-            ].filter(truthy);
+            ].filter(truthy)
           },
           loc: notModifier
             ? { end: call.matcher.loc!.end, start: notModifier.loc!.start }
@@ -103,9 +103,9 @@ export default {
             : isInverted
             ? 'noUselessProperty'
             : 'noUselessTruthy',
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -124,4 +124,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

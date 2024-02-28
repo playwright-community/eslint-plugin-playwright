@@ -1,42 +1,42 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { getParent } from '../utils/ast';
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
+import { getParent } from '../utils/ast'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     const options = {
       max: 5,
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    };
+    }
 
-    let count = 0;
+    let count = 0
 
     const maybeResetCount = (node: ESTree.Node) => {
-      const parent = getParent(node);
+      const parent = getParent(node)
       const isTestFn =
         parent?.type !== 'CallExpression' ||
-        isTypeOfFnCall(context, parent, ['test']);
+        isTypeOfFnCall(context, parent, ['test'])
 
       if (isTestFn) {
-        count = 0;
+        count = 0
       }
-    };
+    }
 
     return {
       ArrowFunctionExpression: maybeResetCount,
       'ArrowFunctionExpression:exit': maybeResetCount,
       CallExpression(node) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
 
         if (
           call?.type !== 'expect' ||
           getParent(call.head.node)?.type === 'MemberExpression'
         ) {
-          return;
+          return
         }
 
-        count += 1;
+        count += 1
 
         if (count > options.max) {
           context.report({
@@ -46,12 +46,12 @@ export default {
             },
             messageId: 'exceededMaxAssertion',
             node,
-          });
+          })
         }
       },
       FunctionExpression: maybeResetCount,
       'FunctionExpression:exit': maybeResetCount,
-    };
+    }
   },
   meta: {
     docs: {
@@ -78,4 +78,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

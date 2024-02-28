@@ -11,13 +11,13 @@ used to assert locators `count()` method.
 The following patterns are considered warnings:
 
 ```javascript
-expect(await files.count()).toBe(1);
-expect(await files.count()).toEqual(1);
-expect(await files.count()).toStrictEqual(1);
+expect(await files.count()).toBe(1)
+expect(await files.count()).toEqual(1)
+expect(await files.count()).toStrictEqual(1)
 ```
 
 The following pattern is **not** a warning:
 
 ```javascript
-await expect(files).toHaveCount(1);
+await expect(files).toHaveCount(1)
 ```

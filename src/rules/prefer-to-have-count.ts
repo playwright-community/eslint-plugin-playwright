@@ -1,31 +1,31 @@
-import { Rule } from 'eslint';
-import { equalityMatchers, isPropertyAccessor } from '../utils/ast';
-import { replaceAccessorFixer } from '../utils/fixer';
-import { parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { equalityMatchers, isPropertyAccessor } from '../utils/ast'
+import { replaceAccessorFixer } from '../utils/fixer'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
         if (
           call?.type !== 'expect' ||
           !equalityMatchers.has(call.matcherName)
         ) {
-          return;
+          return
         }
 
-        const [argument] = call.args;
+        const [argument] = call.args
         if (
           argument?.type !== 'AwaitExpression' ||
           argument.argument.type !== 'CallExpression' ||
           argument.argument.callee.type !== 'MemberExpression' ||
           !isPropertyAccessor(argument.argument.callee, 'count')
         ) {
-          return;
+          return
         }
 
-        const callee = argument.argument.callee;
+        const callee = argument.argument.callee
         context.report({
           fix(fixer) {
             return [
@@ -43,13 +43,13 @@ export default {
               replaceAccessorFixer(fixer, call.matcher, 'toHaveCount'),
               // insert "await" to before "expect()"
               fixer.insertTextBefore(node, 'await '),
-            ];
+            ]
           },
           messageId: 'useToHaveCount',
           node: call.matcher,
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -65,4 +65,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

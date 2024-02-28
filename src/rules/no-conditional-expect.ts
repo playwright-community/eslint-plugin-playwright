@@ -1,14 +1,14 @@
-import { Rule, Scope } from 'eslint';
-import * as ESTree from 'estree';
-import { getParent, isPropertyAccessor } from '../utils/ast';
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
-import { KnownCallExpression } from '../utils/types';
+import { Rule, Scope } from 'eslint'
+import * as ESTree from 'estree'
+import { getParent, isPropertyAccessor } from '../utils/ast'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
+import { KnownCallExpression } from '../utils/types'
 
 const isCatchCall = (
   node: ESTree.CallExpression,
 ): node is KnownCallExpression =>
   node.callee.type === 'MemberExpression' &&
-  isPropertyAccessor(node.callee, 'catch');
+  isPropertyAccessor(node.callee, 'catch')
 
 const getTestCallExpressionsFromDeclaredVariables = (
   context: Rule.RuleContext,
@@ -27,51 +27,51 @@ const getTestCallExpressionsFromDeclaredVariables = (
         ),
     ],
     [] as ESTree.CallExpression[],
-  );
-};
+  )
+}
 
 export default {
   create(context) {
-    let conditionalDepth = 0;
-    let inTestCase = false;
-    let inPromiseCatch = false;
+    let conditionalDepth = 0
+    let inTestCase = false
+    let inPromiseCatch = false
 
-    const increaseConditionalDepth = () => inTestCase && conditionalDepth++;
-    const decreaseConditionalDepth = () => inTestCase && conditionalDepth--;
+    const increaseConditionalDepth = () => inTestCase && conditionalDepth++
+    const decreaseConditionalDepth = () => inTestCase && conditionalDepth--
 
     return {
       CallExpression(node: ESTree.CallExpression) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
 
         if (call?.type === 'test') {
-          inTestCase = true;
+          inTestCase = true
         }
 
         if (isCatchCall(node)) {
-          inPromiseCatch = true;
+          inPromiseCatch = true
         }
 
         if (inTestCase && call?.type === 'expect' && conditionalDepth > 0) {
           context.report({
             messageId: 'conditionalExpect',
             node,
-          });
+          })
         }
 
         if (inPromiseCatch && call?.type === 'expect') {
           context.report({
             messageId: 'conditionalExpect',
             node,
-          });
+          })
         }
       },
       'CallExpression:exit'(node) {
         if (isTypeOfFnCall(context, node, ['test'])) {
-          inTestCase = false;
+          inTestCase = false
         }
 
         if (isCatchCall(node)) {
-          inPromiseCatch = false;
+          inPromiseCatch = false
         }
       },
       CatchClause: increaseConditionalDepth,
@@ -79,14 +79,14 @@ export default {
       ConditionalExpression: increaseConditionalDepth,
       'ConditionalExpression:exit': decreaseConditionalDepth,
       FunctionDeclaration(node) {
-        const declaredVariables = context.sourceCode.getDeclaredVariables(node);
+        const declaredVariables = context.sourceCode.getDeclaredVariables(node)
         const testCallExpressions = getTestCallExpressionsFromDeclaredVariables(
           context,
           declaredVariables,
-        );
+        )
 
         if (testCallExpressions.length > 0) {
-          inTestCase = true;
+          inTestCase = true
         }
       },
       IfStatement: increaseConditionalDepth,
@@ -95,7 +95,7 @@ export default {
       'LogicalExpression:exit': decreaseConditionalDepth,
       SwitchStatement: increaseConditionalDepth,
       'SwitchStatement:exit': decreaseConditionalDepth,
-    };
+    }
   },
   meta: {
     docs: {
@@ -109,4 +109,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

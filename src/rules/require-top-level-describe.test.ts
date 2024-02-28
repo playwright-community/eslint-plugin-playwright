@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/require-top-level-describe';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/require-top-level-describe'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('require-top-level-describe', rule, {
   invalid: [
@@ -242,4 +242,4 @@ runRuleTester('require-top-level-describe', rule, {
       },
     },
   ],
-});
+})

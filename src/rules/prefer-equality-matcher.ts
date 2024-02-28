@@ -1,4 +1,4 @@
-import { Rule } from 'eslint';
+import { Rule } from 'eslint'
 import {
   equalityMatchers,
   findParent,
@@ -6,22 +6,22 @@ import {
   getRawValue,
   getStringValue,
   isBooleanLiteral,
-} from '../utils/ast';
-import { parseFnCall } from '../utils/parseFnCall';
+} from '../utils/ast'
+import { parseFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node);
-        if (call?.type !== 'expect' || call.matcherArgs.length === 0) return;
+        const call = parseFnCall(context, node)
+        if (call?.type !== 'expect' || call.matcherArgs.length === 0) return
 
-        const expect = findParent(call.head.node, 'CallExpression');
-        if (!expect) return;
+        const expect = findParent(call.head.node, 'CallExpression')
+        if (!expect) return
 
-        const [comparison] = expect.arguments;
-        const expectCallEnd = expect.range![1];
-        const [matcherArg] = call.matcherArgs;
+        const [comparison] = expect.arguments
+        const expectCallEnd = expect.range![1]
+        const [matcherArg] = call.matcherArgs
 
         if (
           comparison?.type !== 'BinaryExpression' ||
@@ -29,20 +29,20 @@ export default {
           !equalityMatchers.has(call.matcherName) ||
           !isBooleanLiteral(matcherArg)
         ) {
-          return;
+          return
         }
 
-        const matcherValue = getRawValue(matcherArg) === 'true';
-        const [modifier] = call.modifiers;
+        const matcherValue = getRawValue(matcherArg) === 'true'
+        const [modifier] = call.modifiers
         const hasNot = call.modifiers.some(
           (node) => getStringValue(node) === 'not',
-        );
+        )
 
         // we need to negate the expectation if the current expected
         // value is itself negated by the "not" modifier
         const addNotModifier =
           (comparison.operator === '!==' ? !matcherValue : matcherValue) ===
-          hasNot;
+          hasNot
 
         context.report({
           messageId: 'useEqualityMatcher',
@@ -54,10 +54,10 @@ export default {
               let modifierText =
                 modifier && getStringValue(modifier) !== 'not'
                   ? `.${getStringValue(modifier)}`
-                  : '';
+                  : ''
 
               if (addNotModifier) {
-                modifierText += `.not`;
+                modifierText += `.not`
               }
 
               return [
@@ -76,13 +76,13 @@ export default {
                   matcherArg,
                   context.sourceCode.getText(comparison.right),
                 ),
-              ];
+              ]
             },
             messageId: 'suggestEqualityMatcher',
           })),
-        });
+        })
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -98,4 +98,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

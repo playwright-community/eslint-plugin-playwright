@@ -1,11 +1,11 @@
-import { AST, Rule } from 'eslint';
-import ESTree from 'estree';
-import { isPageMethod } from '../utils/ast';
+import { AST, Rule } from 'eslint'
+import ESTree from 'estree'
+import { isPageMethod } from '../utils/ast'
 
 function getPropertyRange(node: ESTree.Node): AST.Range {
   return node.type === 'Identifier'
     ? node.range!
-    : [node.range![0] + 1, node.range![1] - 1];
+    : [node.range![0] + 1, node.range![1] - 1]
 }
 
 export default {
@@ -19,7 +19,7 @@ export default {
             suggest: [
               {
                 fix: (fixer) => {
-                  const { property } = node.callee as ESTree.MemberExpression;
+                  const { property } = node.callee as ESTree.MemberExpression
 
                   // Replace $/$$ with locator
                   const fixes = [
@@ -27,7 +27,7 @@ export default {
                       getPropertyRange(property),
                       'locator',
                     ),
-                  ];
+                  ]
 
                   // Remove the await expression if it exists as locators do
                   // not need to be awaited.
@@ -37,20 +37,20 @@ export default {
                         node.parent.range![0],
                         node.range![0],
                       ]),
-                    );
+                    )
                   }
 
-                  return fixes;
+                  return fixes
                 },
                 messageId: isPageMethod(node, '$')
                   ? 'replaceElementHandleWithLocator'
                   : 'replaceElementHandlesWithLocator',
               },
             ],
-          });
+          })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -68,4 +68,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

@@ -8,7 +8,7 @@ This rule prevents the usage of `nth` methods (`first()`, `last()`, and
 Examples of **incorrect** code for this rule:
 
 ```javascript
-page.locator('button').first();
-page.locator('button').last();
-page.locator('button').nth(3);
+page.locator('button').first()
+page.locator('button').last()
+page.locator('button').nth(3)
 ```

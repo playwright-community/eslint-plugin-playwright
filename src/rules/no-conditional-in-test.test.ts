@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/no-conditional-in-test';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/no-conditional-in-test'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'conditionalInTest';
+const messageId = 'conditionalInTest'
 
 runRuleTester('no-conditional-in-test', rule, {
   invalid: [
@@ -303,4 +303,4 @@ runRuleTester('no-conditional-in-test', rule, {
       },
     },
   ],
-});
+})

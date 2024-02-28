@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/no-standalone-expect';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/no-standalone-expect'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'unexpectedExpect';
+const messageId = 'unexpectedExpect'
 
 runRuleTester('no-standalone-expect', rule, {
   invalid: [
@@ -130,4 +130,4 @@ runRuleTester('no-standalone-expect', rule, {
       },
     },
   ],
-});
+})

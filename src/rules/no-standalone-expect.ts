@@ -1,34 +1,34 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
-import { getParent, isFunction } from '../utils/ast';
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
+import { getParent, isFunction } from '../utils/ast'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 const getBlockType = (
   context: Rule.RuleContext,
   statement: ESTree.BlockStatement,
 ): 'function' | 'describe' | null => {
-  const func = getParent(statement);
+  const func = getParent(statement)
 
   if (!func) {
     throw new Error(
       `Unexpected BlockStatement. No parent defined. - please file a github issue at https://github.com/playwright-community/eslint-plugin-playwright`,
-    );
+    )
   }
 
   // functionDeclaration: function func() {}
   if (func.type === 'FunctionDeclaration') {
-    return 'function';
+    return 'function'
   }
 
   if (isFunction(func) && func.parent) {
-    const expr = func.parent;
+    const expr = func.parent
 
     // arrow function or function expr
     if (
       expr.type === 'VariableDeclarator' ||
       expr.type === 'MethodDefinition'
     ) {
-      return 'function';
+      return 'function'
     }
 
     // if it's not a variable, it will be callExpr, we only care about describe
@@ -36,12 +36,12 @@ const getBlockType = (
       expr.type === 'CallExpression' &&
       isTypeOfFnCall(context, expr, ['describe'])
     ) {
-      return 'describe';
+      return 'describe'
     }
   }
 
-  return null;
-};
+  return null
+}
 
 type BlockType =
   | 'arrow'
@@ -49,70 +49,70 @@ type BlockType =
   | 'function'
   | 'hook'
   | 'template'
-  | 'test';
+  | 'test'
 
 export default {
   create(context: Rule.RuleContext) {
-    const callStack: BlockType[] = [];
+    const callStack: BlockType[] = []
 
     return {
       ArrowFunctionExpression(node) {
         if (node.parent?.type !== 'CallExpression') {
-          callStack.push('arrow');
+          callStack.push('arrow')
         }
       },
       'ArrowFunctionExpression:exit'() {
         if (callStack.at(-1) === 'arrow') {
-          callStack.pop();
+          callStack.pop()
         }
       },
 
       BlockStatement(statement) {
-        const blockType = getBlockType(context, statement);
+        const blockType = getBlockType(context, statement)
 
         if (blockType) {
-          callStack.push(blockType);
+          callStack.push(blockType)
         }
       },
       'BlockStatement:exit'(statement: ESTree.BlockStatement) {
         if (callStack.at(-1) === getBlockType(context, statement)) {
-          callStack.pop();
+          callStack.pop()
         }
       },
 
       CallExpression(node) {
-        const call = parseFnCall(context, node);
+        const call = parseFnCall(context, node)
 
         if (call?.type === 'expect') {
           if (
             getParent(call.head.node)?.type === 'MemberExpression' &&
             call.members.length === 1
           ) {
-            return;
+            return
           }
 
-          const parent = callStack.at(-1);
+          const parent = callStack.at(-1)
           if (!parent || parent === 'describe') {
-            context.report({ messageId: 'unexpectedExpect', node });
+            context.report({ messageId: 'unexpectedExpect', node })
           }
 
-          return;
+          return
         }
 
         if (call?.type === 'test') {
-          callStack.push('test');
+          callStack.push('test')
         }
 
         if (call?.type === 'hook') {
-          callStack.push('hook');
+          callStack.push('hook')
         }
 
         if (node.callee.type === 'TaggedTemplateExpression') {
-          callStack.push('template');
+          callStack.push('template')
         }
       },
       'CallExpression:exit'(node: ESTree.CallExpression) {
-        const top = callStack.at(-1);
+        const top = callStack.at(-1)
 
         if (
           (top === 'test' &&
@@ -121,10 +121,10 @@ export default {
           (top === 'template' &&
             node.callee.type === 'TaggedTemplateExpression')
         ) {
-          callStack.pop();
+          callStack.pop()
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -139,4 +139,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

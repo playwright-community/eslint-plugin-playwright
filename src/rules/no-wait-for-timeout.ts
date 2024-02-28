@@ -1,5 +1,5 @@
-import { Rule } from 'eslint';
-import { isPageMethod } from '../utils/ast';
+import { Rule } from 'eslint'
+import { isPageMethod } from '../utils/ast'
 
 export default {
   create(context) {
@@ -20,10 +20,10 @@ export default {
                 messageId: 'removeWaitForTimeout',
               },
             ],
-          });
+          })
         }
       },
-    };
+    }
   },
   meta: {
     docs: {
@@ -39,4 +39,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

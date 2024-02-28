@@ -1,6 +1,6 @@
-import dedent from 'dedent';
-import { runRuleTester } from '../utils/rule-tester';
-import rule from './valid-expect-in-promise';
+import dedent from 'dedent'
+import { runRuleTester } from '../utils/rule-tester'
+import rule from './valid-expect-in-promise'
 
 runRuleTester('valid-expect-in-promise', rule, {
   invalid: [
@@ -1623,4 +1623,4 @@ runRuleTester('valid-expect-in-promise', rule, {
       });
     `,
   ],
-});
+})

@@ -1,5 +1,5 @@
-import rule from '../../src/rules/valid-expect';
-import { runRuleTester } from '../utils/rule-tester';
+import rule from '../../src/rules/valid-expect'
+import { runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('valid-expect', rule, {
   invalid: [
@@ -254,4 +254,4 @@ runRuleTester('valid-expect', rule, {
       },
     },
   ],
-});
+})

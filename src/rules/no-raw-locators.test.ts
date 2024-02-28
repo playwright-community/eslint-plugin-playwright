@@ -1,7 +1,7 @@
-import rule from '../../src/rules/no-raw-locators';
-import { runRuleTester, test } from '../utils/rule-tester';
+import rule from '../../src/rules/no-raw-locators'
+import { runRuleTester, test } from '../utils/rule-tester'
 
-const messageId = 'noRawLocator';
+const messageId = 'noRawLocator'
 
 runRuleTester('no-raw-locators', rule, {
   invalid: [
@@ -126,4 +126,4 @@ runRuleTester('no-raw-locators', rule, {
       options: [{ allowed: [`[aria-busy='false']`] }],
     },
   ],
-});
+})

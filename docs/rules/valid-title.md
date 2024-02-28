@@ -16,21 +16,21 @@ An empty title is not informative, and serves little purpose.
 Examples of **incorrect** code for this rule:
 
 ```javascript
-test.describe('', () => {});
+test.describe('', () => {})
 test.describe('foo', () => {
-  test('', () => {});
-});
-test('', () => {});
+  test('', () => {})
+})
+test('', () => {})
 ```
 
 Examples of **correct** code for this rule:
 
 ```javascript
-test.describe('foo', () => {});
+test.describe('foo', () => {})
 test.describe('foo', () => {
-  test('bar', () => {});
-});
-test('foo', () => {});
+  test('bar', () => {})
+})
+test('foo', () => {})
 ```
 
 ### `titleMustBeString`
@@ -42,39 +42,39 @@ options.
 Examples of **incorrect** code for this rule:
 
 ```javascript
-test(123, () => {});
-test.describe(String(/.+/), () => {});
-test.describe(myFunction, () => {});
-test.describe(6, function () {});
+test(123, () => {})
+test.describe(String(/.+/), () => {})
+test.describe(myFunction, () => {})
+test.describe(6, function () {})
 ```
 
 Examples of **correct** code for this rule:
 
 ```javascript
-test('is a string', () => {});
-test.describe('is a string', () => {});
+test('is a string', () => {})
+test.describe('is a string', () => {})
 ```
 
 Examples of **correct** code when `ignoreTypeOfDescribeName` is `true`:
 
 ```javascript
-test('is a string', () => {});
-test.describe('is a string', () => {});
+test('is a string', () => {})
+test.describe('is a string', () => {})
 
-test.describe(String(/.+/), () => {});
-test.describe(myFunction, () => {});
-test.describe(6, function () {});
+test.describe(String(/.+/), () => {})
+test.describe(myFunction, () => {})
+test.describe(6, function () {})
 ```
 
 Examples of **correct** code when `ignoreTypeOfTestName` is `true`:
 
 ```javascript
-const myTestName = 'is a string';
+const myTestName = 'is a string'
 
-test(String(/.+/), () => {});
-test(myFunction, () => {});
-test(myTestName, () => {});
-test(6, function () {});
+test(String(/.+/), () => {})
+test(myFunction, () => {})
+test(myTestName, () => {})
+test(6, function () {})
 ```
 
 ### `duplicatePrefix`
@@ -84,25 +84,25 @@ A `describe` / `test` block should not start with `duplicatePrefix`
 Examples of **incorrect** code for this rule
 
 ```javascript
-test('test foo', () => {});
+test('test foo', () => {})
 
 test.describe('foo', () => {
-  test('test bar', () => {});
-});
+  test('test bar', () => {})
+})
 
 test.describe('describe foo', () => {
-  test('bar', () => {});
-});
+  test('bar', () => {})
+})
 ```
 
 Examples of **correct** code for this rule
 
 ```javascript
-test('foo', () => {});
+test('foo', () => {})
 
 test.describe('foo', () => {
-  test('bar', () => {});
-});
+  test('bar', () => {})
+})
 ```
 
 ### `accidentalSpace`
@@ -113,41 +113,41 @@ turned off via the `ignoreSpaces` option:
 Examples of **incorrect** code for this rule
 
 ```javascript
-test(' foo', () => {});
+test(' foo', () => {})
 
 test.describe('foo', () => {
-  test(' bar', () => {});
-});
+  test(' bar', () => {})
+})
 
 test.describe(' foo', () => {
-  test('bar', () => {});
-});
+  test('bar', () => {})
+})
 
 test.describe('foo  ', () => {
-  test('bar', () => {});
-});
+  test('bar', () => {})
+})
 ```
 
 Examples of **correct** code for this rule
 
 ```javascript
-test('foo', () => {});
+test('foo', () => {})
 
 test.describe('foo', () => {
-  test('bar', () => {});
-});
+  test('bar', () => {})
+})
 ```
 
 ## Options
 
 ```ts
 interface Options {
-  ignoreSpaces?: boolean;
-  ignoreTypeOfTestName?: boolean;
-  ignoreTypeOfDescribeName?: boolean;
-  disallowedWords?: string[];
-  mustNotMatch?: Partial<Record<'describe' | 'test', string>> | string;
-  mustMatch?: Partial<Record<'describe' | 'test', string>> | string;
+  ignoreSpaces?: boolean
+  ignoreTypeOfTestName?: boolean
+  ignoreTypeOfDescribeName?: boolean
+  disallowedWords?: string[]
+  mustNotMatch?: Partial<Record<'describe' | 'test', string>> | string
+  mustMatch?: Partial<Record<'describe' | 'test', string>> | string
 }
 ```
 
@@ -175,19 +175,19 @@ Examples of **incorrect** code when using `disallowedWords`:
 
 ```javascript
 // with disallowedWords: ['correct', 'all', 'every', 'properly']
-test.describe('the correct way to do things', () => {});
-test.describe('every single one of them', () => {});
-test('has ALL the things', () => {});
-test(`that the value is set properly`, () => {});
+test.describe('the correct way to do things', () => {})
+test.describe('every single one of them', () => {})
+test('has ALL the things', () => {})
+test(`that the value is set properly`, () => {})
 ```
 
 Examples of **correct** code when using `disallowedWords`:
 
 ```javascript
 // with disallowedWords: ['correct', 'all', 'every', 'properly']
-test('correctly sets the value', () => {});
-test('that everything is as it should be', () => {});
-test.describe('the proper way to handle things', () => {});
+test('correctly sets the value', () => {})
+test('that everything is as it should be', () => {})
+test.describe('the proper way to handle things', () => {})
 ```
 
 #### `mustMatch` & `mustNotMatch`
@@ -203,33 +203,33 @@ Examples of **incorrect** code when using `mustMatch`:
 
 ```javascript
 // with mustMatch: '^that'
-test.describe('the correct way to do things', () => {});
-test('this there!', () => {});
+test.describe('the correct way to do things', () => {})
+test('this there!', () => {})
 
 // with mustMatch: { test: '^that' }
-test.describe('the tests that will be run', () => {});
-test('the stuff works', () => {});
-test('errors that are thrown have messages', () => {});
+test.describe('the tests that will be run', () => {})
+test('the stuff works', () => {})
+test('errors that are thrown have messages', () => {})
 ```
 
 Examples of **correct** code when using `mustMatch`:
 
 ```javascript
 // with mustMatch: '^that'
-test.describe('that thing that needs to be done', () => {});
-test('that this there!', () => {});
+test.describe('that thing that needs to be done', () => {})
+test('that this there!', () => {})
 
 // with mustMatch: { test: '^that' }
-test.describe('the tests will be run', () => {});
-test('that the stuff works', () => {});
+test.describe('the tests will be run', () => {})
+test('that the stuff works', () => {})
 ```
 
 Optionally you can provide a custom message to show for a particular matcher by
 using a tuple at any level where you can provide a matcher:
 
 ```javascript
-const prefixes = ['when', 'with', 'without', 'if', 'unless', 'for'];
-const prefixesList = prefixes.join('  - \n');
+const prefixes = ['when', 'with', 'without', 'if', 'unless', 'for']
+const prefixesList = prefixes.join('  - \n')
 
 module.exports = {
   rules: {
@@ -247,5 +247,5 @@ module.exports = {
       },
     ],
   },
-};
+}
 ```

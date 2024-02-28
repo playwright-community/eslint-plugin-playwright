@@ -1,15 +1,15 @@
-import { Rule } from 'eslint';
-import { findParent } from '../utils/ast';
-import { isTypeOfFnCall } from '../utils/parseFnCall';
+import { Rule } from 'eslint'
+import { findParent } from '../utils/ast'
+import { isTypeOfFnCall } from '../utils/parseFnCall'
 
 export default {
   create(context) {
     function checkConditional(node: Rule.Node & Rule.NodeParentExtension) {
-      const call = findParent(node, 'CallExpression');
-      if (!call) return;
+      const call = findParent(node, 'CallExpression')
+      if (!call) return
 
       if (isTypeOfFnCall(context, call, ['test', 'step'])) {
-        context.report({ messageId: 'conditionalInTest', node });
+        context.report({ messageId: 'conditionalInTest', node })
       }
     }
 
@@ -18,7 +18,7 @@ export default {
       IfStatement: checkConditional,
       LogicalExpression: checkConditional,
       SwitchStatement: checkConditional,
-    };
+    }
   },
   meta: {
     docs: {
@@ -33,4 +33,4 @@ export default {
     schema: [],
     type: 'problem',
   },
-} as Rule.RuleModule;
+} as Rule.RuleModule

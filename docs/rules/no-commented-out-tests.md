@@ -30,12 +30,12 @@ test.describe('foo', () => {});
 These patterns would not be considered warnings:
 
 ```js
-describe('foo', () => {});
-test.describe('foo', () => {});
-test('foo', () => {});
+describe('foo', () => {})
+test.describe('foo', () => {})
+test('foo', () => {})
 
-test.describe.only('bar', () => {});
-test.only('bar', () => {});
+test.describe.only('bar', () => {})
+test.only('bar', () => {})
 
 // foo('bar', () => {});
 ```

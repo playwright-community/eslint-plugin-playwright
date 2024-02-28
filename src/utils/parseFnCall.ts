@@ -1,5 +1,5 @@
-import { Rule } from 'eslint';
-import * as ESTree from 'estree';
+import { Rule } from 'eslint'
+import * as ESTree from 'estree'
 import {
   findParent,
   getParent,
@@ -8,9 +8,9 @@ import {
   isIdentifier,
   isStringNode,
   StringNode,
-} from './ast';
+} from './ast'
 
-const testHooks = new Set(['afterAll', 'afterEach', 'beforeAll', 'beforeEach']);
+const testHooks = new Set(['afterAll', 'afterEach', 'beforeAll', 'beforeEach'])
 
 const VALID_CHAINS = new Set([
   // Hooks
@@ -64,14 +64,14 @@ const VALID_CHAINS = new Set([
   'test.step',
   'test.slow',
   'test.use',
-]);
+])
 
-export type AccessorNode = StringNode | ESTree.Identifier;
+export type AccessorNode = StringNode | ESTree.Identifier
 
 const joinChains = (
   a: AccessorNode[] | null,
   b: AccessorNode[] | null,
-): AccessorNode[] | null => (a && b ? [...a, ...b] : null);
+): AccessorNode[] | null => (a && b ? [...a, ...b] : null)
 
 /**
  * Checks if the given `node` is a "supported accessor".
@@ -92,23 +92,23 @@ export const isSupportedAccessor = (
   node: ESTree.Node,
   value?: string,
 ): node is AccessorNode =>
-  isIdentifier(node, value) || isStringNode(node, value);
+  isIdentifier(node, value) || isStringNode(node, value)
 
 function getNodeChain(node: ESTree.Node): AccessorNode[] | null {
   if (isSupportedAccessor(node)) {
-    return [node];
+    return [node]
   }
 
   switch (node.type) {
     case 'TaggedTemplateExpression':
-      return getNodeChain(node.tag);
+      return getNodeChain(node.tag)
     case 'MemberExpression':
-      return joinChains(getNodeChain(node.object), getNodeChain(node.property));
+      return joinChains(getNodeChain(node.object), getNodeChain(node.property))
     case 'CallExpression':
-      return getNodeChain(node.callee);
+      return getNodeChain(node.callee)
   }
 
-  return null;
+  return null
 }
 
 const resolvePossibleAliasedGlobal = (
@@ -116,33 +116,33 @@ const resolvePossibleAliasedGlobal = (
   global: string,
 ) => {
   const globalAliases: Record<string, string[]> =
-    context.settings.playwright?.globalAliases ?? {};
+    context.settings.playwright?.globalAliases ?? {}
 
   const alias = Object.entries(globalAliases).find(([, aliases]) =>
     aliases.includes(global),
-  );
+  )
 
-  return alias?.[0] ?? null;
-};
+  return alias?.[0] ?? null
+}
 
 interface ResolvedFn {
-  local: string;
-  original: string | null;
+  local: string
+  original: string | null
 }
 
 const resolveToPlaywrightFn = (
   context: Rule.RuleContext,
   accessor: AccessorNode,
 ): ResolvedFn | null => {
-  const ident = getStringValue(accessor);
-  const resolved = /(^expect|Expect)$/.test(ident) ? 'expect' : ident;
+  const ident = getStringValue(accessor)
+  const resolved = /(^expect|Expect)$/.test(ident) ? 'expect' : ident
 
   return {
     // eslint-disable-next-line sort/object-properties
     original: resolvePossibleAliasedGlobal(context, resolved),
     local: resolved,
-  };
-};
+  }
+}
 
 export type FnGroup =
   | 'describe'
@@ -150,41 +150,41 @@ export type FnGroup =
   | 'hook'
   | 'step'
   | 'test'
-  | 'unknown';
+  | 'unknown'
 
-export type FnType = FnGroup | 'config';
+export type FnType = FnGroup | 'config'
 
 function determinePlaywrightFnGroup(name: string): FnGroup {
-  if (name === 'step') return 'step';
-  if (name === 'expect') return 'expect';
-  if (name === 'describe') return 'describe';
-  if (name === 'test') return 'test';
-  if (testHooks.has(name)) return 'hook';
-  return 'unknown';
+  if (name === 'step') return 'step'
+  if (name === 'expect') return 'expect'
+  if (name === 'describe') return 'describe'
+  if (name === 'test') return 'test'
+  if (testHooks.has(name)) return 'hook'
+  return 'unknown'
 }
 
-export const modifiers = new Set(['not', 'resolves', 'rejects']);
+export const modifiers = new Set(['not', 'resolves', 'rejects'])
 
 const findModifiersAndMatcher = (
   members: KnownMemberExpressionProperty[],
 ): ModifiersAndMatcher | string => {
-  const modifiers: KnownMemberExpressionProperty[] = [];
+  const modifiers: KnownMemberExpressionProperty[] = []
 
   for (const member of members) {
     // Otherwise, it should be a modifier
-    const name = getStringValue(member);
+    const name = getStringValue(member)
 
     if (name === 'soft' || name === 'poll') {
       // soft and poll must be the first modifier
       if (modifiers.length > 0) {
-        return 'modifier-unknown';
+        return 'modifier-unknown'
       }
     } else if (name === 'resolves' || name === 'rejects') {
-      const lastModifier = getStringValue(modifiers.at(-1));
+      const lastModifier = getStringValue(modifiers.at(-1))
 
       // resolves and rejects must be the first modifier following soft or poll
       if (lastModifier && lastModifier !== 'soft' && lastModifier !== 'poll') {
-        return 'modifier-unknown';
+        return 'modifier-unknown'
       }
     } else if (name !== 'not') {
       // Check if the member is being called, which means it is the matcher
@@ -198,78 +198,78 @@ const findModifiersAndMatcher = (
           matcherArgs: member.parent.parent.arguments,
           matcherName: name,
           modifiers,
-        };
+        }
       }
 
       // not is the only other allowed modifier
-      return 'modifier-unknown';
+      return 'modifier-unknown'
     }
 
-    modifiers.push(member);
+    modifiers.push(member)
   }
 
   // This will only really happen if there are no members
-  return 'matcher-not-found';
-};
+  return 'matcher-not-found'
+}
 
 function getExpectArguments(
   call: Omit<ParsedFnCall, 'group' | 'type'>,
 ): ESTree.CallExpression['arguments'] {
-  return findParent(call.head.node, 'CallExpression')?.arguments ?? [];
+  return findParent(call.head.node, 'CallExpression')?.arguments ?? []
 }
 
 type KnownMemberExpression = ESTree.MemberExpression & {
-  parent: ESTree.CallExpression;
-};
+  parent: ESTree.CallExpression
+}
 
 type KnownMemberExpressionProperty = AccessorNode & {
-  parent: KnownMemberExpression;
-};
+  parent: KnownMemberExpression
+}
 
 export interface ResolvedFnWithNode extends ResolvedFn {
-  node: AccessorNode;
+  node: AccessorNode
 }
 
 interface BaseParsedFnCall {
-  head: ResolvedFnWithNode;
-  members: KnownMemberExpressionProperty[];
+  head: ResolvedFnWithNode
+  members: KnownMemberExpressionProperty[]
   /**
    * The name of the underlying Playwright function that is being called. This
    * is the result of `(head.original ?? head.local)`.
    */
-  name: string;
-  type: FnType;
+  name: string
+  type: FnType
 }
 
 interface ParsedGeneralFnCall extends BaseParsedFnCall {
-  group: Exclude<FnGroup, 'expect'>;
-  type: Exclude<FnType, 'expect'>;
+  group: Exclude<FnGroup, 'expect'>
+  type: Exclude<FnType, 'expect'>
 }
 
 interface ModifiersAndMatcher {
-  matcher: KnownMemberExpressionProperty;
-  matcherArgs: ESTree.CallExpression['arguments'];
-  matcherName: string;
-  modifiers: KnownMemberExpressionProperty[];
+  matcher: KnownMemberExpressionProperty
+  matcherArgs: ESTree.CallExpression['arguments']
+  matcherName: string
+  modifiers: KnownMemberExpressionProperty[]
 }
 
 export interface ParsedExpectFnCall
   extends BaseParsedFnCall,
     ModifiersAndMatcher {
-  args: ESTree.CallExpression['arguments'];
-  group: 'expect';
-  type: 'expect';
+  args: ESTree.CallExpression['arguments']
+  group: 'expect'
+  type: 'expect'
 }
 
-export type ParsedFnCall = ParsedGeneralFnCall | ParsedExpectFnCall;
+export type ParsedFnCall = ParsedGeneralFnCall | ParsedExpectFnCall
 
 const parseExpectCall = (
   call: Omit<ParsedFnCall, 'group' | 'type'>,
 ): ParsedExpectFnCall | string => {
-  const modifiersAndMatcher = findModifiersAndMatcher(call.members);
+  const modifiersAndMatcher = findModifiersAndMatcher(call.members)
 
   if (typeof modifiersAndMatcher === 'string') {
-    return modifiersAndMatcher;
+    return modifiersAndMatcher
   }
 
   return {
@@ -278,15 +278,15 @@ const parseExpectCall = (
     group: 'expect',
     type: 'expect',
     ...modifiersAndMatcher,
-  };
-};
+  }
+}
 
 export const findTopMostCallExpression = (
   node: ESTree.CallExpression,
 ): ESTree.CallExpression & Rule.NodeParentExtension => {
-  let top = node;
-  let parent = getParent(node);
-  let child: ESTree.Node = node;
+  let top = node
+  let parent = getParent(node)
+  let child: ESTree.Node = node
 
   while (parent) {
     // If the parent is a call expression, then we set that as the new top-most
@@ -295,52 +295,52 @@ export const findTopMostCallExpression = (
     // as this is valid: `expect(x).not.resolves.toBe(x)`, but this is not:
     // `something(expect(x).not.resolves.toBe)`.
     if (parent.type === 'CallExpression' && parent.callee === child) {
-      top = parent;
-      node = parent;
-      parent = getParent(parent);
-      continue;
+      top = parent
+      node = parent
+      parent = getParent(parent)
+      continue
     }
 
     if (parent.type !== 'MemberExpression') {
-      break;
+      break
     }
 
-    child = parent;
-    parent = getParent(parent);
+    child = parent
+    parent = getParent(parent)
   }
 
-  return top as ESTree.CallExpression & Rule.NodeParentExtension;
-};
+  return top as ESTree.CallExpression & Rule.NodeParentExtension
+}
 
 function parse(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
 ): ParsedFnCall | string | null {
-  const chain = getNodeChain(node);
+  const chain = getNodeChain(node)
 
   if (!chain?.length) {
-    return null;
+    return null
   }
 
-  const [first, ...rest] = chain;
-  const resolved = resolveToPlaywrightFn(context, first);
-  if (!resolved) return null;
+  const [first, ...rest] = chain
+  const resolved = resolveToPlaywrightFn(context, first)
+  if (!resolved) return null
 
-  let name = resolved.original ?? resolved.local;
-  const links = [name, ...rest.map((link) => getStringValue(link))];
+  let name = resolved.original ?? resolved.local
+  const links = [name, ...rest.map((link) => getStringValue(link))]
 
   if (name !== 'expect' && !VALID_CHAINS.has(links.join('.'))) {
-    return null;
+    return null
   }
 
   // To support Playwright's convention of `test.describe`, `test.beforeEach`,
   // etc. we need to test the second link in the chain to find the true type.
   if (name === 'test' && links.length > 1) {
-    const nextLinkName = links[1];
-    const nextLinkGroup = determinePlaywrightFnGroup(nextLinkName);
+    const nextLinkName = links[1]
+    const nextLinkGroup = determinePlaywrightFnGroup(nextLinkName)
 
     if (nextLinkGroup !== 'unknown') {
-      name = nextLinkName;
+      name = nextLinkName
     }
   }
 
@@ -350,12 +350,12 @@ function parse(
     // in order to be part of the call chain we're parsing
     members: rest as KnownMemberExpressionProperty[],
     name,
-  };
+  }
 
-  const group = determinePlaywrightFnGroup(name);
+  const group = determinePlaywrightFnGroup(name)
 
   if (group === 'expect') {
-    const result = parseExpectCall(parsedFnCall);
+    const result = parseExpectCall(parsedFnCall)
 
     // If the `expect` call chain is not valid, only report on the topmost node
     // since all members in the chain are likely to get flagged for some reason
@@ -363,16 +363,16 @@ function parse(
       typeof result === 'string' &&
       findTopMostCallExpression(node) !== node
     ) {
-      return null;
+      return null
     }
 
     if (result === 'matcher-not-found') {
       if (getParent(node)?.type === 'MemberExpression') {
-        return 'matcher-not-called';
+        return 'matcher-not-called'
       }
     }
 
-    return result;
+    return result
   }
 
   // Check that every link in the chain except the last is a member expression
@@ -381,62 +381,59 @@ function parse(
       .slice(0, chain.length - 1)
       .some((n) => getParent(n)?.type !== 'MemberExpression')
   ) {
-    return null;
+    return null
   }
 
   // Ensure that we're at the "top" of the function call chain otherwise when
   // parsing e.g. x().y.z(), we'll incorrectly find & parse "x()" even though
   // the full chain is not a valid Playwright function call chain
-  const parent = getParent(node);
+  const parent = getParent(node)
   if (
     parent?.type === 'CallExpression' ||
     parent?.type === 'MemberExpression'
   ) {
-    return null;
+    return null
   }
 
   // If the call is a configuration hook. E.g., `test.skip(true)`, `test.use()`,
   // `test.describe.configure()`, etc.
-  let type: FnType = group;
+  let type: FnType = group
   if (
     (name === 'test' || name === 'describe') &&
     (node.arguments.length < 2 || !isFunction(node.arguments.at(-1)))
   ) {
-    type = 'config';
+    type = 'config'
   }
 
   return {
     ...parsedFnCall,
     group,
     type,
-  };
+  }
 }
 
-const cache = new WeakMap<
-  ESTree.CallExpression,
-  ParsedFnCall | string | null
->();
+const cache = new WeakMap<ESTree.CallExpression, ParsedFnCall | string | null>()
 
 export function parseFnCallWithReason(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
 ): ParsedFnCall | string | null {
   if (cache.has(node)) {
-    return cache.get(node)!;
+    return cache.get(node)!
   }
 
-  const call = parse(context, node);
-  cache.set(node, call);
+  const call = parse(context, node)
+  cache.set(node, call)
 
-  return call;
+  return call
 }
 
 export function parseFnCall(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
 ): ParsedFnCall | null {
-  const call = parseFnCallWithReason(context, node);
-  return typeof call === 'string' ? null : call;
+  const call = parseFnCallWithReason(context, node)
+  return typeof call === 'string' ? null : call
 }
 
 export const isTypeOfFnCall = (
@@ -444,6 +441,6 @@ export const isTypeOfFnCall = (
   node: ESTree.CallExpression,
   types: FnType[],
 ): boolean => {
-  const call = parseFnCall(context, node);
-  return call !== null && types.includes(call.type);
-};
+  const call = parseFnCall(context, node)
+  return call !== null && types.includes(call.type)
+}

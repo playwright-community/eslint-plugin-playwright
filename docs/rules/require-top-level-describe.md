@@ -15,19 +15,19 @@ The following patterns are considered warnings:
 
 ```javascript
 // Above a describe block
-test('my test', () => {});
+test('my test', () => {})
 test.describe('test suite', () => {
-  test('test', () => {});
-});
+  test('test', () => {})
+})
 
 // Below a describe block
-test.describe('test suite', () => {});
-test('my test', () => {});
+test.describe('test suite', () => {})
+test('my test', () => {})
 
 // Same for hooks
-test.beforeAll('my beforeAll', () => {});
-test.describe('test suite', () => {});
-test.afterEach('my afterEach', () => {});
+test.beforeAll('my beforeAll', () => {})
+test.describe('test suite', () => {})
+test.afterEach('my afterEach', () => {})
 ```
 
 The following patterns are **not** considered warnings:
@@ -35,17 +35,17 @@ The following patterns are **not** considered warnings:
 ```javascript
 // In a describe block
 test.describe('test suite', () => {
-  test('my test', () => {});
-});
+  test('my test', () => {})
+})
 
 // In a nested describe block
 test.describe('test suite', () => {
-  test('my test', () => {});
+  test('my test', () => {})
 
   test.describe('another test suite', () => {
-    test('my other test', () => {});
-  });
-});
+    test('my other test', () => {})
+  })
+})
 ```
 
 You can also enforce a limit on the number of describes allowed at the top-level
@@ -64,11 +64,11 @@ Examples of **incorrect** code with the above config:
 
 ```javascript
 test.describe('test suite', () => {
-  test('test', () => {});
-});
+  test('test', () => {})
+})
 
-test.describe('test suite', () => {});
-test.describe('test suite', () => {});
+test.describe('test suite', () => {})
+test.describe('test suite', () => {})
 ```
 
 This option defaults to `Infinity`, allowing any number of top-level describes.

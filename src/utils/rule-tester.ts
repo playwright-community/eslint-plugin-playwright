@@ -1,8 +1,8 @@
-import { RuleTester } from 'eslint';
-import { describe, it } from 'vitest';
+import { RuleTester } from 'eslint'
+import { describe, it } from 'vitest'
 
-(RuleTester as any).it = it;
-(RuleTester as any).describe = describe;
+;(RuleTester as any).it = it
+;(RuleTester as any).describe = describe
 
 /**
  * @example
@@ -19,9 +19,9 @@ export function runRuleTester(...args: Parameters<RuleTester['run']>) {
       ecmaVersion: 2022,
       sourceType: 'module',
     },
-  };
+  }
 
-  return new RuleTester(config).run(...args);
+  return new RuleTester(config).run(...args)
 }
 
 export function runTSRuleTester(...args: Parameters<RuleTester['run']>) {
@@ -31,9 +31,9 @@ export function runTSRuleTester(...args: Parameters<RuleTester['run']>) {
       ecmaVersion: 2022,
       sourceType: 'module',
     },
-  };
+  }
 
-  return new RuleTester(config).run(...args);
+  return new RuleTester(config).run(...args)
 }
 
-export const test = (input: string) => `test('test', async () => { ${input} })`;
+export const test = (input: string) => `test('test', async () => { ${input} })`

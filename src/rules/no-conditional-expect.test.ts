@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/no-conditional-expect';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/no-conditional-expect'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'conditionalExpect';
+const messageId = 'conditionalExpect'
 
 runRuleTester('common tests', rule, {
   invalid: [],
@@ -18,7 +18,7 @@ runRuleTester('common tests', rule, {
       });
     `,
   ],
-});
+})
 
 runRuleTester('logical conditions', rule, {
   invalid: [
@@ -168,7 +168,7 @@ runRuleTester('logical conditions', rule, {
       },
     },
   ],
-});
+})
 
 runRuleTester('conditional conditions', rule, {
   invalid: [
@@ -207,7 +207,7 @@ runRuleTester('conditional conditions', rule, {
       });
     `,
   ],
-});
+})
 
 runRuleTester('switch conditions', rule, {
   invalid: [
@@ -270,7 +270,7 @@ runRuleTester('switch conditions', rule, {
       });
     `,
   ],
-});
+})
 
 runRuleTester('if conditions', rule, {
   invalid: [
@@ -323,7 +323,7 @@ runRuleTester('if conditions', rule, {
       });
     `,
   ],
-});
+})
 
 runRuleTester('catch conditions', rule, {
   invalid: [
@@ -392,7 +392,7 @@ runRuleTester('catch conditions', rule, {
       });
     `,
   ],
-});
+})
 
 runRuleTester('promises', rule, {
   invalid: [
@@ -497,4 +497,4 @@ runRuleTester('promises', rule, {
       });
     `,
   ],
-});
+})

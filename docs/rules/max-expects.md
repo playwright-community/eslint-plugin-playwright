@@ -13,36 +13,36 @@ The following patterns are considered warnings (with the default option of
 
 ```js
 test('should not pass', () => {
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-});
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+})
 ```
 
 The following patterns are **not** considered warnings (with the default option
 of `{ "max": 5 } `):
 
 ```js
-test('shout pass');
+test('shout pass')
 
-test('shout pass', () => {});
+test('shout pass', () => {})
 
-test.skip('shout pass', () => {});
+test.skip('shout pass', () => {})
 
 test('should pass', function () {
-  expect(true).toBeDefined();
-});
+  expect(true).toBeDefined()
+})
 
 test('should pass', () => {
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-  expect(true).toBeDefined();
-});
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+  expect(true).toBeDefined()
+})
 ```
 
 ## Options

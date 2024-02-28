@@ -5,13 +5,13 @@
 Example of **incorrect** code for this rule:
 
 ```javascript
-await page.waitForSelector('#foo');
+await page.waitForSelector('#foo')
 ```
 
 Examples of **correct** code for this rule:
 
 ```javascript
-await page.waitForLoadState();
-await page.waitForURL('/home');
-await page.waitForFunction(() => window.innerWidth < 100);
+await page.waitForLoadState()
+await page.waitForURL('/home')
+await page.waitForFunction(() => window.innerWidth < 100)
 ```

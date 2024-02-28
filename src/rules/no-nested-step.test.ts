@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/no-nested-step';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/no-nested-step'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'noNestedStep';
+const messageId = 'noNestedStep'
 
 runRuleTester('max-nested-step', rule, {
   invalid: [
@@ -96,4 +96,4 @@ runRuleTester('max-nested-step', rule, {
       },
     },
   ],
-});
+})

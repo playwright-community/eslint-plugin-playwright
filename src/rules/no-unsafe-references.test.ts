@@ -1,8 +1,8 @@
-import dedent from 'dedent';
-import rule from '../../src/rules/no-unsafe-references';
-import { runRuleTester } from '../utils/rule-tester';
+import dedent from 'dedent'
+import rule from '../../src/rules/no-unsafe-references'
+import { runRuleTester } from '../utils/rule-tester'
 
-const messageId = 'noUnsafeReference';
+const messageId = 'noUnsafeReference'
 
 runRuleTester('no-unsafe-references', rule, {
   invalid: [
@@ -351,4 +351,4 @@ runRuleTester('no-unsafe-references', rule, {
       parser: require.resolve('@typescript-eslint/parser'),
     },
   ],
-});
+})
