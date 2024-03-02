@@ -5,16 +5,8 @@ import rule from './valid-describe-callback'
 runRuleTester('valid-describe-callback', rule, {
   invalid: [
     {
-      code: 'test.describe(() => {})',
-      errors: [{ column: 15, line: 1, messageId: 'nameAndCallback' }],
-    },
-    {
-      code: 'describe(() => {})',
-      errors: [{ column: 10, line: 1, messageId: 'nameAndCallback' }],
-    },
-    {
       code: 'test.describe("foo")',
-      errors: [{ column: 15, line: 1, messageId: 'nameAndCallback' }],
+      errors: [{ column: 15, line: 1, messageId: 'missingCallback' }],
     },
     {
       code: 'test.describe("foo", { tag: ["@slow"] });',
@@ -30,7 +22,7 @@ runRuleTester('valid-describe-callback', rule, {
     },
     {
       code: 'test.describe()',
-      errors: [{ column: 1, line: 1, messageId: 'nameAndCallback' }],
+      errors: [{ column: 1, line: 1, messageId: 'missingCallback' }],
     },
     {
       code: 'test.describe("foo", async () => {})',
@@ -154,8 +146,10 @@ runRuleTester('valid-describe-callback', rule, {
     },
     // Global aliases
     {
-      code: 'it.describe(() => {})',
-      errors: [{ column: 13, line: 1, messageId: 'nameAndCallback' }],
+      code: 'it.describe("foo", done => {})',
+      errors: [
+        { column: 20, line: 1, messageId: 'unexpectedDescribeArgument' },
+      ],
       settings: {
         playwright: {
           globalAliases: { test: ['it'] },
@@ -164,9 +158,11 @@ runRuleTester('valid-describe-callback', rule, {
     },
   ],
   valid: [
+    'describe(() => {})',
     'describe.configure({ timeout: 600_000 })',
     'describe("foo", function() {})',
     'describe("foo", () => {})',
+    'test.describe(() => {})',
     'test.describe.configure({ timeout: 600_000 })',
     'test.describe("foo", function() {})',
     'test.describe("foo", () => {})',

@@ -1,6 +1,6 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
-import { getStringValue, isFunction } from '../utils/ast'
+import { getStringValue, isFunction, isStringLiteral } from '../utils/ast'
 import { parseFnCall } from '../utils/parseFnCall'
 
 const paramsLocation = (
@@ -15,14 +15,6 @@ const paramsLocation = (
   }
 }
 
-function parseArgs(node: ESTree.CallExpression) {
-  const [name, b, c] = node.arguments
-  const options = node.arguments.length === 2 ? b : undefined
-  const callback = node.arguments.length === 3 ? c : b
-
-  return [name, options, callback] as const
-}
-
 export default {
   create(context) {
     return {
@@ -35,33 +27,33 @@ export default {
           return
         }
 
-        const [name, _, callback] = parseArgs(node)
+        const callback = node.arguments.at(-1)
 
-        if (node.arguments.length < 1) {
+        // e.g., test.describe()
+        if (!callback) {
           return context.report({
             loc: node.loc!,
-            messageId: 'nameAndCallback',
+            messageId: 'missingCallback',
           })
         }
 
-        if (!name || !callback) {
-          context.report({
+        // e.g., test.describe("foo")
+        if (node.arguments.length === 1 && isStringLiteral(callback)) {
+          return context.report({
             loc: paramsLocation(node.arguments),
-            messageId: 'nameAndCallback',
+            messageId: 'missingCallback',
           })
-
-          return
         }
 
+        // e.g., test.describe("foo", "foo2");
         if (!isFunction(callback)) {
-          context.report({
+          return context.report({
             loc: paramsLocation(node.arguments),
             messageId: 'invalidCallback',
           })
-
-          return
         }
 
+        // e.g., test.describe("foo", async () => {});
         if (callback.async) {
           context.report({
             messageId: 'noAsyncDescribeCallback',
@@ -69,6 +61,7 @@ export default {
           })
         }
 
+        // e.g., test.describe("foo", (done) => {});
         if (callback.params.length) {
           context.report({
             loc: paramsLocation(callback.params),
@@ -76,6 +69,7 @@ export default {
           })
         }
 
+        // e.g., test.describe("foo", () => { return; });
         if (callback.body.type === 'CallExpression') {
           context.report({
             messageId: 'unexpectedReturnInDescribe',
@@ -105,7 +99,7 @@ export default {
     },
     messages: {
       invalidCallback: 'Callback argument must be a function',
-      nameAndCallback: 'Describe requires name and callback arguments',
+      missingCallback: 'Describe requires a callback',
       noAsyncDescribeCallback: 'No async describe callback',
       unexpectedDescribeArgument: 'Unexpected argument(s) in describe callback',
       unexpectedReturnInDescribe:
