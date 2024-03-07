@@ -29,6 +29,10 @@ runRuleTester('valid-describe-callback', rule, {
       errors: [{ column: 22, line: 1, messageId: 'noAsyncDescribeCallback' }],
     },
     {
+      code: 'test.describe("foo", { tag: ["@slow"] }, async () => {})',
+      errors: [{ column: 42, line: 1, messageId: 'noAsyncDescribeCallback' }],
+    },
+    {
       code: 'test.describe("foo", async function () {})',
       errors: [{ column: 22, line: 1, messageId: 'noAsyncDescribeCallback' }],
     },
