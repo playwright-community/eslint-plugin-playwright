@@ -126,7 +126,7 @@ const sharedConfig = {
     'playwright/valid-expect-in-promise': 'error',
     'playwright/valid-title': 'error',
   },
-}
+} as const
 
 const legacyConfig = {
   ...sharedConfig,
@@ -164,7 +164,7 @@ const sharedJestConfig = {
     'playwright/missing-playwright-await': 'error',
     'playwright/no-page-pause': 'warn',
   },
-}
+} as const
 
 const legacyJestConfig = {
   ...sharedJestConfig,
