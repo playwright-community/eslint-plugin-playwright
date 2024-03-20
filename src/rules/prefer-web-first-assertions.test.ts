@@ -1,3 +1,4 @@
+import dedent from 'dedent'
 import rule from '../../src/rules/prefer-web-first-assertions'
 import { runRuleTester, test } from '../utils/rule-tester'
 
@@ -708,6 +709,17 @@ runRuleTester('prefer-web-first-assertions', rule, {
     { code: test('let visible = await foo.isVisible()') },
     { code: test('const value = await bar["inputValue"]()') },
     { code: test('const isEditable = await baz[`isEditable`]()') },
+    {
+      code: dedent`
+        import { expect } from '@playwright/test';
+
+        test('my test', async ({ page }) => {
+          await expect
+            .poll(() => foo, { message })
+            .toEqual(expect.objectContaining({ bar: expect.anything() }));
+        });
+      `,
+    },
     // Global aliases
     {
       code: test('await assert(page.locator(".tweet")).toBeVisible()'),

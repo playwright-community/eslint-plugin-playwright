@@ -62,8 +62,8 @@ const supportedMatchers = new Set([
  * If the expect call argument is a variable reference, finds the variable
  * initializer.
  */
-function dereference(context: Rule.RuleContext, node: ESTree.Node) {
-  if (node.type !== 'Identifier') {
+function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
+  if (node?.type !== 'Identifier') {
     return node
   }
 
