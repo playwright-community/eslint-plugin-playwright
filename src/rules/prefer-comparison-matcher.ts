@@ -2,7 +2,6 @@ import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import {
   equalityMatchers,
-  findParent,
   getParent,
   getRawValue,
   getStringValue,
@@ -48,8 +47,8 @@ export default {
         const call = parseFnCall(context, node)
         if (call?.type !== 'expect' || call.matcherArgs.length === 0) return
 
-        const expect = findParent(call.head.node, 'CallExpression')
-        if (!expect) return
+        const expect = getParent(call.head.node)
+        if (expect?.type !== 'CallExpression') return
 
         const [comparison] = expect.arguments
         const expectCallEnd = expect.range![1]

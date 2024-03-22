@@ -1,6 +1,6 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
-import { findParent, getParent, getStringValue } from '../utils/ast'
+import { getParent, getStringValue } from '../utils/ast'
 import { getAmountData } from '../utils/misc'
 import {
   isSupportedAccessor,
@@ -81,8 +81,8 @@ export default {
           return
         }
 
-        const expect = findParent(call.head.node, 'CallExpression')
-        if (!expect) return
+        const expect = getParent(call.head.node)
+        if (expect?.type !== 'CallExpression') return
 
         if (expect.arguments.length < minArgs) {
           const expectLength = getStringValue(call.head.node).length
