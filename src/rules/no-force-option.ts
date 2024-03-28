@@ -56,7 +56,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-force-option.md',
     },
     messages: {
-      noForceOption: 'Unexpected use of { force: true } option.',
+      noForceOption: 'Unexpected use of `{ force: true }`. This bypasses actionability checks like the element\'s visibility.',
     },
     type: 'suggestion',
   },

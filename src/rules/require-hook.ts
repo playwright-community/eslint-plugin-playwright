@@ -82,7 +82,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/require-hook.md',
     },
     messages: {
-      useHook: 'This should be done within a hook',
+      useHook: 'Setup and teardown code should be done within a hook like `beforeEach()`.',
     },
     schema: [
       {

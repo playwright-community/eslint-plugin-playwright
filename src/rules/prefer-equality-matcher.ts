@@ -93,7 +93,7 @@ export default {
     hasSuggestions: true,
     messages: {
       suggestEqualityMatcher: 'Use `{{ matcher }}`',
-      useEqualityMatcher: 'Prefer using one of the equality matchers instead',
+      useEqualityMatcher: 'Playwright has built-in matchers for expecting equality. Prefer using one of the equality matchers instead.',
     },
     type: 'suggestion',
   },

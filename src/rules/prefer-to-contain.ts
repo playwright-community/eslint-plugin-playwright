@@ -102,7 +102,7 @@ export default {
     },
     fixable: 'code',
     messages: {
-      useToContain: 'Use toContain() instead',
+      useToContain: 'To have a better failure message, use `toContain()` instead.',
     },
     type: 'suggestion',
   },

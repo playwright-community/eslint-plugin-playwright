@@ -34,7 +34,7 @@ export default {
     },
     hasSuggestions: true,
     messages: {
-      noWaitForTimeout: 'Unexpected use of page.waitForTimeout().',
+      noWaitForTimeout: 'Never wait for timeout in production. Tests that wait for time are inherently flaky. Use Locator actions and web assertions that wait automatically, or remove the wait.',
       removeWaitForTimeout: 'Remove the page.waitForTimeout() method.',
     },
     type: 'suggestion',

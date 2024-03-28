@@ -31,7 +31,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-nth-methods.md',
     },
     messages: {
-      noNthMethod: 'Unexpected use of {{method}}()',
+      noNthMethod: 'Use of {{method}}() is discouraged. These methods can be prone to flakiness if the DOM structure changes.',
     },
     type: 'problem',
   },

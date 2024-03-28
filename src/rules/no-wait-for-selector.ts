@@ -34,8 +34,8 @@ export default {
     },
     hasSuggestions: true,
     messages: {
-      noWaitForSelector: 'Unexpected use of page.waitForSelector().',
-      removeWaitForSelector: 'Remove the page.waitForSelector() method.',
+      noWaitForSelector: 'Unexpected use of `page.waitForSelector()`. Use web assertions that assert visibility or a locator-based `locator.waitFor()` instead, or remove the call.',
+      removeWaitForSelector: 'Remove the `page.waitForSelector()` call.',
     },
     type: 'suggestion',
   },

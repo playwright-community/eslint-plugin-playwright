@@ -42,8 +42,8 @@ export default {
     },
     hasSuggestions: true,
     messages: {
-      noFocusedTest: 'Unexpected focused test.',
-      suggestRemoveOnly: 'Remove .only() annotation.',
+      noFocusedTest: 'Unexpected focused test. Other tests in this block will not be run.',
+      suggestRemoveOnly: 'Remove `.only()` annotation.',
     },
     type: 'problem',
   },

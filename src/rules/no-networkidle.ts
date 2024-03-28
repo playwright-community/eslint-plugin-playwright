@@ -57,7 +57,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-networkidle.md',
     },
     messages: {
-      noNetworkidle: 'Unexpected use of networkidle.',
+      noNetworkidle: 'Using networkidle is discouraged. Use web first assertions like waiting for text to be visible instead.',
     },
     type: 'problem',
   },

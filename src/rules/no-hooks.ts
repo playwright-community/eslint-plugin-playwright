@@ -31,7 +31,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-hooks.md',
     },
     messages: {
-      unexpectedHook: "Unexpected '{{ hookName }}' hook",
+      unexpectedHook: "Unexpected '{{ hookName }}' hook. The use of these hooks may result in shared state between tests.",
     },
     schema: [
       {

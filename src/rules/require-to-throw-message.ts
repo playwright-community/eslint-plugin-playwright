@@ -32,7 +32,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/require-to-throw-message.md',
     },
     messages: {
-      addErrorMessage: 'Add an error message to {{ matcherName }}()',
+      addErrorMessage: 'If no message is defined, the test will pass for any thrown error. Add an error message to {{ matcherName }}().',
     },
     schema: [],
     type: 'suggestion',

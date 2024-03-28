@@ -41,7 +41,7 @@ export default {
     hasSuggestions: true,
     messages: {
       suggestReplaceWithStrictEqual: 'Replace with `toStrictEqual()`',
-      useToStrictEqual: 'Use toStrictEqual() instead',
+      useToStrictEqual: 'Stricter equality will catch cases where two objects do not have identical keys. Use `toStrictEqual()` instead.',
     },
     schema: [],
     type: 'suggestion',

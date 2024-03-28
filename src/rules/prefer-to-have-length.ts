@@ -50,7 +50,7 @@ export default {
     },
     fixable: 'code',
     messages: {
-      useToHaveLength: 'Use toHaveLength() instead',
+      useToHaveLength: 'To have a better failure message, use `toHaveLength()` instead.',
     },
     schema: [],
     type: 'suggestion',

@@ -149,7 +149,7 @@ export default {
     fixable: 'code',
     messages: {
       noUnsafeReference:
-        'Unsafe reference to variable "{{ variable }}" in page.evaluate()',
+        'Unsafe reference to variable "{{ variable }}" in `page.evaluate()`. You must pass used variables as arguments to `page.evaluate()`.',
     },
     type: 'problem',
   },

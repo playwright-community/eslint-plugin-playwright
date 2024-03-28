@@ -105,7 +105,7 @@ export default {
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-conditional-expect.md',
     },
     messages: {
-      conditionalExpect: 'Avoid calling `expect` conditionally`',
+      conditionalExpect: 'Avoid calling `expect` conditionally, as tests can end up passing but not actually test anything.',
     },
     type: 'problem',
   },

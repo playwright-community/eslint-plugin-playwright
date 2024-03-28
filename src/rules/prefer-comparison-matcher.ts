@@ -115,11 +115,11 @@ export default {
       category: 'Best Practices',
       description: 'Suggest using the built-in comparison matchers',
       recommended: false,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-comparision-matcher.md',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-comparison-matcher.md',
     },
     fixable: 'code',
     messages: {
-      useToBeComparison: 'Prefer using `{{ preferredMatcher }}` instead',
+      useToBeComparison: 'Playwright has a number of built-in matchers for comparing numbers. Prefer using `{{ preferredMatcher }}` instead.',
     },
     type: 'suggestion',
   },

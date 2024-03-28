@@ -60,7 +60,7 @@ export default {
     },
     fixable: 'code',
     messages: {
-      useToHaveCount: 'Use toHaveCount() instead',
+      useToHaveCount: 'To have a better failure message, use `toHaveCount()` instead.',
     },
     schema: [],
     type: 'suggestion',
