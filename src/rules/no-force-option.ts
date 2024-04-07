@@ -1,6 +1,6 @@
-import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { getStringValue, isBooleanLiteral } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 
 function isForceOptionEnabled(node: ESTree.CallExpression) {
   const arg = node.arguments.at(-1)
@@ -31,7 +31,7 @@ const methodsWithForceOption = new Set([
   'tap',
 ])
 
-export default {
+export default createRule({
   create(context) {
     return {
       MemberExpression(node) {
@@ -60,4 +60,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

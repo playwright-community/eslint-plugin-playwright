@@ -1,6 +1,6 @@
-import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { getStringValue, isStringNode, StringNode } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
 const doesBinaryExpressionContainStringNode = (
@@ -84,7 +84,7 @@ interface Options {
     | string
 }
 
-export default {
+export default createRule({
   create(context) {
     const opts: Options = context.options?.[0] ?? {}
     const {
@@ -291,4 +291,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

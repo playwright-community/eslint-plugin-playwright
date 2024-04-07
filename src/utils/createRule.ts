@@ -21,7 +21,25 @@ export function createRule(rule: Rule.RuleModule): Rule.RuleModule {
         return context.report(options)
       }
 
-      return rule.create({ ...context, report })
+      // ESLint does not allow modifying the context object, so we have to create
+      // a new context object. Also, destructuring the context object will not work
+      // because the properties are not enumerable, so we have to manually copy
+      // the properties we need.
+      const ruleContext = Object.freeze({
+        ...context,
+        cwd: context.cwd,
+        filename: context.filename,
+        id: context.id,
+        options: context.options,
+        parserOptions: context.parserOptions,
+        parserPath: context.parserPath,
+        physicalFilename: context.physicalFilename,
+        report,
+        settings: context.settings,
+        sourceCode: context.sourceCode,
+      })
+
+      return rule.create(ruleContext)
     },
     meta: rule.meta,
   }

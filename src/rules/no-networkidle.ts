@@ -1,6 +1,6 @@
-import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { getStringValue, isStringLiteral } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 
 const messageId = 'noNetworkidle'
 const methods = new Set([
@@ -13,7 +13,7 @@ const methods = new Set([
   'waitForURL',
 ])
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -61,4 +61,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule
+})

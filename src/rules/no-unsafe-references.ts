@@ -6,6 +6,7 @@ import {
   isFunction,
   isPageMethod,
 } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { truthy } from '../utils/misc'
 
 /** Collect all variable references in the parent scopes recursively. */
@@ -89,7 +90,7 @@ function addParam(
   return token ? fixer.insertTextAfter(token, `[${refs}]`) : null
 }
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -153,4 +154,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule
+})

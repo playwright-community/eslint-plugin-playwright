@@ -1,4 +1,3 @@
-import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import {
   equalityMatchers,
@@ -8,6 +7,7 @@ import {
   isBooleanLiteral,
   isStringLiteral,
 } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
 const isString = (node: ESTree.Node) => {
@@ -40,7 +40,7 @@ const determineMatcher = (
   return operatorMatcher[op!] ?? null
 }
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -123,4 +123,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

@@ -1,8 +1,8 @@
-import { Rule } from 'eslint'
 import * as ESTree from 'estree'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     const { options } = context
     const max: number = options[0]?.max ?? 5
@@ -57,4 +57,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

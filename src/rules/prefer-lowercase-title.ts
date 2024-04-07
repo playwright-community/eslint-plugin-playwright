@@ -1,11 +1,12 @@
-import { AST, Rule } from 'eslint'
+import { AST } from 'eslint'
 import ESTree from 'estree'
 import { getStringValue, isStringNode } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 type Method = 'test' | 'test.describe'
 
-export default {
+export default createRule({
   create(context) {
     const { allowedPrefixes, ignore, ignoreTopLevelDescribe } = {
       allowedPrefixes: [] as string[],
@@ -116,4 +117,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

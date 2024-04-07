@@ -1,6 +1,6 @@
-import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { getStringValue, isPageMethod } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 
 const locatorMethods = new Set([
   'and',
@@ -48,7 +48,7 @@ function isSupportedMethod(node: ESTree.CallExpression) {
   )
 }
 
-export default {
+export default createRule({
   create(context) {
     return {
       AwaitExpression(node) {
@@ -93,4 +93,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule
+})

@@ -1,6 +1,7 @@
-import { AST, Rule } from 'eslint'
+import { AST } from 'eslint'
 import ESTree from 'estree'
 import { isPageMethod } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 
 function getPropertyRange(node: ESTree.Node): AST.Range {
   return node.type === 'Identifier'
@@ -8,7 +9,7 @@ function getPropertyRange(node: ESTree.Node): AST.Range {
     : [node.range![0] + 1, node.range![1] - 1]
 }
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -68,4 +69,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

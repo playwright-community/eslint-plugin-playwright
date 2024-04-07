@@ -1,6 +1,7 @@
 import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { getParent, getStringValue, isIdentifier } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { ParsedFnCall, parseFnCall } from '../utils/parseFnCall'
 
 const validTypes = new Set([
@@ -81,7 +82,7 @@ function getCallType(call: ParsedFnCall, awaitableMatchers: Set<string>) {
   }
 }
 
-export default {
+export default createRule({
   create(context) {
     const options = context.options[0] || {}
     const awaitableMatchers = new Set([
@@ -182,4 +183,4 @@ export default {
     ],
     type: 'problem',
   },
-} as Rule.RuleModule
+})

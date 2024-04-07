@@ -7,6 +7,7 @@ import {
   isFunction,
   isIdentifier,
 } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import {
   findTopMostCallExpression,
   isSupportedAccessor,
@@ -326,7 +327,7 @@ const isVariableAwaitedOrReturned = (
   return isValueAwaitedOrReturned(context, variable.id, body)
 }
 
-export default {
+export default createRule({
   create(context) {
     let inTestCaseWithDoneCallback = false
     // an array of booleans representing each promise chain we enter, with the
@@ -453,4 +454,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

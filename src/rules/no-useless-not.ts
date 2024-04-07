@@ -1,6 +1,6 @@
-import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import { getStringValue, isBooleanLiteral } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import {
   getRangeOffset,
   removePropertyFixer,
@@ -40,7 +40,7 @@ function getOptions(call: ParsedExpectFnCall, name: string) {
   }
 }
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -124,4 +124,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule
+})

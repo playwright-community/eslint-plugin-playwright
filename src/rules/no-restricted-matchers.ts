@@ -1,8 +1,8 @@
-import { Rule } from 'eslint'
 import { getStringValue } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     const restrictedChains = (context.options?.[0] ?? {}) as {
       [key: string]: string | null
@@ -76,4 +76,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

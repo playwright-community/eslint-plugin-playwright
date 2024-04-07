@@ -1,9 +1,9 @@
-import { Rule } from 'eslint'
 import { equalityMatchers, isPropertyAccessor } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { replaceAccessorFixer } from '../utils/fixer'
 import { parseFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -65,4 +65,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

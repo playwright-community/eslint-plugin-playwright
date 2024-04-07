@@ -1,8 +1,8 @@
-import { Rule } from 'eslint'
 import { getStringValue } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     const hookContexts: Array<Record<string, number>> = [{}]
 
@@ -55,4 +55,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

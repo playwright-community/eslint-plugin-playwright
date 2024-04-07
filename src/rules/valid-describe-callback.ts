@@ -1,6 +1,6 @@
-import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import { getStringValue, isFunction, isStringLiteral } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
 const paramsLocation = (
@@ -15,7 +15,7 @@ const paramsLocation = (
   }
 }
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -108,4 +108,4 @@ export default {
     schema: [],
     type: 'problem',
   },
-} as Rule.RuleModule
+})
