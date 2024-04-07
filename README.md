@@ -91,6 +91,8 @@ export default [
 }
 ```
 
+## Settings
+
 ### Aliased Playwright Globals
 
 If you import Playwright globals (e.g. `test`, `expect`) with a custom name, you
@@ -103,6 +105,27 @@ can configure this plugin to be aware of these additional names.
       "globalAliases": {
         "test": ["myTest"],
         "expect": ["myExpect"]
+      }
+    }
+  }
+}
+```
+
+### Custom Messages
+
+You can customize the error messages for rules using the
+`settings.playwright.messages` property. This is useful if you would like to
+increase the verbosity of error messages or provide additional context.
+
+Only the message ids you define in this setting will be overridden, so any other
+messages will use the default message defined by the plugin.
+
+```json
+{
+  "settings": {
+    "playwright": {
+      "messages": {
+        "conditionalExpect": "Avoid conditional expects as they can lead to false positives"
       }
     }
   }
