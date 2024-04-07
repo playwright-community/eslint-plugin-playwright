@@ -66,8 +66,8 @@ runRuleTester('no-eval', rule, {
     },
 
     // Custom messages
-    // Note: This is the only test in the project to tests custom messages
-    // since it's implementation is global in the `createRule` method.
+    // Note: This is one of the only test in the project to tests custom
+    // messages since it's implementation is global in the `createRule` method.
     {
       code: dedent`
         page.$eval("#search", el => el.value);

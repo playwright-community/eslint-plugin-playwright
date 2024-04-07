@@ -1,21 +1,35 @@
 import { Rule } from 'eslint'
 import { Settings } from './types'
 
+/** Interpolate a message replacing any data placeholders (e.g. `{{foo}}`) */
+function interpolate(str: string, data: Record<string, string> | undefined) {
+  return str.replace(/{{\s*(\w+)\s*}}/g, (_, key) => data?.[key] ?? '')
+}
+
 export function createRule(rule: Rule.RuleModule): Rule.RuleModule {
   return {
     create(context: Rule.RuleContext) {
       const messages = (context.settings as Settings)?.playwright?.messages
 
+      // If there are no custom messages, we don't need to modify the rule context
+      if (!messages) {
+        return rule.create(context)
+      }
+
       /** Custom wrapper around `context.report` to support custom messages. */
       const report = (options: Rule.ReportDescriptor) => {
         // Support overriding the default messages from global settings
         if (messages && 'messageId' in options) {
-          const { messageId, ...rest } = options
+          const { data, messageId, ...rest } = options
           const message = messages?.[messageId]
 
           // If the message is not found, fallback to the default messageId
           // in the options.
-          return context.report(message ? { ...rest, message } : options)
+          return context.report(
+            message
+              ? { ...rest, message: interpolate(message, data) }
+              : options,
+          )
         }
 
         return context.report(options)

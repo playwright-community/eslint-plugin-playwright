@@ -443,6 +443,32 @@ runRuleTester('prefer-hooks-in-order', rule, {
         },
       },
     },
+    // Custom messages
+    // Note: This is one of the only test in the project to tests custom
+    // messages since it's implementation is global in the `createRule` method.
+    {
+      code: dedent`
+        const withDatabase = () => {
+          test.afterAll(() => {
+            removeMyDatabase();
+          });
+          test.beforeAll(() => {
+            createMyDatabase();
+          });
+        };
+      `,
+      errors: [
+        { column: 3, line: 5, message: 'afterAll should be after beforeAll' },
+      ],
+      name: 'Custom messages',
+      settings: {
+        playwright: {
+          messages: {
+            reorderHooks: '{{ previousHook }} should be after {{currentHook}}',
+          },
+        },
+      },
+    },
   ],
   valid: [
     'test.beforeAll(() => {})',
