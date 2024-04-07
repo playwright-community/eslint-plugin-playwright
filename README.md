@@ -45,7 +45,10 @@ import playwright from 'eslint-plugin-playwright'
 
 export default [
   {
-    ...playwright.configs['flat/recommended'],
+    ...playwright.configs['flat/playwright'],
+    files: ['tests/**'],
+  },
+  {
     files: ['tests/**'],
     rules: {
       // Customize Playwright rules
@@ -81,6 +84,9 @@ import jest from 'eslint-plugin-jest'
 export default [
   {
     ...playwright.configs['flat/jest-playwright'],
+    files: ['tests/**'],
+  },
+  {
     files: ['tests/**'],
     plugins: { jest },
     rules: {
