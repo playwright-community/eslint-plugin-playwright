@@ -1,6 +1,7 @@
 import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { isPropertyAccessor } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 
 function isStepCall(node: ESTree.Node): boolean {
   const inner = node.type === 'CallExpression' ? node.callee : node
@@ -12,7 +13,7 @@ function isStepCall(node: ESTree.Node): boolean {
   return isPropertyAccessor(inner, 'step')
 }
 
-export default {
+export default createRule({
   create(context) {
     const stack: number[] = []
 
@@ -59,4 +60,4 @@ export default {
     schema: [],
     type: 'problem',
   },
-} as Rule.RuleModule
+})

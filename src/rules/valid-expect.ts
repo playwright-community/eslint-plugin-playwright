@@ -1,6 +1,6 @@
-import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import { getParent, getStringValue } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { getAmountData } from '../utils/misc'
 import {
   isSupportedAccessor,
@@ -26,7 +26,7 @@ const findTopMostMemberExpression = (
   return topMostMemberExpression
 }
 
-export default {
+export default createRule({
   create(context) {
     const options = {
       maxArgs: 2,
@@ -159,4 +159,4 @@ export default {
     ],
     type: 'problem',
   },
-} as Rule.RuleModule
+})

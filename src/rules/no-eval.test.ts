@@ -1,3 +1,4 @@
+import dedent from 'dedent'
 import rule from '../../src/rules/no-eval'
 import { runRuleTester, test } from '../utils/rule-tester'
 
@@ -62,6 +63,29 @@ runRuleTester('no-eval', rule, {
         'const divCounts = await page.$$eval("div", (divs, min) => divs.length >= min, 10);',
       ),
       errors: [{ column: 52, endColumn: 63, line: 1, messageId: 'noEvalAll' }],
+    },
+
+    // Custom messages
+    // Note: This is one of the only test in the project to tests custom
+    // messages since it's implementation is global in the `createRule` method.
+    {
+      code: dedent`
+        page.$eval("#search", el => el.value);
+        page.$$eval("#search", el => el.value);
+      `,
+      errors: [
+        { column: 1, endColumn: 11, line: 1, message: 'no eval' },
+        { column: 1, endColumn: 12, line: 2, message: 'no eval all' },
+      ],
+      name: 'Custom messages',
+      settings: {
+        playwright: {
+          messages: {
+            noEval: 'no eval',
+            noEvalAll: 'no eval all',
+          },
+        },
+      },
     },
   ],
   valid: [

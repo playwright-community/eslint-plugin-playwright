@@ -1,7 +1,7 @@
-import { Rule } from 'eslint'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     const options = {
       allow: [] as string[],
@@ -47,4 +47,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

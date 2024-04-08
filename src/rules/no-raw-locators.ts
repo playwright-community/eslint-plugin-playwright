@@ -1,5 +1,5 @@
-import { Rule } from 'eslint'
 import { getStringValue, isPageMethod } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 
 /** Normalize data attribute locators */
 function normalize(str: string) {
@@ -7,7 +7,7 @@ function normalize(str: string) {
   return match ? `[${match[1]}=${match[2]}]` : str
 }
 
-export default {
+export default createRule({
   create(context) {
     const options = {
       allowed: [] as string[],
@@ -56,4 +56,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

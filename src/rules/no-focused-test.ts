@@ -1,8 +1,8 @@
-import { Rule } from 'eslint'
 import { getStringValue } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -47,4 +47,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule
+})

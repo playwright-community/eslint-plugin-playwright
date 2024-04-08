@@ -1,6 +1,7 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import { getStringValue, isFunction, isIdentifier } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 const isNullOrUndefined = (node: ESTree.Expression): boolean => {
@@ -38,7 +39,7 @@ const shouldBeInHook = (
   }
 }
 
-export default {
+export default createRule({
   create(context) {
     const options = {
       allowedFunctionCalls: [] as string[],
@@ -98,4 +99,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

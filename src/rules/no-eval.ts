@@ -1,7 +1,7 @@
-import { Rule } from 'eslint'
 import { isPageMethod } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -30,4 +30,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule
+})

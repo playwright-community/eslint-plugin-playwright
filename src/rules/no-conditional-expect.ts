@@ -1,6 +1,7 @@
 import { Rule, Scope } from 'eslint'
 import * as ESTree from 'estree'
 import { getParent, isPropertyAccessor } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 import { KnownCallExpression } from '../utils/types'
 
@@ -30,7 +31,7 @@ const getTestCallExpressionsFromDeclaredVariables = (
   )
 }
 
-export default {
+export default createRule({
   create(context) {
     let conditionalDepth = 0
     let inTestCase = false
@@ -109,4 +110,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule
+})

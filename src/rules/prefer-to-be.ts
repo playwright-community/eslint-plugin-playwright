@@ -1,6 +1,7 @@
 import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { equalityMatchers, getStringValue, isIdentifier } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { replaceAccessorFixer } from '../utils/fixer'
 import { ParsedExpectFnCall, parseFnCall } from '../utils/parseFnCall'
 
@@ -48,7 +49,7 @@ function reportPreferToBe(
   })
 }
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -111,4 +112,4 @@ export default {
     schema: [],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

@@ -1,4 +1,3 @@
-import { Rule } from 'eslint'
 import ESTree from 'estree'
 import {
   equalityMatchers,
@@ -7,6 +6,7 @@ import {
   isBooleanLiteral,
   isPropertyAccessor,
 } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 import { KnownCallExpression } from '../utils/types'
 
@@ -21,7 +21,7 @@ const isFixableIncludesCallExpression = (
   node.arguments.length === 1 &&
   node.arguments[0].type !== 'SpreadElement'
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -106,4 +106,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

@@ -1,9 +1,9 @@
-import { Rule } from 'eslint'
 import ESTree from 'estree'
+import { createRule } from '../utils/createRule'
 import { getAmountData } from '../utils/misc'
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     const { maxTopLevelDescribes } = {
       maxTopLevelDescribes: Infinity,
@@ -75,4 +75,4 @@ export default {
     ],
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

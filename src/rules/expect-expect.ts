@@ -1,9 +1,9 @@
-import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { dig } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     const options = {
       assertFunctionNames: [] as string[],
@@ -69,4 +69,4 @@ export default {
     ],
     type: 'problem',
   },
-} as Rule.RuleModule
+})

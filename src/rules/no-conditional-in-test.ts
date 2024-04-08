@@ -1,8 +1,9 @@
 import { Rule } from 'eslint'
 import { findParent } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     function checkConditional(node: Rule.Node & Rule.NodeParentExtension) {
       const call = findParent(node, 'CallExpression')
@@ -33,4 +34,4 @@ export default {
     schema: [],
     type: 'problem',
   },
-} as Rule.RuleModule
+})

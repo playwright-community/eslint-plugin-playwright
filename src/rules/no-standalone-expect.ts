@@ -1,6 +1,7 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import { getParent, isFunction } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 const getBlockType = (
@@ -51,7 +52,7 @@ type BlockType =
   | 'template'
   | 'test'
 
-export default {
+export default createRule({
   create(context: Rule.RuleContext) {
     const callStack: BlockType[] = []
 
@@ -139,4 +140,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

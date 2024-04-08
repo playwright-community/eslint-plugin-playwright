@@ -6,6 +6,7 @@ import {
   getStringValue,
   isBooleanLiteral,
 } from '../utils/ast'
+import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
 type MethodConfig = {
@@ -79,7 +80,7 @@ function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
   }
 }
 
-export default {
+export default createRule({
   create(context) {
     return {
       CallExpression(node) {
@@ -229,4 +230,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

@@ -19,5 +19,8 @@ export interface Settings {
       expect?: string[]
       test?: string[]
     }
+    messages?: {
+      [messageId: string]: string | undefined
+    }
   }
 }

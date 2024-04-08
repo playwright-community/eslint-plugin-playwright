@@ -1,5 +1,6 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
+import { createRule } from '../utils/createRule'
 
 function getTestNames(context: Rule.RuleContext) {
   const aliases = context.settings.playwright?.globalAliases?.test ?? []
@@ -16,7 +17,7 @@ function hasTests(context: Rule.RuleContext, node: ESTree.Comment) {
   return regex.test(node.value)
 }
 
-export default {
+export default createRule({
   create(context) {
     function checkNode(node: ESTree.Comment) {
       if (!hasTests(context, node)) return
@@ -45,4 +46,4 @@ export default {
     },
     type: 'problem',
   },
-} as Rule.RuleModule
+})

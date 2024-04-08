@@ -1,7 +1,7 @@
-import { Rule } from 'eslint'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall } from '../utils/parseFnCall'
 
-export default {
+export default createRule({
   create(context) {
     const stack = [false]
 
@@ -34,4 +34,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})

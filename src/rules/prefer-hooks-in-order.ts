@@ -1,9 +1,9 @@
-import { Rule } from 'eslint'
+import { createRule } from '../utils/createRule'
 import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
 
 const order = ['beforeAll', 'beforeEach', 'afterEach', 'afterAll']
 
-export default {
+export default createRule({
   create(context) {
     let previousHookIndex = -1
     let inHook = false
@@ -62,4 +62,4 @@ export default {
     },
     type: 'suggestion',
   },
-} as Rule.RuleModule
+})
