@@ -1,9 +1,10 @@
-import { readdir } from 'node:fs/promises'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import { expect, test } from 'vitest'
 import plugin from '../../src/index'
 
-test('has all rules', async () => {
-  const files = await readdir('src/rules')
+test('exports all rules', async () => {
+  const files = await fs.readdir('src/rules')
   const { rules } = plugin.configs['flat/recommended'].plugins.playwright
   const ruleKeys = Object.keys(rules).sort()
   const fileKeys = files
@@ -12,4 +13,17 @@ test('has all rules', async () => {
     .sort()
 
   expect(ruleKeys).toEqual(fileKeys)
+})
+
+test('has all rules in the README', async () => {
+  const readme = await fs.readFile(
+    path.resolve(__dirname, '../../README.md'),
+    'utf-8',
+  )
+
+  const { rules } = plugin.configs['flat/recommended'].plugins.playwright
+
+  for (const rule of Object.keys(rules)) {
+    expect(readme).toContain(`[${rule}]`)
+  }
 })
