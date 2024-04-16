@@ -4,9 +4,8 @@ import { parseFnCall } from '../utils/parseFnCall'
 
 export default createRule({
   create(context) {
-    const restrictedChains = (context.options?.[0] ?? {}) as {
-      [key: string]: string | null
-    }
+    const restrictedChains: Record<string, string | null> =
+      context.options?.[0] ?? {}
 
     return {
       CallExpression(node) {

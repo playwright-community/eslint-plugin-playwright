@@ -86,7 +86,6 @@ interface Options {
 
 export default createRule({
   create(context) {
-    const opts: Options = context.options?.[0] ?? {}
     const {
       disallowedWords = [],
       ignoreSpaces = false,
@@ -94,7 +93,7 @@ export default createRule({
       ignoreTypeOfTestName = false,
       mustMatch,
       mustNotMatch,
-    } = opts
+    }: Options = context.options?.[0] ?? {}
     const disallowedWordsRegexp = new RegExp(
       `\\b(${disallowedWords.join('|')})\\b`,
       'iu',
