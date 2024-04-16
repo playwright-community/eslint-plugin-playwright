@@ -15,7 +15,7 @@ const getTestCallExpressionsFromDeclaredVariables = (
   context: Rule.RuleContext,
   declaredVariables: readonly Scope.Variable[],
 ): ESTree.CallExpression[] => {
-  return declaredVariables.reduce(
+  return declaredVariables.reduce<ESTree.CallExpression[]>(
     (acc, { references }) => [
       ...acc,
       ...references
@@ -27,7 +27,7 @@ const getTestCallExpressionsFromDeclaredVariables = (
             isTypeOfFnCall(context, node, ['test']),
         ),
     ],
-    [] as ESTree.CallExpression[],
+    [],
   )
 }
 
