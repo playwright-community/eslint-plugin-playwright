@@ -8,7 +8,7 @@ export default createRule({
     const options = {
       assertFunctionNames: [] as string[],
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    }
+    } as const
 
     const unchecked: ESTree.CallExpression[] = []
 

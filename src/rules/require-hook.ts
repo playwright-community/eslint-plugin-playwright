@@ -44,7 +44,7 @@ export default createRule({
     const options = {
       allowedFunctionCalls: [] as string[],
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    }
+    } as const
 
     const checkBlockBody = (body: ESTree.Program['body']) => {
       for (const statement of body) {

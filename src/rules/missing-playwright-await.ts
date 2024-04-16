@@ -28,7 +28,7 @@ const expectPlaywrightMatchers = [
   'toMatchURL',
   'toMatchValue',
   'toPass',
-]
+] as const satisfies string[]
 
 const playwrightTestMatchers = [
   'toBeChecked',
@@ -55,7 +55,7 @@ const playwrightTestMatchers = [
   'toHaveValues',
   'toBeAttached',
   'toBeInViewport',
-]
+] as const satisfies string[]
 
 function getReportNode(node: ESTree.Node) {
   const parent = getParent(node)

@@ -12,7 +12,7 @@ export default createRule({
     const options = {
       allowed: [] as string[],
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    }
+    } as const
 
     function isAllowed(arg: string) {
       return options.allowed.some((a) => normalize(a) === normalize(arg))

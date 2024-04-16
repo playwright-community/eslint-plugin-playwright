@@ -32,7 +32,7 @@ export default createRule({
       maxArgs: 2,
       minArgs: 1,
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    }
+    } as const
 
     const minArgs = Math.min(options.minArgs, options.maxArgs)
     const maxArgs = Math.max(options.minArgs, options.maxArgs)

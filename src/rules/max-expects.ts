@@ -8,7 +8,7 @@ export default createRule({
     const options = {
       max: 5,
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-    }
+    } as const
 
     let count = 0
 
