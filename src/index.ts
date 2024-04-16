@@ -1,3 +1,4 @@
+import { ESLint, Linter } from 'eslint'
 import globals from 'globals'
 import expectExpect from './rules/expect-expect'
 import maxExpects from './rules/max-expects'
@@ -96,7 +97,7 @@ const index = {
     'valid-expect-in-promise': validExpectInPromise,
     'valid-title': validTitle,
   },
-}
+} as const satisfies ESLint.Plugin
 
 const sharedConfig = {
   rules: {
@@ -126,7 +127,7 @@ const sharedConfig = {
     'playwright/valid-expect-in-promise': 'error',
     'playwright/valid-title': 'error',
   },
-} as const
+} as const satisfies Linter.FlatConfig
 
 const legacyConfig = {
   ...sharedConfig,
@@ -134,7 +135,7 @@ const legacyConfig = {
     'shared-node-browser': true,
   },
   plugins: ['playwright'],
-}
+} as const satisfies Linter.BaseConfig
 
 const flatConfig = {
   ...sharedConfig,
@@ -144,7 +145,7 @@ const flatConfig = {
   plugins: {
     playwright: index,
   },
-}
+} as const satisfies Linter.FlatConfig
 
 const sharedJestConfig = {
   rules: {
@@ -164,7 +165,7 @@ const sharedJestConfig = {
     'playwright/missing-playwright-await': 'error',
     'playwright/no-page-pause': 'warn',
   },
-} as const
+} as const satisfies Linter.FlatConfig
 
 const legacyJestConfig = {
   ...sharedJestConfig,
@@ -181,7 +182,7 @@ const legacyJestConfig = {
     page: true,
   },
   plugins: ['jest', 'playwright'],
-}
+} as const satisfies Linter.BaseConfig
 
 const jestConfig = {
   ...sharedJestConfig,
@@ -200,7 +201,7 @@ const jestConfig = {
   plugins: {
     playwright: index,
   },
-}
+} as const satisfies Linter.FlatConfig
 
 export = {
   ...index,
