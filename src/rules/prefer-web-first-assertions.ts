@@ -74,7 +74,11 @@ function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
   for (const ref of scope.references) {
     const refParent = (ref.identifier as Rule.Node).parent
 
-    if (refParent.type === 'VariableDeclarator') {
+    const isCorrectVariableDeclarator = refParent.type === 'VariableDeclarator' &&
+      refParent.id.type === 'Identifier' &&
+      refParent.id.name === node.name
+
+    if (isCorrectVariableDeclarator) {
       return refParent.init
     }
   }
