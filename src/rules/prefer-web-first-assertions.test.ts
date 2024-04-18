@@ -34,6 +34,90 @@ runRuleTester('prefer-web-first-assertions', rule, {
       output: test('await expect(page.locator(".tweet")).toBeHidden()'),
     },
     {
+      code: test(`
+        const unrelatedAssignment = 'unrelated'
+        const isTweetVisible = await page.locator(".tweet").isVisible()
+        expect(isTweetVisible).toBe(true)
+      `),
+      output: test(`
+        const unrelatedAssignment = 'unrelated'
+        const isTweetVisible = page.locator(".tweet")
+        await expect(isTweetVisible).toBeVisible()
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toBeVisible', method: 'isVisible' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+    },
+    {
+      code: test(`
+        const unrelatedAssignment = 'unrelated'
+        const isTweetVisible = await page.locator(".tweet").isVisible()
+        expect(isTweetVisible).toBe(false)
+      `),
+      output: test(`
+        const unrelatedAssignment = 'unrelated'
+        const isTweetVisible = page.locator(".tweet")
+        await expect(isTweetVisible).toBeHidden()
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toBeHidden', method: 'isVisible' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+    },
+    {
+      code: test(`
+        const locatorFoo = page.locator(".foo")
+        const isBarVisible = await locatorFoo.locator(".bar").isVisible()
+        expect(isBarVisible).toBe(false)
+      `),
+      output: test(`
+        const locatorFoo = page.locator(".foo")
+        const isBarVisible = locatorFoo.locator(".bar")
+        await expect(isBarVisible).toBeHidden()
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toBeHidden', method: 'isVisible' },
+          endColumn: 29,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+    },
+    {
+      code: test(`
+        const locatorFoo = page.locator(".foo")
+        const isBarVisible = await locatorFoo.locator(".bar").isVisible()
+        expect(isBarVisible).toBe(true)
+      `),
+      output: test(`
+        const locatorFoo = page.locator(".foo")
+        const isBarVisible = locatorFoo.locator(".bar")
+        await expect(isBarVisible).toBeVisible()
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toBeVisible', method: 'isVisible' },
+          endColumn: 29,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+    },
+    {
       code: test(
         'expect(await page.locator(".tweet").isVisible()).toEqual(true)',
       ),
@@ -300,6 +384,44 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test('await expect(foo).not.toHaveText("bar")'),
+    },
+    {
+      code: test(`
+        const fooLocator = page.locator('.fooClass');
+        const fooLocatorText = await fooLocator.textContent();
+        expect(fooLocatorText).toEqual('new bucket');
+      `),
+      output: test(`
+        const fooLocator = page.locator('.fooClass');
+        const fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('new bucket');
+      `),
+      errors: [{
+        column: 9,
+        data: { matcher: 'toHaveText', method: 'textContent' },
+        endColumn: 31,
+        line: 4,
+        messageId: 'useWebFirstAssertion',
+      }],
+    },
+    {
+      code: test(`
+        const unrelatedAssignment = "unrelated";
+        const fooLocatorText = await page.locator('.foo').textContent();
+        expect(fooLocatorText).toEqual('new bucket');
+      `),
+      output: test(`
+        const unrelatedAssignment = "unrelated";
+        const fooLocatorText = page.locator('.foo');
+        await expect(fooLocatorText).toHaveText('new bucket');
+      `),
+      errors: [{
+        column: 9,
+        data: { matcher: 'toHaveText', method: 'textContent' },
+        endColumn: 31,
+        line: 4,
+        messageId: 'useWebFirstAssertion',
+      }],
     },
 
     // isChecked
