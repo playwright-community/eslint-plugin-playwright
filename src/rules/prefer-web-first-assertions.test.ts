@@ -389,12 +389,35 @@ runRuleTester('prefer-web-first-assertions', rule, {
       code: test(`
         const fooLocator = page.locator('.fooClass');
         const fooLocatorText = await fooLocator.textContent();
-        expect(fooLocatorText).toEqual('new bucket');
+        expect(fooLocatorText).toEqual('foo');
       `),
       output: test(`
         const fooLocator = page.locator('.fooClass');
         const fooLocatorText = fooLocator;
-        await expect(fooLocatorText).toHaveText('new bucket');
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
+      errors: [{
+        column: 9,
+        data: { matcher: 'toHaveText', method: 'textContent' },
+        endColumn: 31,
+        line: 4,
+        messageId: 'useWebFirstAssertion',
+      }],
+    },
+    {
+      code: test(`
+        const fooLocator = page.locator('.fooClass');
+        let fooLocatorText = await fooLocator.textContent();
+        expect(fooLocatorText).toEqual('foo');
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      output: test(`
+        const fooLocator = page.locator('.fooClass');
+        let fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('foo');
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
       `),
       errors: [{
         column: 9,
@@ -410,14 +433,14 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const fooLocator = page.locator('.fooClass');
         fooLocatorText = 'Unrelated';
         fooLocatorText = await fooLocator.textContent();
-        expect(fooLocatorText).toEqual('new bucket');
+        expect(fooLocatorText).toEqual('foo');
       `),
       output: test(`
         let fooLocatorText;
         const fooLocator = page.locator('.fooClass');
         fooLocatorText = 'Unrelated';
         fooLocatorText = fooLocator;
-        await expect(fooLocatorText).toHaveText('new bucket');
+        await expect(fooLocatorText).toHaveText('foo');
       `),
       errors: [{
         column: 9,
@@ -434,7 +457,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const fooLocator = page.locator('.fooClass');
         fooLocatorText = await fooLocator.textContent();
         fooLocatorText2 = await fooLocator.textContent();
-        expect(fooLocatorText).toEqual('new bucket');
+        expect(fooLocatorText).toEqual('foo');
       `),
       output: test(`
         let fooLocatorText;
@@ -442,7 +465,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const fooLocator = page.locator('.fooClass');
         fooLocatorText = fooLocator;
         fooLocatorText2 = await fooLocator.textContent();
-        await expect(fooLocatorText).toHaveText('new bucket');
+        await expect(fooLocatorText).toHaveText('foo');
       `),
       errors: [{
         column: 9,
@@ -454,14 +477,37 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(`
+        let fooLocatorText;
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+        fooLocatorText = await page.locator('.fooClass').textContent();
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      output: test(`
+        let fooLocatorText;
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+        fooLocatorText = page.locator('.fooClass');
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
+      errors: [{
+        column: 9,
+        data: { matcher: 'toHaveText', method: 'textContent' },
+        endColumn: 31,
+        line: 6,
+        messageId: 'useWebFirstAssertion',
+      }],
+    },
+    {
+      code: test(`
         const unrelatedAssignment = "unrelated";
         const fooLocatorText = await page.locator('.foo').textContent();
-        expect(fooLocatorText).toEqual('new bucket');
+        expect(fooLocatorText).toEqual('foo');
       `),
       output: test(`
         const unrelatedAssignment = "unrelated";
         const fooLocatorText = page.locator('.foo');
-        await expect(fooLocatorText).toHaveText('new bucket');
+        await expect(fooLocatorText).toHaveText('foo');
       `),
       errors: [{
         column: 9,
@@ -911,8 +957,8 @@ runRuleTester('prefer-web-first-assertions', rule, {
         let fooLocatorText;
         const fooLocator = page.locator('.fooClass');
         fooLocatorText = await fooLocator.textContent();
-        fooLocatorText = 'new bucket';
-        expect(fooLocatorText).toEqual('new bucket');
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
       `),
     },
     {
@@ -920,9 +966,29 @@ runRuleTester('prefer-web-first-assertions', rule, {
         let fooLocatorText;
         let fooLocatorText2;
         const fooLocator = page.locator('.fooClass');
-        fooLocatorText = 'new bucket';
+        fooLocatorText = 'foo';
         fooLocatorText2 = await fooLocator.textContent();
-        expect(fooLocatorText).toEqual('new bucket');
+        expect(fooLocatorText).toEqual('foo');
+      `),
+    },
+    {
+      code: test(`
+        let fooLocatorText;
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo')
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = fooLocator;
+        expect(fooLocatorText).toHaveText('foo');
+      `),
+    },
+    {
+      code: test(`
+        const fooLocator = page.locator('.fooClass');
+        let fooLocatorText;
+        fooLocatorText = fooLocator;
+        expect(fooLocatorText).toHaveText('foo');
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo')
       `),
     },
   ],
