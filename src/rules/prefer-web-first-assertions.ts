@@ -1,4 +1,4 @@
-import { Rule } from 'eslint'
+import { Rule, Scope } from 'eslint'
 import ESTree from 'estree'
 import {
   findParent,
@@ -61,7 +61,10 @@ const supportedMatchers = new Set([
 
 /**
  * If the expect call argument is a variable reference, finds the variable
- * initializer.
+ * initializer or last variable assignment.
+ * 
+ * If a variable is assigned after initialization we have to look for the last time it was assigned
+ * because it could have been changed multiple times. We then use its right hand assignment operator as the dereferenced node.
  */
 function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
   if (node?.type !== 'Identifier') {
@@ -70,18 +73,19 @@ function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
 
   const scope = context.sourceCode.getScope(node)
 
-  // Find the variable declaration and return the initializer
-  for (const ref of scope.references) {
-    const refParent = (ref.identifier as Rule.Node).parent
+  const referenceIdentifiers: Rule.Node[] = scope.references.map((reference) => reference.identifier as Rule.Node )
+  const identifierParents = referenceIdentifiers.map((identifier) => identifier.parent );
+  
+  // Look for any variable declarators in the scope references that match the dereferenced node variable name
+  const variableDeclarators = identifierParents.filter((parent): parent is Rule.Node & {type:'VariableDeclarator'} => parent.type === 'VariableDeclarator')
+  const matchingVariableDeclarator = variableDeclarators.find((parent) => parent.id.type === 'Identifier' && parent.id.name === node.name)
+  
+  // Look for any variable assignments in the scope references and pick the last one that matches the dereferenced node variable name
+  const assignmentExpressions = identifierParents.filter((parent): parent is Rule.Node & {type:'AssignmentExpression'} => parent.type === 'AssignmentExpression')
+  // The array reversing is done before trying the 'find' method to ensure we find the last variable assignment first.
+  const matchingLastAssignmentExpression = assignmentExpressions.reverse().find((assignment) => assignment.left.type==='Identifier' && assignment.left.name === node.name)
 
-    const isCorrectVariableDeclarator = refParent.type === 'VariableDeclarator' &&
-      refParent.id.type === 'Identifier' &&
-      refParent.id.name === node.name
-
-    if (isCorrectVariableDeclarator) {
-      return refParent.init
-    }
-  }
+  return matchingVariableDeclarator?.init ?? matchingLastAssignmentExpression?.right;
 }
 
 export default createRule({

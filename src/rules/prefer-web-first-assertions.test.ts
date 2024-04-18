@@ -406,6 +406,54 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(`
+        let fooLocatorText;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = 'Unrelated';
+        fooLocatorText = await fooLocator.textContent();
+        expect(fooLocatorText).toEqual('new bucket');
+      `),
+      output: test(`
+        let fooLocatorText;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = 'Unrelated';
+        fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('new bucket');
+      `),
+      errors: [{
+        column: 9,
+        data: { matcher: 'toHaveText', method: 'textContent' },
+        endColumn: 31,
+        line: 6,
+        messageId: 'useWebFirstAssertion',
+      }],
+    },
+    {
+      code: test(`
+        let fooLocatorText;
+        let fooLocatorText2;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = await fooLocator.textContent();
+        fooLocatorText2 = await fooLocator.textContent();
+        expect(fooLocatorText).toEqual('new bucket');
+      `),
+      output: test(`
+        let fooLocatorText;
+        let fooLocatorText2;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = fooLocator;
+        fooLocatorText2 = await fooLocator.textContent();
+        await expect(fooLocatorText).toHaveText('new bucket');
+      `),
+      errors: [{
+        column: 9,
+        data: { matcher: 'toHaveText', method: 'textContent' },
+        endColumn: 31,
+        line: 7,
+        messageId: 'useWebFirstAssertion',
+      }],
+    },
+    {
+      code: test(`
         const unrelatedAssignment = "unrelated";
         const fooLocatorText = await page.locator('.foo').textContent();
         expect(fooLocatorText).toEqual('new bucket');
@@ -856,6 +904,25 @@ runRuleTester('prefer-web-first-assertions', rule, {
       code: test(`
         const myValue = page.locator('.foo');
         expect(myValue).toBeVisible();
+      `),
+    },
+    {
+      code: test(`
+        let fooLocatorText;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = await fooLocator.textContent();
+        fooLocatorText = 'new bucket';
+        expect(fooLocatorText).toEqual('new bucket');
+      `),
+    },
+    {
+      code: test(`
+        let fooLocatorText;
+        let fooLocatorText2;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = 'new bucket';
+        fooLocatorText2 = await fooLocator.textContent();
+        expect(fooLocatorText).toEqual('new bucket');
       `),
     },
   ],
