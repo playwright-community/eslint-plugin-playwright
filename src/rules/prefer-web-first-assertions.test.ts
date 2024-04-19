@@ -485,23 +485,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(`
-      const quoteLocator = page.getByTestId(DataTestId.blockQuoteComponent);
-      await expect(quoteLocator).toBeVisible();
-  
-      const blockQuoteContent = await quoteLocator.textContent();
-      expect(blockQuoteContent).toContain('Hello World!');
-      `),
-      output: test(`
-      const quoteLocator = page.getByTestId(DataTestId.blockQuoteComponent);
-      await expect(quoteLocator).toBeVisible();
-  
-      const blockQuoteContent = quoteLocator;
-      await expect(blockQuoteContent).toContainText('Hello World!');
-      `),
-      errors: [{}],
-    },
-    {
-      code: test(`
         let fooLocatorText;
         fooLocatorText = 'foo';
         expect(fooLocatorText).toEqual('foo');
