@@ -396,13 +396,15 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const fooLocatorText = fooLocator;
         await expect(fooLocatorText).toHaveText('foo');
       `),
-      errors: [{
-        column: 9,
-        data: { matcher: 'toHaveText', method: 'textContent' },
-        endColumn: 31,
-        line: 4,
-        messageId: 'useWebFirstAssertion',
-      }],
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'textContent' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
     },
     {
       code: test(`
@@ -419,13 +421,15 @@ runRuleTester('prefer-web-first-assertions', rule, {
         fooLocatorText = 'foo';
         expect(fooLocatorText).toEqual('foo');
       `),
-      errors: [{
-        column: 9,
-        data: { matcher: 'toHaveText', method: 'textContent' },
-        endColumn: 31,
-        line: 4,
-        messageId: 'useWebFirstAssertion',
-      }],
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'textContent' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
     },
     {
       code: test(`
@@ -442,13 +446,15 @@ runRuleTester('prefer-web-first-assertions', rule, {
         fooLocatorText = fooLocator;
         await expect(fooLocatorText).toHaveText('foo');
       `),
-      errors: [{
-        column: 9,
-        data: { matcher: 'toHaveText', method: 'textContent' },
-        endColumn: 31,
-        line: 6,
-        messageId: 'useWebFirstAssertion',
-      }],
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'textContent' },
+          endColumn: 31,
+          line: 6,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
     },
     {
       code: test(`
@@ -467,13 +473,32 @@ runRuleTester('prefer-web-first-assertions', rule, {
         fooLocatorText2 = await fooLocator.textContent();
         await expect(fooLocatorText).toHaveText('foo');
       `),
-      errors: [{
-        column: 9,
-        data: { matcher: 'toHaveText', method: 'textContent' },
-        endColumn: 31,
-        line: 7,
-        messageId: 'useWebFirstAssertion',
-      }],
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'textContent' },
+          endColumn: 31,
+          line: 7,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+    },
+    {
+      code: test(`
+      const quoteLocator = page.getByTestId(DataTestId.blockQuoteComponent);
+      await expect(quoteLocator).toBeVisible();
+  
+      const blockQuoteContent = await quoteLocator.textContent();
+      expect(blockQuoteContent).toContain('Hello World!');
+      `),
+      output: test(`
+      const quoteLocator = page.getByTestId(DataTestId.blockQuoteComponent);
+      await expect(quoteLocator).toBeVisible();
+  
+      const blockQuoteContent = quoteLocator;
+      await expect(blockQuoteContent).toContainText('Hello World!');
+      `),
+      errors: [{}],
     },
     {
       code: test(`
@@ -490,13 +515,15 @@ runRuleTester('prefer-web-first-assertions', rule, {
         fooLocatorText = page.locator('.fooClass');
         await expect(fooLocatorText).toHaveText('foo');
       `),
-      errors: [{
-        column: 9,
-        data: { matcher: 'toHaveText', method: 'textContent' },
-        endColumn: 31,
-        line: 6,
-        messageId: 'useWebFirstAssertion',
-      }],
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'textContent' },
+          endColumn: 31,
+          line: 6,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
     },
     {
       code: test(`
@@ -509,13 +536,15 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const fooLocatorText = page.locator('.foo');
         await expect(fooLocatorText).toHaveText('foo');
       `),
-      errors: [{
-        column: 9,
-        data: { matcher: 'toHaveText', method: 'textContent' },
-        endColumn: 31,
-        line: 4,
-        messageId: 'useWebFirstAssertion',
-      }],
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'textContent' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
     },
 
     // isChecked

@@ -63,9 +63,10 @@ const supportedMatchers = new Set([
 /**
  * If the expect call argument is a variable reference, finds the variable
  * initializer or last variable assignment.
- * 
- * If a variable is assigned after initialization we have to look for the last time it was assigned
- * because it could have been changed multiple times. We then use its right hand assignment operator as the dereferenced node.
+ *
+ * If a variable is assigned after initialization we have to look for the last
+ * time it was assigned because it could have been changed multiple times. We
+ * then use its right hand assignment operator as the dereferenced node.
  */
 function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
   if (node?.type !== 'Identifier') {
@@ -74,19 +75,35 @@ function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
 
   const scope = context.sourceCode.getScope(node)
 
-  const referenceIdentifiers: Rule.Node[] = scope.references.map((reference) => reference.identifier as Rule.Node )
-  const identifierParents = referenceIdentifiers.map((identifier) => identifier.parent );
-  
-  // Look for any variable declarators in the scope references that match the dereferenced node variable name
-  const variableDeclarators = identifierParents.filter((parent): parent is TypedNodeWithParent<'VariableDeclarator'> => parent.type === 'VariableDeclarator')
-  const matchingVariableDeclarator = variableDeclarators.find((parent) => parent.id.type === 'Identifier' && parent.id.name === node.name)
-  
-  // Look for any variable assignments in the scope references and pick the last one that matches the dereferenced node variable name
-  const assignmentExpressions = identifierParents.filter((parent): parent is TypedNodeWithParent<'AssignmentExpression'> => parent.type === 'AssignmentExpression')
-  // The array reversing is done before trying the 'find' method to ensure we find the last variable assignment first.
-  const matchingLastAssignmentExpression = assignmentExpressions.reverse().find((assignment => isNodeLastAssignment(node, assignment)));
+  const referenceIdentifiers: Rule.Node[] = scope.references.map(
+    (reference) => reference.identifier as Rule.Node,
+  )
+  const identifierParents = referenceIdentifiers.map(
+    (identifier) => identifier.parent,
+  )
 
-  return matchingLastAssignmentExpression?.right ?? matchingVariableDeclarator?.init ;
+  // Look for any variable declarators in the scope references that match the dereferenced node variable name
+  const variableDeclarators = identifierParents.filter(
+    (parent): parent is TypedNodeWithParent<'VariableDeclarator'> =>
+      parent.type === 'VariableDeclarator',
+  )
+  const matchingVariableDeclarator = variableDeclarators.find(
+    (parent) => parent.id.type === 'Identifier' && parent.id.name === node.name,
+  )
+
+  // Look for any variable assignments in the scope references and pick the last one that matches the dereferenced node variable name
+  const assignmentExpressions = identifierParents.filter(
+    (parent): parent is TypedNodeWithParent<'AssignmentExpression'> =>
+      parent.type === 'AssignmentExpression',
+  )
+  // The array reversing is done before trying the 'find' method to ensure we find the last variable assignment first.
+  const matchingLastAssignmentExpression = assignmentExpressions
+    .reverse()
+    .find((assignment) => isNodeLastAssignment(node, assignment))
+
+  return (
+    matchingLastAssignmentExpression?.right ?? matchingVariableDeclarator?.init
+  )
 }
 
 export default createRule({
@@ -242,20 +259,33 @@ export default createRule({
 })
 
 /**
- * Given a Node and an assignment expression, finds out if the assignment expression happens before the node identifier (based on their range properties)
- * and if the assignment expression left side is of the same name as the name of the given node.
- * 
- * @param {ESTree.Identifier} node The node we are comparing the assignment expression to.
- * @param { AssignmentExpression } assignment The assignment that will be verified to see if its left operand is the same as the node.name and if it happens before it.
- * @returns True if the assignment left hand operator belongs to the node and occurs before it, false otherwise.
- * If either the node or the assignment expression doen't contain a range array, this will also return false because their relative positions cannot be calculated.
+ * Given a Node and an assignment expression, finds out if the assignment
+ * expression happens before the node identifier (based on their range
+ * properties) and if the assignment expression left side is of the same name as
+ * the name of the given node.
+ *
+ * @param {ESTree.Identifier} node The node we are comparing the assignment
+ *   expression to.
+ * @param {AssignmentExpression} assignment The assignment that will be verified
+ *   to see if its left operand is the same as the node.name and if it happens
+ *   before it.
+ * @returns True if the assignment left hand operator belongs to the node and
+ *   occurs before it, false otherwise. If either the node or the assignment
+ *   expression doen't contain a range array, this will also return false
+ *   because their relative positions cannot be calculated.
  */
-function isNodeLastAssignment(node: ESTree.Identifier, assignment: AssignmentExpression) {
-  const nodeRange = node.range;
-  const assignmentRange = assignment.range;
-  const isAssignmentHappeningAfterNode = nodeRange && assignmentRange && nodeRange[0] < assignmentRange[1]
-  if(isAssignmentHappeningAfterNode){
+function isNodeLastAssignment(
+  node: ESTree.Identifier,
+  assignment: AssignmentExpression,
+) {
+  const nodeRange = node.range
+  const assignmentRange = assignment.range
+  const isAssignmentHappeningAfterNode =
+    nodeRange && assignmentRange && nodeRange[0] < assignmentRange[1]
+  if (isAssignmentHappeningAfterNode) {
     return false
   }
-  return assignment.left.type==='Identifier' && assignment.left.name === node.name
+  return (
+    assignment.left.type === 'Identifier' && assignment.left.name === node.name
+  )
 }
