@@ -1,5 +1,5 @@
 import { Rule } from 'eslint'
-import ESTree from 'estree'
+import ESTree, { AssignmentExpression } from 'estree'
 import {
   findParent,
   getRawValue,
@@ -8,6 +8,7 @@ import {
 } from '../utils/ast'
 import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
+import { TypedNodeWithParent } from '../utils/types'
 
 type MethodConfig = {
   inverse?: string
@@ -59,9 +60,50 @@ const supportedMatchers = new Set([
   'toBeFalsy',
 ])
 
+const isVariableDeclarator = (
+  node: ESTree.Node,
+): node is TypedNodeWithParent<'VariableDeclarator'> =>
+  node.type === 'VariableDeclarator'
+
+const isAssignmentExpression = (
+  node: ESTree.Node,
+): node is TypedNodeWithParent<'AssignmentExpression'> =>
+  node.type === 'AssignmentExpression'
+
+/**
+ * Given a Node and an assignment expression, finds out if the assignment
+ * expression happens before the node identifier (based on their range
+ * properties) and if the assignment expression left side is of the same name as
+ * the name of the given node.
+ *
+ * @param node The node we are comparing the assignment expression to.
+ * @param assignment The assignment that will be verified to see if its left
+ *   operand is the same as the node.name and if it happens before it.
+ * @returns True if the assignment left hand operator belongs to the node and
+ *   occurs before it, false otherwise. If either the node or the assignment
+ *   expression doesn't contain a range array, this will also return false
+ *   because their relative positions cannot be calculated.
+ */
+function isNodeLastAssignment(
+  node: ESTree.Identifier,
+  assignment: AssignmentExpression,
+) {
+  if (node.range && assignment.range && node.range[0] < assignment.range[1]) {
+    return false
+  }
+
+  return (
+    assignment.left.type === 'Identifier' && assignment.left.name === node.name
+  )
+}
+
 /**
  * If the expect call argument is a variable reference, finds the variable
- * initializer.
+ * initializer or last variable assignment.
+ *
+ * If a variable is assigned after initialization we have to look for the last
+ * time it was assigned because it could have been changed multiple times. We
+ * then use its right hand assignment operator as the dereferenced node.
  */
 function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
   if (node?.type !== 'Identifier') {
@@ -69,15 +111,24 @@ function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
   }
 
   const scope = context.sourceCode.getScope(node)
+  const parents = scope.references
+    .map((ref) => ref.identifier as Rule.Node)
+    .map((ident) => ident.parent)
 
-  // Find the variable declaration and return the initializer
-  for (const ref of scope.references) {
-    const refParent = (ref.identifier as Rule.Node).parent
+  // Look for any variable declarators in the scope references that match the
+  // dereferenced node variable name
+  const decl = parents
+    .filter(isVariableDeclarator)
+    .find((p) => p.id.type === 'Identifier' && p.id.name === node.name)
 
-    if (refParent.type === 'VariableDeclarator') {
-      return refParent.init
-    }
-  }
+  // Look for any variable assignments in the scope references and pick the last
+  // one that matches the dereferenced node variable name
+  const expr = parents
+    .filter(isAssignmentExpression)
+    .reverse()
+    .find((assignment) => isNodeLastAssignment(node, assignment))
+
+  return expr?.right ?? decl?.init
 }
 
 export default createRule({
