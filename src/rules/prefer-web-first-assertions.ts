@@ -60,6 +60,16 @@ const supportedMatchers = new Set([
   'toBeFalsy',
 ])
 
+const isVariableDeclarator = (
+  node: ESTree.Node,
+): node is TypedNodeWithParent<'VariableDeclarator'> =>
+  node.type === 'VariableDeclarator'
+
+const isAssignmentExpression = (
+  node: ESTree.Node,
+): node is TypedNodeWithParent<'AssignmentExpression'> =>
+  node.type === 'AssignmentExpression'
+
 /**
  * If the expect call argument is a variable reference, finds the variable
  * initializer or last variable assignment.
@@ -74,36 +84,24 @@ function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
   }
 
   const scope = context.sourceCode.getScope(node)
+  const parents = scope.references
+    .map((ref) => ref.identifier as Rule.Node)
+    .map((ident) => ident.parent)
 
-  const referenceIdentifiers: Rule.Node[] = scope.references.map(
-    (reference) => reference.identifier as Rule.Node,
-  )
-  const identifierParents = referenceIdentifiers.map(
-    (identifier) => identifier.parent,
-  )
+  // Look for any variable declarators in the scope references that match the
+  // dereferenced node variable name
+  const decl = parents
+    .filter(isVariableDeclarator)
+    .find((p) => p.id.type === 'Identifier' && p.id.name === node.name)
 
-  // Look for any variable declarators in the scope references that match the dereferenced node variable name
-  const variableDeclarators = identifierParents.filter(
-    (parent): parent is TypedNodeWithParent<'VariableDeclarator'> =>
-      parent.type === 'VariableDeclarator',
-  )
-  const matchingVariableDeclarator = variableDeclarators.find(
-    (parent) => parent.id.type === 'Identifier' && parent.id.name === node.name,
-  )
-
-  // Look for any variable assignments in the scope references and pick the last one that matches the dereferenced node variable name
-  const assignmentExpressions = identifierParents.filter(
-    (parent): parent is TypedNodeWithParent<'AssignmentExpression'> =>
-      parent.type === 'AssignmentExpression',
-  )
-  // The array reversing is done before trying the 'find' method to ensure we find the last variable assignment first.
-  const matchingLastAssignmentExpression = assignmentExpressions
+  // Look for any variable assignments in the scope references and pick the last
+  // one that matches the dereferenced node variable name
+  const expr = parents
+    .filter(isAssignmentExpression)
     .reverse()
     .find((assignment) => isNodeLastAssignment(node, assignment))
 
-  return (
-    matchingLastAssignmentExpression?.right ?? matchingVariableDeclarator?.init
-  )
+  return expr?.right ?? decl?.init
 }
 
 export default createRule({
