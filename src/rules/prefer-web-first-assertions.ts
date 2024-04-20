@@ -71,6 +71,33 @@ const isAssignmentExpression = (
   node.type === 'AssignmentExpression'
 
 /**
+ * Given a Node and an assignment expression, finds out if the assignment
+ * expression happens before the node identifier (based on their range
+ * properties) and if the assignment expression left side is of the same name as
+ * the name of the given node.
+ *
+ * @param node The node we are comparing the assignment expression to.
+ * @param assignment The assignment that will be verified to see if its left
+ *   operand is the same as the node.name and if it happens before it.
+ * @returns True if the assignment left hand operator belongs to the node and
+ *   occurs before it, false otherwise. If either the node or the assignment
+ *   expression doesn't contain a range array, this will also return false
+ *   because their relative positions cannot be calculated.
+ */
+function isNodeLastAssignment(
+  node: ESTree.Identifier,
+  assignment: AssignmentExpression,
+) {
+  if (node.range && assignment.range && node.range[0] < assignment.range[1]) {
+    return false
+  }
+
+  return (
+    assignment.left.type === 'Identifier' && assignment.left.name === node.name
+  )
+}
+
+/**
  * If the expect call argument is a variable reference, finds the variable
  * initializer or last variable assignment.
  *
@@ -255,35 +282,3 @@ export default createRule({
     type: 'suggestion',
   },
 })
-
-/**
- * Given a Node and an assignment expression, finds out if the assignment
- * expression happens before the node identifier (based on their range
- * properties) and if the assignment expression left side is of the same name as
- * the name of the given node.
- *
- * @param {ESTree.Identifier} node The node we are comparing the assignment
- *   expression to.
- * @param {AssignmentExpression} assignment The assignment that will be verified
- *   to see if its left operand is the same as the node.name and if it happens
- *   before it.
- * @returns True if the assignment left hand operator belongs to the node and
- *   occurs before it, false otherwise. If either the node or the assignment
- *   expression doen't contain a range array, this will also return false
- *   because their relative positions cannot be calculated.
- */
-function isNodeLastAssignment(
-  node: ESTree.Identifier,
-  assignment: AssignmentExpression,
-) {
-  const nodeRange = node.range
-  const assignmentRange = assignment.range
-  const isAssignmentHappeningAfterNode =
-    nodeRange && assignmentRange && nodeRange[0] < assignmentRange[1]
-  if (isAssignmentHappeningAfterNode) {
-    return false
-  }
-  return (
-    assignment.left.type === 'Identifier' && assignment.left.name === node.name
-  )
-}
