@@ -9,10 +9,10 @@ export function getStringValue(node: ESTree.Node | undefined) {
   return node.type === 'Identifier'
     ? node.name
     : node.type === 'TemplateLiteral'
-    ? node.quasis[0].value.raw
-    : node.type === 'Literal' && typeof node.value === 'string'
-    ? node.value
-    : ''
+      ? node.quasis[0].value.raw
+      : node.type === 'Literal' && typeof node.value === 'string'
+        ? node.value
+        : ''
 }
 
 export function getRawValue(node: ESTree.Node) {
@@ -106,10 +106,10 @@ export function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
   return node.type === 'MemberExpression'
     ? dig(node.property, identifier)
     : node.type === 'CallExpression'
-    ? dig(node.callee, identifier)
-    : node.type === 'Identifier'
-    ? isIdentifier(node, identifier)
-    : false
+      ? dig(node.callee, identifier)
+      : node.type === 'Identifier'
+        ? isIdentifier(node, identifier)
+        : false
 }
 
 export function isPageMethod(node: ESTree.CallExpression, name: string) {
@@ -168,7 +168,7 @@ const isAssignmentExpression = (
   node: ESTree.Node,
 ): node is TypedNodeWithParent<'AssignmentExpression'> =>
   node.type === 'AssignmentExpression'
-  
+
 /**
  * Given a Node and an assignment expression, finds out if the assignment
  * expression happens before the node identifier (based on their range
@@ -197,25 +197,28 @@ function isNodeLastAssignment(
 }
 
 /**
- * If the node argument is a variable reference, finds the variable
- * initializer or last variable assignment and returns the assigned value.
+ * If the node argument is a variable reference, finds the variable initializer
+ * or last variable assignment and returns the assigned value.
  *
  * If a variable is assigned after initialization we have to look for the last
  * time it was assigned because it could have been changed multiple times. We
  * then use its right hand assignment operator as the dereferenced node.
- * 
+ *
  * @example <caption>Dereference a `const` initialized node:</caption>
- * // returns 1
- * const variable = 1;
- * console.log(variable) // dereferenced value of the 'variable' node is 1
- *  
+ *   // returns 1
+ *   const variable = 1
+ *   console.log(variable) // dereferenced value of the 'variable' node is 1
+ *
  * @example <caption>Dereference a `let` re-assigned node:</caption>
- * // returns 1
- * let variable = 0;
- * variable = 1;
- * console.log(variable) // dereferenced value of the 'variable' node is 1
+ *   // returns 1
+ *   let variable = 0
+ *   variable = 1
+ *   console.log(variable) // dereferenced value of the 'variable' node is 1
  */
-export function dereference(context: Rule.RuleContext, node: ESTree.Node | undefined) {
+export function dereference(
+  context: Rule.RuleContext,
+  node: ESTree.Node | undefined,
+) {
   if (node?.type !== 'Identifier') {
     return node
   }
