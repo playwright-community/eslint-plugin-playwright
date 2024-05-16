@@ -84,11 +84,6 @@ runRuleTester('prefer-to-have-count', rule, {
         const filesCount = files;
         await expect(filesCount).toHaveCount(1)
       `,
-      settings: {
-        playwright: {
-          globalAliases: { expect: ['assert'] },
-        },
-      },
     },
     {
       code: `
@@ -104,11 +99,6 @@ runRuleTester('prefer-to-have-count', rule, {
         const unrelatedConst = unrelated;
         await expect(filesCount).toHaveCount(1)
       `,
-      settings: {
-        playwright: {
-          globalAliases: { expect: ['assert'] },
-        },
-      },
     },
     {
       code: `
@@ -124,11 +114,6 @@ runRuleTester('prefer-to-have-count', rule, {
         filesCount = files;
         await expect(filesCount).toHaveCount(1);
       `,
-      settings: {
-        playwright: {
-          globalAliases: { expect: ['assert'] },
-        },
-      },
     },
     {
       code: `
@@ -146,11 +131,6 @@ runRuleTester('prefer-to-have-count', rule, {
         let unrelatedVar = unrelated;
         await expect(filesCount).toHaveCount(1);
       `,
-      settings: {
-        playwright: {
-          globalAliases: { expect: ['assert'] },
-        },
-      },
     },
     {
       code: `
@@ -168,13 +148,7 @@ runRuleTester('prefer-to-have-count', rule, {
         await expect(filesCount).toHaveCount(1);
         filesCount = 0;
       `,
-      settings: {
-        playwright: {
-          globalAliases: { expect: ['assert'] },
-        },
-      },
     },
-    
   ],
   valid: [
     { code: 'await expect(files).toHaveCount(1)' },
