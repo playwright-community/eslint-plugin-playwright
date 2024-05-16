@@ -72,6 +72,109 @@ runRuleTester('prefer-to-have-count', rule, {
         },
       },
     },
+    {
+      code: `
+        const filesCount = await files.count();
+        expect(filesCount).toBe(1)
+      `,
+      errors: [
+        { column: 28, endColumn: 32, line: 3, messageId: 'useToHaveCount' },
+      ],
+      output: `
+        const filesCount = files;
+        await expect(filesCount).toHaveCount(1)
+      `,
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
+    {
+      code: `
+        const filesCount = await files.count();
+        const unrelatedConst = unrelated;
+        expect(filesCount).toBe(1)
+      `,
+      errors: [
+        { column: 28, endColumn: 32, line: 4, messageId: 'useToHaveCount' },
+      ],
+      output: `
+        const filesCount = files;
+        const unrelatedConst = unrelated;
+        await expect(filesCount).toHaveCount(1)
+      `,
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
+    {
+      code: `
+        let filesCount = 3;
+        filesCount = await files.count();
+        expect(filesCount).toBe(1);
+      `,
+      errors: [
+        { column: 28, endColumn: 32, line: 4, messageId: 'useToHaveCount' },
+      ],
+      output: `
+        let filesCount = 3;
+        filesCount = files;
+        await expect(filesCount).toHaveCount(1);
+      `,
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
+    {
+      code: `
+        let filesCount = 3;
+        filesCount = await files.count();
+        let unrelatedVar = unrelated;
+        expect(filesCount).toBe(1);
+      `,
+      errors: [
+        { column: 28, endColumn: 32, line: 5, messageId: 'useToHaveCount' },
+      ],
+      output: `
+        let filesCount = 3;
+        filesCount = files;
+        let unrelatedVar = unrelated;
+        await expect(filesCount).toHaveCount(1);
+      `,
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
+    {
+      code: `
+        let filesCount = 3;
+        filesCount = await files.count();
+        expect(filesCount).toBe(1);
+        filesCount = 0;
+      `,
+      errors: [
+        { column: 28, endColumn: 32, line: 4, messageId: 'useToHaveCount' },
+      ],
+      output: `
+        let filesCount = 3;
+        filesCount = files;
+        await expect(filesCount).toHaveCount(1);
+        filesCount = 0;
+      `,
+      settings: {
+        playwright: {
+          globalAliases: { expect: ['assert'] },
+        },
+      },
+    },
+    
   ],
   valid: [
     { code: 'await expect(files).toHaveCount(1)' },
