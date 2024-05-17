@@ -1,4 +1,4 @@
-import { equalityMatchers, isPropertyAccessor } from '../utils/ast'
+import { dereference, equalityMatchers, isPropertyAccessor } from '../utils/ast'
 import { createRule } from '../utils/createRule'
 import { replaceAccessorFixer } from '../utils/fixer'
 import { parseFnCall } from '../utils/parseFnCall'
@@ -15,7 +15,7 @@ export default createRule({
           return
         }
 
-        const [argument] = call.args
+        const argument = dereference(context, call.args[0])
         if (
           argument?.type !== 'AwaitExpression' ||
           argument.argument.type !== 'CallExpression' ||
