@@ -39,11 +39,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const isTweetVisible = await page.locator(".tweet").isVisible()
         expect(isTweetVisible).toBe(true)
       `),
-      output: test(`
-        const unrelatedAssignment = 'unrelated'
-        const isTweetVisible = page.locator(".tweet")
-        await expect(isTweetVisible).toBeVisible()
-      `),
       errors: [
         {
           column: 9,
@@ -53,6 +48,11 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        const unrelatedAssignment = 'unrelated'
+        const isTweetVisible = page.locator(".tweet")
+        await expect(isTweetVisible).toBeVisible()
+      `),
     },
     {
       code: test(`
@@ -60,11 +60,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const isTweetVisible = await page.locator(".tweet").isVisible()
         expect(isTweetVisible).toBe(false)
       `),
-      output: test(`
-        const unrelatedAssignment = 'unrelated'
-        const isTweetVisible = page.locator(".tweet")
-        await expect(isTweetVisible).toBeHidden()
-      `),
       errors: [
         {
           column: 9,
@@ -74,17 +69,17 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        const unrelatedAssignment = 'unrelated'
+        const isTweetVisible = page.locator(".tweet")
+        await expect(isTweetVisible).toBeHidden()
+      `),
     },
     {
       code: test(`
         const locatorFoo = page.locator(".foo")
         const isBarVisible = await locatorFoo.locator(".bar").isVisible()
         expect(isBarVisible).toBe(false)
-      `),
-      output: test(`
-        const locatorFoo = page.locator(".foo")
-        const isBarVisible = locatorFoo.locator(".bar")
-        await expect(isBarVisible).toBeHidden()
       `),
       errors: [
         {
@@ -95,17 +90,17 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        const locatorFoo = page.locator(".foo")
+        const isBarVisible = locatorFoo.locator(".bar")
+        await expect(isBarVisible).toBeHidden()
+      `),
     },
     {
       code: test(`
         const locatorFoo = page.locator(".foo")
         const isBarVisible = await locatorFoo.locator(".bar").isVisible()
         expect(isBarVisible).toBe(true)
-      `),
-      output: test(`
-        const locatorFoo = page.locator(".foo")
-        const isBarVisible = locatorFoo.locator(".bar")
-        await expect(isBarVisible).toBeVisible()
       `),
       errors: [
         {
@@ -116,6 +111,11 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        const locatorFoo = page.locator(".foo")
+        const isBarVisible = locatorFoo.locator(".bar")
+        await expect(isBarVisible).toBeVisible()
+      `),
     },
     {
       code: test(
@@ -391,11 +391,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const fooLocatorText = await fooLocator.textContent();
         expect(fooLocatorText).toEqual('foo');
       `),
-      output: test(`
-        const fooLocator = page.locator('.fooClass');
-        const fooLocatorText = fooLocator;
-        await expect(fooLocatorText).toHaveText('foo');
-      `),
       errors: [
         {
           column: 9,
@@ -405,6 +400,11 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        const fooLocator = page.locator('.fooClass');
+        const fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
     },
     {
       code: test(`
@@ -414,13 +414,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         fooLocatorText = 'foo';
         expect(fooLocatorText).toEqual('foo');
       `),
-      output: test(`
-        const fooLocator = page.locator('.fooClass');
-        let fooLocatorText = fooLocator;
-        await expect(fooLocatorText).toHaveText('foo');
-        fooLocatorText = 'foo';
-        expect(fooLocatorText).toEqual('foo');
-      `),
       errors: [
         {
           column: 9,
@@ -430,6 +423,13 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        const fooLocator = page.locator('.fooClass');
+        let fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('foo');
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+      `),
     },
     {
       code: test(`
@@ -438,13 +438,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         fooLocatorText = 'Unrelated';
         fooLocatorText = await fooLocator.textContent();
         expect(fooLocatorText).toEqual('foo');
-      `),
-      output: test(`
-        let fooLocatorText;
-        const fooLocator = page.locator('.fooClass');
-        fooLocatorText = 'Unrelated';
-        fooLocatorText = fooLocator;
-        await expect(fooLocatorText).toHaveText('foo');
       `),
       errors: [
         {
@@ -455,6 +448,13 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        let fooLocatorText;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = 'Unrelated';
+        fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
     },
     {
       code: test(`
@@ -464,14 +464,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         fooLocatorText = await fooLocator.textContent();
         fooLocatorText2 = await fooLocator.textContent();
         expect(fooLocatorText).toEqual('foo');
-      `),
-      output: test(`
-        let fooLocatorText;
-        let fooLocatorText2;
-        const fooLocator = page.locator('.fooClass');
-        fooLocatorText = fooLocator;
-        fooLocatorText2 = await fooLocator.textContent();
-        await expect(fooLocatorText).toHaveText('foo');
       `),
       errors: [
         {
@@ -482,6 +474,14 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        let fooLocatorText;
+        let fooLocatorText2;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = fooLocator;
+        fooLocatorText2 = await fooLocator.textContent();
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
     },
     {
       code: test(`
@@ -490,13 +490,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         expect(fooLocatorText).toEqual('foo');
         fooLocatorText = await page.locator('.fooClass').textContent();
         expect(fooLocatorText).toEqual('foo');
-      `),
-      output: test(`
-        let fooLocatorText;
-        fooLocatorText = 'foo';
-        expect(fooLocatorText).toEqual('foo');
-        fooLocatorText = page.locator('.fooClass');
-        await expect(fooLocatorText).toHaveText('foo');
       `),
       errors: [
         {
@@ -507,17 +500,19 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        let fooLocatorText;
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+        fooLocatorText = page.locator('.fooClass');
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
     },
     {
       code: test(`
         const unrelatedAssignment = "unrelated";
         const fooLocatorText = await page.locator('.foo').textContent();
         expect(fooLocatorText).toEqual('foo');
-      `),
-      output: test(`
-        const unrelatedAssignment = "unrelated";
-        const fooLocatorText = page.locator('.foo');
-        await expect(fooLocatorText).toHaveText('foo');
       `),
       errors: [
         {
@@ -528,6 +523,11 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
+      output: test(`
+        const unrelatedAssignment = "unrelated";
+        const fooLocatorText = page.locator('.foo');
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
     },
 
     // isChecked
