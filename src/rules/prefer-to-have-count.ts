@@ -3,24 +3,27 @@ import { createRule } from '../utils/createRule'
 import { replaceAccessorFixer } from '../utils/fixer'
 import { parseFnCall } from '../utils/parseFnCall'
 
+const matchers = new Set([...equalityMatchers, 'toHaveLength'])
+
 export default createRule({
   create(context) {
     return {
       CallExpression(node) {
         const call = parseFnCall(context, node)
-        if (
-          call?.type !== 'expect' ||
-          !equalityMatchers.has(call.matcherName)
-        ) {
+        if (call?.type !== 'expect' || !matchers.has(call.matcherName)) {
           return
         }
 
+        // If the matcher is `toHaveLength`, we expect the inner call to be
+        // `all()`, otherwise we expect `count()`.
+        const accessor = call.matcherName === 'toHaveLength' ? 'all' : 'count'
         const argument = dereference(context, call.args[0])
+
         if (
           argument?.type !== 'AwaitExpression' ||
           argument.argument.type !== 'CallExpression' ||
           argument.argument.callee.type !== 'MemberExpression' ||
-          !isPropertyAccessor(argument.argument.callee, 'count')
+          !isPropertyAccessor(argument.argument.callee, accessor)
         ) {
           return
         }

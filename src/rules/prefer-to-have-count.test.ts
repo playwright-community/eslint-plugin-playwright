@@ -149,6 +149,13 @@ runRuleTester('prefer-to-have-count', rule, {
         filesCount = 0;
       `,
     },
+    {
+      code: "expect(await page.getByText('test').all()).toHaveLength(2)",
+      errors: [
+        { column: 44, endColumn: 56, line: 1, messageId: 'useToHaveCount' },
+      ],
+      output: "await expect(page.getByText('test')).toHaveCount(2)",
+    },
   ],
   valid: [
     { code: 'await expect(files).toHaveCount(1)' },
@@ -164,6 +171,9 @@ runRuleTester('prefer-to-have-count', rule, {
     {
       code: `expect(await page.evaluate(() => document.querySelectorAll("*").length)).toBe(10);`,
     },
+    // `toHaveLength`
+    { code: 'expect(files.length).toBe(1)' },
+    { code: 'expect(files).toHaveLength(1)' },
     // Global aliases
     {
       code: 'await assert(files).toHaveCount(1)',

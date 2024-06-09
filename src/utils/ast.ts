@@ -75,9 +75,10 @@ export function isStringNode(
 
 export function isPropertyAccessor(
   node: ESTree.MemberExpression,
-  name: string,
+  name: string | RegExp,
 ) {
-  return getStringValue(node.property) === name
+  const value = getStringValue(node.property)
+  return typeof name === 'string' ? value === name : name.test(value)
 }
 
 export function getParent(
