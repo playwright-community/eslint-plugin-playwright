@@ -46,6 +46,7 @@ runRuleTester('expect-expect', rule, {
     '["bar"]();',
     'testing("will test something eventually", () => {})',
     'test("should pass", () => expect(true).toBeDefined())',
+    'test("should pass", () => test.expect(true).toBeDefined())',
     'test.slow("should pass", () => expect(true).toBeDefined())',
     'test.skip("should pass", () => expect(true).toBeDefined())',
     // Config methods

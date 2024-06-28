@@ -464,6 +464,32 @@ runRuleTester('expect', rule, {
       `,
       errors: [{ column: 1, line: 3, messageId: 'modifier-unknown' }],
     },
+    {
+      code: 'test.expect(x).toBe(y);',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            args: ['x'],
+            group: 'expect',
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            matcher: 'toBe',
+            matcherArgs: ['y'],
+            matcherName: 'toBe',
+            members: ['toBe'],
+            modifiers: [],
+            name: 'expect',
+            type: 'expect',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
   ],
   valid: [],
 })

@@ -19,9 +19,12 @@ export function getRawValue(node: ESTree.Node) {
   return node.type === 'Literal' ? node.raw : undefined
 }
 
-export function isIdentifier(node: ESTree.Node, name?: string | RegExp) {
+export function isIdentifier(
+  node: ESTree.Node | undefined,
+  name?: string | RegExp,
+) {
   return (
-    node.type === 'Identifier' &&
+    node?.type === 'Identifier' &&
     (!name ||
       (typeof name === 'string' ? node.name === name : name.test(node.name)))
   )

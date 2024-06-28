@@ -329,10 +329,6 @@ function parse(
   let name = resolved.original ?? resolved.local
   const links = [name, ...rest.map((link) => getStringValue(link))]
 
-  if (name !== 'expect' && !VALID_CHAINS.has(links.join('.'))) {
-    return null
-  }
-
   // To support Playwright's convention of `test.describe`, `test.beforeEach`,
   // etc. we need to test the second link in the chain to find the true type.
   if (name === 'test' && links.length > 1) {
@@ -342,6 +338,10 @@ function parse(
     if (nextLinkGroup !== 'unknown') {
       name = nextLinkName
     }
+  }
+
+  if (name !== 'expect' && !VALID_CHAINS.has(links.join('.'))) {
+    return null
   }
 
   const parsedFnCall: Omit<ParsedFnCall, 'group' | 'type'> = {
@@ -355,6 +355,13 @@ function parse(
   const group = determinePlaywrightFnGroup(name)
 
   if (group === 'expect') {
+    // If using `test.expect` style, the `rest` array will start with `expect`
+    // and we need to remove it to ensure the chain accurately represents the
+    // `expect` call chain.
+    if (isIdentifier(rest[0], 'expect')) {
+      parsedFnCall.members.shift()
+    }
+
     const result = parseExpectCall(parsedFnCall)
 
     // If the `expect` call chain is not valid, only report on the topmost node
