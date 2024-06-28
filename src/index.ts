@@ -20,6 +20,7 @@ import noPagePause from './rules/no-page-pause'
 import noRawLocators from './rules/no-raw-locators'
 import noRestrictedMatchers from './rules/no-restricted-matchers'
 import noSkippedTest from './rules/no-skipped-test'
+import noSlowedTests from './rules/no-slowed-tests'
 import noStandaloneExpect from './rules/no-standalone-expect'
 import noUnsafeReferences from './rules/no-unsafe-references'
 import noUselessAwait from './rules/no-useless-await'
@@ -70,6 +71,7 @@ const index = {
     'no-raw-locators': noRawLocators,
     'no-restricted-matchers': noRestrictedMatchers,
     'no-skipped-test': noSkippedTest,
+    'no-slowed-test': noSlowedTests,
     'no-standalone-expect': noStandaloneExpect,
     'no-unsafe-references': noUnsafeReferences,
     'no-useless-await': noUselessAwait,
