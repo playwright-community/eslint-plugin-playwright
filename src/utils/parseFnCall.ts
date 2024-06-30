@@ -1,6 +1,7 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import {
+  dig,
   findParent,
   getParent,
   getStringValue,
@@ -167,11 +168,10 @@ export const modifiers = new Set(['not', 'resolves', 'rejects'])
 
 const findModifiersAndMatcher = (
   members: KnownMemberExpressionProperty[],
-): ModifiersAndMatcher | string => {
+): ModifiersAndMatcher | string | null => {
   const modifiers: KnownMemberExpressionProperty[] = []
 
   for (const member of members) {
-    // Otherwise, it should be a modifier
     const name = getStringValue(member)
 
     if (name === 'soft' || name === 'poll') {
@@ -265,8 +265,9 @@ export type ParsedFnCall = ParsedGeneralFnCall | ParsedExpectFnCall
 
 const parseExpectCall = (
   call: Omit<ParsedFnCall, 'group' | 'type'>,
-): ParsedExpectFnCall | string => {
+): ParsedExpectFnCall | string | null => {
   const modifiersAndMatcher = findModifiersAndMatcher(call.members)
+  if (!modifiersAndMatcher) return null
 
   if (typeof modifiersAndMatcher === 'string') {
     return modifiersAndMatcher
@@ -363,6 +364,7 @@ function parse(
     }
 
     const result = parseExpectCall(parsedFnCall)
+    if (!result) return null
 
     // If the `expect` call chain is not valid, only report on the topmost node
     // since all members in the chain are likely to get flagged for some reason

@@ -82,6 +82,7 @@ export default createRule({
         }
 
         const expect = getParent(call.head.node)
+        console.log(expect)
         if (expect?.type !== 'CallExpression') return
 
         if (expect.arguments.length < minArgs) {

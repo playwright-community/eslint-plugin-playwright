@@ -260,36 +260,6 @@ runRuleTester('expect', rule, {
       code: dedent`
         import { expect } from '@playwright/test';
 
-        expect.assertions();
-      `,
-      errors: [
-        {
-          column: 1,
-          data: expectedParsedFnCallResultData({
-            args: [],
-            group: 'expect',
-            head: {
-              local: 'expect',
-              node: 'expect',
-              original: null,
-            },
-            matcher: 'assertions',
-            matcherArgs: [],
-            matcherName: 'assertions',
-            members: ['assertions'],
-            modifiers: [],
-            name: 'expect',
-            type: 'expect',
-          }),
-          line: 3,
-          messageId: 'details',
-        },
-      ],
-    },
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
         expect(x).toBe(y);
       `,
       errors: [
@@ -375,58 +345,6 @@ runRuleTester('expect', rule, {
     {
       code: 'something(expect(x).not.toBe)',
       errors: [{ column: 11, line: 1, messageId: 'matcher-not-called' }],
-    },
-    {
-      code: dedent`
-        import { expect } from '@playwright/test';
-
-        expect.anything();
-        expect.not.arrayContaining();
-      `,
-      errors: [
-        {
-          column: 1,
-          data: expectedParsedFnCallResultData({
-            args: [],
-            group: 'expect',
-            head: {
-              local: 'expect',
-              node: 'expect',
-              original: null,
-            },
-            matcher: 'anything',
-            matcherArgs: [],
-            matcherName: 'anything',
-            members: ['anything'],
-            modifiers: [],
-            name: 'expect',
-            type: 'expect',
-          }),
-          line: 3,
-          messageId: 'details',
-        },
-        {
-          column: 1,
-          data: expectedParsedFnCallResultData({
-            args: [],
-            group: 'expect',
-            head: {
-              local: 'expect',
-              node: 'expect',
-              original: null,
-            },
-            matcher: 'arrayContaining',
-            matcherArgs: [],
-            matcherName: 'arrayContaining',
-            members: ['not', 'arrayContaining'],
-            modifiers: ['not'],
-            name: 'expect',
-            type: 'expect',
-          }),
-          line: 4,
-          messageId: 'details',
-        },
-      ],
     },
     {
       code: dedent`
@@ -1187,5 +1105,17 @@ runTSRuleTester('typescript', rule, {
     },
     "it('is not a  function', () => {});",
     'dedent()',
+    'expect.anything()',
+    'expect.arrayContaining()',
+    {
+      code: dedent`
+        import { expect } from '@playwright/test';
+
+        expect.assertions();
+        expect.anything();
+        expect.not.arrayContaining();
+      `,
+      only: true,
+    },
   ],
 })
