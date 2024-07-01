@@ -1115,7 +1115,6 @@ runTSRuleTester('typescript', rule, {
         expect.anything();
         expect.not.arrayContaining();
       `,
-      only: true,
     },
   ],
 })
