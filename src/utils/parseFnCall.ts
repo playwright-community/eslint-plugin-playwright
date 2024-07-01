@@ -94,21 +94,51 @@ export const isSupportedAccessor = (
 ): node is AccessorNode =>
   isIdentifier(node, value) || isStringNode(node, value)
 
-function getNodeChain(node: ESTree.Node): AccessorNode[] | null {
-  if (isSupportedAccessor(node)) {
-    return [node]
+class Chain {
+  #nodes: AccessorNode[] | null = null
+  #leaves: WeakSet<AccessorNode> = new WeakSet()
+
+  constructor(node: ESTree.Node) {
+    this.#nodes = this.#buildChain(node)
   }
 
-  switch (node.type) {
-    case 'TaggedTemplateExpression':
-      return getNodeChain(node.tag)
-    case 'MemberExpression':
-      return joinChains(getNodeChain(node.object), getNodeChain(node.property))
-    case 'CallExpression':
-      return getNodeChain(node.callee)
+  isLeaf(node: AccessorNode): boolean {
+    return this.#leaves.has(node)
   }
 
-  return null
+  get nodes() {
+    return this.#nodes
+  }
+
+  #buildChain(node: ESTree.Node, insideCall = false): AccessorNode[] | null {
+    if (isSupportedAccessor(node)) {
+      // If we are inside a call expression, then the current node is a leaf,
+      // that is, the end of the sub-chain. For example, in
+      // `expect.soft(x).not.toBe()`, `soft` and `toBe` are leaves.
+      if (insideCall) {
+        this.#leaves.add(node)
+      }
+
+      return [node]
+    }
+
+    switch (node.type) {
+      case 'TaggedTemplateExpression':
+        return this.#buildChain(node.tag)
+
+      case 'MemberExpression':
+        return joinChains(
+          this.#buildChain(node.object),
+          this.#buildChain(node.property, insideCall),
+        )
+
+      case 'CallExpression':
+        return this.#buildChain(node.callee, true)
+
+      default:
+        return null
+    }
+  }
 }
 
 const resolvePossibleAliasedGlobal = (
@@ -166,12 +196,13 @@ function determinePlaywrightFnGroup(name: string): FnGroup {
 export const modifiers = new Set(['not', 'resolves', 'rejects'])
 
 const findModifiersAndMatcher = (
+  chain: Chain,
   members: KnownMemberExpressionProperty[],
-): ModifiersAndMatcher | string => {
+  stage: ExpectParseStage,
+): ModifiersAndMatcher | string | null => {
   const modifiers: KnownMemberExpressionProperty[] = []
 
   for (const member of members) {
-    // Otherwise, it should be a modifier
     const name = getStringValue(member)
 
     if (name === 'soft' || name === 'poll') {
@@ -187,6 +218,12 @@ const findModifiersAndMatcher = (
         return 'modifier-unknown'
       }
     } else if (name !== 'not') {
+      // If we're in the "modifiers" stage and we find an unknown modifier,
+      // then it's actually an asymmetric matcher which we don't care about.
+      if (stage === 'modifiers') {
+        return null
+      }
+
       // Check if the member is being called, which means it is the matcher
       // (and also the end of the entire "expect" call chain).
       if (
@@ -205,6 +242,13 @@ const findModifiersAndMatcher = (
       return 'modifier-unknown'
     }
 
+    // When we find a leaf node, we're done with the modifiers and are moving
+    // on to the matchers.
+    if (chain.isLeaf(member)) {
+      stage = 'matchers'
+    }
+
+    // Add the modifier to the list of modifiers
     modifiers.push(member)
   }
 
@@ -263,10 +307,22 @@ export interface ParsedExpectFnCall
 
 export type ParsedFnCall = ParsedGeneralFnCall | ParsedExpectFnCall
 
+type ExpectParseStage = 'matchers' | 'modifiers'
+
 const parseExpectCall = (
+  chain: Chain,
   call: Omit<ParsedFnCall, 'group' | 'type'>,
-): ParsedExpectFnCall | string => {
-  const modifiersAndMatcher = findModifiersAndMatcher(call.members)
+  stage: ExpectParseStage,
+): ParsedExpectFnCall | string | null => {
+  const modifiersAndMatcher = findModifiersAndMatcher(
+    chain,
+    call.members,
+    stage,
+  )
+
+  if (!modifiersAndMatcher) {
+    return null
+  }
 
   if (typeof modifiersAndMatcher === 'string') {
     return modifiersAndMatcher
@@ -316,13 +372,10 @@ function parse(
   context: Rule.RuleContext,
   node: ESTree.CallExpression,
 ): ParsedFnCall | string | null {
-  const chain = getNodeChain(node)
+  const chain = new Chain(node)
+  if (!chain.nodes?.length) return null
 
-  if (!chain?.length) {
-    return null
-  }
-
-  const [first, ...rest] = chain
+  const [first, ...rest] = chain.nodes
   const resolved = resolveToPlaywrightFn(context, first)
   if (!resolved) return null
 
@@ -355,14 +408,20 @@ function parse(
   const group = determinePlaywrightFnGroup(name)
 
   if (group === 'expect') {
+    let stage: ExpectParseStage = chain.isLeaf(parsedFnCall.head.node)
+      ? 'matchers'
+      : 'modifiers'
+
     // If using `test.expect` style, the `rest` array will start with `expect`
     // and we need to remove it to ensure the chain accurately represents the
     // `expect` call chain.
     if (isIdentifier(rest[0], 'expect')) {
+      stage = chain.isLeaf(rest[0]) ? 'matchers' : 'modifiers'
       parsedFnCall.members.shift()
     }
 
-    const result = parseExpectCall(parsedFnCall)
+    const result = parseExpectCall(chain, parsedFnCall, stage)
+    if (!result) return null
 
     // If the `expect` call chain is not valid, only report on the topmost node
     // since all members in the chain are likely to get flagged for some reason
@@ -384,8 +443,8 @@ function parse(
 
   // Check that every link in the chain except the last is a member expression
   if (
-    chain
-      .slice(0, chain.length - 1)
+    chain.nodes
+      .slice(0, chain.nodes.length - 1)
       .some((n) => getParent(n)?.type !== 'MemberExpression')
   ) {
     return null

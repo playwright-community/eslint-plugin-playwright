@@ -1,22 +1,36 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/no-conditional-expect'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 const messageId = 'conditionalExpect'
 
 runRuleTester('common tests', rule, {
   invalid: [],
   valid: [
-    `
+    javascript`
       test('foo', () => {
         expect(1).toBe(2);
       });
     `,
-    `
+    javascript`
       test('foo', () => {
         expect(!true).toBe(false);
       });
     `,
+    {
+      code: javascript`
+        test('foo', () => {
+          const expected = arr.map((x) => {
+            if (typeof x === 'string') {
+              return expect.arrayContaining([x])
+            } else {
+              return b
+            }
+          })
+
+          expect([1, 2, 3]).toEqual(expected);
+        });
+      `,
+    },
   ],
 })
 
@@ -154,7 +168,7 @@ runRuleTester('logical conditions', rule, {
     `,
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it('foo', () => {
           process.env.FAIL && setNum(1);
 
@@ -331,7 +345,6 @@ runRuleTester('catch conditions', rule, {
       code: `
         test('foo', () => {
           try {
-  
           } catch (err) {
             expect(err).toMatch('Error');
           }
@@ -397,7 +410,7 @@ runRuleTester('catch conditions', rule, {
 runRuleTester('promises', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         test('works', async () => {
           await Promise.resolve()
             .then(() => { throw new Error('oh noes!'); })
@@ -407,7 +420,7 @@ runRuleTester('promises', rule, {
       errors: [{ messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('works', async () => {
           await Promise.resolve()
             .then(() => { throw new Error('oh noes!'); })
@@ -421,7 +434,7 @@ runRuleTester('promises', rule, {
       errors: [{ messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('works', async () => {
           await Promise.resolve()
             .catch(error => expect(error).toBeInstanceOf(Error))
@@ -432,7 +445,7 @@ runRuleTester('promises', rule, {
       errors: [{ messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('works', async () => {
           await Promise.resolve()
             .catch(error => expect(error).toBeInstanceOf(Error))
@@ -444,7 +457,7 @@ runRuleTester('promises', rule, {
       errors: [{ messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('works', async () => {
           await somePromise
             .then(() => { throw new Error('oh noes!'); })
@@ -454,7 +467,7 @@ runRuleTester('promises', rule, {
       errors: [{ messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('works', async () => {
           await somePromise.catch(error => expect(error).toBeInstanceOf(Error));
         });
