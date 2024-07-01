@@ -1105,15 +1105,17 @@ runTSRuleTester('typescript', rule, {
     },
     "it('is not a  function', () => {});",
     'dedent()',
+    'expect.assertions()',
     'expect.anything()',
     'expect.arrayContaining()',
+    'expect.objectContaining(expected)',
+    'expect.not.objectContaining(expected)',
     {
       code: dedent`
         import { expect } from '@playwright/test';
 
         expect.assertions();
         expect.anything();
-        expect.not.arrayContaining();
       `,
     },
   ],
