@@ -416,8 +416,8 @@ function parse(
     // and we need to remove it to ensure the chain accurately represents the
     // `expect` call chain.
     if (isIdentifier(rest[0], 'expect')) {
-      parsedFnCall.members.shift()
       stage = chain.isLeaf(rest[0]) ? 'matchers' : 'modifiers'
+      parsedFnCall.members.shift()
     }
 
     const result = parseExpectCall(chain, parsedFnCall, stage)
