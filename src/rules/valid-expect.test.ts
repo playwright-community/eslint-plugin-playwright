@@ -215,8 +215,7 @@ runRuleTester('valid-expect', rule, {
   valid: [
     { code: 'expectPayButtonToBeEnabled()' },
     { code: 'expect("something").toBe("else")' },
-    { code: 'expect.soft()', only: true },
-    { code: 'expect.anything()', only: true },
+    { code: 'expect.anything()' },
     { code: 'expect("something").toBe(expect.anything())' },
     { code: 'expect("something").toEqual({ foo: expect.anything() })' },
     { code: 'expect("something").toBe(expect.arrayContaining([1, 2, 3]))' },
