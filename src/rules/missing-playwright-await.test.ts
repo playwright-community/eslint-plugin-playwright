@@ -1,4 +1,3 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/missing-playwright-await'
 import { runRuleTester, test } from '../utils/rule-tester'
 
@@ -162,7 +161,7 @@ runRuleTester('missing-playwright-await', rule, {
     },
     // expect.configure
     {
-      code: dedent`
+      code: javascript`
         test('test', async () => {
           const softExpect = expect.configure({ soft: true })
           softExpect(foo).toBeChecked()
@@ -177,7 +176,7 @@ runRuleTester('missing-playwright-await', rule, {
           messageId: 'expect',
         },
       ],
-      output: dedent`
+      output: javascript`
         test('test', async () => {
           const softExpect = expect.configure({ soft: true })
           await softExpect(foo).toBeChecked()

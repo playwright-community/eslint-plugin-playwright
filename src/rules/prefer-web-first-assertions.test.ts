@@ -1,6 +1,5 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/prefer-web-first-assertions'
-import { runRuleTester, test } from '../utils/rule-tester'
+import { javascript, runRuleTester, test } from '../utils/rule-tester'
 
 runRuleTester('prefer-web-first-assertions', rule, {
   invalid: [
@@ -938,7 +937,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     { code: test('const value = await bar["inputValue"]()') },
     { code: test('const isEditable = await baz[`isEditable`]()') },
     {
-      code: dedent`
+      code: javascript`
         import { expect } from '@playwright/test';
 
         test('my test', async ({ page }) => {

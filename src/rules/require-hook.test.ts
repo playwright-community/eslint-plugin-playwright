@@ -1,4 +1,3 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/require-hook'
 import { runRuleTester, runTSRuleTester } from '../utils/rule-tester'
 
@@ -11,7 +10,7 @@ runRuleTester('require-hook', rule, {
       errors: [{ column: 1, line: 1, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('some tests', () => {
           setup();
         });
@@ -19,7 +18,7 @@ runRuleTester('require-hook', rule, {
       errors: [{ column: 3, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('some tests', { tag: '@slow' }, () => {
           setup();
         });
@@ -27,7 +26,7 @@ runRuleTester('require-hook', rule, {
       errors: [{ column: 3, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         let { setup } = require('./test-utils');
 
         test.describe('some tests', () => {
@@ -40,7 +39,7 @@ runRuleTester('require-hook', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('some tests', () => {
           setup();
 
@@ -67,7 +66,7 @@ runRuleTester('require-hook', rule, {
       errors: [{ column: 1, line: 1, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         import { database, isCity } from '../database';
         import { loadCities } from '../api';
 
@@ -113,7 +112,7 @@ runRuleTester('require-hook', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         enableAutoDestroy(test.afterEach);
 
         test.describe('some tests', () => {
@@ -127,7 +126,7 @@ runRuleTester('require-hook', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it.describe('some tests', () => {
           setup();
         });
@@ -152,7 +151,7 @@ runRuleTester('require-hook', rule, {
     { code: 'test.describe("just a title", { tag: "@slow" })' },
     { code: 'test.describe.configure({ mode: "parallel" })' },
     {
-      code: dedent`
+      code: javascript`
         test.describe.configure({ mode: 'parallel' });
 
         test.describe('A, runs in parallel with B', () => {
@@ -163,7 +162,7 @@ runRuleTester('require-hook', rule, {
       `,
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe.configure({ mode: 'parallel' });
 
         test.describe('A, runs in parallel with B', { tag: "@slow" }, () => {
@@ -173,18 +172,18 @@ runRuleTester('require-hook', rule, {
         });
       `,
     },
-    dedent`
+    javascript`
       test.describe('a test', () =>
         test('something', () => {
           expect(true).toBe(true);
         }));
     `,
-    dedent`
+    javascript`
       test('it', () => {
         //
       });
     `,
-    dedent`
+    javascript`
       const { myFn } = require('../functions');
 
       test('myFn', () => {
@@ -192,7 +191,7 @@ runRuleTester('require-hook', rule, {
       });
     `,
     {
-      code: dedent`
+      code: javascript`
         import { myFn } from '../functions';
 
         test('myFn', () => {
@@ -200,7 +199,7 @@ runRuleTester('require-hook', rule, {
         });
       `,
     },
-    dedent`
+    javascript`
       class MockLogger {
         log() {}
       }
@@ -209,7 +208,7 @@ runRuleTester('require-hook', rule, {
         expect(myFn()).toBe(1);
       });
     `,
-    dedent`
+    javascript`
       const { myFn } = require('../functions');
 
       test.describe('myFn', () => {
@@ -218,14 +217,14 @@ runRuleTester('require-hook', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test.describe('some tests', () => {
         test('is true', () => {
           expect(true).toBe(true);
         });
       });
     `,
-    dedent`
+    javascript`
       test.describe('some tests', () => {
         test('is true', () => {
           expect(true).toBe(true);
@@ -238,14 +237,14 @@ runRuleTester('require-hook', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test.describe('some tests', () => {
         test.beforeEach(() => {
           setup();
         });
       });
     `,
-    dedent`
+    javascript`
       test.beforeEach(() => {
         initializeCityDatabase();
       });
@@ -262,7 +261,7 @@ runRuleTester('require-hook', rule, {
         expect(isCity('San Juan')).toBeTruthy();
       });
     `,
-    dedent`
+    javascript`
       test.describe('cities', () => {
         test.beforeEach(() => {
           initializeCityDatabase();
@@ -282,7 +281,7 @@ runRuleTester('require-hook', rule, {
       });
     `,
     {
-      code: dedent`
+      code: javascript`
         enableAutoDestroy(test.afterEach);
 
         test.describe('some tests', () => {
@@ -295,7 +294,7 @@ runRuleTester('require-hook', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it.beforeEach(() => {
           initializeCityDatabase();
         });
@@ -324,7 +323,7 @@ runRuleTester('require-hook', rule, {
 runTSRuleTester('require-hook - TypeScript', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         import { setup } from '../test-utils';
 
         // todo: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/56545
@@ -344,7 +343,7 @@ runTSRuleTester('require-hook - TypeScript', rule, {
     },
   ],
   valid: [
-    dedent`
+    javascript`
       import { myFn } from '../functions';
 
       // todo: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/56545

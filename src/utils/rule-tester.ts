@@ -41,3 +41,4 @@ export function runTSRuleTester(...args: Parameters<RuleTester['run']>) {
 export const test = (input: string) => `test('test', async () => { ${input} })`
 
 export const javascript = dedent
+export const typescript = dedent

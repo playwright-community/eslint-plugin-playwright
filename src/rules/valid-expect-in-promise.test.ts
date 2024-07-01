@@ -1,11 +1,10 @@
-import dedent from 'dedent'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 import rule from './valid-expect-in-promise'
 
 runRuleTester('valid-expect-in-promise', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         const myFn = () => {
           Promise.resolve().then(() => {
             expect(true).toBe(false);
@@ -28,7 +27,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', () => {
           somePromise.then(() => {
             expect(someThing).toEqual(true);
@@ -40,7 +39,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', () => {
           somePromise.finally(() => {
             expect(someThing).toEqual(true);
@@ -64,7 +63,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', function() {
           getSomeThing().getPromise().then(function() {
             expect(someThing).toEqual(true);
@@ -76,7 +75,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', function() {
           Promise.resolve().then(function() {
             expect(someThing).toEqual(true);
@@ -88,7 +87,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', function() {
           somePromise.catch(function() {
             expect(someThing).toEqual(true)
@@ -100,7 +99,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', function() {
           somePromise.then(function() {
             expect(someThing).toEqual(true)
@@ -112,7 +111,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', function () {
           Promise.resolve().then(/*fulfillment*/ function () {
             expect(someThing).toEqual(true);
@@ -126,7 +125,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', function () {
           Promise.resolve().then(/*fulfillment*/ function () {
           }, /*rejection*/ function () {
@@ -139,7 +138,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('test function', () => {
           Builder.getPromiseBuilder()
             .get()
@@ -165,7 +164,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', () => {
           somePromise.then(() => {
             doSomeOperation();
@@ -178,7 +177,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is a test', () => {
           somePromise
             .then(() => {})
@@ -190,7 +189,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is a test', () => {
           somePromise
             .then(() => expect(someThing).toEqual(value))
@@ -202,7 +201,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is a test', () => {
           somePromise.then(() => {
             return value;
@@ -217,7 +216,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is a test', () => {
           somePromise.then(() => {
             expect(someThing).toEqual(true);
@@ -232,7 +231,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is a test', () => {
           somePromise.then(() => {
             // return value;
@@ -247,7 +246,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is a test', () => {
           somePromise.then(() => {
             return value;
@@ -264,7 +263,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is a test', () => {
           somePromise
             .then(() => 1)
@@ -280,7 +279,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is a test', () => {
           somePromise
             .then(() => 1)
@@ -296,7 +295,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', () => {
           somePromise.finally(() => {
             doSomeOperation();
@@ -309,7 +308,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('invalid return', () => {
           const promise = something().then(value => {
             const foo = "foo";
@@ -322,7 +321,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.skip('foo', () => {
           somePromise.then(() => {
             doSomeOperation();
@@ -335,7 +334,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -349,7 +348,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -365,7 +364,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -381,7 +380,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -397,7 +396,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -413,7 +412,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -429,7 +428,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -445,7 +444,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -459,7 +458,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -473,7 +472,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -487,7 +486,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -501,7 +500,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -515,7 +514,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -527,7 +526,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('later return', async () => {
           const x = 1, promise = something().then(value => {
             expect(value).toBe('red');
@@ -539,7 +538,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         import { test } from '@playwright/test';
 
         test('later return', async () => {
@@ -553,7 +552,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('promise test', () => {
           const somePromise = getThatPromise();
           somePromise.then((data) => {
@@ -568,7 +567,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('promise test', function () {
           let somePromise = getThatPromise();
           somePromise.then((data) => {
@@ -583,7 +582,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('promise test', async function () {
           let somePromise = getPromise().then((data) => {
             expect(data).toEqual('foo');
@@ -599,7 +598,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('promise test', async function () {
           let somePromise = getPromise().then((data) => {
             expect(data).toEqual('foo');
@@ -622,7 +621,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('promise test', async function () {
           let somePromise = getPromise().then((data) => {
             expect(data).toEqual('foo');
@@ -641,7 +640,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('promise test', async function () {
           let somePromise = getPromise().then((data) => {
             expect(data).toEqual('foo');
@@ -666,7 +665,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('that we error on this destructuring', async () => {
           [promise] = something().then(value => {
             expect(value).toBe('red');
@@ -683,7 +682,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('that we error on this', () => {
           const promise = something().then(value => {
             expect(value).toBe('red');
@@ -701,7 +700,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is valid', async () => {
           const promise = loadNumber().then(number => {
             expect(typeof number).toBe('number');
@@ -721,7 +720,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('is valid', async () => {
           const promise = loadNumber().then(number => {
             expect(typeof number).toBe('number');
@@ -742,7 +741,7 @@ runRuleTester('valid-expect-in-promise', rule, {
     },
     // TODO:
     // {
-    //   code: dedent`
+    //   code: javascript`
     //     import { test as promiseThatThis } from '@playwright/test';
     //
     //     promiseThatThis('is valid', async () => {
@@ -765,7 +764,7 @@ runRuleTester('valid-expect-in-promise', rule, {
     // },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         test('is valid', async () => {
           const promise = loadNumber().then(number => {
             assert(typeof number).toBe('number');
@@ -790,7 +789,7 @@ runRuleTester('valid-expect-in-promise', rule, {
       },
     },
     {
-      code: dedent`
+      code: javascript`
         it('is valid', async () => {
           const promise = loadNumber().then(number => {
             expect(typeof number).toBe('number');
@@ -819,7 +818,7 @@ runRuleTester('valid-expect-in-promise', rule, {
     "test('something', () => Promise.resolve().then(() => expect(1).toBe(2)));",
     'Promise.resolve().then(() => expect(1).toBe(2))',
     'const x = Promise.resolve().then(() => expect(1).toBe(2))',
-    dedent`
+    javascript`
       test('is valid', () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -830,7 +829,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(promise).resolves.toBe(1);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -841,7 +840,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(promise).resolves.not.toBe(2);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -852,7 +851,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(promise).rejects.toBe(1);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -863,7 +862,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(promise).rejects.not.toBe(2);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -874,7 +873,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(await promise).toBeGreaterThan(1);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -885,7 +884,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(await promise).resolves.toBeGreaterThan(1);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -896,7 +895,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(1).toBeGreaterThan(await promise);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -907,7 +906,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect.this.that.is(await promise);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         expect(await loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -916,7 +915,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         })).toBeGreaterThan(1);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -927,7 +926,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect([await promise]).toHaveLength(1);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -938,7 +937,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect([,,await promise,,]).toHaveLength(1);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -949,7 +948,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect([[await promise]]).toHaveLength(1);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -960,7 +959,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         logValue(await promise);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promise = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -971,14 +970,14 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect.assertions(await promise);
       });
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         await loadNumber().then(number => {
           expect(typeof number).toBe('number');
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', () => new Promise((done) => {
         test()
           .then(() => {
@@ -987,7 +986,7 @@ runRuleTester('valid-expect-in-promise', rule, {
           });
       }));
     `,
-    dedent`
+    javascript`
       test('foo', () => {
         return new Promise(done => {
           test().then(() => {
@@ -997,14 +996,14 @@ runRuleTester('valid-expect-in-promise', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test('passes', () => {
         Promise.resolve().then(() => {
           grabber.grabSomething();
         });
       });
     `,
-    dedent`
+    javascript`
       test('passes', async () => {
         const grabbing = Promise.resolve().then(() => {
           grabber.grabSomething();
@@ -1015,21 +1014,21 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(grabber.grabbedItems).toHaveLength(1);
       });
     `,
-    dedent`
+    javascript`
       const myFn = () => {
         Promise.resolve().then(() => {
           expect(true).toBe(false);
         });
       };
     `,
-    dedent`
+    javascript`
       const myFn = () => {
         Promise.resolve().then(() => {
           subject.invokeMethod();
         });
       };
     `,
-    dedent`
+    javascript`
       const myFn = () => {
         Promise.resolve().then(() => {
           expect(true).toBe(false);
@@ -1042,7 +1041,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', () => new Promise((done) => {
         test()
           .finally(() => {
@@ -1051,49 +1050,49 @@ runRuleTester('valid-expect-in-promise', rule, {
           });
       }));
     `,
-    dedent`
+    javascript`
       test('foo', () => {
         return somePromise.then(() => {
           expect(someThing).toEqual(true);
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', () => {
         return somePromise.finally(() => {
           expect(someThing).toEqual(true);
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', function() {
         return somePromise.catch(function() {
           expect(someThing).toEqual(true);
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', function() {
         return somePromise.then(function() {
           doSomeThingButNotExpect();
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', function() {
         return getSomeThing().getPromise().then(function() {
           expect(someThing).toEqual(true);
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', function() {
         return Promise.resolve().then(function() {
           expect(someThing).toEqual(true);
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', function () {
         return Promise.resolve().then(function () {
           /*fulfillment*/
@@ -1104,7 +1103,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', function () {
         Promise.resolve().then(/*fulfillment*/ function () {
         }, undefined, /*rejection*/ function () {
@@ -1112,7 +1111,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         })
       });
     `,
-    dedent`
+    javascript`
       test('foo', function () {
         return Promise.resolve().then(function () {
           /*fulfillment*/
@@ -1122,33 +1121,33 @@ runRuleTester('valid-expect-in-promise', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', function () {
         return somePromise.then()
       });
     `,
-    dedent`
+    javascript`
       test('foo', async () => {
         await Promise.resolve().then(function () {
           expect(someThing).toEqual(true)
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', async () => {
         await somePromise.then(() => {
           expect(someThing).toEqual(true)
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', async () => {
         await getSomeThing().getPromise().then(function () {
           expect(someThing).toEqual(true)
         });
       });
     `,
-    dedent`
+    javascript`
       test('foo', () => {
         return somePromise.then(() => {
           expect(someThing).toEqual(true);
@@ -1158,7 +1157,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         })
       });
     `,
-    dedent`
+    javascript`
       test('foo', () => {
         return somePromise.then(() => {
           return value;
@@ -1168,7 +1167,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         })
       });
     `,
-    dedent`
+    javascript`
       test('foo', () => {
         return somePromise.then(() => {
           expect(someThing).toEqual(true);
@@ -1178,7 +1177,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         })
       });
     `,
-    dedent`
+    javascript`
       test('foo', () => {
         return somePromise.then(() => {
           expect(someThing).toEqual(true);
@@ -1188,7 +1187,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         })
       });
     `,
-    dedent`
+    javascript`
       test('later return', () => {
         const promise = something().then(value => {
           expect(value).toBe('red');
@@ -1197,7 +1196,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         return promise;
       });
     `,
-    dedent`
+    javascript`
       test('later return', async () => {
         const promise = something().then(value => {
           expect(value).toBe('red');
@@ -1206,7 +1205,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await promise;
       });
     `,
-    dedent`
+    javascript`
       test.only('later return', () => {
         const promise = something().then(value => {
           expect(value).toBe('red');
@@ -1215,21 +1214,21 @@ runRuleTester('valid-expect-in-promise', rule, {
         return promise;
       });
     `,
-    dedent`
+    javascript`
       test('that we bailout if destructuring is used', () => {
         const [promise] = something().then(value => {
           expect(value).toBe('red');
         });
       });
     `,
-    dedent`
+    javascript`
       test('that we bailout if destructuring is used', async () => {
         const [promise] = await something().then(value => {
           expect(value).toBe('red');
         });
       });
     `,
-    dedent`
+    javascript`
       test('that we bailout if destructuring is used', () => {
         const [promise] = [
           something().then(value => {
@@ -1238,7 +1237,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         ];
       });
     `,
-    dedent`
+    javascript`
       test('that we bailout if destructuring is used', () => {
         const {promise} = {
           promise: something().then(value => {
@@ -1247,7 +1246,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         };
       });
     `,
-    dedent`
+    javascript`
       test('that we bailout in complex cases', () => {
         promiseSomething({
           timeout: 500,
@@ -1257,7 +1256,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test('shorthand arrow', () =>
         something().then(value => {
           expect(() => {
@@ -1266,7 +1265,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         })
       );
     `,
-    dedent`
+    javascript`
       test('crawls for files based on patterns', () => {
         const promise = nodeCrawl({}).then(data => {
           expect(childProcess.spawn).lastCalledWith('find');
@@ -1274,7 +1273,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         return promise;
       });
     `,
-    dedent`
+    javascript`
       test('is a test', async () => {
         const value = await somePromise().then(response => {
           expect(response).toHaveProperty('data');
@@ -1285,7 +1284,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(value).toBe('hello world');
       });
     `,
-    dedent`
+    javascript`
       test('is a test', async () => {
         return await somePromise().then(response => {
           expect(response).toHaveProperty('data');
@@ -1294,7 +1293,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test('is a test', async () => {
         return somePromise().then(response => {
           expect(response).toHaveProperty('data');
@@ -1303,7 +1302,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test('is a test', async () => {
         await somePromise().then(response => {
           expect(response).toHaveProperty('data');
@@ -1312,7 +1311,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test(
         'test function',
         () => {
@@ -1325,7 +1324,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         }
       );
     `,
-    dedent`
+    javascript`
       notATestFunction(
         'not a test function',
         () => {
@@ -1339,7 +1338,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         }
       );
     `,
-    dedent`
+    javascript`
       test('is valid', async () => {
         const promiseOne = loadNumber().then(number => {
           expect(typeof number).toBe('number');
@@ -1352,25 +1351,25 @@ runRuleTester('valid-expect-in-promise', rule, {
         await promiseOne;
       });
     `,
-    dedent`
+    javascript`
       test("foo", () => somePromise.then(() => {
         expect(someThing).toEqual(true)
       }))
     `,
     'test("foo", () => somePromise.then(() => expect(someThing).toEqual(true)))',
-    dedent`
+    javascript`
       test('promise test with done', (done) => {
         const promise = getPromise();
         promise.then(() => expect(someThing).toEqual(true));
       });
     `,
-    dedent`
+    javascript`
       test('name of done param does not matter', (nameDoesNotMatter) => {
         const promise = getPromise();
         promise.then(() => expect(someThing).toEqual(true));
       });
     `,
-    dedent`
+    javascript`
       test('valid-expect-in-promise', async () => {
         const text = await fetch('url')
             .then(res => res.text())
@@ -1379,7 +1378,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         expect(text).toBe('text');
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1388,7 +1387,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await somePromise;
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let x = 1, somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1397,7 +1396,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await somePromise;
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1412,7 +1411,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await somePromise;
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1427,7 +1426,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         return somePromise;
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1438,7 +1437,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await somePromise;
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         const somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1449,7 +1448,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         }
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1466,7 +1465,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         }
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1483,7 +1482,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         }
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1496,7 +1495,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await somePromise;
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1512,7 +1511,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await somePromise;
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1525,7 +1524,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await somePromise;
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         let somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1544,7 +1543,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         }
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         const somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1553,7 +1552,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await Promise.all([somePromise]);
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         const somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1562,7 +1561,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         return Promise.all([somePromise]);
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         const somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1571,7 +1570,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         return Promise.resolve(somePromise);
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         const somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1580,7 +1579,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         return Promise.reject(somePromise);
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         const somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1589,7 +1588,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await Promise.resolve(somePromise);
       });
     `,
-    dedent`
+    javascript`
       test('promise test', async function () {
         const somePromise = getPromise().then((data) => {
           expect(data).toEqual('foo');
@@ -1598,7 +1597,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         await Promise.reject(somePromise);
       });
     `,
-    dedent`
+    javascript`
       test('later return', async () => {
         const onePromise = something().then(value => {
           console.log(value);
@@ -1610,7 +1609,7 @@ runRuleTester('valid-expect-in-promise', rule, {
         return Promise.all([onePromise, twoPromise]);
       });
     `,
-    dedent`
+    javascript`
       test('later return', async () => {
         const onePromise = something().then(value => {
           console.log(value);

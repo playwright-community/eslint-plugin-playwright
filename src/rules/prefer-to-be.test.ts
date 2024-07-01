@@ -84,7 +84,7 @@ runRuleTester('prefer-to-be', rule, {
     'expect("something");',
     'expect(token).toStrictEqual(/[abc]+/g);',
     "expect(token).toStrictEqual(new RegExp('[abc]+', 'g'));",
-    'expect(value).toEqual(dedent`my string`);',
+    'expect(value).toEqual(javascript`my string`);',
     // Global aliases
     {
       code: 'assert(null).toBeNull();',

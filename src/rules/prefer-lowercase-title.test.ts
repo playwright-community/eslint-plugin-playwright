@@ -1,6 +1,5 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/prefer-lowercase-title'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 const messageId = 'unexpectedLowercase'
 
@@ -420,7 +419,7 @@ runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
       output: 'test("works!", () => {});',
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('MyClass', () => {
           test.describe('MyMethod', () => {
             test('Does things', () => {});
@@ -444,7 +443,7 @@ runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
         },
       ],
       options: [{ ignoreTopLevelDescribe: true }],
-      output: dedent`
+      output: javascript`
         test.describe('MyClass', () => {
           test.describe('myMethod', () => {
             test('does things', () => {});
@@ -461,7 +460,7 @@ runRuleTester('prefer-lowercase-title with ignoreTopLevelDescribe', rule, {
       options: [{ ignoreTopLevelDescribe: true }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('MyClass', () => {
           test.describe('#myMethod', () => {
             test('does things', () => {});

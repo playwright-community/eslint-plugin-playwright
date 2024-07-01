@@ -1,6 +1,5 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/no-conditional-in-test'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 const messageId = 'conditionalInTest'
 
@@ -11,7 +10,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 21, endColumn: 53, endLine: 1, line: 1, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe("foo", () => {
           test("bar", () => {
             if (someCondition()) {
@@ -25,7 +24,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 5, endColumn: 6, endLine: 7, line: 3, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         describe('foo', () => {
           test('bar', () => {
             if ('bar') {}
@@ -35,7 +34,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 5, endColumn: 18, endLine: 3, line: 3, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         describe('foo', () => {
           test('bar', () => {
             if ('bar') {}
@@ -53,7 +52,7 @@ runRuleTester('no-conditional-in-test', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test("foo", function () {
           switch(someCondition()) {
             case 1:
@@ -68,7 +67,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 4, endLine: 9, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', () => {
           if ('bar') {}
         })
@@ -76,7 +75,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 2, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', () => {
           bar ? expect(1).toBe(1) : expect(2).toBe(2);
         })
@@ -84,7 +83,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 46, endLine: 2, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', function () {
           bar ? expect(1).toBe(1) : expect(2).toBe(2);
         })
@@ -92,7 +91,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 46, endLine: 2, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', function () {
           if ('bar') {}
         })
@@ -100,7 +99,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 2, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', async function ({ page }) {
           await asyncFunc();
           if ('bar') {}
@@ -109,7 +108,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 3, line: 3, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.skip('foo', () => {
           if ('bar') {}
         })
@@ -117,7 +116,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 2, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.skip('foo', async ({ page }) => {
           await asyncFunc();
           if ('bar') {}
@@ -126,7 +125,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 3, line: 3, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.skip('foo', function () {
           if ('bar') {}
         })
@@ -134,7 +133,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 2, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.only('foo', () => {
           if ('bar') {}
         })
@@ -142,7 +141,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 2, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.fixme('foo', () => {
           if ('bar') {}
         })
@@ -150,7 +149,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 2, line: 2, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', () => {
           callExpression()
           if ('bar') {}
@@ -159,7 +158,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 3, endColumn: 16, endLine: 3, line: 3, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         testDetails.forEach((detail) => {
           test(detail.name, () => {
             if (detail.fail) {
@@ -173,7 +172,7 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 5, endColumn: 6, endLine: 7, line: 3, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('test', async ({ page }) => {
           await test.step('step', async () => {
             if (true) {}

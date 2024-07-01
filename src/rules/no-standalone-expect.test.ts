@@ -1,6 +1,5 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/no-standalone-expect'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 const messageId = 'unexpectedExpect'
 
@@ -23,7 +22,7 @@ runRuleTester('no-standalone-expect', rule, {
       errors: [{ column: 29, endColumn: 53, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('scenario', () => {
           const t = Math.random() ? test.only : test;
           t('testing', () => expect(true).toBe(false));
@@ -32,7 +31,7 @@ runRuleTester('no-standalone-expect', rule, {
       errors: [{ column: 22, endColumn: 46, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         it.describe('scenario', () => {
           it('testing', () => expect(true).toBe(false));
         });
@@ -60,7 +59,7 @@ runRuleTester('no-standalone-expect', rule, {
       errors: [{ column: 2, endColumn: 19, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         import { expect as pleaseExpect } from '@playwright/test';
         test.describe("a test", () => { pleaseExpect(1).toBe(1); });
       `,
@@ -68,7 +67,7 @@ runRuleTester('no-standalone-expect', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         test.describe('scenario', () => {
           const t = Math.random() ? test.only : test;
           t('testing', () => assert(true).toBe(false));
@@ -103,7 +102,7 @@ runRuleTester('no-standalone-expect', rule, {
     'class Helper { foo() { expect(1).toBe(1); } }',
     'class Helper { foo = () => { expect(1).toBe(1); } }',
     {
-      code: dedent`
+      code: javascript`
         test.describe('Test describe', () => {
           test.beforeAll(async ({ page }) => {
             await page.goto('https://google.com');
@@ -115,7 +114,7 @@ runRuleTester('no-standalone-expect', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it.describe('scenario', () => {
           it('testing', () => assert(true));
         });

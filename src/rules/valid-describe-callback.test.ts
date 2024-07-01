@@ -1,5 +1,4 @@
-import dedent from 'dedent'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 import rule from './valid-describe-callback'
 
 runRuleTester('valid-describe-callback', rule, {
@@ -45,7 +44,7 @@ runRuleTester('valid-describe-callback', rule, {
       errors: [{ column: 27, line: 1, messageId: 'noAsyncDescribeCallback' }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('sample case', () => {
           test('works', () => {
             expect(true).toEqual(true);
@@ -61,7 +60,7 @@ runRuleTester('valid-describe-callback', rule, {
       errors: [{ column: 26, line: 5, messageId: 'noAsyncDescribeCallback' }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', function () {
           return Promise.resolve().then(() => {
             test('breaks', () => {
@@ -73,7 +72,7 @@ runRuleTester('valid-describe-callback', rule, {
       errors: [{ column: 3, line: 2, messageId: 'unexpectedReturnInDescribe' }],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () => {
           return Promise.resolve().then(() => {
             test('breaks', () => {
@@ -95,7 +94,7 @@ runRuleTester('valid-describe-callback', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', async () => {
           await something()
           test('does something')
@@ -114,7 +113,7 @@ runRuleTester('valid-describe-callback', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () =>
           test('bar', () => {})
         )
@@ -175,7 +174,7 @@ runRuleTester('valid-describe-callback', rule, {
     'test.describe.only("foo", () => {})',
     'describe("foo", () => {})',
     'describe.only("foo", () => {})',
-    dedent`
+    javascript`
       test.describe('foo', () => {
         test('bar', () => {
           return Promise.resolve(42).then(value => {
@@ -184,14 +183,14 @@ runRuleTester('valid-describe-callback', rule, {
         })
       })
     `,
-    dedent`
+    javascript`
       test.describe('foo', () => {
         test('bar', async () => {
           expect(await Promise.resolve(42)).toBe(42)
         })
       })
     `,
-    dedent`
+    javascript`
       if (hasOwnProperty(obj, key)) {
       }
     `,

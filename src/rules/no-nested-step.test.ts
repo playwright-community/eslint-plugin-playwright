@@ -1,13 +1,12 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/no-nested-step'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 const messageId = 'noNestedStep'
 
 runRuleTester('max-nested-step', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         test('foo', async () => {
           await test.step("step1", async () => {
             await test.step("nested step1", async () => {
@@ -19,7 +18,7 @@ runRuleTester('max-nested-step', rule, {
       errors: [{ column: 11, endColumn: 20, endLine: 3, line: 3, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', async () => {
           await test.step("step1", async () => {
             await test.step("nested step1", async () => {
@@ -38,7 +37,7 @@ runRuleTester('max-nested-step', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it('foo', async () => {
           await it.step("step1", async () => {
             await it.step("nested step1", async () => {
@@ -59,14 +58,14 @@ runRuleTester('max-nested-step', rule, {
     'await test.step("step1", () => {});',
     'await test.step("step1", async () => {});',
     {
-      code: dedent`
+      code: javascript`
         test('foo', async () => {
           await expect(true).toBe(true);
         });
       `,
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', async () => {
           await test.step("step1", async () => {
             await expect(true).toBe(true);
@@ -75,7 +74,7 @@ runRuleTester('max-nested-step', rule, {
       `,
     },
     {
-      code: dedent`
+      code: javascript`
         test('foo', async () => {
           await test.step("step1", async () => {
             await expect(true).toBe(true);

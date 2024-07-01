@@ -1,11 +1,10 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/prefer-hooks-on-top'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('basic describe block', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () => {
           test.beforeEach(() => {});
           test('bar', () => {
@@ -27,7 +26,7 @@ runRuleTester('basic describe block', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () => {
           test.beforeEach(() => {});
           test.only('bar', () => {
@@ -49,7 +48,7 @@ runRuleTester('basic describe block', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () => {
           test.beforeEach(() => {});
           test.only('bar', () => {
@@ -72,7 +71,7 @@ runRuleTester('basic describe block', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it.describe('foo', () => {
           it.beforeEach(() => {});
           it('bar', () => {
@@ -100,7 +99,7 @@ runRuleTester('basic describe block', rule, {
     },
   ],
   valid: [
-    dedent`
+    javascript`
       test.describe('foo', () => {
         test.beforeEach(() => {});
         someSetupFn();
@@ -111,7 +110,7 @@ runRuleTester('basic describe block', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test.describe('foo', () => {
         someSetupFn();
         test.beforeEach(() => {});
@@ -124,7 +123,7 @@ runRuleTester('basic describe block', rule, {
     `,
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it.describe('foo', () => {
           it.beforeEach(() => {});
           someSetupFn();
@@ -142,7 +141,7 @@ runRuleTester('basic describe block', rule, {
 runRuleTester('multiple describe blocks', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         test.describe.skip('foo', () => {
           test.beforeEach(() => {});
           test('bar', () => {
@@ -199,7 +198,7 @@ runRuleTester('multiple describe blocks', rule, {
     },
   ],
   valid: [
-    dedent`
+    javascript`
       test.describe.skip('foo', () => {
         test.beforeEach(() => {});
         test.beforeAll(() => {});
@@ -223,7 +222,7 @@ runRuleTester('multiple describe blocks', rule, {
 runRuleTester('nested describe blocks', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () => {
           test.beforeAll(() => {});
           test('bar', () => {
@@ -263,7 +262,7 @@ runRuleTester('nested describe blocks', rule, {
     },
   ],
   valid: [
-    dedent`
+    javascript`
       test.describe('foo', () => {
         test.beforeEach(() => {});
         test('bar', () => {

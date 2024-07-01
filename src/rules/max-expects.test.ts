@@ -1,11 +1,10 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/max-expects'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('max-expects', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         test('should not pass', function () {
           expect(true).toBeDefined();
           expect(true).toBeDefined();
@@ -24,7 +23,7 @@ runRuleTester('max-expects', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('should not pass', async () => {
           await test.step('part 1', async () => {
             expect(true).toBeDefined();
@@ -48,7 +47,7 @@ runRuleTester('max-expects', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('should not pass', () => {
           expect(true).toBeDefined();
           expect(true).toBeDefined();
@@ -67,7 +66,7 @@ runRuleTester('max-expects', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('should not pass', () => {
           expect(true).toBeDefined();
           expect(true).toBeDefined();
@@ -99,7 +98,7 @@ runRuleTester('max-expects', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         describe('test', () => {
           test('should not pass', () => {
             expect(true).toBeDefined();
@@ -120,7 +119,7 @@ runRuleTester('max-expects', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test('should not pass', () => {
           expect(true).toBeDefined();
           expect(true).toBeDefined();
@@ -141,7 +140,7 @@ runRuleTester('max-expects', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it('should not pass', function () {
           expect(true).toBeDefined();
           expect(true).toBeDefined();
@@ -169,12 +168,12 @@ runRuleTester('max-expects', rule, {
     `test('should pass')`,
     `test('should pass', () => {})`,
     `test.skip('should pass', () => {})`,
-    dedent`
+    javascript`
       test('should pass', function () {
         expect(true).toBeDefined();
       });
     `,
-    dedent`
+    javascript`
       test('should pass', () => {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -183,7 +182,7 @@ runRuleTester('max-expects', rule, {
         expect(true).toBeDefined();
       });
     `,
-    dedent`
+    javascript`
       test('should pass', () => {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -193,7 +192,7 @@ runRuleTester('max-expects', rule, {
         // expect(true).toBeDefined();
       });
     `,
-    dedent`
+    javascript`
       test('should pass', async () => {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -202,7 +201,7 @@ runRuleTester('max-expects', rule, {
         expect(true).toBeDefined();
       });
     `,
-    dedent`
+    javascript`
       test('should pass', async () => {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -211,7 +210,7 @@ runRuleTester('max-expects', rule, {
         expect(true).toEqual(expect.any(Boolean));
       });
     `,
-    dedent`
+    javascript`
       describe('test', () => {
         test('should pass', () => {
           expect(true).toBeDefined();
@@ -222,7 +221,7 @@ runRuleTester('max-expects', rule, {
         });
       });
     `,
-    dedent`
+    javascript`
       test.each(['should', 'pass'], () => {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -231,7 +230,7 @@ runRuleTester('max-expects', rule, {
         expect(true).toBeDefined();
       });
     `,
-    dedent`
+    javascript`
       test('should pass', () => {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -243,7 +242,7 @@ runRuleTester('max-expects', rule, {
         expect(true).toBeDefined();
       });
     `,
-    dedent`
+    javascript`
       function myHelper() {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -256,7 +255,7 @@ runRuleTester('max-expects', rule, {
         expect(true).toBeDefined();
       });
     `,
-    dedent`
+    javascript`
       function myHelper1() {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -275,7 +274,7 @@ runRuleTester('max-expects', rule, {
         expect(true).toBeDefined();
       };
     `,
-    dedent`
+    javascript`
       test('should pass', () => {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -288,7 +287,7 @@ runRuleTester('max-expects', rule, {
         expect(true).toBeDefined();
       };
     `,
-    dedent`
+    javascript`
       const myHelper1 = () => {
         expect(true).toBeDefined();
         expect(true).toBeDefined();
@@ -308,7 +307,7 @@ runRuleTester('max-expects', rule, {
       };
     `,
     {
-      code: dedent`
+      code: javascript`
         test('should pass', () => {
           expect(true).toBeDefined();
           expect(true).toBeDefined();

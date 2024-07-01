@@ -1,6 +1,5 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/valid-title'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 runRuleTester('valid-title', rule, {
   invalid: [
@@ -134,7 +133,7 @@ runRuleTester('valid-title', rule, {
 runRuleTester('mustMatch & mustNotMatch options', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         test.describe('things to test', () => {
           test.describe('unit tests #unit', () => {
             test('is true', () => {
@@ -175,7 +174,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('things to test', () => {
           test.describe('unit tests #unit', () => {
             test('is true', () => {
@@ -224,7 +223,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('things to test', () => {
           test.describe('unit tests #unit', () => {
             test('is true', () => {
@@ -256,7 +255,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('things to test', () => {
           test.describe('unit tests #unit', () => {
             test('is true', () => {
@@ -294,7 +293,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('things to test', () => {
           test.describe('unit tests #unit', () => {
             test('is true', () => {
@@ -326,7 +325,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('things to test', () => {
           test.describe('unit tests #unit', () => {
             test('is true #playwright4life', () => {
@@ -429,7 +428,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it.describe('things to test', () => {
           it.describe('unit tests #unit', () => {
             it('is true', () => {
@@ -505,7 +504,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('things to test', () => {
           test.describe('unit tests #unit', () => {
             test('is true #unit', () => {
@@ -732,7 +731,7 @@ runRuleTester('no-empty-title', rule, {
       ],
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () => {
           test('', () => {});
         });
@@ -971,26 +970,26 @@ runRuleTester('no-accidental-space', rule, {
       output: 'test("foo", function () {})',
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe(' foo', () => {
           test('bar', () => {})
         })
       `,
       errors: [{ column: 15, line: 1, messageId: 'accidentalSpace' }],
-      output: dedent`
+      output: javascript`
         test.describe('foo', () => {
           test('bar', () => {})
         })
       `,
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () => {
           test(' bar', () => {})
         })
       `,
       errors: [{ column: 8, line: 2, messageId: 'accidentalSpace' }],
-      output: dedent`
+      output: javascript`
         test.describe('foo', () => {
           test('bar', () => {})
         })
@@ -1016,7 +1015,7 @@ runRuleTester('no-accidental-space', rule, {
     'test.describe("foo", function () {})',
     'test.only()',
     'test.only("foo", function () {})',
-    dedent`
+    javascript`
       test.describe('foo', () => {
         test('bar', () => {})
       })
@@ -1139,39 +1138,39 @@ runRuleTester('no-duplicate-prefix test', rule, {
 runRuleTester('no-duplicate-prefix nested', rule, {
   invalid: [
     {
-      code: dedent`
+      code: javascript`
         test.describe('describe foo', () => {
           test('bar', () => {})
         })
       `,
       errors: [{ column: 15, line: 1, messageId: 'duplicatePrefix' }],
-      output: dedent`
+      output: javascript`
         test.describe('foo', () => {
           test('bar', () => {})
         })
       `,
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('describe foo', () => {
           test('describes things correctly', () => {})
         })
       `,
       errors: [{ column: 15, line: 1, messageId: 'duplicatePrefix' }],
-      output: dedent`
+      output: javascript`
         test.describe('foo', () => {
           test('describes things correctly', () => {})
         })
       `,
     },
     {
-      code: dedent`
+      code: javascript`
         test.describe('foo', () => {
           test('test bar', () => {})
         })
       `,
       errors: [{ column: 8, line: 2, messageId: 'duplicatePrefix' }],
-      output: dedent`
+      output: javascript`
         test.describe('foo', () => {
           test('bar', () => {})
         })
@@ -1179,13 +1178,13 @@ runRuleTester('no-duplicate-prefix nested', rule, {
     },
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it.describe('describe foo', () => {
           it('bar', () => {})
         })
       `,
       errors: [{ column: 13, line: 1, messageId: 'duplicatePrefix' }],
-      output: dedent`
+      output: javascript`
         it.describe('foo', () => {
           it('bar', () => {})
         })
@@ -1198,19 +1197,19 @@ runRuleTester('no-duplicate-prefix nested', rule, {
     },
   ],
   valid: [
-    dedent`
+    javascript`
       test.describe('foo', () => {
         test('bar', () => {})
       })
     `,
-    dedent`
+    javascript`
       test.describe('foo', () => {
         test('describes things correctly', () => {})
       })
     `,
     // Global aliases
     {
-      code: dedent`
+      code: javascript`
         it.describe('foo', () => {
           it('bar', () => {})
         })

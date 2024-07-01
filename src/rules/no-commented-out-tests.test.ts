@@ -1,6 +1,5 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/no-commented-out-tests'
-import { runRuleTester } from '../utils/rule-tester'
+import { javascript, runRuleTester } from '../utils/rule-tester'
 
 const messageId = 'commentedTests'
 
@@ -39,7 +38,7 @@ runRuleTester('no-commented-out-tests', rule, {
       errors: [{ column: 1, line: 1, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         // test(
         //   "foo", function () {}
         // )
@@ -47,7 +46,7 @@ runRuleTester('no-commented-out-tests', rule, {
       errors: [{ column: 1, line: 1, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         /* test
           (
             "foo", function () {}
@@ -77,7 +76,7 @@ runRuleTester('no-commented-out-tests', rule, {
       errors: [{ column: 1, line: 1, messageId }],
     },
     {
-      code: dedent`
+      code: javascript`
         foo()
         /*
           test.describe("has title but no callback", () => {})
@@ -116,27 +115,27 @@ runRuleTester('no-commented-out-tests', rule, {
     '// latest(dates)',
     '// TODO: unify with Git implementation from Shipit (?)',
     '#!/usr/bin/env node',
-    dedent`
+    javascript`
       import { pending } from "actions"
 
       test("foo", () => {
         expect(pending()).toEqual({})
       })
     `,
-    dedent`
+    javascript`
       const { pending } = require("actions")
 
       test("foo", () => {
         expect(pending()).toEqual({})
       })
     `,
-    dedent`
+    javascript`
       test("foo", () => {
         const pending = getPending()
         expect(pending()).toEqual({})
       })
     `,
-    dedent`
+    javascript`
       test("foo", () => {
         expect(pending()).toEqual({})
       })

@@ -1,6 +1,5 @@
-import dedent from 'dedent'
 import rule from '../../src/rules/no-eval'
-import { runRuleTester, test } from '../utils/rule-tester'
+import { javascript, runRuleTester, test } from '../utils/rule-tester'
 
 runRuleTester('no-eval', rule, {
   invalid: [
@@ -69,7 +68,7 @@ runRuleTester('no-eval', rule, {
     // Note: This is one of the only test in the project to tests custom
     // messages since it's implementation is global in the `createRule` method.
     {
-      code: dedent`
+      code: javascript`
         page.$eval("#search", el => el.value);
         page.$$eval("#search", el => el.value);
       `,
