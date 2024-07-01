@@ -1,5 +1,10 @@
 import rule from '../../src/rules/require-hook'
-import { runRuleTester, runTSRuleTester } from '../utils/rule-tester'
+import {
+  javascript,
+  runRuleTester,
+  runTSRuleTester,
+  typescript,
+} from '../utils/rule-tester'
 
 const messageId = 'useHook'
 
@@ -323,7 +328,7 @@ runRuleTester('require-hook', rule, {
 runTSRuleTester('require-hook - TypeScript', rule, {
   invalid: [
     {
-      code: javascript`
+      code: typescript`
         import { setup } from '../test-utils';
 
         // todo: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/56545
@@ -343,7 +348,7 @@ runTSRuleTester('require-hook - TypeScript', rule, {
     },
   ],
   valid: [
-    javascript`
+    typescript`
       import { myFn } from '../functions';
 
       // todo: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/56545
