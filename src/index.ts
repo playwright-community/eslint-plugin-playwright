@@ -1,4 +1,5 @@
 import globals from 'globals'
+import contextClose from './rules/context-close'
 import expectExpect from './rules/expect-expect'
 import maxExpects from './rules/max-expects'
 import maxNestedDescribe from './rules/max-nested-describe'
@@ -49,6 +50,7 @@ import validTitle from './rules/valid-title'
 const index = {
   configs: {},
   rules: {
+    'context-close': contextClose,
     'expect-expect': expectExpect,
     'max-expects': maxExpects,
     'max-nested-describe': maxNestedDescribe,
@@ -101,6 +103,7 @@ const index = {
 const sharedConfig = {
   rules: {
     'no-empty-pattern': 'off',
+    'playwright/context-close': 'error',
     'playwright/expect-expect': 'warn',
     'playwright/max-nested-describe': 'warn',
     'playwright/missing-playwright-await': 'error',
