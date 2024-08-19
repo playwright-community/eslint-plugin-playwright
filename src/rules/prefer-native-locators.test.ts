@@ -71,7 +71,7 @@ runRuleTester('prefer-native-locators', rule, {
   ],
   valid: [
     { code: 'page.getByLabel("View more")' },
-    { code: 'page.getByRole("Button")' },
+    { code: 'page.getByRole("button")' },
     { code: 'page.getByPlaceholder("Enter some text...")' },
     { code: 'page.getByAltText("Playwright logo")' },
     { code: 'page.getByTestId("password-input")' },
