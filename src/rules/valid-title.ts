@@ -54,7 +54,7 @@ const compileMatcherPatterns = (
       ? compileMatcherPattern(matchers.describe)
       : null,
     test: matchers.test ? compileMatcherPattern(matchers.test) : null,
-    step: matchers.step ? compileMatcherPattern(matchers.step) : null
+    step: matchers.step ? compileMatcherPattern(matchers.step) : null,
   }
 }
 
@@ -110,7 +110,11 @@ export default createRule({
     return {
       CallExpression(node) {
         const call = parseFnCall(context, node)
-        if (call?.type !== 'test' && call?.type !== 'describe' && call?.type !== 'step') {
+        if (
+          call?.type !== 'test' &&
+          call?.type !== 'describe' &&
+          call?.type !== 'step'
+        ) {
           return
         }
 
@@ -293,7 +297,7 @@ export default createRule({
           ignoreTypeOfStepName: {
             default: true,
             type: 'boolean',
-          }
+          },
         },
         type: 'object',
       },

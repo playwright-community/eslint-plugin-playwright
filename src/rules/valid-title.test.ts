@@ -452,9 +452,7 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
           messageId: 'mustMatch',
         },
       ],
-      options: [
-        { mustMatch: { step: /#(?:unit|integration|e2e)/u.source } },
-      ],
+      options: [{ mustMatch: { step: /#(?:unit|integration|e2e)/u.source } }],
     },
     {
       code: 'test.describe.skip("the test", () => {});',
@@ -1255,11 +1253,9 @@ runRuleTester('no-duplicate-prefix step', rule, {
       code: 'test.step(`step foo`, function () {})',
       errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
       output: 'test.step(`foo`, function () {})',
-    }
+    },
   ],
-  valid: [
-    'test.step("foo", function () {})',
-  ],
+  valid: ['test.step("foo", function () {})'],
 })
 
 runRuleTester('no-duplicate-prefix nested', rule, {
