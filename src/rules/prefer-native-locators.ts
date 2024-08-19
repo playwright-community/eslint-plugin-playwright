@@ -5,6 +5,11 @@ export default createRule({
   create(context) {
     return {
       CallExpression(node) {
+        const { testIdAttribute } = {
+          testIdAttribute: 'data-testid',
+          ...((context.options?.[0] as Record<string, unknown>) ?? {}),
+        }
+
         if (node.callee.type !== 'MemberExpression') return
         const method = getStringValue(node.callee.property)
         const query = getStringValue(node.arguments[0])
@@ -84,10 +89,8 @@ export default createRule({
           })
         }
 
-        // TODO: Add support for custom test ID attribute
-        const testIdAttributeName = 'data-testid'
         const testIdPattern = new RegExp(
-          `^\\[${testIdAttributeName}=['"](.+?)['"]\\]`,
+          `^\\[${testIdAttribute}=['"](.+?)['"]\\]`,
         )
         const testIdMatch = query.match(testIdPattern)
         if (testIdMatch) {
@@ -119,7 +122,18 @@ export default createRule({
       unexpectedTestIdQuery: 'Use .getByTestId() instead',
       unexpectedTitleQuery: 'Use .getByTitle() instead',
     },
-    schema: [],
+    schema: [
+      {
+        additionalProperties: false,
+        properties: {
+          testIdAttribute: {
+            default: 'data-testid',
+            type: 'string',
+          },
+        },
+        type: 'object',
+      },
+    ],
     type: 'suggestion',
   },
 })

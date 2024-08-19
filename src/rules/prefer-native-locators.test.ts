@@ -33,6 +33,12 @@ runRuleTester('prefer-native-locators', rule, {
       errors: [{ column: 1, line: 1, messageId: 'unexpectedTestIdQuery' }],
       output: 'page.getByTestId("password-input")',
     },
+    {
+      code: `page.locator('[data-custom-testid="password-input"]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedTestIdQuery' }],
+      options: [{ testIdAttribute: 'data-custom-testid' }],
+      output: 'page.getByTestId("password-input")',
+    },
   ],
   valid: [
     { code: 'page.getByLabel("View more")' },
