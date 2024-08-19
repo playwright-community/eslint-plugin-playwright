@@ -18,11 +18,17 @@ runRuleTester('prefer-native-locators', rule, {
       errors: [{ column: 1, line: 1, messageId: 'unexpectedPlaceholderQuery' }],
       output: 'page.getByPlaceholder("Enter some text...")',
     },
+    {
+      code: `page.locator('[alt="Playwright logo"]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedAltTextQuery' }],
+      output: 'page.getByAltText("Playwright logo")',
+    },
   ],
   valid: [
     { code: 'page.getByLabel("View more")' },
     { code: 'page.getByRole("Button")' },
     { code: 'page.getByPlaceholder("Enter some text...")' },
+    { code: 'page.getByAltText("Playwright logo")' },
     {
       code: `page.locator('[complex-query] > [aria-label="View more"]')`,
     },
@@ -31,6 +37,9 @@ runRuleTester('prefer-native-locators', rule, {
     },
     {
       code: `page.locator('[complex-query] > [placeholder="Enter some text..."]')`,
+    },
+    {
+      code: `page.locator('[complex-query] > [alt="Playwright logo"]')`,
     },
   ],
 })

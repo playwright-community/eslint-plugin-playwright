@@ -70,6 +70,26 @@ export default createRule({
             node,
           })
         }
+
+        const altTextPattern = /^\[alt=['"](.+?)['"]\]$/
+        if (query.match(altTextPattern)) {
+          context.report({
+            fix(fixer) {
+              const [, alt] = query.match(altTextPattern) ?? []
+              const start =
+                node.callee.type === 'MemberExpression'
+                  ? node.callee.property.range![0]
+                  : node.range![0]
+              const end = node.range![1]
+              return fixer.replaceTextRange(
+                [start, end],
+                `getByAltText("${alt}")`,
+              )
+            },
+            messageId: 'unexpectedAltTextQuery',
+            node,
+          })
+        }
       },
     }
   },
