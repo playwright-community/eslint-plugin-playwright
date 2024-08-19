@@ -24,10 +24,8 @@ export default createRule({
         if (labelMatch) {
           context.report({
             fix(fixer) {
-              return fixer.replaceTextRange(
-                rangeToReplace,
-                `getByLabel("${labelMatch[1]}")`,
-              )
+              const newText = `getByLabel("${labelMatch[1]}")`
+              return fixer.replaceTextRange(rangeToReplace, newText)
             },
             messageId: 'unexpectedLabelQuery',
             node,
@@ -39,10 +37,8 @@ export default createRule({
         if (roleMatch) {
           context.report({
             fix(fixer) {
-              return fixer.replaceTextRange(
-                rangeToReplace,
-                `getByRole("${roleMatch[1]}")`,
-              )
+              const newText = `getByRole("${roleMatch[1]}")`
+              return fixer.replaceTextRange(rangeToReplace, newText)
             },
             messageId: 'unexpectedRoleQuery',
             node,
@@ -54,10 +50,8 @@ export default createRule({
         if (placeholderMatch) {
           context.report({
             fix(fixer) {
-              return fixer.replaceTextRange(
-                rangeToReplace,
-                `getByPlaceholder("${placeholderMatch[1]}")`,
-              )
+              const newText = `getByPlaceholder("${placeholderMatch[1]}")`
+              return fixer.replaceTextRange(rangeToReplace, newText)
             },
             messageId: 'unexpectedPlaceholderQuery',
             node,
@@ -69,10 +63,8 @@ export default createRule({
         if (altTextMatch) {
           context.report({
             fix(fixer) {
-              return fixer.replaceTextRange(
-                rangeToReplace,
-                `getByAltText("${altTextMatch[1]}")`,
-              )
+              const newText = `getByAltText("${altTextMatch[1]}")`
+              return fixer.replaceTextRange(rangeToReplace, newText)
             },
             messageId: 'unexpectedAltTextQuery',
             node,
@@ -84,10 +76,8 @@ export default createRule({
         if (titleMatch) {
           context.report({
             fix(fixer) {
-              return fixer.replaceTextRange(
-                rangeToReplace,
-                `getByTitle("${titleMatch[1]}")`,
-              )
+              const newText = `getByTitle("${titleMatch[1]}")`
+              return fixer.replaceTextRange(rangeToReplace, newText)
             },
             messageId: 'unexpectedTitleQuery',
             node,
@@ -103,10 +93,8 @@ export default createRule({
         if (testIdMatch) {
           context.report({
             fix(fixer) {
-              return fixer.replaceTextRange(
-                rangeToReplace,
-                `getByTestId("${testIdMatch[1]}")`,
-              )
+              const newText = `getByTestId("${testIdMatch[1]}")`
+              return fixer.replaceTextRange(rangeToReplace, newText)
             },
             messageId: 'unexpectedTestIdQuery',
             node,
