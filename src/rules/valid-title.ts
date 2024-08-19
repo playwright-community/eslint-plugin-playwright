@@ -44,8 +44,8 @@ const compileMatcherPatterns = (
 
     return {
       describe: compiledMatcher,
-      test: compiledMatcher,
       step: compiledMatcher,
+      test: compiledMatcher,
     }
   }
 
@@ -53,8 +53,8 @@ const compileMatcherPatterns = (
     describe: matchers.describe
       ? compileMatcherPattern(matchers.describe)
       : null,
-    test: matchers.test ? compileMatcherPattern(matchers.test) : null,
     step: matchers.step ? compileMatcherPattern(matchers.step) : null,
+    test: matchers.test ? compileMatcherPattern(matchers.test) : null,
   }
 }
 
@@ -69,14 +69,14 @@ const MatcherAndMessageSchema = {
   type: 'array',
 } as const
 
-type MatcherGroups = 'describe' | 'test' | 'step'
+type MatcherGroups = 'describe' | 'step' | 'test'
 
 interface Options {
   disallowedWords?: string[]
   ignoreSpaces?: boolean
   ignoreTypeOfDescribeName?: boolean
-  ignoreTypeOfTestName?: boolean
   ignoreTypeOfStepName?: boolean
+  ignoreTypeOfTestName?: boolean
   mustMatch?:
     | Partial<Record<MatcherGroups, string | MatcherAndMessage>>
     | MatcherAndMessage
@@ -94,8 +94,8 @@ export default createRule({
       disallowedWords = [],
       ignoreSpaces = false,
       ignoreTypeOfDescribeName = false,
-      ignoreTypeOfTestName = false,
       ignoreTypeOfStepName = true,
+      ignoreTypeOfTestName = false,
       mustMatch,
       mustNotMatch,
     } = opts
@@ -290,12 +290,12 @@ export default createRule({
             default: false,
             type: 'boolean',
           },
-          ignoreTypeOfTestName: {
-            default: false,
-            type: 'boolean',
-          },
           ignoreTypeOfStepName: {
             default: true,
+            type: 'boolean',
+          },
+          ignoreTypeOfTestName: {
+            default: false,
             type: 'boolean',
           },
         },
