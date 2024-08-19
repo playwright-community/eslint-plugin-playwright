@@ -155,7 +155,8 @@ messages will use the default message defined by the plugin.
 ## Rules
 
 ✅ Set in the `recommended` configuration\
-🔧 Automatically fixable by the [`--fix`](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix)
+🔧 Automatically fixable by the
+[`--fix`](https://eslint.org/docs/latest/user-guide/command-line-interface#--fix)
 CLI option\
 💡 Manually fixable by
 [editor suggestions](https://eslint.org/docs/latest/developer-guide/working-with-rules#providing-suggestions)
@@ -194,6 +195,7 @@ CLI option\
 | [prefer-hooks-in-order](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-hooks-in-order.md)             | Prefer having hooks in a consistent order                          |     |     |     |
 | [prefer-hooks-on-top](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-hooks-on-top.md)                 | Suggest having hooks before any test cases                         |     |     |     |
 | [prefer-lowercase-title](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-lowercase-title.md)           | Enforce lowercase test names                                       |     | 🔧  |     |
+| [prefer-native-locators](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-native-locators.md)           | Suggest built-in locators over `page.locator()`                    |     | 🔧  |     |
 | [prefer-strict-equal](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-strict-equal.md)                 | Suggest using `toStrictEqual()`                                    |     |     | 💡  |
 | [prefer-to-be](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-to-be.md)                               | Suggest using `toBe()`                                             |     | 🔧  |     |
 | [prefer-to-contain](https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-to-contain.md)                     | Suggest using `toContain()`                                        |     | 🔧  |     |
