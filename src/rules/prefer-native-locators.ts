@@ -50,6 +50,26 @@ export default createRule({
             node,
           })
         }
+
+        const placeholderPattern = /^\[placeholder=['"](.+?)['"]\]$/
+        if (query.match(placeholderPattern)) {
+          context.report({
+            fix(fixer) {
+              const [, placeholder] = query.match(placeholderPattern) ?? []
+              const start =
+                node.callee.type === 'MemberExpression'
+                  ? node.callee.property.range![0]
+                  : node.range![0]
+              const end = node.range![1]
+              return fixer.replaceTextRange(
+                [start, end],
+                `getByPlaceholder("${placeholder}")`,
+              )
+            },
+            messageId: 'unexpectedPlaceholderQuery',
+            node,
+          })
+        }
       },
     }
   },
