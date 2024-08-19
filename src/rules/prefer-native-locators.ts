@@ -90,6 +90,30 @@ export default createRule({
             node,
           })
         }
+
+        // TODO: Add support for custom test ID attribute
+        const testIdAttributeName = 'data-testid'
+        const testIdPattern = new RegExp(
+          `^\\[${testIdAttributeName}=['"](.+?)['"]\\]`,
+        )
+        if (query.match(testIdPattern)) {
+          context.report({
+            fix(fixer) {
+              const [, testId] = query.match(testIdPattern) ?? []
+              const start =
+                node.callee.type === 'MemberExpression'
+                  ? node.callee.property.range![0]
+                  : node.range![0]
+              const end = node.range![1]
+              return fixer.replaceTextRange(
+                [start, end],
+                `getByTestId("${testId}")`,
+              )
+            },
+            messageId: 'unexpectedTestIdQuery',
+            node,
+          })
+        }
       },
     }
   },

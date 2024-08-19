@@ -23,12 +23,18 @@ runRuleTester('prefer-native-locators', rule, {
       errors: [{ column: 1, line: 1, messageId: 'unexpectedAltTextQuery' }],
       output: 'page.getByAltText("Playwright logo")',
     },
+    {
+      code: `page.locator('[data-testid="password-input"]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedTestIdQuery' }],
+      output: 'page.getByTestId("password-input")',
+    },
   ],
   valid: [
     { code: 'page.getByLabel("View more")' },
     { code: 'page.getByRole("Button")' },
     { code: 'page.getByPlaceholder("Enter some text...")' },
     { code: 'page.getByAltText("Playwright logo")' },
+    { code: 'page.getByTestId("password-input")' },
     {
       code: `page.locator('[complex-query] > [aria-label="View more"]')`,
     },
@@ -40,6 +46,9 @@ runRuleTester('prefer-native-locators', rule, {
     },
     {
       code: `page.locator('[complex-query] > [alt="Playwright logo"]')`,
+    },
+    {
+      code: `page.locator('[complex-query] > [data-testid="password-input"]')`,
     },
   ],
 })
