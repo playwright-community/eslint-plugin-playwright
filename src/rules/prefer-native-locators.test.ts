@@ -8,11 +8,20 @@ runRuleTester('prefer-native-locators', rule, {
       errors: [{ column: 1, line: 1, messageId: 'unexpectedLabelQuery' }],
       output: 'page.getByLabel("View more")',
     },
+    {
+      code: `page.locator('[role="button"]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedRoleQuery' }],
+      output: 'page.getByRole("button")',
+    },
   ],
   valid: [
     { code: 'page.getByLabel("View more")' },
+    { code: 'page.getByRole("Button")' },
     {
-      code: `page.locator('[something-more-complex][aria-label="View more"]')`,
+      code: `page.locator('[complex-query] > [aria-label="View more"]')`,
+    },
+    {
+      code: `page.locator('[complex-query] > [role="button"]')`,
     },
   ],
 })

@@ -16,7 +16,6 @@ export default createRule({
           context.report({
             fix(fixer) {
               const [, label] = query.match(ariaLabelPattern) ?? []
-              // Replace .locator(...) with .getByLabel(...)
               const start =
                 node.callee.type === 'MemberExpression'
                   ? node.callee.property.range![0]
@@ -28,6 +27,26 @@ export default createRule({
               )
             },
             messageId: 'unexpectedLabelQuery',
+            node,
+          })
+        }
+
+        const rolePattern = /^\[role=['"](.+?)['"]\]$/
+        if (query.match(rolePattern)) {
+          context.report({
+            fix(fixer) {
+              const [, role] = query.match(rolePattern) ?? []
+              const start =
+                node.callee.type === 'MemberExpression'
+                  ? node.callee.property.range![0]
+                  : node.range![0]
+              const end = node.range![1]
+              return fixer.replaceTextRange(
+                [start, end],
+                `getByRole("${role}")`,
+              )
+            },
+            messageId: 'unexpectedRoleQuery',
             node,
           })
         }
