@@ -45,6 +45,7 @@ const compileMatcherPatterns = (
     return {
       describe: compiledMatcher,
       test: compiledMatcher,
+      step: compiledMatcher,
     }
   }
 
@@ -53,6 +54,7 @@ const compileMatcherPatterns = (
       ? compileMatcherPattern(matchers.describe)
       : null,
     test: matchers.test ? compileMatcherPattern(matchers.test) : null,
+    step: matchers.step ? compileMatcherPattern(matchers.step) : null
   }
 }
 
@@ -67,13 +69,14 @@ const MatcherAndMessageSchema = {
   type: 'array',
 } as const
 
-type MatcherGroups = 'describe' | 'test'
+type MatcherGroups = 'describe' | 'test' | 'step'
 
 interface Options {
   disallowedWords?: string[]
   ignoreSpaces?: boolean
   ignoreTypeOfDescribeName?: boolean
   ignoreTypeOfTestName?: boolean
+  ignoreTypeOfStepName?: boolean
   mustMatch?:
     | Partial<Record<MatcherGroups, string | MatcherAndMessage>>
     | MatcherAndMessage
@@ -92,6 +95,7 @@ export default createRule({
       ignoreSpaces = false,
       ignoreTypeOfDescribeName = false,
       ignoreTypeOfTestName = false,
+      ignoreTypeOfStepName = true,
       mustMatch,
       mustNotMatch,
     } = opts
@@ -106,7 +110,7 @@ export default createRule({
     return {
       CallExpression(node) {
         const call = parseFnCall(context, node)
-        if (call?.type !== 'test' && call?.type !== 'describe') {
+        if (call?.type !== 'test' && call?.type !== 'describe' && call?.type !== 'step') {
           return
         }
 
@@ -124,7 +128,8 @@ export default createRule({
           if (
             !(
               (call.type === 'describe' && ignoreTypeOfDescribeName) ||
-              (call.type === 'test' && ignoreTypeOfTestName)
+              (call.type === 'test' && ignoreTypeOfTestName) ||
+              (call.type === 'step' && ignoreTypeOfStepName)
             ) &&
             (argument as ESTree.Node).type !== 'TemplateLiteral'
           ) {
@@ -262,7 +267,7 @@ export default createRule({
                 additionalProperties: {
                   oneOf: [{ type: 'string' }, MatcherAndMessageSchema],
                 },
-                propertyNames: { enum: ['describe', 'test'] },
+                propertyNames: { enum: ['describe', 'test', 'step'] },
                 type: 'object',
               },
             ],
@@ -285,6 +290,10 @@ export default createRule({
             default: false,
             type: 'boolean',
           },
+          ignoreTypeOfStepName: {
+            default: true,
+            type: 'boolean',
+          }
         },
         type: 'object',
       },
