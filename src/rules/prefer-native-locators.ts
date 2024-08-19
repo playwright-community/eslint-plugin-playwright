@@ -11,19 +11,22 @@ export default createRule({
         const isLocator = isPageMethod(node, 'locator') || method === 'locator'
         if (!isLocator) return
 
+        // If it's something like `page.locator`, just replace the `.locator` part
+        const start =
+          node.callee.type === 'MemberExpression'
+            ? node.callee.property.range![0]
+            : node.range![0]
+        const end = node.range![1]
+        const rangeToReplace: [number, number] = [start, end]
+
         const ariaLabelPattern = /^\[aria-label=['"](.+?)['"]\]$/
-        if (query.match(ariaLabelPattern)) {
+        const labelMatch = query.match(ariaLabelPattern)
+        if (labelMatch) {
           context.report({
             fix(fixer) {
-              const [, label] = query.match(ariaLabelPattern) ?? []
-              const start =
-                node.callee.type === 'MemberExpression'
-                  ? node.callee.property.range![0]
-                  : node.range![0]
-              const end = node.range![1]
               return fixer.replaceTextRange(
-                [start, end],
-                `getByLabel("${label}")`,
+                rangeToReplace,
+                `getByLabel("${labelMatch[1]}")`,
               )
             },
             messageId: 'unexpectedLabelQuery',
@@ -32,18 +35,13 @@ export default createRule({
         }
 
         const rolePattern = /^\[role=['"](.+?)['"]\]$/
-        if (query.match(rolePattern)) {
+        const roleMatch = query.match(rolePattern)
+        if (roleMatch) {
           context.report({
             fix(fixer) {
-              const [, role] = query.match(rolePattern) ?? []
-              const start =
-                node.callee.type === 'MemberExpression'
-                  ? node.callee.property.range![0]
-                  : node.range![0]
-              const end = node.range![1]
               return fixer.replaceTextRange(
-                [start, end],
-                `getByRole("${role}")`,
+                rangeToReplace,
+                `getByRole("${roleMatch[1]}")`,
               )
             },
             messageId: 'unexpectedRoleQuery',
@@ -52,18 +50,13 @@ export default createRule({
         }
 
         const placeholderPattern = /^\[placeholder=['"](.+?)['"]\]$/
-        if (query.match(placeholderPattern)) {
+        const placeholderMatch = query.match(placeholderPattern)
+        if (placeholderMatch) {
           context.report({
             fix(fixer) {
-              const [, placeholder] = query.match(placeholderPattern) ?? []
-              const start =
-                node.callee.type === 'MemberExpression'
-                  ? node.callee.property.range![0]
-                  : node.range![0]
-              const end = node.range![1]
               return fixer.replaceTextRange(
-                [start, end],
-                `getByPlaceholder("${placeholder}")`,
+                rangeToReplace,
+                `getByPlaceholder("${placeholderMatch[1]}")`,
               )
             },
             messageId: 'unexpectedPlaceholderQuery',
@@ -72,18 +65,13 @@ export default createRule({
         }
 
         const altTextPattern = /^\[alt=['"](.+?)['"]\]$/
-        if (query.match(altTextPattern)) {
+        const altTextMatch = query.match(altTextPattern)
+        if (altTextMatch) {
           context.report({
             fix(fixer) {
-              const [, alt] = query.match(altTextPattern) ?? []
-              const start =
-                node.callee.type === 'MemberExpression'
-                  ? node.callee.property.range![0]
-                  : node.range![0]
-              const end = node.range![1]
               return fixer.replaceTextRange(
-                [start, end],
-                `getByAltText("${alt}")`,
+                rangeToReplace,
+                `getByAltText("${altTextMatch[1]}")`,
               )
             },
             messageId: 'unexpectedAltTextQuery',
@@ -92,18 +80,13 @@ export default createRule({
         }
 
         const titlePattern = /^\[title=['"](.+?)['"]\]$/
-        if (query.match(titlePattern)) {
+        const titleMatch = query.match(titlePattern)
+        if (titleMatch) {
           context.report({
             fix(fixer) {
-              const [, title] = query.match(titlePattern) ?? []
-              const start =
-                node.callee.type === 'MemberExpression'
-                  ? node.callee.property.range![0]
-                  : node.range![0]
-              const end = node.range![1]
               return fixer.replaceTextRange(
-                [start, end],
-                `getByTitle("${title}")`,
+                rangeToReplace,
+                `getByTitle("${titleMatch[1]}")`,
               )
             },
             messageId: 'unexpectedTitleQuery',
@@ -116,18 +99,13 @@ export default createRule({
         const testIdPattern = new RegExp(
           `^\\[${testIdAttributeName}=['"](.+?)['"]\\]`,
         )
-        if (query.match(testIdPattern)) {
+        const testIdMatch = query.match(testIdPattern)
+        if (testIdMatch) {
           context.report({
             fix(fixer) {
-              const [, testId] = query.match(testIdPattern) ?? []
-              const start =
-                node.callee.type === 'MemberExpression'
-                  ? node.callee.property.range![0]
-                  : node.range![0]
-              const end = node.range![1]
               return fixer.replaceTextRange(
-                [start, end],
-                `getByTestId("${testId}")`,
+                rangeToReplace,
+                `getByTestId("${testIdMatch[1]}")`,
               )
             },
             messageId: 'unexpectedTestIdQuery',
