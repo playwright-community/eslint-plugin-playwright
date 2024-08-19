@@ -24,6 +24,11 @@ runRuleTester('prefer-native-locators', rule, {
       output: 'page.getByAltText("Playwright logo")',
     },
     {
+      code: `page.locator('[title="Additional context"]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedTitleQuery' }],
+      output: 'page.getByTitle("Additional context")',
+    },
+    {
       code: `page.locator('[data-testid="password-input"]')`,
       errors: [{ column: 1, line: 1, messageId: 'unexpectedTestIdQuery' }],
       output: 'page.getByTestId("password-input")',
@@ -35,6 +40,7 @@ runRuleTester('prefer-native-locators', rule, {
     { code: 'page.getByPlaceholder("Enter some text...")' },
     { code: 'page.getByAltText("Playwright logo")' },
     { code: 'page.getByTestId("password-input")' },
+    { code: 'page.getByTitle("Additional context")' },
     {
       code: `page.locator('[complex-query] > [aria-label="View more"]')`,
     },
@@ -49,6 +55,9 @@ runRuleTester('prefer-native-locators', rule, {
     },
     {
       code: `page.locator('[complex-query] > [data-testid="password-input"]')`,
+    },
+    {
+      code: `page.locator('[complex-query] > [title="Additional context"]')`,
     },
   ],
 })

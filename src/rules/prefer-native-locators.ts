@@ -91,6 +91,26 @@ export default createRule({
           })
         }
 
+        const titlePattern = /^\[title=['"](.+?)['"]\]$/
+        if (query.match(titlePattern)) {
+          context.report({
+            fix(fixer) {
+              const [, title] = query.match(titlePattern) ?? []
+              const start =
+                node.callee.type === 'MemberExpression'
+                  ? node.callee.property.range![0]
+                  : node.range![0]
+              const end = node.range![1]
+              return fixer.replaceTextRange(
+                [start, end],
+                `getByTitle("${title}")`,
+              )
+            },
+            messageId: 'unexpectedTitleQuery',
+            node,
+          })
+        }
+
         // TODO: Add support for custom test ID attribute
         const testIdAttributeName = 'data-testid'
         const testIdPattern = new RegExp(
@@ -131,6 +151,7 @@ export default createRule({
       unexpectedPlaceholderQuery: 'Use .getByPlaceholder() instead',
       unexpectedRoleQuery: 'Use .getByRole() instead',
       unexpectedTestIdQuery: 'Use .getByTestId() instead',
+      unexpectedTitleQuery: 'Use .getByTitle() instead',
     },
     schema: [],
     type: 'suggestion',
