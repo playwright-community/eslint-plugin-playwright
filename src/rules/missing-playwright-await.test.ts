@@ -385,6 +385,12 @@ runRuleTester('missing-playwright-await', rule, {
     },
     // Page methods
     { code: `await page.goto('https://example.com')` },
-    { code: test(`await page.goto('https://example.com')`) },
+    { code: `await page.title()` },
+    // Other page methods are ignored
+    { code: `page.frames()` },
+    // Other methods with the same name are ignored
+    { code: `randomObject.title()` },
+    // Does not need to be awaited when returned
+    { code: `() => { return page.content() }` },
   ],
 })

@@ -57,7 +57,75 @@ const playwrightTestMatchers = [
   'toBeInViewport',
 ]
 
-const pageMethods = new Set(['goto'])
+const pageMethods = new Set([
+  '$', // deprecated
+  '$$', // deprecated
+  '$eval', // deprecated
+  '$$eval', // deprecated
+  'addInitScript',
+  'addLocatorHandler',
+  'addScriptTag',
+  'addStyleTag',
+  'bringToFront',
+  'check', // deprecated
+  'click', // deprecated
+  'close',
+  'content',
+  'dblclick', // deprecated
+  'dispatchEvent', // deprecated
+  'dragAndDrop',
+  'emulateMedia',
+  'evaluate',
+  'evaluateHandle',
+  'exposeBinding',
+  'exposeFunction',
+  'fill', // deprecated
+  'focus', // deprecated
+  'getAttribute', // deprecated
+  'goBack',
+  'goForward',
+  'goto',
+  'hover', // deprecated
+  'innerHTML', // deprecated
+  'innerText', // deprecated
+  'inputValue', // deprecated
+  'isChecked', // deprecated
+  'isDisabled', // deprecated
+  'isEditable', // deprecated
+  'isEnabled', // deprecated
+  'isHidden', // deprecated
+  'isVisible', // deprecated
+  'opener',
+  'pause',
+  'pdf',
+  'press', // deprecated
+  'reload',
+  'removeLocatorHandler',
+  'route',
+  'routeFromHAR',
+  'screenshot',
+  'selectOption', // deprecated
+  'setChecked', // deprecated
+  'setContent',
+  'setExtraHTTPHeaders',
+  'setInputFiles', // deprecated
+  'setViewportSize',
+  'tap', // deprecated
+  'textContent', // deprecated
+  'title',
+  'type', // deprecated
+  'unroute',
+  'unrouteAll',
+  'waitForEvent',
+  'waitForFunction',
+  'waitForLoadState',
+  'waitForNavigation', // deprecated
+  'waitForRequest',
+  'waitForResponse',
+  'waitForSelector', // deprecated
+  'waitForTimeout', // deprecated
+  'waitForURL',
+])
 
 function getReportNode(node: ESTree.Node) {
   const parent = getParent(node)
