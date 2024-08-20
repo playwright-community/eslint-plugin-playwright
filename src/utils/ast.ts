@@ -116,10 +116,17 @@ export function dig(node: ESTree.Node, identifier: string | RegExp): boolean {
     : false
 }
 
+export function isPage(node: ESTree.CallExpression) {
+  return (
+    node.callee.type === 'MemberExpression' &&
+    dig(node.callee.object, /(^(page|frame)|(Page|Frame)$)/)
+  )
+}
+
 export function isPageMethod(node: ESTree.CallExpression, name: string) {
   return (
     node.callee.type === 'MemberExpression' &&
-    dig(node.callee.object, /(^(page|frame)|(Page|Frame)$)/) &&
+    isPage(node) &&
     isPropertyAccessor(node.callee, name)
   )
 }

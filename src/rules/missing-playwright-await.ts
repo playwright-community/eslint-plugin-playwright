@@ -1,6 +1,6 @@
 import { Rule } from 'eslint'
 import ESTree from 'estree'
-import { getParent, getStringValue, isIdentifier } from '../utils/ast'
+import { getParent, getStringValue, isIdentifier, isPage } from '../utils/ast'
 import { createRule } from '../utils/createRule'
 import { ParsedFnCall, parseFnCall } from '../utils/parseFnCall'
 
@@ -56,6 +56,8 @@ const playwrightTestMatchers = [
   'toBeAttached',
   'toBeInViewport',
 ]
+
+const pageMethods = new Set(['goto'])
 
 function getReportNode(node: ESTree.Node) {
   const parent = getParent(node)
@@ -139,6 +141,21 @@ export default createRule({
 
     return {
       CallExpression(node) {
+        // Checking validity of calls to methods on the page object
+        if (isPage(node) && node.callee.type === 'MemberExpression') {
+          const method = getStringValue(node.callee.property)
+          const isValid = checkValidity(node)
+
+          if (!isValid && pageMethods.has(method)) {
+            context.report({
+              data: { method },
+              fix: (fixer) => fixer.insertTextBefore(node, 'await '),
+              messageId: 'page',
+              node: node.callee,
+            })
+          }
+        }
+
         const call = parseFnCall(context, node)
         if (call?.type !== 'step' && call?.type !== 'expect') return
 
@@ -167,6 +184,7 @@ export default createRule({
     messages: {
       expect: "'{{matcherName}}' must be awaited or returned.",
       expectPoll: "'expect.poll' matchers must be awaited or returned.",
+      page: "'{{method}}' must be awaited or returned.",
       testStep: "'test.step' must be awaited or returned.",
     },
     schema: [

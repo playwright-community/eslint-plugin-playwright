@@ -247,6 +247,21 @@ runRuleTester('missing-playwright-await', rule, {
         },
       },
     },
+    // Page methods
+    {
+      code: `page.goto('https://example.com')`,
+      errors: [
+        { column: 1, endColumn: 10, endLine: 1, line: 1, messageId: 'page' },
+      ],
+      output: `await page.goto('https://example.com')`,
+    },
+    {
+      code: test(`page.goto('https://example.com')`),
+      errors: [
+        { column: 28, endColumn: 37, endLine: 1, line: 1, messageId: 'page' },
+      ],
+      output: test(`await page.goto('https://example.com')`),
+    },
   ],
   valid: [
     // Basic
@@ -368,5 +383,8 @@ runRuleTester('missing-playwright-await', rule, {
         },
       },
     },
+    // Page methods
+    { code: `await page.goto('https://example.com')` },
+    { code: test(`await page.goto('https://example.com')`) },
   ],
 })
