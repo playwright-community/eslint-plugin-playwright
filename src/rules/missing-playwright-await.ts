@@ -119,8 +119,6 @@ const pageMethods = new Set([
   'waitForFunction',
   'waitForLoadState',
   'waitForNavigation', // deprecated
-  'waitForRequest',
-  'waitForResponse',
   'waitForSelector', // deprecated
   'waitForTimeout', // deprecated
   'waitForURL',
