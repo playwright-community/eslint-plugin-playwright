@@ -9,6 +9,7 @@ Example of **incorrect** code for this rule:
 ```javascript
 expect(page).toMatchText('text')
 expect.poll(() => foo).toBe(true)
+page.goto('https://example.com')
 
 test.step('clicks the button', async () => {
   await page.click('button')
@@ -20,6 +21,7 @@ Example of **correct** code for this rule:
 ```javascript
 await expect(page).toMatchText('text')
 await expect.poll(() => foo).toBe(true)
+await page.goto('https://example.com')
 
 await test.step('clicks the button', async () => {
   await page.click('button')
