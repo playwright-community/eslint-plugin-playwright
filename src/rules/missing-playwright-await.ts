@@ -116,7 +116,6 @@ const pageMethods = new Set([
   'type', // deprecated
   'unroute',
   'unrouteAll',
-  'waitForEvent',
   'waitForFunction',
   'waitForLoadState',
   'waitForNavigation', // deprecated
