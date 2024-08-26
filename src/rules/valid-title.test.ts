@@ -52,6 +52,18 @@ runRuleTester('valid-title', rule, {
       options: [{ disallowedWords: ['descriptive'] }],
     },
     {
+      code: 'test(`that the value is set properly`, function () {})',
+      errors: [
+        {
+          column: 6,
+          data: { word: 'properly' },
+          line: 1,
+          messageId: 'disallowedWord',
+        },
+      ],
+      options: [{ disallowedWords: ['properly'] }],
+    },
+    {
       code: 'test.step(`that the value is set properly`, function () {})',
       errors: [
         {
