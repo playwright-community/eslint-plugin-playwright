@@ -143,6 +143,7 @@ test.describe('foo', () => {
 ```ts
 interface Options {
   ignoreSpaces?: boolean
+  ignoreTypeOfStepName?: boolean
   ignoreTypeOfTestName?: boolean
   ignoreTypeOfDescribeName?: boolean
   disallowedWords?: string[]
@@ -156,6 +157,13 @@ interface Options {
 Default: `false`
 
 When enabled, the leading and trailing spaces won't be checked.
+
+#### `ignoreTypeOfStepName`
+
+Default: `true`
+
+When enabled, the type of the first argument to `test.step` blocks won't be
+checked.
 
 #### `ignoreTypeOfDescribeName`
 
