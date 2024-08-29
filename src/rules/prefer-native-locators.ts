@@ -88,12 +88,12 @@ export default createRule({
     },
     fixable: 'code',
     messages: {
-      unexpectedAltTextQuery: 'Use .getByAltText() instead',
-      unexpectedLabelQuery: 'Use .getByLabel() instead',
-      unexpectedPlaceholderQuery: 'Use .getByPlaceholder() instead',
-      unexpectedRoleQuery: 'Use .getByRole() instead',
-      unexpectedTestIdQuery: 'Use .getByTestId() instead',
-      unexpectedTitleQuery: 'Use .getByTitle() instead',
+      unexpectedAltTextQuery: 'Use getByAltText() instead',
+      unexpectedLabelQuery: 'Use getByLabel() instead',
+      unexpectedPlaceholderQuery: 'Use getByPlaceholder() instead',
+      unexpectedRoleQuery: 'Use getByRole() instead',
+      unexpectedTestIdQuery: 'Use getByTestId() instead',
+      unexpectedTitleQuery: 'Use getByTitle() instead',
     },
     schema: [
       {
