@@ -70,6 +70,8 @@ runRuleTester('prefer-native-locators', rule, {
     { code: 'page.getByAltText("Playwright logo")' },
     { code: 'page.getByTestId("password-input")' },
     { code: 'page.getByTitle("Additional context")' },
+    { code: 'page.locator(".class")' },
+    { code: 'page.locator("#id")' },
     // Does not match on more complex queries
     {
       code: `page.locator('[complex-query] > [aria-label="View more"]')`,
