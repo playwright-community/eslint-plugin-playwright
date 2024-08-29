@@ -32,3 +32,39 @@ page.getByAltText('Playwright logo')
 page.getByTestId('password-input')
 page.getByTitle('Additional context')
 ```
+
+## Options
+
+```json
+{
+  "playwright/prefer-native-locators": [
+    "error",
+    {
+      "testIdAttribute": "data-testid"
+    }
+  ]
+}
+```
+
+### `testIdAttribute`
+
+Default: `data-testid`
+
+This string option specifies the test ID attribute to look for and replace with
+`page.getByTestId()` calls. If you are using
+[`page.setTestIdAttribute()`](https://playwright.dev/docs/api/class-selectors#selectors-set-test-id-attribute),
+this should be set to the same value as what you pass in to that method.
+
+Examples of **incorrect** code when using
+`{ "testIdAttribute": "data-custom-testid" }` option:
+
+```js
+page.locator('[data-custom-testid="password-input"]')
+```
+
+Examples of **correct** code when using
+`{ "testIdAttribute": "data-custom-testid" }` option:
+
+```js
+page.getByTestId('password-input')
+```
