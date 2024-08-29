@@ -1,3 +1,4 @@
+import { AST } from 'eslint'
 import { getStringValue, isPageMethod } from '../utils/ast'
 import { createRule } from '../utils/createRule'
 
@@ -60,7 +61,7 @@ export default createRule({
             ? node.callee.property.range![0]
             : node.range![0]
         const end = node.range![1]
-        const rangeToReplace: [number, number] = [start, end]
+        const rangeToReplace: AST.Range = [start, end]
 
         for (const pattern of patterns) {
           const match = query.match(pattern.pattern)
