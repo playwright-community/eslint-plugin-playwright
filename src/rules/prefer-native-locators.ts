@@ -1,15 +1,54 @@
 import { getStringValue, isPageMethod } from '../utils/ast'
 import { createRule } from '../utils/createRule'
 
+type Pattern = {
+  messageId: string
+  pattern: RegExp
+  replacement: string
+}
+
 export default createRule({
   create(context) {
+    const { testIdAttribute } = {
+      testIdAttribute: 'data-testid',
+      ...((context.options?.[0] as Record<string, unknown>) ?? {}),
+    }
+
+    const patterns: Array<Pattern> = [
+      {
+        messageId: 'unexpectedLabelQuery',
+        pattern: /^\[aria-label=['"](.+?)['"]\]$/,
+        replacement: 'getByLabel',
+      },
+      {
+        messageId: 'unexpectedRoleQuery',
+        pattern: /^\[role=['"](.+?)['"]\]$/,
+        replacement: 'getByRole',
+      },
+      {
+        messageId: 'unexpectedPlaceholderQuery',
+        pattern: /^\[placeholder=['"](.+?)['"]\]$/,
+        replacement: 'getByPlaceholder',
+      },
+      {
+        messageId: 'unexpectedAltTextQuery',
+        pattern: /^\[alt=['"](.+?)['"]\]$/,
+        replacement: 'getByAltText',
+      },
+      {
+        messageId: 'unexpectedTitleQuery',
+        pattern: /^\[title=['"](.+?)['"]\]$/,
+        replacement: 'getByTitle',
+      },
+      {
+        messageId: 'unexpectedTestIdQuery',
+        pattern: new RegExp(`^\\[${testIdAttribute}=['"](.+?)['"]\\]`),
+        replacement: 'getByTestId',
+      },
+    ]
+
     return {
       CallExpression(node) {
-        const { testIdAttribute } = {
-          testIdAttribute: 'data-testid',
-          ...((context.options?.[0] as Record<string, unknown>) ?? {}),
-        }
-
         if (node.callee.type !== 'MemberExpression') return
         const method = getStringValue(node.callee.property)
         const query = getStringValue(node.arguments[0])
@@ -24,84 +63,18 @@ export default createRule({
         const end = node.range![1]
         const rangeToReplace: [number, number] = [start, end]
 
-        const ariaLabelPattern = /^\[aria-label=['"](.+?)['"]\]$/
-        const labelMatch = query.match(ariaLabelPattern)
-        if (labelMatch) {
-          context.report({
-            fix(fixer) {
-              const newText = `getByLabel("${labelMatch[1]}")`
-              return fixer.replaceTextRange(rangeToReplace, newText)
-            },
-            messageId: 'unexpectedLabelQuery',
-            node,
-          })
-        }
-
-        const rolePattern = /^\[role=['"](.+?)['"]\]$/
-        const roleMatch = query.match(rolePattern)
-        if (roleMatch) {
-          context.report({
-            fix(fixer) {
-              const newText = `getByRole("${roleMatch[1]}")`
-              return fixer.replaceTextRange(rangeToReplace, newText)
-            },
-            messageId: 'unexpectedRoleQuery',
-            node,
-          })
-        }
-
-        const placeholderPattern = /^\[placeholder=['"](.+?)['"]\]$/
-        const placeholderMatch = query.match(placeholderPattern)
-        if (placeholderMatch) {
-          context.report({
-            fix(fixer) {
-              const newText = `getByPlaceholder("${placeholderMatch[1]}")`
-              return fixer.replaceTextRange(rangeToReplace, newText)
-            },
-            messageId: 'unexpectedPlaceholderQuery',
-            node,
-          })
-        }
-
-        const altTextPattern = /^\[alt=['"](.+?)['"]\]$/
-        const altTextMatch = query.match(altTextPattern)
-        if (altTextMatch) {
-          context.report({
-            fix(fixer) {
-              const newText = `getByAltText("${altTextMatch[1]}")`
-              return fixer.replaceTextRange(rangeToReplace, newText)
-            },
-            messageId: 'unexpectedAltTextQuery',
-            node,
-          })
-        }
-
-        const titlePattern = /^\[title=['"](.+?)['"]\]$/
-        const titleMatch = query.match(titlePattern)
-        if (titleMatch) {
-          context.report({
-            fix(fixer) {
-              const newText = `getByTitle("${titleMatch[1]}")`
-              return fixer.replaceTextRange(rangeToReplace, newText)
-            },
-            messageId: 'unexpectedTitleQuery',
-            node,
-          })
-        }
-
-        const testIdPattern = new RegExp(
-          `^\\[${testIdAttribute}=['"](.+?)['"]\\]`,
-        )
-        const testIdMatch = query.match(testIdPattern)
-        if (testIdMatch) {
-          context.report({
-            fix(fixer) {
-              const newText = `getByTestId("${testIdMatch[1]}")`
-              return fixer.replaceTextRange(rangeToReplace, newText)
-            },
-            messageId: 'unexpectedTestIdQuery',
-            node,
-          })
+        for (const pattern of patterns) {
+          const match = query.match(pattern.pattern)
+          if (match) {
+            context.report({
+              fix(fixer) {
+                const newText = `${pattern.replacement}("${match[1]}")`
+                return fixer.replaceTextRange(rangeToReplace, newText)
+              },
+              messageId: pattern.messageId,
+              node,
+            })
+          }
         }
       },
     }
