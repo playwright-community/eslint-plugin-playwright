@@ -50,9 +50,8 @@ export default createRule({
     return {
       CallExpression(node) {
         if (node.callee.type !== 'MemberExpression') return
-        const method = getStringValue(node.callee.property)
         const query = getStringValue(node.arguments[0])
-        const isLocator = isPageMethod(node, 'locator') || method === 'locator'
+        const isLocator = isPageMethod(node, 'locator')
         if (!isLocator) return
 
         // If it's something like `page.locator`, just replace the `.locator` part

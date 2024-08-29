@@ -62,12 +62,6 @@ runRuleTester('prefer-native-locators', rule, {
       errors: [{ column: 7, line: 1, messageId: 'unexpectedPlaceholderQuery' }],
       output: 'await page.getByPlaceholder("New password").click()',
     },
-    // Works when it is not page.locator
-    {
-      code: `this.locator('[aria-label="View more"]')`,
-      errors: [{ column: 1, line: 1, messageId: 'unexpectedLabelQuery' }],
-      output: 'this.getByLabel("View more")',
-    },
   ],
   valid: [
     { code: 'page.getByLabel("View more")' },
