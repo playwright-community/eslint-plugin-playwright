@@ -18,32 +18,32 @@ export default createRule({
     const patterns: Array<Pattern> = [
       {
         messageId: 'unexpectedLabelQuery',
-        pattern: /^\[aria-label=['"](.+?)['"]\]$/,
+        pattern: /^\[aria-label=['"]?(.+?)['"]?\]$/,
         replacement: 'getByLabel',
       },
       {
         messageId: 'unexpectedRoleQuery',
-        pattern: /^\[role=['"](.+?)['"]\]$/,
+        pattern: /^\[role=['"]?(.+?)['"]?\]$/,
         replacement: 'getByRole',
       },
       {
         messageId: 'unexpectedPlaceholderQuery',
-        pattern: /^\[placeholder=['"](.+?)['"]\]$/,
+        pattern: /^\[placeholder=['"]?(.+?)['"]?\]$/,
         replacement: 'getByPlaceholder',
       },
       {
         messageId: 'unexpectedAltTextQuery',
-        pattern: /^\[alt=['"](.+?)['"]\]$/,
+        pattern: /^\[alt=['"]?(.+?)['"]?\]$/,
         replacement: 'getByAltText',
       },
       {
         messageId: 'unexpectedTitleQuery',
-        pattern: /^\[title=['"](.+?)['"]\]$/,
+        pattern: /^\[title=['"]?(.+?)['"]?\]$/,
         replacement: 'getByTitle',
       },
       {
         messageId: 'unexpectedTestIdQuery',
-        pattern: new RegExp(`^\\[${testIdAttribute}=['"](.+?)['"]\\]`),
+        pattern: new RegExp(`^\\[${testIdAttribute}=['"]?(.+?)['"]?\\]`),
         replacement: 'getByTestId',
       },
     ]

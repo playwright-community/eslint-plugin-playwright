@@ -9,7 +9,17 @@ runRuleTester('prefer-native-locators', rule, {
       output: 'page.getByLabel("View more")',
     },
     {
+      code: `page.locator('[aria-label=Edit]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedLabelQuery' }],
+      output: 'page.getByLabel("Edit")',
+    },
+    {
       code: `page.locator('[role="button"]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedRoleQuery' }],
+      output: 'page.getByRole("button")',
+    },
+    {
+      code: `page.locator('[role=button]')`,
       errors: [{ column: 1, line: 1, messageId: 'unexpectedRoleQuery' }],
       output: 'page.getByRole("button")',
     },
@@ -19,9 +29,19 @@ runRuleTester('prefer-native-locators', rule, {
       output: 'page.getByPlaceholder("Enter some text...")',
     },
     {
+      code: `page.locator('[placeholder=Name]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedPlaceholderQuery' }],
+      output: 'page.getByPlaceholder("Name")',
+    },
+    {
       code: `page.locator('[alt="Playwright logo"]')`,
       errors: [{ column: 1, line: 1, messageId: 'unexpectedAltTextQuery' }],
       output: 'page.getByAltText("Playwright logo")',
+    },
+    {
+      code: `page.locator('[alt=Logo]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedAltTextQuery' }],
+      output: 'page.getByAltText("Logo")',
     },
     {
       code: `page.locator('[title="Additional context"]')`,
@@ -29,15 +49,31 @@ runRuleTester('prefer-native-locators', rule, {
       output: 'page.getByTitle("Additional context")',
     },
     {
+      code: `page.locator('[title=Context]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedTitleQuery' }],
+      output: 'page.getByTitle("Context")',
+    },
+    {
       code: `page.locator('[data-testid="password-input"]')`,
       errors: [{ column: 1, line: 1, messageId: 'unexpectedTestIdQuery' }],
       output: 'page.getByTestId("password-input")',
+    },
+    {
+      code: `page.locator('[data-testid=input]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedTestIdQuery' }],
+      output: 'page.getByTestId("input")',
     },
     {
       code: `page.locator('[data-custom-testid="password-input"]')`,
       errors: [{ column: 1, line: 1, messageId: 'unexpectedTestIdQuery' }],
       options: [{ testIdAttribute: 'data-custom-testid' }],
       output: 'page.getByTestId("password-input")',
+    },
+    {
+      code: `page.locator('[data-custom-testid=input]')`,
+      errors: [{ column: 1, line: 1, messageId: 'unexpectedTestIdQuery' }],
+      options: [{ testIdAttribute: 'data-custom-testid' }],
+      output: 'page.getByTestId("input")',
     },
     // Works when locators are chained
     {
