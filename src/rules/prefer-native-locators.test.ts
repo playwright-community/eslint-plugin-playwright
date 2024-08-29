@@ -70,6 +70,7 @@ runRuleTester('prefer-native-locators', rule, {
     { code: 'page.getByAltText("Playwright logo")' },
     { code: 'page.getByTestId("password-input")' },
     { code: 'page.getByTitle("Additional context")' },
+    // Does not match on more complex queries
     {
       code: `page.locator('[complex-query] > [aria-label="View more"]')`,
     },
@@ -88,5 +89,8 @@ runRuleTester('prefer-native-locators', rule, {
     {
       code: `page.locator('[complex-query] > [title="Additional context"]')`,
     },
+    // Works for empty string and no arguments
+    { code: `page.locator('')` },
+    { code: `page.locator()` },
   ],
 })
