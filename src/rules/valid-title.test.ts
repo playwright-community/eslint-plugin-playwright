@@ -63,6 +63,18 @@ runRuleTester('valid-title', rule, {
       ],
       options: [{ disallowedWords: ['properly'] }],
     },
+    {
+      code: 'test.step(`that the value is set properly`, function () {})',
+      errors: [
+        {
+          column: 11,
+          data: { word: 'properly' },
+          line: 1,
+          messageId: 'disallowedWord',
+        },
+      ],
+      options: [{ disallowedWords: ['properly'] }],
+    },
     // Global aliases
     {
       code: 'it("the correct way to properly handle all things", () => {});',
@@ -142,7 +154,9 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
           });
 
           test.describe('e2e tests #e4e', () => {
-            test('is another test #e2e #playwright4life', () => {});
+            test('is another test #e2e #playwright4life', () => {
+              test.step('#wow', () => {});
+            });
           });
         });
       `,
@@ -165,6 +179,15 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
           line: 9,
           messageId: 'mustNotMatch',
         },
+        {
+          column: 17,
+          data: {
+            functionName: 'step',
+            pattern: /(?:#(?!unit|e2e))\w+/u,
+          },
+          line: 10,
+          messageId: 'mustNotMatch',
+        },
       ],
       options: [
         {
@@ -183,7 +206,9 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
           });
 
           test.describe('e2e tests #e4e', () => {
-            test('is another test #e2e #playwright4life', () => {});
+            test('is another test #e2e #playwright4life', () => {
+              test.step('#wow', () => {});
+            });
           });
         });
       `,
@@ -206,6 +231,15 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
             pattern: /(?:#(?!unit|e2e))\w+/u,
           },
           line: 9,
+          messageId: 'mustNotMatchCustom',
+        },
+        {
+          column: 17,
+          data: {
+            message: 'Please include "#unit" or "#e2e" in titles',
+            pattern: /(?:#(?!unit|e2e))\w+/u,
+          },
+          line: 10,
           messageId: 'mustNotMatchCustom',
         },
       ],
@@ -232,7 +266,9 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
           });
 
           test.describe('e2e tests #e4e', () => {
-            test('is another test #e2e #playwright4life', () => {});
+            test('is another test #e2e #playwright4life', () => {
+              test.step('#wow', () => {});
+            });
           });
         });
       `,
@@ -264,7 +300,9 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
           });
 
           test.describe('e2e tests #e4e', () => {
-            test('is another test #e2e #playwright4life', () => {});
+            test('is another test #e2e #playwright4life', () => {
+              test.step('#wow', () => {});
+            });
           });
         });
       `,
@@ -302,7 +340,9 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
           });
 
           test.describe('e2e tests #e4e', () => {
-            test('is another test #e2e #playwright4life', () => {});
+            test('is another test #e2e #playwright4life', () => {
+              test.step('#wow', () => {});
+            });
           });
         });
       `,
@@ -334,7 +374,9 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
           });
 
           test.describe('e2e tests #e4e', () => {
-            test('is another test #e2e #playwright4life', () => {});
+            test('is another test #e2e #playwright4life', () => {
+              test.step('#wow', () => {});
+            });
           });
         });
       `,
@@ -408,6 +450,21 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
       options: [
         { mustMatch: { describe: /#(?:unit|integration|e2e)/u.source } },
       ],
+    },
+    {
+      code: 'test.step("the test", () => {});',
+      errors: [
+        {
+          column: 11,
+          data: {
+            functionName: 'step',
+            pattern: /#(?:unit|integration|e2e)/u,
+          },
+          line: 1,
+          messageId: 'mustMatch',
+        },
+      ],
+      options: [{ mustMatch: { step: /#(?:unit|integration|e2e)/u.source } }],
     },
     {
       code: 'test.describe.skip("the test", () => {});',
@@ -499,6 +556,12 @@ runRuleTester('mustMatch & mustNotMatch options', rule, {
     },
     {
       code: 'test("correctly sets the value", () => {});',
+      options: [
+        { mustMatch: { describe: /#(?:unit|integration|e2e)/u.source } },
+      ],
+    },
+    {
+      code: 'test.step("correctly sets the value", () => {});',
       options: [
         { mustMatch: { describe: /#(?:unit|integration|e2e)/u.source } },
       ],
@@ -657,6 +720,17 @@ runRuleTester('title-must-be-string', rule, {
         },
       ],
     },
+    {
+      code: 'test.step(123, () => {});',
+      errors: [
+        {
+          column: 11,
+          line: 1,
+          messageId: 'titleMustBeString',
+        },
+      ],
+      options: [{ ignoreTypeOfStepName: false }],
+    },
     // Global aliases
     {
       code: 'it(String(/.+/), () => {});',
@@ -685,6 +759,7 @@ runRuleTester('title-must-be-string', rule, {
     'test.describe.skip("is a string", () => {});',
     'test.describe.skip(`${myFunc} is a string`, () => {});',
     'test.describe("is a string", () => {});',
+    'test.step(123, () => {});',
     {
       code: 'test.describe(String(/.+/), () => {});',
       options: [{ ignoreTypeOfDescribeName: true }],
@@ -811,6 +886,17 @@ runRuleTester('no-empty-title', rule, {
         },
       ],
     },
+    {
+      code: 'test.step(``, function () {})',
+      errors: [
+        {
+          column: 1,
+          data: { functionName: 'step' },
+          line: 1,
+          messageId: 'emptyTitle',
+        },
+      ],
+    },
     // Global aliases
     {
       code: 'it.describe("", function () {})',
@@ -840,6 +926,7 @@ runRuleTester('no-empty-title', rule, {
     'test.skip(`foo`, function () {})',
     'test(`${foo}`, function () {})',
     'test.fixme(`${foo}`, function () {})',
+    'test.step(`${foo}`, function () {})',
     // Global aliases
     {
       code: 'test.describe()',
@@ -970,6 +1057,21 @@ runRuleTester('no-accidental-space', rule, {
       output: 'test("foo", function () {})',
     },
     {
+      code: 'test.step(` foo bar bang  `, function () {})',
+      errors: [{ column: 11, line: 1, messageId: 'accidentalSpace' }],
+      output: 'test.step(`foo bar bang`, function () {})',
+    },
+    {
+      code: 'test.step(" foo", function () {})',
+      errors: [{ column: 11, line: 1, messageId: 'accidentalSpace' }],
+      output: 'test.step("foo", function () {})',
+    },
+    {
+      code: 'test.step(" foo  ", function () {})',
+      errors: [{ column: 11, line: 1, messageId: 'accidentalSpace' }],
+      output: 'test.step("foo", function () {})',
+    },
+    {
       code: javascript`
         test.describe(' foo', () => {
           test('bar', () => {})
@@ -1013,6 +1115,8 @@ runRuleTester('no-accidental-space', rule, {
     'test("foo", function () {})',
     'test.describe()',
     'test.describe("foo", function () {})',
+    'test.step()',
+    'test.step("foo", function () {})',
     'test.only()',
     'test.only("foo", function () {})',
     javascript`
@@ -1135,6 +1239,37 @@ runRuleTester('no-duplicate-prefix test', rule, {
   ],
 })
 
+runRuleTester('no-duplicate-prefix step', rule, {
+  invalid: [
+    {
+      code: 'test.step("step foo", function () {})',
+      errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
+      output: 'test.step("foo", function () {})',
+    },
+    {
+      code: 'test.step("step foo", function () {})',
+      errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
+      output: 'test.step("foo", function () {})',
+    },
+    {
+      code: 'test.step("step foo", function () {})',
+      errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
+      output: 'test.step("foo", function () {})',
+    },
+    {
+      code: "test.step('step foo', function () {})",
+      errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
+      output: "test.step('foo', function () {})",
+    },
+    {
+      code: 'test.step(`step foo`, function () {})',
+      errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
+      output: 'test.step(`foo`, function () {})',
+    },
+  ],
+  valid: ['test.step("foo", function () {})'],
+})
+
 runRuleTester('no-duplicate-prefix nested', rule, {
   invalid: [
     {
@@ -1173,6 +1308,23 @@ runRuleTester('no-duplicate-prefix nested', rule, {
       output: javascript`
         test.describe('foo', () => {
           test('bar', () => {})
+        })
+      `,
+    },
+    {
+      code: javascript`
+        test.describe('foo', () => {
+          test('bar', () => {
+            test.step('step foobar', () => {})
+          })
+        })
+      `,
+      errors: [{ column: 15, line: 3, messageId: 'duplicatePrefix' }],
+      output: javascript`
+        test.describe('foo', () => {
+          test('bar', () => {
+            test.step('foobar', () => {})
+          })
         })
       `,
     },

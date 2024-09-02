@@ -44,6 +44,7 @@ const compileMatcherPatterns = (
 
     return {
       describe: compiledMatcher,
+      step: compiledMatcher,
       test: compiledMatcher,
     }
   }
@@ -52,6 +53,7 @@ const compileMatcherPatterns = (
     describe: matchers.describe
       ? compileMatcherPattern(matchers.describe)
       : null,
+    step: matchers.step ? compileMatcherPattern(matchers.step) : null,
     test: matchers.test ? compileMatcherPattern(matchers.test) : null,
   }
 }
@@ -67,12 +69,13 @@ const MatcherAndMessageSchema = {
   type: 'array',
 } as const
 
-type MatcherGroups = 'describe' | 'test'
+type MatcherGroups = 'describe' | 'step' | 'test'
 
 interface Options {
   disallowedWords?: string[]
   ignoreSpaces?: boolean
   ignoreTypeOfDescribeName?: boolean
+  ignoreTypeOfStepName?: boolean
   ignoreTypeOfTestName?: boolean
   mustMatch?:
     | Partial<Record<MatcherGroups, string | MatcherAndMessage>>
@@ -91,6 +94,7 @@ export default createRule({
       disallowedWords = [],
       ignoreSpaces = false,
       ignoreTypeOfDescribeName = false,
+      ignoreTypeOfStepName = true,
       ignoreTypeOfTestName = false,
       mustMatch,
       mustNotMatch,
@@ -106,7 +110,11 @@ export default createRule({
     return {
       CallExpression(node) {
         const call = parseFnCall(context, node)
-        if (call?.type !== 'test' && call?.type !== 'describe') {
+        if (
+          call?.type !== 'test' &&
+          call?.type !== 'describe' &&
+          call?.type !== 'step'
+        ) {
           return
         }
 
@@ -124,7 +132,8 @@ export default createRule({
           if (
             !(
               (call.type === 'describe' && ignoreTypeOfDescribeName) ||
-              (call.type === 'test' && ignoreTypeOfTestName)
+              (call.type === 'test' && ignoreTypeOfTestName) ||
+              (call.type === 'step' && ignoreTypeOfStepName)
             ) &&
             (argument as ESTree.Node).type !== 'TemplateLiteral'
           ) {
@@ -262,7 +271,7 @@ export default createRule({
                 additionalProperties: {
                   oneOf: [{ type: 'string' }, MatcherAndMessageSchema],
                 },
-                propertyNames: { enum: ['describe', 'test'] },
+                propertyNames: { enum: ['describe', 'test', 'step'] },
                 type: 'object',
               },
             ],
@@ -279,6 +288,10 @@ export default createRule({
           },
           ignoreTypeOfDescribeName: {
             default: false,
+            type: 'boolean',
+          },
+          ignoreTypeOfStepName: {
+            default: true,
             type: 'boolean',
           },
           ignoreTypeOfTestName: {
