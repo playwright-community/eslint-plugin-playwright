@@ -67,19 +67,18 @@ export default createRule({
         const isLocator = isPageMethod(node, 'locator')
         if (!isLocator) return
 
-        // If it's something like `page.locator`, just replace the `.locator` part
-        const start =
-          node.callee.type === 'MemberExpression'
-            ? node.callee.property.range![0]
-            : node.range![0]
-        const end = node.range![1]
-        const rangeToReplace: AST.Range = [start, end]
-
         for (const pattern of patterns) {
           const match = query.match(pattern.pattern)
           if (match) {
             context.report({
               fix(fixer) {
+                const start =
+                  node.callee.type === 'MemberExpression'
+                    ? node.callee.property.range![0]
+                    : node.range![0]
+                const end = node.range![1]
+                const rangeToReplace: AST.Range = [start, end]
+
                 const newText = `${pattern.replacement}("${match[1]}")`
                 return fixer.replaceTextRange(rangeToReplace, newText)
               },
