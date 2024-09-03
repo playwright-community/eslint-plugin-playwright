@@ -98,16 +98,58 @@ runRuleTester('prefer-native-locators', rule, {
       errors: [{ column: 7, line: 1, messageId: 'unexpectedPlaceholderQuery' }],
       output: 'await page.getByPlaceholder("New password").click()',
     },
+    // Works as part of a declaration or other usage
+    {
+      code: `const dialog = page.locator('[role="dialog"]')`,
+      errors: [{ column: 16, line: 1, messageId: 'unexpectedRoleQuery' }],
+      output: 'const dialog = page.getByRole("dialog")',
+    },
+    {
+      code: `this.closeModalLocator = this.page.locator('[data-test=close-modal]');`,
+      errors: [{ column: 26, line: 1, messageId: 'unexpectedTestIdQuery' }],
+      options: [{ testIdAttribute: 'data-test' }],
+      output: 'this.closeModalLocator = this.page.getByTestId("close-modal");',
+    },
+    {
+      code: `export class TestClass {
+        container = () => this.page.locator('[data-testid="container"]');
+      }`,
+      errors: [{ column: 27, line: 2, messageId: 'unexpectedTestIdQuery' }],
+      output: `export class TestClass {
+        container = () => this.page.getByTestId("container");
+      }`,
+    },
+    {
+      code: `export class TestClass {
+        get alert() {
+          return this.page.locator("[role='alert']");
+        }
+      }`,
+      errors: [{ column: 18, line: 3, messageId: 'unexpectedRoleQuery' }],
+      output: `export class TestClass {
+        get alert() {
+          return this.page.getByRole("alert");
+        }
+      }`,
+    },
   ],
   valid: [
     { code: 'page.getByLabel("View more")' },
     { code: 'page.getByRole("button")' },
+    { code: 'page.getByRole("button", {name: "Open"})' },
     { code: 'page.getByPlaceholder("Enter some text...")' },
     { code: 'page.getByAltText("Playwright logo")' },
     { code: 'page.getByTestId("password-input")' },
     { code: 'page.getByTitle("Additional context")' },
+    { code: 'this.page.getByLabel("View more")' },
+    { code: 'this.page.getByRole("button")' },
+    { code: 'this.page.getByPlaceholder("Enter some text...")' },
+    { code: 'this.page.getByAltText("Playwright logo")' },
+    { code: 'this.page.getByTestId("password-input")' },
+    { code: 'this.page.getByTitle("Additional context")' },
     { code: 'page.locator(".class")' },
     { code: 'page.locator("#id")' },
+    { code: 'this.page.locator("#id")' },
     // Does not match on more complex queries
     {
       code: `page.locator('[complex-query] > [aria-label="View more"]')`,
@@ -127,8 +169,26 @@ runRuleTester('prefer-native-locators', rule, {
     {
       code: `page.locator('[complex-query] > [title="Additional context"]')`,
     },
+    {
+      code: `this.page.locator('[complex-query] > [title="Additional context"]')`,
+    },
     // Works for empty string and no arguments
     { code: `page.locator('')` },
     { code: `page.locator()` },
+    // Works for classes and declarations
+    { code: `const dialog = page.getByRole("dialog")` },
+    {
+      code: `export class TestClass {
+        get alert() {
+          return this.page.getByRole("alert");
+        }
+      }`,
+    },
+    {
+      code: `export class TestClass {
+        container = () => this.page.getByTestId("container");
+      }`,
+    },
+    { code: `this.closeModalLocator = this.page.getByTestId("close-modal");` },
   ],
 })
