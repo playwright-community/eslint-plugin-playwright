@@ -8,6 +8,49 @@ type Pattern = {
   replacement: string
 }
 
+const compilePatterns = ({
+  testIdAttribute,
+}: {
+  testIdAttribute: string
+}): Pattern[] => {
+  const patterns = [
+    {
+      attribute: 'aria-label',
+      messageId: 'unexpectedLabelQuery',
+      replacement: 'getByLabel',
+    },
+    {
+      attribute: 'role',
+      messageId: 'unexpectedRoleQuery',
+      replacement: 'getByRole',
+    },
+    {
+      attribute: 'placeholder',
+      messageId: 'unexpectedPlaceholderQuery',
+      replacement: 'getByPlaceholder',
+    },
+    {
+      attribute: 'alt',
+      messageId: 'unexpectedAltTextQuery',
+      replacement: 'getByAltText',
+    },
+    {
+      attribute: 'title',
+      messageId: 'unexpectedTitleQuery',
+      replacement: 'getByTitle',
+    },
+    {
+      attribute: testIdAttribute,
+      messageId: 'unexpectedTestIdQuery',
+      replacement: 'getByTestId',
+    },
+  ]
+  return patterns.map(({ attribute, ...pattern }) => ({
+    ...pattern,
+    pattern: new RegExp(`^\\[${attribute}=['"]?(.+?)['"]?\\]$`),
+  }))
+}
+
 export default createRule({
   create(context) {
     const { testIdAttribute } = {
@@ -15,38 +58,7 @@ export default createRule({
       ...((context.options?.[0] as Record<string, unknown>) ?? {}),
     }
 
-    const patterns: Array<Pattern> = [
-      {
-        messageId: 'unexpectedLabelQuery',
-        pattern: /^\[aria-label=['"]?(.+?)['"]?\]$/,
-        replacement: 'getByLabel',
-      },
-      {
-        messageId: 'unexpectedRoleQuery',
-        pattern: /^\[role=['"]?(.+?)['"]?\]$/,
-        replacement: 'getByRole',
-      },
-      {
-        messageId: 'unexpectedPlaceholderQuery',
-        pattern: /^\[placeholder=['"]?(.+?)['"]?\]$/,
-        replacement: 'getByPlaceholder',
-      },
-      {
-        messageId: 'unexpectedAltTextQuery',
-        pattern: /^\[alt=['"]?(.+?)['"]?\]$/,
-        replacement: 'getByAltText',
-      },
-      {
-        messageId: 'unexpectedTitleQuery',
-        pattern: /^\[title=['"]?(.+?)['"]?\]$/,
-        replacement: 'getByTitle',
-      },
-      {
-        messageId: 'unexpectedTestIdQuery',
-        pattern: new RegExp(`^\\[${testIdAttribute}=['"]?(.+?)['"]?\\]`),
-        replacement: 'getByTestId',
-      },
-    ]
+    const patterns = compilePatterns({ testIdAttribute })
 
     return {
       CallExpression(node) {
@@ -74,6 +86,7 @@ export default createRule({
               messageId: pattern.messageId,
               node,
             })
+            return
           }
         }
       },
