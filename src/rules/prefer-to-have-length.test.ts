@@ -65,6 +65,13 @@ runRuleTester('prefer-to-have-length', rule, {
         },
       },
     },
+    {
+      code: 'expect((await table.rows.all()).length).toBe(5)',
+      errors: [
+        { column: 41, endColumn: 45, line: 1, messageId: 'useToHaveLength' },
+      ],
+      output: 'expect((await table.rows.all())).toHaveLength(5)',
+    },
   ],
   valid: [
     'expect(files).toHaveLength(1)',
