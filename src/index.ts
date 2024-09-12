@@ -32,6 +32,7 @@ import preferHooksInOrder from './rules/prefer-hooks-in-order'
 import preferHooksOnTop from './rules/prefer-hooks-on-top'
 import preferLowercaseTitle from './rules/prefer-lowercase-title'
 import preferNativeLocators from './rules/prefer-native-locators'
+import preferPageLocatorFill from './rules/prefer-page-locator-fill'
 import preferStrictEqual from './rules/prefer-strict-equal'
 import preferToBe from './rules/prefer-to-be'
 import preferToContain from './rules/prefer-to-contain'
@@ -83,6 +84,7 @@ const index = {
     'prefer-hooks-on-top': preferHooksOnTop,
     'prefer-lowercase-title': preferLowercaseTitle,
     'prefer-native-locators': preferNativeLocators,
+    'prefer-page-locator-fill': preferPageLocatorFill,
     'prefer-strict-equal': preferStrictEqual,
     'prefer-to-be': preferToBe,
     'prefer-to-contain': preferToContain,
