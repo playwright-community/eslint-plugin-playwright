@@ -1,11 +1,11 @@
-# Suggest using `page.locator()` (`prefer-page-locator`)
+# Suggest using `page.locator()` (`prefer-locator`)
 
-Use locator-based [locator.fill(value[, options])](https://playwright.dev/docs/api/class-locator#locator-fill)
-instead of page methods.
+Instead of using page methods use locator-based e.g. page.fill() use
+[locator.fill(value[, options])](https://playwright.dev/docs/api/class-locator#locator-fill)
 
 ## Rule details
 
-This rule triggers a warning if `page.fill()` is used.
+This rule triggers a warning if page methods are used, instead of locators.
 
 The following patterns are considered warnings:
 
