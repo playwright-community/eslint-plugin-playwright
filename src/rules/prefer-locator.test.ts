@@ -15,7 +15,7 @@ runRuleTester('prefer-locator', rule, {
               endColumn: 32,
               endLine: 3,
               line: 3,
-              messageId: 'avoidAwaitPageFill'
+              messageId: 'avoidAwaitPageMethods'
           }
       ],
       output: null
