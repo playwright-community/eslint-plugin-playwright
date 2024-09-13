@@ -10,12 +10,12 @@ This rule triggers a warning if page methods are used, instead of locators.
 The following patterns are considered warnings:
 
 ```javascript
-await page.fill("input[type=\"password\"]", "password");
+await page.fill('input[type="password"]', 'password')
 ```
 
 The following pattern is **not** a warning:
 
 ```javascript
-await page.getByRole("password").fill("password");
-await page.locator("input[type=\"password\"]").fill("password");
+await page.getByRole('password').fill('password')
+await page.locator('input[type="password"]').fill('password')
 ```

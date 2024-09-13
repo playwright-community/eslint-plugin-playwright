@@ -10,16 +10,16 @@ runRuleTester('prefer-locator', rule, {
           }
       `,
       errors: [
-          {
-              column: 15,
-              endColumn: 32,
-              endLine: 3,
-              line: 3,
-              messageId: 'avoidAwaitPageMethods'
-          }
+        {
+          column: 15,
+          endColumn: 32,
+          endLine: 3,
+          line: 3,
+          messageId: 'avoidAwaitPageMethods',
+        },
       ],
-      output: null
-    }
+      output: null,
+    },
   ],
   valid: [
     {
@@ -27,7 +27,7 @@ runRuleTester('prefer-locator', rule, {
           async function test() {
               await page.locator();
           }
-      `
-    }
+      `,
+    },
   ],
 })
