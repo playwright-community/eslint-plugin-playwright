@@ -1,7 +1,7 @@
 import { runRuleTester } from '../utils/rule-tester'
-import rule from './prefer-page-locator-fill'
+import rule from './prefer-locator'
 
-runRuleTester('prefer-page-locator-fill', rule, {
+runRuleTester('prefer-locator', rule, {
   invalid: [
     {
       code: `

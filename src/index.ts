@@ -30,9 +30,9 @@ import preferComparisonMatcher from './rules/prefer-comparison-matcher'
 import preferEqualityMatcher from './rules/prefer-equality-matcher'
 import preferHooksInOrder from './rules/prefer-hooks-in-order'
 import preferHooksOnTop from './rules/prefer-hooks-on-top'
+import preferPageLocator from './rules/prefer-locator'
 import preferLowercaseTitle from './rules/prefer-lowercase-title'
 import preferNativeLocators from './rules/prefer-native-locators'
-import preferPageLocatorFill from './rules/prefer-page-locator-fill'
 import preferStrictEqual from './rules/prefer-strict-equal'
 import preferToBe from './rules/prefer-to-be'
 import preferToContain from './rules/prefer-to-contain'
@@ -82,9 +82,9 @@ const index = {
     'prefer-equality-matcher': preferEqualityMatcher,
     'prefer-hooks-in-order': preferHooksInOrder,
     'prefer-hooks-on-top': preferHooksOnTop,
+    'prefer-locator': preferPageLocator,
     'prefer-lowercase-title': preferLowercaseTitle,
     'prefer-native-locators': preferNativeLocators,
-    'prefer-page-locator-fill': preferPageLocatorFill,
     'prefer-strict-equal': preferStrictEqual,
     'prefer-to-be': preferToBe,
     'prefer-to-contain': preferToContain,

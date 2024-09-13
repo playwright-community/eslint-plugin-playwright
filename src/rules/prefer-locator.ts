@@ -24,9 +24,9 @@ export default createRule({
   meta: {
     docs: {
       category: 'Best Practices',
-      description: "Discourage using 'await page.fill()'",
+      description: "Discourage using await page methods",
       recommended: false,
-      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-page-locator-fill.md',
+      url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-locator.md',
     },
     messages: {
       avoidAwaitPageFill: "Avoid using 'await page.fill()', Use locator-based [locator.fill(value[, options])](https://playwright.dev/docs/api/class-locator#locator-fill)",

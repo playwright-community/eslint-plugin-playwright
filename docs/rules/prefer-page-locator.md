@@ -1,7 +1,7 @@
-# Suggest using `page.locator()` (`prefer-page-locator-fill`)
+# Suggest using `page.locator()` (`prefer-page-locator`)
 
 Use locator-based [locator.fill(value[, options])](https://playwright.dev/docs/api/class-locator#locator-fill)
-instead of page.fill().
+instead of page methods.
 
 ## Rule details
 
