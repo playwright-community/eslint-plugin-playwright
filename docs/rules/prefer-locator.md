@@ -1,7 +1,7 @@
 # Suggest using `page.locator()` (`prefer-locator`)
 
-Instead of using page methods use locator-based e.g. page.fill() use
-[locator.fill(value[, options])](https://playwright.dev/docs/api/class-locator#locator-fill)
+Suggest using locators and their associated methods instead of page methods for
+performing actions.
 
 ## Rule details
 
@@ -10,12 +10,22 @@ This rule triggers a warning if page methods are used, instead of locators.
 The following patterns are considered warnings:
 
 ```javascript
+await page.click('css=button')
+await page.dblclick('xpath=//button')
 await page.fill('input[type="password"]', 'password')
+
+await page.frame('frame-name').click('css=button')
 ```
 
-The following pattern is **not** a warning:
+The following pattern are **not** warnings:
 
 ```javascript
 await page.getByRole('password').fill('password')
+await page.getByLabel('User Name').fill('John')
+await page.getByRole('button', { name: 'Sign in' }).click()
 await page.locator('input[type="password"]').fill('password')
+await page.locator('css=button').click()
+await page.locator('xpath=//button').dblclick()
+
+await page.frameLocator('#my-iframe').getByText('Submit').click()
 ```

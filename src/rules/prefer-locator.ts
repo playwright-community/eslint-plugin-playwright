@@ -46,7 +46,7 @@ export default createRule({
         if (!isSupportedMethod(node.argument)) return
 
         context.report({
-          messageId: 'avoidAwaitPageMethods',
+          messageId: 'preferLocator',
           node,
         })
       },
@@ -55,13 +55,12 @@ export default createRule({
   meta: {
     docs: {
       category: 'Best Practices',
-      description: 'Discourage using await page methods',
+      description: 'Suggest locators over page methods',
       recommended: false,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/prefer-locator.md',
     },
     messages: {
-      avoidAwaitPageMethods:
-        "Avoid using page methods e.g. 'await page.fill()', Use locator-based [locator.fill(value[, options])](https://playwright.dev/docs/api/class-locator#locator-fill)",
+      preferLocator: 'Prefer locator methods instead of page methods',
     },
     schema: [],
     type: 'suggestion',
