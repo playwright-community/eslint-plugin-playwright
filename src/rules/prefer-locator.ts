@@ -38,12 +38,9 @@ function isSupportedMethod(node: ESTree.CallExpression) {
 export default createRule({
   create(context) {
     return {
-      AwaitExpression(node) {
-        // Must be a call expression
-        if (node.argument.type !== 'CallExpression') return
-
+      CallExpression(node) {
         // Must be a method we care about
-        if (!isSupportedMethod(node.argument)) return
+        if (!isSupportedMethod(node)) return
 
         context.report({
           messageId: 'preferLocator',

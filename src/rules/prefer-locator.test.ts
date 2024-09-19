@@ -11,7 +11,7 @@ runRuleTester('prefer-locator', rule, {
       `,
       errors: [
         {
-          column: 15,
+          column: 21,
           endColumn: 68,
           endLine: 3,
           line: 3,
@@ -28,10 +28,23 @@ runRuleTester('prefer-locator', rule, {
       `,
       errors: [
         {
-          column: 15,
+          column: 21,
           endColumn: 52,
           endLine: 3,
           line: 3,
+          messageId: 'preferLocator',
+        },
+      ],
+      output: null,
+    },
+    {
+      code: `page.click('xpath=//button');`,
+      errors: [
+        {
+          column: 1,
+          endColumn: 29,
+          endLine: 1,
+          line: 1,
           messageId: 'preferLocator',
         },
       ],
@@ -45,10 +58,23 @@ runRuleTester('prefer-locator', rule, {
       `,
       errors: [
         {
-          column: 15,
+          column: 21,
           endColumn: 65,
           endLine: 3,
           line: 3,
+          messageId: 'preferLocator',
+        },
+      ],
+      output: null,
+    },
+    {
+      code: `page.frame('frame-name').click('css=button')`,
+      errors: [
+        {
+          column: 1,
+          endColumn: 45,
+          endLine: 1,
+          line: 1,
           messageId: 'preferLocator',
         },
       ],
@@ -72,6 +98,9 @@ runRuleTester('prefer-locator', rule, {
               await page.locator('xpath=//button').dblclick();
           }
       `,
+    },
+    {
+      code: `page.locator('xpath=//button').click();`,
     },
     {
       code: `
