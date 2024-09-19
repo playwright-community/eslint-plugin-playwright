@@ -1,44 +1,36 @@
-import { runRuleTester } from '../utils/rule-tester'
+import { runRuleTester, test } from '../utils/rule-tester'
 import rule from './prefer-locator'
 
 runRuleTester('prefer-locator', rule, {
   invalid: [
     {
-      code: `
-          async function test() {
-              await page.fill('input[type="password"]', 'password');
-          }
-      `,
+      code: test(`await page.fill('input[type="password"]', 'password')`),
       errors: [
         {
-          column: 21,
-          endColumn: 68,
-          endLine: 3,
-          line: 3,
+          column: 34,
+          endColumn: 81,
+          endLine: 1,
+          line: 1,
           messageId: 'preferLocator',
         },
       ],
       output: null,
     },
     {
-      code: `
-          async function test() {
-              await page.dblclick('xpath=//button');
-          }
-      `,
+      code: test(`await page.dblclick('xpath=//button')`),
       errors: [
         {
-          column: 21,
-          endColumn: 52,
-          endLine: 3,
-          line: 3,
+          column: 34,
+          endColumn: 65,
+          endLine: 1,
+          line: 1,
           messageId: 'preferLocator',
         },
       ],
       output: null,
     },
     {
-      code: `page.click('xpath=//button');`,
+      code: `page.click('xpath=//button')`,
       errors: [
         {
           column: 1,
@@ -51,17 +43,13 @@ runRuleTester('prefer-locator', rule, {
       output: null,
     },
     {
-      code: `
-          async function test() {
-              await page.frame('frame-name').click('css=button');
-          }
-      `,
+      code: test(`await page.frame('frame-name').click('css=button')`),
       errors: [
         {
-          column: 21,
-          endColumn: 65,
-          endLine: 3,
-          line: 3,
+          column: 34,
+          endColumn: 78,
+          endLine: 1,
+          line: 1,
           messageId: 'preferLocator',
         },
       ],
@@ -86,35 +74,23 @@ runRuleTester('prefer-locator', rule, {
       code: `const locator = page.locator('input[type="password"]')`,
     },
     {
-      code: `
-          async function test() {
-              await page.locator('input[type="password"]').fill('password');
-          }
-      `,
+      code: test(
+        `await page.locator('input[type="password"]').fill('password')`,
+      ),
     },
     {
-      code: `
-          async function test() {
-              await page.locator('xpath=//button').dblclick();
-          }
-      `,
+      code: test(`await page.locator('xpath=//button').dblclick()`),
     },
     {
-      code: `page.locator('xpath=//button').click();`,
+      code: `page.locator('xpath=//button').click()`,
     },
     {
-      code: `
-          async function test() {
-              await page.frameLocator('#my-iframe').locator('css=button').click();
-          }
-      `,
+      code: test(
+        `await page.frameLocator('#my-iframe').locator('css=button').click()`,
+      ),
     },
     {
-      code: `
-          async function test() {
-              await page.evaluate('1 + 2');
-          }
-      `,
+      code: test(`await page.evaluate('1 + 2')`),
     },
     {
       code: `page.frame('frame-name')`,
