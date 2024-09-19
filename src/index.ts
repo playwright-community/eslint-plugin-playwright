@@ -30,6 +30,7 @@ import preferComparisonMatcher from './rules/prefer-comparison-matcher'
 import preferEqualityMatcher from './rules/prefer-equality-matcher'
 import preferHooksInOrder from './rules/prefer-hooks-in-order'
 import preferHooksOnTop from './rules/prefer-hooks-on-top'
+import preferLocator from './rules/prefer-locator'
 import preferLowercaseTitle from './rules/prefer-lowercase-title'
 import preferNativeLocators from './rules/prefer-native-locators'
 import preferStrictEqual from './rules/prefer-strict-equal'
@@ -81,6 +82,7 @@ const index = {
     'prefer-equality-matcher': preferEqualityMatcher,
     'prefer-hooks-in-order': preferHooksInOrder,
     'prefer-hooks-on-top': preferHooksOnTop,
+    'prefer-locator': preferLocator,
     'prefer-lowercase-title': preferLowercaseTitle,
     'prefer-native-locators': preferNativeLocators,
     'prefer-strict-equal': preferStrictEqual,
