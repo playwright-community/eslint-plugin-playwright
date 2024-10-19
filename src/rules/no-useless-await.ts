@@ -1,6 +1,8 @@
+import { Rule } from 'eslint'
 import ESTree from 'estree'
 import { getStringValue, isPageMethod } from '../utils/ast'
 import { createRule } from '../utils/createRule'
+import { parseFnCall } from '../utils/parseFnCall'
 
 const locatorMethods = new Set([
   'and',
@@ -38,6 +40,32 @@ const pageMethods = new Set([
   'workers',
 ])
 
+const expectMatchers = new Set([
+  'toBe',
+  'toBeCloseTo',
+  'toBeDefined',
+  'toBeFalsy',
+  'toBeGreaterThan',
+  'toBeGreaterThanOrEqual',
+  'toBeInstanceOf',
+  'toBeLessThan',
+  'toBeLessThanOrEqual',
+  'toBeNaN',
+  'toBeNull',
+  'toBeTruthy',
+  'toBeUndefined',
+  'toContain',
+  'toContainEqual',
+  'toEqual',
+  'toHaveLength',
+  'toHaveProperty',
+  'toMatch',
+  'toMatchObject',
+  'toStrictEqual',
+  'toThrow',
+  'toThrowError',
+])
+
 function isSupportedMethod(node: ESTree.CallExpression) {
   if (node.callee.type !== 'MemberExpression') return false
 
@@ -50,32 +78,40 @@ function isSupportedMethod(node: ESTree.CallExpression) {
 
 export default createRule({
   create(context) {
-    return {
-      AwaitExpression(node) {
-        // Must be a call expression
-        if (node.argument.type !== 'CallExpression') return
+    function fix(node: ESTree.Node) {
+      const start = node.loc!.start
+      const range = node.range!
 
-        // Must be a foo.bar() call, bare calls are ignored
-        const { callee } = node.argument
-        if (callee.type !== 'MemberExpression') return
-
-        // Must be a method we care about
-        if (!isSupportedMethod(node.argument)) return
-
-        const start = node.loc!.start
-        const range = node.range!
-
-        context.report({
-          fix: (fixer) => fixer.removeRange([range[0], range[0] + 6]),
-          loc: {
-            end: {
-              column: start.column + 5,
-              line: start.line,
-            },
-            start,
+      context.report({
+        fix: (fixer) => fixer.removeRange([range[0], range[0] + 6]),
+        loc: {
+          end: {
+            column: start.column + 5,
+            line: start.line,
           },
-          messageId: 'noUselessAwait',
-        })
+          start,
+        },
+        messageId: 'noUselessAwait',
+      })
+    }
+
+    return {
+      'AwaitExpression > CallExpression'(
+        node: ESTree.CallExpression & Rule.NodeParentExtension,
+      ) {
+        // await page.locator('.foo')
+        if (
+          node.callee.type === 'MemberExpression' &&
+          isSupportedMethod(node)
+        ) {
+          return fix(node.parent)
+        }
+
+        // await expect(true).toBe(true)
+        const call = parseFnCall(context, node)
+        if (call?.type === 'expect' && expectMatchers.has(call.matcherName)) {
+          return fix(node.parent)
+        }
       },
     }
   },

@@ -181,6 +181,23 @@ runRuleTester('no-useless-await', rule, {
       errors: [{ column: 1, endColumn: 6, line: 1, messageId }],
       output: 'frame.parentFrame()',
     },
+
+    // Expect methods
+    {
+      code: 'await expect(true).toBe(true)',
+      errors: [{ column: 1, endColumn: 6, line: 1, messageId }],
+      output: 'expect(true).toBe(true)',
+    },
+    {
+      code: 'await expect(true).toBeTruthy()',
+      errors: [{ column: 1, endColumn: 6, line: 1, messageId }],
+      output: 'expect(true).toBeTruthy()',
+    },
+    {
+      code: 'await expect(true).toEqual(true)',
+      errors: [{ column: 1, endColumn: 6, line: 1, messageId }],
+      output: 'expect(true).toEqual(true)',
+    },
   ],
   valid: [
     'await foo()',
@@ -195,5 +212,12 @@ runRuleTester('no-useless-await', rule, {
     'await page.waitForLoadState({ waitUntil: "load" })',
     'await page.waitForURL(url, { waitUntil: "load" })',
     'await page.locator(".hello-world").waitFor()',
+
+    'expect(true).toBe(true)',
+    'expect(true).toBeTruthy()',
+    'expect(true).toEqual(true)',
+
+    'await expect(page.locator(".my-element")).toBeVisible()',
+    'await expect(page.locator(".my-element")).toHaveText("test")',
   ],
 })
