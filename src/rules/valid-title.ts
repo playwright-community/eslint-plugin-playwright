@@ -123,16 +123,14 @@ export default createRule({
           return
         }
 
-        let argument: ESTree.Node = node.arguments[0]
-        if (!argument) return
+        const [argument] = node.arguments
+        const title = dereference(context, argument) ?? argument
+        if (!title) return
 
-        // Attempt to dereference the argument if it's a variable
-        argument = dereference(context, argument) ?? argument
-
-        if (!isStringNode(argument)) {
+        if (!isStringNode(title)) {
           if (
-            argument.type === 'BinaryExpression' &&
-            doesBinaryExpressionContainStringNode(argument)
+            title.type === 'BinaryExpression' &&
+            doesBinaryExpressionContainStringNode(title)
           ) {
             return
           }
@@ -143,10 +141,10 @@ export default createRule({
               (call.type === 'test' && ignoreTypeOfTestName) ||
               (call.type === 'step' && ignoreTypeOfStepName)
             ) &&
-            (argument as ESTree.Node).type !== 'TemplateLiteral'
+            (title as ESTree.Node).type !== 'TemplateLiteral'
           ) {
             context.report({
-              loc: argument.loc!,
+              loc: title.loc!,
               messageId: 'titleMustBeString',
             })
           }
@@ -154,10 +152,10 @@ export default createRule({
           return
         }
 
-        const title = getStringValue(argument)
+        const titleString = getStringValue(title)
         const functionName = call.type
 
-        if (!title) {
+        if (!titleString) {
           context.report({
             data: { functionName: call.type },
             messageId: 'emptyTitle',
@@ -168,52 +166,55 @@ export default createRule({
         }
 
         if (disallowedWords.length > 0) {
-          const disallowedMatch = disallowedWordsRegexp.exec(title)
+          const disallowedMatch = disallowedWordsRegexp.exec(titleString)
 
           if (disallowedMatch) {
             context.report({
               data: { word: disallowedMatch[1] },
               messageId: 'disallowedWord',
-              node: argument,
+              node: title,
             })
 
             return
           }
         }
 
-        if (ignoreSpaces === false && title.trim().length !== title.length) {
+        if (
+          ignoreSpaces === false &&
+          titleString.trim().length !== titleString.length
+        ) {
           context.report({
             fix: (fixer) => [
               fixer.replaceTextRange(
-                argument.range!,
-                quoteStringValue(argument)
+                title.range!,
+                quoteStringValue(title)
                   .replace(/^([`'"]) +?/u, '$1')
                   .replace(/ +?([`'"])$/u, '$1'),
               ),
             ],
             messageId: 'accidentalSpace',
-            node: argument,
+            node: title,
           })
         }
 
-        const [firstWord] = title.split(' ')
+        const [firstWord] = titleString.split(' ')
         if (firstWord.toLowerCase() === functionName) {
           context.report({
             fix: (fixer) => [
               fixer.replaceTextRange(
-                argument.range!,
-                quoteStringValue(argument).replace(/^([`'"]).+? /u, '$1'),
+                title.range!,
+                quoteStringValue(title).replace(/^([`'"]).+? /u, '$1'),
               ),
             ],
             messageId: 'duplicatePrefix',
-            node: argument,
+            node: title,
           })
         }
 
         const [mustNotMatchPattern, mustNotMatchMessage] =
           mustNotMatchPatterns[functionName] ?? []
 
-        if (mustNotMatchPattern && mustNotMatchPattern.test(title)) {
+        if (mustNotMatchPattern && mustNotMatchPattern.test(titleString)) {
           context.report({
             data: {
               functionName,
@@ -223,7 +224,7 @@ export default createRule({
             messageId: mustNotMatchMessage
               ? 'mustNotMatchCustom'
               : 'mustNotMatch',
-            node: argument,
+            node: title,
           })
 
           return
@@ -232,7 +233,7 @@ export default createRule({
         const [mustMatchPattern, mustMatchMessage] =
           mustMatchPatterns[functionName] ?? []
 
-        if (mustMatchPattern && !mustMatchPattern.test(title)) {
+        if (mustMatchPattern && !mustMatchPattern.test(titleString)) {
           context.report({
             data: {
               functionName,
@@ -240,7 +241,7 @@ export default createRule({
               pattern: String(mustMatchPattern),
             },
             messageId: mustMatchMessage ? 'mustMatchCustom' : 'mustMatch',
-            node: argument,
+            node: title,
           })
 
           return
