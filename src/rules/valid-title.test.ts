@@ -608,17 +608,6 @@ runRuleTester('title-must-be-string', rule, {
       options: [{ ignoreTypeOfTestName: false }],
     },
     {
-      code: 'const foo = "my-title"; test(foo, () => {});',
-      errors: [
-        {
-          column: 30,
-          line: 1,
-          messageId: 'titleMustBeString',
-        },
-      ],
-      options: [{ ignoreTypeOfTestName: false }],
-    },
-    {
       code: 'test(123, () => {});',
       errors: [
         {
@@ -731,6 +720,22 @@ runRuleTester('title-must-be-string', rule, {
       ],
       options: [{ ignoreTypeOfStepName: false }],
     },
+    // Basic semantic analysis
+    {
+      code: javascript`
+        const title = 123;
+        test(title, () => {
+          expect(1).toBe(1);
+        });
+      `,
+      errors: [
+        {
+          column: 15,
+          line: 1,
+          messageId: 'titleMustBeString',
+        },
+      ],
+    },
     // Global aliases
     {
       code: 'it(String(/.+/), () => {});',
@@ -769,16 +774,29 @@ runRuleTester('title-must-be-string', rule, {
       options: [{ ignoreTypeOfTestName: true }],
     },
     {
-      code: 'const foo = "my-title"; test(foo, () => {});',
-      options: [{ ignoreTypeOfTestName: true }],
-    },
-    {
       code: 'test.describe(myFunction, () => {});',
       options: [{ ignoreTypeOfDescribeName: true }],
     },
     {
       code: 'test.describe(skipFunction, () => {});',
       options: [{ disallowedWords: [], ignoreTypeOfDescribeName: true }],
+    },
+    // Basic semantic analysis
+    {
+      code: 'const foo = "my-title"; test(foo, () => {});',
+      options: [{ ignoreTypeOfTestName: true }],
+    },
+    {
+      code: 'const foo = "my-title"; test(foo, () => {});',
+      options: [{ ignoreTypeOfTestName: false }],
+    },
+    {
+      code: javascript`
+        const title = "is a string";
+        test(title, () => {
+          expect(1).toBe(1);
+        });
+      `,
     },
     // Global aliases
     {

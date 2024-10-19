@@ -1,5 +1,10 @@
 import ESTree from 'estree'
-import { getStringValue, isStringNode, StringNode } from '../utils/ast'
+import {
+  dereference,
+  getStringValue,
+  isStringNode,
+  StringNode,
+} from '../utils/ast'
 import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
@@ -118,8 +123,11 @@ export default createRule({
           return
         }
 
-        const [argument] = node.arguments
+        let argument: ESTree.Node = node.arguments[0]
         if (!argument) return
+
+        // Attempt to dereference the argument if it's a variable
+        argument = dereference(context, argument) ?? argument
 
         if (!isStringNode(argument)) {
           if (

@@ -46,6 +46,9 @@ test(123, () => {})
 test.describe(String(/.+/), () => {})
 test.describe(myFunction, () => {})
 test.describe(6, function () {})
+
+const title = 123
+test(title, () => {})
 ```
 
 Examples of **correct** code for this rule:
@@ -53,6 +56,9 @@ Examples of **correct** code for this rule:
 ```javascript
 test('is a string', () => {})
 test.describe('is a string', () => {})
+
+const title = 'is a string'
+test(title, () => {})
 ```
 
 Examples of **correct** code when `ignoreTypeOfDescribeName` is `true`:
