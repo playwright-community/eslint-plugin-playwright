@@ -1,6 +1,6 @@
 import { Rule } from 'eslint'
 import ESTree from 'estree'
-import { getStringValue, isPageMethod } from '../utils/ast'
+import { getStringValue, isIdentifier, isPageMethod } from '../utils/ast'
 import { createRule } from '../utils/createRule'
 import { parseFnCall } from '../utils/parseFnCall'
 
@@ -109,7 +109,14 @@ export default createRule({
 
         // await expect(true).toBe(true)
         const call = parseFnCall(context, node)
-        if (call?.type === 'expect' && expectMatchers.has(call.matcherName)) {
+        if (
+          call?.type === 'expect' &&
+          !call.modifiers.some((modifier) =>
+            isIdentifier(modifier, /^(resolves|rejects)$/),
+          ) &&
+          !call.members.some((member) => isIdentifier(member, 'poll')) &&
+          expectMatchers.has(call.matcherName)
+        ) {
           return fix(node.parent)
         }
       },
