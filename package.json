@@ -16,6 +16,7 @@
     "node": ">=16.6.0"
   },
   "type": "commonjs",
+  "types": "./index.d.ts",
   "exports": {
     ".": {
       "types": "./index.d.ts",
