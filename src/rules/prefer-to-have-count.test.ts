@@ -166,7 +166,6 @@ runRuleTester('prefer-to-have-count', rule, {
     { code: "expect(files[`name`]).toBe('file')" },
     { code: 'expect(result).toBe(true)' },
     { code: `expect(user.getUserName(5)).not.toEqual('Paul')` },
-    { code: `expect(user.getUserName(5)).not.toEqual('Paul')` },
     { code: 'expect(a)' },
     {
       code: `expect(await page.evaluate(() => document.querySelectorAll("*").length)).toBe(10);`,

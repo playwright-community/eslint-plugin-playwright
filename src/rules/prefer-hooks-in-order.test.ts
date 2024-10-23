@@ -636,57 +636,6 @@ runRuleTester('prefer-hooks-in-order', rule, {
       });
     `,
     javascript`
-      test.describe('foo', () => {
-        test.beforeAll(() => {
-          createMyDatabase();
-        });
-
-        test.beforeEach(() => {
-          seedMyDatabase();
-        });
-
-        test('accepts this input', () => {
-          // ...
-        });
-
-        test('returns that value', () => {
-          // ...
-        });
-
-        test.describe('when the database has specific values', () => {
-          const specificValue = '...';
-
-          test.beforeEach(() => {
-            seedMyDatabase(specificValue);
-          });
-
-          test('accepts that input', () => {
-            // ...
-          });
-
-          test('throws an error', () => {
-            // ...
-          });
-
-          test.beforeEach(() => {
-            mockLogger();
-          });
-
-          test.afterEach(() => {
-            clearLogger();
-          });
-
-          test('logs a message', () => {
-            // ...
-          });
-        });
-
-        test.afterAll(() => {
-          removeMyDatabase();
-        });
-      });
-    `,
-    javascript`
       test.describe('A file with a lot of test', () => {
         test.beforeAll(() => {
           setupTheDatabase();

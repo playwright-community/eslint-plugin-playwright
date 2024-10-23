@@ -1,10 +1,12 @@
+import parser from '@typescript-eslint/parser'
 import dedent from 'dedent'
 import { RuleTester } from 'eslint'
 import { describe, it } from 'vitest'
 
 // Override the default `it` and `describe` functions to use `vitest`
-;(RuleTester as any).it = it
-;(RuleTester as any).describe = describe
+RuleTester.it = it
+RuleTester.describe = describe
+RuleTester.itOnly = it.only
 
 /**
  * @example
@@ -16,26 +18,26 @@ import { describe, it } from 'vitest'
  *   });
  */
 export function runRuleTester(...args: Parameters<RuleTester['run']>) {
-  const config = {
-    parserOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
+  return new RuleTester({
+    languageOptions: {
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+      },
     },
-  }
-
-  return new RuleTester(config).run(...args)
+  }).run(...args)
 }
 
 export function runTSRuleTester(...args: Parameters<RuleTester['run']>) {
-  const config = {
-    parser: require.resolve('@typescript-eslint/parser'),
-    parserOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
+  return new RuleTester({
+    languageOptions: {
+      parser,
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+      },
     },
-  }
-
-  return new RuleTester(config).run(...args)
+  }).run(...args)
 }
 
 export const test = (input: string) => `test('test', async () => { ${input} })`

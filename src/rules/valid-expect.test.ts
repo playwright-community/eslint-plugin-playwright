@@ -233,7 +233,6 @@ runRuleTester('valid-expect', rule, {
     { code: 'expect.soft(1, "1 !== 2").toBe(2)' },
     { code: 'expect["soft"](1, "1 !== 2")["toBe"](2)' },
     { code: 'expect[`poll`](() => 1, { message: "1 !== 2" })[`toBe`](2)' },
-    { code: 'expect[`poll`](() => 1, { message: "1 !== 2" })[`toBe`](2)' },
     // minArgs
     {
       code: 'expect(1, "1 !== 2").toBe(2)',

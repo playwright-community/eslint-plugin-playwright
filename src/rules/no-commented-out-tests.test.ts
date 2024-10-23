@@ -34,10 +34,6 @@ runRuleTester('no-commented-out-tests', rule, {
       errors: [{ column: 1, line: 1, messageId }],
     },
     {
-      code: '// test["skip"]("foo", function () {})',
-      errors: [{ column: 1, line: 1, messageId }],
-    },
-    {
       code: javascript`
         // test(
         //   "foo", function () {}
@@ -72,10 +68,6 @@ runRuleTester('no-commented-out-tests', rule, {
       errors: [{ column: 1, line: 1, messageId }],
     },
     {
-      code: '// test("has title but no callback")',
-      errors: [{ column: 1, line: 1, messageId }],
-    },
-    {
       code: javascript`
         foo()
         /*
@@ -103,8 +95,6 @@ runRuleTester('no-commented-out-tests', rule, {
     'test.describe.only("foo", function () {})',
     'test.only("foo", function () {})',
     'test.skip("foo", function () {})',
-    'test("foo", function () {})',
-    'test.only("foo", function () {})',
     'test.concurrent("foo", function () {})',
     'var appliedSkip = describe.skip; appliedSkip.apply(describe)',
     'var calledSkip = test.skip; calledSkip.call(it)',

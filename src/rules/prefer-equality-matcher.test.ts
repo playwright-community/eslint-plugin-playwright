@@ -33,7 +33,9 @@ runRuleTester('prefer-equality-matcher: ===', rule, {
           suggestions: expectSuggestions((m) => `expect(a,).${m}(b,);`),
         },
       ],
-      parserOptions: { ecmaVersion: 2017 },
+      languageOptions: {
+        parserOptions: { ecmaVersion: 2017 },
+      },
     },
     {
       code: 'expect(a === b).toBe(false);',

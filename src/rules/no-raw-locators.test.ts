@@ -45,7 +45,7 @@ runRuleTester('no-raw-locators', rule, {
       options: [{ allowed: ['iframe'] }],
     },
     {
-      code: test(`await page.locator("[aria-busy=false]")`),
+      code: test(`await page.locator('[aria-busy=false]')`),
       errors: [{ column: 34, endColumn: 67, line: 1, messageId }],
       options: [{ allowed: ['iframe'] }],
     },

@@ -172,7 +172,6 @@ runRuleTester('valid-describe-callback', rule, {
     'test.describe(`foo`, () => {})',
     'test.describe("another suite", { tag: ["@slow"] }, () => {});',
     'test.describe.only("foo", () => {})',
-    'describe("foo", () => {})',
     'describe.only("foo", () => {})',
     javascript`
       test.describe('foo', () => {

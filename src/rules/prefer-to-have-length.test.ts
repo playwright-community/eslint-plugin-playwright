@@ -80,7 +80,6 @@ runRuleTester('prefer-to-have-length', rule, {
     "expect(files[`name`]).toBe('file')",
     'expect(result).toBe(true)',
     `expect(user.getUserName(5)).not.toEqual('Paul')`,
-    `expect(user.getUserName(5)).not.toEqual('Paul')`,
     'expect(a)',
     // Global aliases
     {

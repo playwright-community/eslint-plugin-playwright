@@ -161,10 +161,6 @@ runRuleTester('no-restricted-matchers', rule, {
       options: [{ 'not.toBe': null }],
     },
     {
-      code: 'expect(a).toBe(b)',
-      options: [{ 'not.toBe': null }],
-    },
-    {
       code: 'expect.soft(a).toBe(b)',
       options: [{ 'not.toBe': null }],
     },

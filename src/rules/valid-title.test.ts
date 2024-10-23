@@ -108,7 +108,6 @@ runRuleTester('valid-title', rule, {
     'test.skip(browserName === "Chrome", "This feature is skipped on Chrome")',
     'test.slow("that all is as it should be", () => {});',
     'test.slow(true);',
-    'test.slow(true, "Always");',
     'test.slow(({ browserName }) => browserName === "Chrome");',
     'test.slow();',
     'test.slow(browserName === "webkit", "This feature is slow on Mac")',
@@ -758,12 +757,10 @@ runRuleTester('title-must-be-string', rule, {
     'test("is a string", () => {});',
     'test("is" + " a " + " string", () => {});',
     'test(1 + " + " + 1, () => {});',
-    'test("is a string", () => {});',
     'test(`${myFunc} is a string`, () => {});',
     'test.describe("is a string", () => {});',
     'test.describe.skip("is a string", () => {});',
     'test.describe.skip(`${myFunc} is a string`, () => {});',
-    'test.describe("is a string", () => {});',
     'test.step(123, () => {});',
     {
       code: 'test.describe(String(/.+/), () => {});',
@@ -834,28 +831,6 @@ runRuleTester('no-empty-title', rule, {
           column: 3,
           data: { functionName: 'test' },
           line: 2,
-          messageId: 'emptyTitle',
-        },
-      ],
-    },
-    {
-      code: 'test("", function () {})',
-      errors: [
-        {
-          column: 1,
-          data: { functionName: 'test' },
-          line: 1,
-          messageId: 'emptyTitle',
-        },
-      ],
-    },
-    {
-      code: 'test.only("", function () {})',
-      errors: [
-        {
-          column: 1,
-          data: { functionName: 'test' },
-          line: 1,
           messageId: 'emptyTitle',
         },
       ],
@@ -975,19 +950,9 @@ runRuleTester('no-accidental-space', rule, {
       output: 'test.describe("foo foe fum", function () {})',
     },
     {
-      code: 'test.describe(" foo", function () {})',
-      errors: [{ column: 15, line: 1, messageId: 'accidentalSpace' }],
-      output: 'test.describe("foo", function () {})',
-    },
-    {
       code: "test.describe(' foo', function () {})",
       errors: [{ column: 15, line: 1, messageId: 'accidentalSpace' }],
       output: "test.describe('foo', function () {})",
-    },
-    {
-      code: 'test.describe(" foo", function () {})',
-      errors: [{ column: 15, line: 1, messageId: 'accidentalSpace' }],
-      output: 'test.describe("foo", function () {})',
     },
     {
       code: 'test(" foo", function () {})',
@@ -998,11 +963,6 @@ runRuleTester('no-accidental-space', rule, {
       code: 'test.only(" foo", function () {})',
       errors: [{ column: 11, line: 1, messageId: 'accidentalSpace' }],
       output: 'test.only("foo", function () {})',
-    },
-    {
-      code: 'test(" foo", function () {})',
-      errors: [{ column: 6, line: 1, messageId: 'accidentalSpace' }],
-      output: 'test("foo", function () {})',
     },
     {
       code: 'test.skip(" foo", function () {})',
@@ -1018,21 +978,6 @@ runRuleTester('no-accidental-space', rule, {
       code: 'test.skip("foo ", function () {})',
       errors: [{ column: 11, line: 1, messageId: 'accidentalSpace' }],
       output: 'test.skip("foo", function () {})',
-    },
-    {
-      code: 'test(" foo", function () {})',
-      errors: [{ column: 6, line: 1, messageId: 'accidentalSpace' }],
-      output: 'test("foo", function () {})',
-    },
-    {
-      code: 'test(" foo", function () {})',
-      errors: [{ column: 6, line: 1, messageId: 'accidentalSpace' }],
-      output: 'test("foo", function () {})',
-    },
-    {
-      code: 'test.only(" foo", function () {})',
-      errors: [{ column: 11, line: 1, messageId: 'accidentalSpace' }],
-      output: 'test.only("foo", function () {})',
     },
     {
       code: 'test(` foo`, function () {})',
@@ -1063,11 +1008,6 @@ runRuleTester('no-accidental-space', rule, {
       code: 'test.only(` foo bar bang  `, function () {})',
       errors: [{ column: 11, line: 1, messageId: 'accidentalSpace' }],
       output: 'test.only(`foo bar bang`, function () {})',
-    },
-    {
-      code: 'test(" foo", function () {})',
-      errors: [{ column: 6, line: 1, messageId: 'accidentalSpace' }],
-      output: 'test("foo", function () {})',
     },
     {
       code: 'test(" foo  ", function () {})',
@@ -1166,16 +1106,6 @@ runRuleTester('no-duplicate-prefix describe', rule, {
       output: 'test.describe("foo", function () {})',
     },
     {
-      code: 'test.describe("describe foo", function () {})',
-      errors: [{ column: 15, line: 1, messageId: 'duplicatePrefix' }],
-      output: 'test.describe("foo", function () {})',
-    },
-    {
-      code: 'test.describe("describe foo", function () {})',
-      errors: [{ column: 15, line: 1, messageId: 'duplicatePrefix' }],
-      output: 'test.describe("foo", function () {})',
-    },
-    {
       code: "test.describe('describe foo', function () {})",
       errors: [{ column: 15, line: 1, messageId: 'duplicatePrefix' }],
       output: "test.describe('foo', function () {})",
@@ -1265,16 +1195,6 @@ runRuleTester('no-duplicate-prefix step', rule, {
       output: 'test.step("foo", function () {})',
     },
     {
-      code: 'test.step("step foo", function () {})',
-      errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
-      output: 'test.step("foo", function () {})',
-    },
-    {
-      code: 'test.step("step foo", function () {})',
-      errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
-      output: 'test.step("foo", function () {})',
-    },
-    {
       code: "test.step('step foo', function () {})",
       errors: [{ column: 11, line: 1, messageId: 'duplicatePrefix' }],
       output: "test.step('foo', function () {})",
@@ -1285,7 +1205,11 @@ runRuleTester('no-duplicate-prefix step', rule, {
       output: 'test.step(`foo`, function () {})',
     },
   ],
-  valid: ['test.step("foo", function () {})'],
+  valid: [
+    'test.step("foo", function () {})',
+    "test.step('foo', function () {})",
+    'test.step(`foo`, function () {})',
+  ],
 })
 
 runRuleTester('no-duplicate-prefix nested', rule, {

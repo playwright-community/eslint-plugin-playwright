@@ -57,7 +57,7 @@ export default createRule({
     },
     messages: {
       tooManyDescribes:
-        'There should not be more than {{max}} describe{{s}} at the top level',
+        'There should not be more than {{amount}} describe{{s}} at the top level',
       unexpectedHook: 'All hooks must be wrapped in a describe block.',
       unexpectedTest: 'All test cases must be wrapped in a describe block.',
     },

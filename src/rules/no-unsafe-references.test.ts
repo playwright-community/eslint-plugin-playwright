@@ -1,5 +1,10 @@
 import rule from '../../src/rules/no-unsafe-references'
-import { javascript, runRuleTester, typescript } from '../utils/rule-tester'
+import {
+  javascript,
+  runRuleTester,
+  runTSRuleTester,
+  typescript,
+} from '../utils/rule-tester'
 
 const messageId = 'noUnsafeReference'
 
@@ -315,7 +320,12 @@ runRuleTester('no-unsafe-references', rule, {
       `,
       name: 'Multi-level scopes',
     },
-    // TypeScript
+  ],
+})
+
+runTSRuleTester('no-unsafe-references', rule, {
+  invalid: [],
+  valid: [
     {
       code: typescript`
         type X = number;
@@ -325,7 +335,6 @@ runRuleTester('no-unsafe-references', rule, {
         });
       `,
       name: 'TypeScript - variable assignment of type',
-      parser: require.resolve('@typescript-eslint/parser'),
     },
     {
       code: typescript`
@@ -336,7 +345,6 @@ runRuleTester('no-unsafe-references', rule, {
         });
       `,
       name: 'TypeScript - parameter type',
-      parser: require.resolve('@typescript-eslint/parser'),
     },
     {
       code: typescript`
@@ -347,7 +355,6 @@ runRuleTester('no-unsafe-references', rule, {
         });
       `,
       name: 'TypeScript - casting',
-      parser: require.resolve('@typescript-eslint/parser'),
     },
   ],
 })

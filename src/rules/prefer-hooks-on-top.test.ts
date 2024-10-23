@@ -47,28 +47,6 @@ runRuleTester('basic describe block', rule, {
         },
       ],
     },
-    {
-      code: javascript`
-        test.describe('foo', () => {
-          test.beforeEach(() => {});
-          test.only('bar', () => {
-            someFn();
-          });
-
-          test.beforeAll(() => {});
-          test.only('bar', () => {
-            someFn();
-          });
-        });
-      `,
-      errors: [
-        {
-          column: 3,
-          line: 7,
-          messageId: 'noHookOnTop',
-        },
-      ],
-    },
     // Global aliases
     {
       code: javascript`

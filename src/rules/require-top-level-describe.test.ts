@@ -126,7 +126,13 @@ runRuleTester('require-top-level-describe', rule, {
         test.describe.parallel('three', () => {});
       `,
       errors: [
-        { column: 1, endColumn: 23, line: 3, messageId: 'tooManyDescribes' },
+        {
+          column: 1,
+          data: { amount: 2, s: 's' },
+          endColumn: 23,
+          line: 3,
+          messageId: 'tooManyDescribes',
+        },
       ],
       options: [{ maxTopLevelDescribes: 2 }],
     },
@@ -150,7 +156,13 @@ runRuleTester('require-top-level-describe', rule, {
         });
       `,
       errors: [
-        { column: 1, endColumn: 26, line: 12, messageId: 'tooManyDescribes' },
+        {
+          column: 1,
+          data: { amount: 2, s: 's' },
+          endColumn: 26,
+          line: 12,
+          messageId: 'tooManyDescribes',
+        },
       ],
       options: [{ maxTopLevelDescribes: 2 }],
     },
@@ -161,8 +173,20 @@ runRuleTester('require-top-level-describe', rule, {
         test.describe.fixme('three', () => {});
       `,
       errors: [
-        { column: 1, endColumn: 25, line: 2, messageId: 'tooManyDescribes' },
-        { column: 1, endColumn: 20, line: 3, messageId: 'tooManyDescribes' },
+        {
+          column: 1,
+          data: { amount: 1, s: '' },
+          endColumn: 25,
+          line: 2,
+          messageId: 'tooManyDescribes',
+        },
+        {
+          column: 1,
+          data: { amount: 1, s: '' },
+          endColumn: 20,
+          line: 3,
+          messageId: 'tooManyDescribes',
+        },
       ],
       options: [{ maxTopLevelDescribes: 1 }],
     },

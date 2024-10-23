@@ -32,8 +32,10 @@ const generateInvalidCases = (
           messageId: 'useToBeComparison',
         },
       ],
+      languageOptions: {
+        parserOptions: { ecmaVersion: 2017 },
+      },
       output: `expect(value,).${preferredMatcher}(1,);`,
-      parserOptions: { ecmaVersion: 2017 },
     },
     {
       code: `expect(value ${operator} 1)['${equalityMatcher}'](true);`,
@@ -217,29 +219,18 @@ const generateValidStringLiteralCases = (operator: string, matcher: string) => {
     ['x', "'y'"],
     ['x', '`y`'],
     ['x', '`y${z}`'],
-  ].reduce((cases, [a, b]) => [
-    ...cases,
-    ...[
-      `expect(${a} ${operator} ${b}).${matcher}(true)`,
-      `expect(${a} ${operator} ${b}).${matcher}(false)`,
-      `expect(${a} ${operator} ${b}).not.${matcher}(true)`,
-      `expect(${a} ${operator} ${b}).not.${matcher}(false)`,
-      `expect(${b} ${operator} ${a}).${matcher}(true)`,
-      `expect(${b} ${operator} ${a}).${matcher}(false)`,
-      `expect(${b} ${operator} ${a}).not.${matcher}(true)`,
-      `expect(${b} ${operator} ${a}).not.${matcher}(false)`,
-      `expect(${a} ${operator} ${b}).${matcher}(true)`,
-      `expect(${a} ${operator} ${b}).${matcher}(false)`,
-      `expect(${a} ${operator} ${b}).not.${matcher}(true)`,
-      `expect(${a} ${operator} ${b}).not.${matcher}(false)`,
-      `expect(${b} ${operator} ${a}).${matcher}(true)`,
-      `expect(${b} ${operator} ${a}).${matcher}(false)`,
-      `expect(${b} ${operator} ${a}).not.${matcher}(true)`,
-      `expect(${b} ${operator} ${a}).not.${matcher}(false)`,
-      `expect(${b} ${operator} ${b}).not.${matcher}(false)`,
-      `expect(${b} ${operator} ${b}).resolves.not.${matcher}(false)`,
-      `expect(${b} ${operator} ${b}).resolves.${matcher}(false)`,
-    ],
+  ].flatMap(([a, b]) => [
+    `expect(${a} ${operator} ${b}).${matcher}(false)`,
+    `expect(${a} ${operator} ${b}).${matcher}(true)`,
+    `expect(${a} ${operator} ${b}).not.${matcher}(false)`,
+    `expect(${a} ${operator} ${b}).not.${matcher}(true)`,
+    `expect(${b} ${operator} ${a}).${matcher}(false)`,
+    `expect(${b} ${operator} ${a}).${matcher}(true)`,
+    `expect(${b} ${operator} ${a}).not.${matcher}(false)`,
+    `expect(${b} ${operator} ${a}).not.${matcher}(true)`,
+    `expect(${b} ${operator} ${b}).not.${matcher}(false)`,
+    `expect(${b} ${operator} ${b}).resolves.${matcher}(false)`,
+    `expect(${b} ${operator} ${b}).resolves.not.${matcher}(false)`,
   ])
 }
 
