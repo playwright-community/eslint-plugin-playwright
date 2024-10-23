@@ -38,13 +38,7 @@
     "ts": "tsc --noEmit"
   },
   "peerDependencies": {
-    "eslint": ">=8.40.0",
-    "eslint-plugin-jest": ">=25"
-  },
-  "peerDependenciesMeta": {
-    "eslint-plugin-jest": {
-      "optional": true
-    }
+    "eslint": ">=8.40.0"
   },
   "dependencies": {
     "globals": "^13.23.0"

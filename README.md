@@ -28,14 +28,11 @@ pnpm add -D eslint-plugin-playwright
 
 ## Usage
 
-This plugin bundles two configurations to work with both `@playwright/test` or
-`jest-playwright`. The recommended setup is to use the `files` field to target
-only Playwright test files. In the examples below, this is done by targeting
-files in the `tests` directory and only applying the Playwright rules to those
-files. In your project, you may need to change the `files` field to match your
-Playwright test file patterns.
-
-### With [Playwright test runner](https://playwright.dev/docs/writing-tests)
+The recommended setup is to use the `files` field to target only Playwright test
+files. In the examples below, this is done by targeting files in the `tests`
+directory and only applying the Playwright rules to those files. In your
+project, you may need to change the `files` field to match your Playwright test
+file patterns.
 
 [Flat config](https://eslint.org/docs/latest/use/configure/configuration-files-new)
 (**eslint.config.js**)
@@ -47,10 +44,8 @@ export default [
   {
     ...playwright.configs['flat/recommended'],
     files: ['tests/**'],
-  },
-  {
-    files: ['tests/**'],
     rules: {
+      ...playwright.configs['flat/recommended'].rules,
       // Customize Playwright rules
       // ...
     },
@@ -67,45 +62,6 @@ export default [
     {
       "files": "tests/**",
       "extends": "plugin:playwright/recommended"
-    }
-  ]
-}
-```
-
-### With [Jest Playwright](https://github.com/playwright-community/jest-playwright)
-
-[Flat config](https://eslint.org/docs/latest/use/configure/configuration-files-new)
-(**eslint.config.js**)
-
-```javascript
-import playwright from 'eslint-plugin-playwright'
-import jest from 'eslint-plugin-jest'
-
-export default [
-  {
-    ...playwright.configs['flat/jest-playwright'],
-    files: ['tests/**'],
-  },
-  {
-    files: ['tests/**'],
-    plugins: { jest },
-    rules: {
-      // Customize Playwright rules
-      // ...
-    },
-  },
-]
-```
-
-[Legacy config](https://eslint.org/docs/latest/use/configure/configuration-files)
-(**.eslintrc**)
-
-```json
-{
-  "overrides": [
-    {
-      "files": "tests/**",
-      "extends": "plugin:playwright/jest-playwright"
     }
   ]
 }
