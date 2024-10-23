@@ -25,7 +25,7 @@
   },
   "files": [
     "dist",
-    "index.js",
+    "index.mjs",
     "index.d.ts"
   ],
   "scripts": {
