@@ -150,68 +150,10 @@ const flatConfig = {
   },
 }
 
-const sharedJestConfig = {
-  rules: {
-    'jest/no-standalone-expect': [
-      'error',
-      {
-        additionalTestBlockFunctions: [
-          'test.jestPlaywrightDebug',
-          'it.jestPlaywrightDebug',
-          'test.jestPlaywrightSkip',
-          'it.jestPlaywrightSkip',
-          'test.jestPlaywrightConfig',
-          'it.jestPlaywrightConfig',
-        ],
-      },
-    ],
-    'playwright/missing-playwright-await': 'error',
-    'playwright/no-page-pause': 'warn',
-  },
-} as const
-
-const legacyJestConfig = {
-  ...sharedJestConfig,
-  env: {
-    jest: true,
-    'shared-node-browser': true,
-  },
-  globals: {
-    browser: true,
-    browserName: true,
-    context: true,
-    deviceName: true,
-    jestPlaywright: true,
-    page: true,
-  },
-  plugins: ['jest', 'playwright'],
-}
-
-const jestConfig = {
-  ...sharedJestConfig,
-  languageOptions: {
-    globals: {
-      ...globals['shared-node-browser'],
-      ...globals.jest,
-      browser: 'writable',
-      browserName: 'writable',
-      context: 'writable',
-      deviceName: 'writable',
-      jestPlaywright: 'writable',
-      page: 'writable',
-    },
-  },
-  plugins: {
-    playwright: index,
-  },
-}
-
 export = {
   ...index,
   configs: {
-    'flat/jest-playwright': jestConfig,
     'flat/recommended': flatConfig,
-    'jest-playwright': legacyJestConfig,
     'playwright-test': legacyConfig,
     recommended: legacyConfig,
   },
