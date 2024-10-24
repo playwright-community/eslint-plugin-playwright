@@ -1,6 +1,6 @@
 import { Rule } from 'eslint'
 import ESTree from 'estree'
-import { getParent, getStringValue, isIdentifier } from '../utils/ast'
+import { getParent, getStringValue, isIdentifier, isPage } from '../utils/ast'
 import { createRule } from '../utils/createRule'
 import { ParsedFnCall, parseFnCall } from '../utils/parseFnCall'
 
@@ -56,6 +56,73 @@ const playwrightTestMatchers = [
   'toBeAttached',
   'toBeInViewport',
 ]
+
+const pageMethods = new Set([
+  '$', // deprecated
+  '$$', // deprecated
+  '$eval', // deprecated
+  '$$eval', // deprecated
+  'addInitScript',
+  'addLocatorHandler',
+  'addScriptTag',
+  'addStyleTag',
+  'bringToFront',
+  'check', // deprecated
+  'click', // deprecated
+  'close',
+  'content',
+  'dblclick', // deprecated
+  'dispatchEvent', // deprecated
+  'dragAndDrop',
+  'emulateMedia',
+  'evaluate',
+  'evaluateHandle',
+  'exposeBinding',
+  'exposeFunction',
+  'fill', // deprecated
+  'focus', // deprecated
+  'getAttribute', // deprecated
+  'goBack',
+  'goForward',
+  'goto',
+  'hover', // deprecated
+  'innerHTML', // deprecated
+  'innerText', // deprecated
+  'inputValue', // deprecated
+  'isChecked', // deprecated
+  'isDisabled', // deprecated
+  'isEditable', // deprecated
+  'isEnabled', // deprecated
+  'isHidden', // deprecated
+  'isVisible', // deprecated
+  'opener',
+  'pause',
+  'pdf',
+  'press', // deprecated
+  'reload',
+  'removeLocatorHandler',
+  'route',
+  'routeFromHAR',
+  'screenshot',
+  'selectOption', // deprecated
+  'setChecked', // deprecated
+  'setContent',
+  'setExtraHTTPHeaders',
+  'setInputFiles', // deprecated
+  'setViewportSize',
+  'tap', // deprecated
+  'textContent', // deprecated
+  'title',
+  'type', // deprecated
+  'unroute',
+  'unrouteAll',
+  'waitForFunction',
+  'waitForLoadState',
+  'waitForNavigation', // deprecated
+  'waitForSelector', // deprecated
+  'waitForTimeout', // deprecated
+  'waitForURL',
+])
 
 function getReportNode(node: ESTree.Node) {
   const parent = getParent(node)
@@ -139,6 +206,21 @@ export default createRule({
 
     return {
       CallExpression(node) {
+        // Checking validity of calls to methods on the page object
+        if (isPage(node) && node.callee.type === 'MemberExpression') {
+          const method = getStringValue(node.callee.property)
+          const isValid = checkValidity(node)
+
+          if (!isValid && pageMethods.has(method)) {
+            context.report({
+              data: { method },
+              fix: (fixer) => fixer.insertTextBefore(node, 'await '),
+              messageId: 'page',
+              node: node.callee,
+            })
+          }
+        }
+
         const call = parseFnCall(context, node)
         if (call?.type !== 'step' && call?.type !== 'expect') return
 
@@ -167,6 +249,7 @@ export default createRule({
     messages: {
       expect: "'{{matcherName}}' must be awaited or returned.",
       expectPoll: "'expect.poll' matchers must be awaited or returned.",
+      page: "'{{method}}' must be awaited or returned.",
       testStep: "'test.step' must be awaited or returned.",
     },
     schema: [
