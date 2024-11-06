@@ -1,6 +1,6 @@
-import { createRule } from '../utils/createRule'
-import { replaceAccessorFixer } from '../utils/fixer'
-import { parseFnCall } from '../utils/parseFnCall'
+import { createRule } from '../utils/createRule.js'
+import { replaceAccessorFixer } from '../utils/fixer.js'
+import { parseFnCall } from '../utils/parseFnCall.js'
 
 export default createRule({
   create(context) {

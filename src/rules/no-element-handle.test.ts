@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-element-handle'
-import { runRuleTester, test } from '../utils/rule-tester'
+import rule from '../../src/rules/no-element-handle.js'
+import { runRuleTester, test } from '../utils/rule-tester.js'
 
 runRuleTester('no-element-handle', rule, {
   invalid: [

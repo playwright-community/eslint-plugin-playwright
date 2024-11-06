@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-wait-for-timeout'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-wait-for-timeout.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'noWaitForTimeout'
 

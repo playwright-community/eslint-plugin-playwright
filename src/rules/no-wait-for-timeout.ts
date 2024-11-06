@@ -1,5 +1,5 @@
-import { isPageMethod } from '../utils/ast'
-import { createRule } from '../utils/createRule'
+import { isPageMethod } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 
 export default createRule({
   create(context) {

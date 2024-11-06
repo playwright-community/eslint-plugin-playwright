@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-to-have-length'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/prefer-to-have-length.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('prefer-to-have-length', rule, {
   invalid: [

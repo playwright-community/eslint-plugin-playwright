@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-restricted-matchers'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-restricted-matchers.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('no-restricted-matchers', rule, {
   invalid: [

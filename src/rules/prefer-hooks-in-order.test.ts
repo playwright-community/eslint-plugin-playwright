@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-hooks-in-order'
-import { javascript, runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/prefer-hooks-in-order.js'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('prefer-hooks-in-order', rule, {
   invalid: [

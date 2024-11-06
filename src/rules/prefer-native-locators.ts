@@ -1,6 +1,6 @@
 import { AST } from 'eslint'
-import { getStringValue, isPageMethod } from '../utils/ast'
-import { createRule } from '../utils/createRule'
+import { getStringValue, isPageMethod } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 
 type Pattern = {
   messageId: string

@@ -4,9 +4,9 @@ import {
   getStringValue,
   isStringNode,
   StringNode,
-} from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { parseFnCall } from '../utils/parseFnCall'
+} from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { parseFnCall } from '../utils/parseFnCall.js'
 
 const doesBinaryExpressionContainStringNode = (
   binaryExp: ESTree.BinaryExpression,

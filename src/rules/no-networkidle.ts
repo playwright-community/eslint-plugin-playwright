@@ -1,6 +1,6 @@
 import ESTree from 'estree'
-import { getStringValue, isStringLiteral } from '../utils/ast'
-import { createRule } from '../utils/createRule'
+import { getStringValue, isStringLiteral } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 
 const messageId = 'noNetworkidle'
 const methods = new Set([

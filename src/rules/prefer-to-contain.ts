@@ -5,10 +5,10 @@ import {
   getStringValue,
   isBooleanLiteral,
   isPropertyAccessor,
-} from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { parseFnCall } from '../utils/parseFnCall'
-import { KnownCallExpression } from '../utils/types'
+} from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { parseFnCall } from '../utils/parseFnCall.js'
+import { KnownCallExpression } from '../utils/types.js'
 
 type FixableIncludesCallExpression = KnownCallExpression
 

@@ -15,19 +15,20 @@
   "engines": {
     "node": ">=16.6.0"
   },
-  "type": "commonjs",
-  "types": "./index.d.mts",
+  "type": "module",
+  "types": "./index.d.ts",
   "exports": {
     ".": {
-      "types": "./index.d.mts",
-      "import": "./index.mjs",
-      "require": "./dist/index.js"
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.cjs"
     }
   },
   "files": [
     "dist",
-    "index.mjs",
-    "index.d.mts"
+    "index.js",
+    "index.cjs",
+    "index.d.ts"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs --out-dir dist",

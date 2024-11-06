@@ -1,7 +1,7 @@
 import { RuleTester } from 'eslint'
-import rule from '../../src/rules/prefer-comparison-matcher'
-import { equalityMatchers } from '../../src/utils/ast'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/prefer-comparison-matcher.js'
+import { equalityMatchers } from '../../src/utils/ast.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 const generateInvalidCases = (
   operator: string,

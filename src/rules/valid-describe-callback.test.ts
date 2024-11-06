@@ -1,5 +1,5 @@
-import { javascript, runRuleTester } from '../utils/rule-tester'
-import rule from './valid-describe-callback'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
+import rule from './valid-describe-callback.js'
 
 runRuleTester('valid-describe-callback', rule, {
   invalid: [

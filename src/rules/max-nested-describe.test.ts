@@ -1,5 +1,5 @@
-import rule from '../../src/rules/max-nested-describe'
-import { javascript, runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/max-nested-describe.js'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'exceededMaxDepth'
 

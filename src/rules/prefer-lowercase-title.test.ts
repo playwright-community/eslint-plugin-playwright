@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-lowercase-title'
-import { javascript, runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/prefer-lowercase-title.js'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'unexpectedLowercase'
 

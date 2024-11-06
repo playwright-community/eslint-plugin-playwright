@@ -1,7 +1,7 @@
 import { Rule } from 'eslint'
 import ESTree, { AssignmentExpression } from 'estree'
-import { isSupportedAccessor } from './parseFnCall'
-import { NodeWithParent, TypedNodeWithParent } from './types'
+import { isSupportedAccessor } from './parseFnCall.js'
+import { NodeWithParent, TypedNodeWithParent } from './types.js'
 
 export function getStringValue(node: ESTree.Node | undefined) {
   if (!node) return ''

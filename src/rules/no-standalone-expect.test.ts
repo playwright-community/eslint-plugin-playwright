@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-standalone-expect'
-import { javascript, runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-standalone-expect.js'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'unexpectedExpect'
 

@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-hooks'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-hooks.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'unexpectedHook'
 

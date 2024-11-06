@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-nested-step'
-import { javascript, runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-nested-step.js'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'noNestedStep'
 

@@ -1,7 +1,7 @@
 import { Rule } from 'eslint'
 import ESTree from 'estree'
-import { isPropertyAccessor } from '../utils/ast'
-import { createRule } from '../utils/createRule'
+import { isPropertyAccessor } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 
 function isStepCall(node: ESTree.Node): boolean {
   const inner = node.type === 'CallExpression' ? node.callee : node

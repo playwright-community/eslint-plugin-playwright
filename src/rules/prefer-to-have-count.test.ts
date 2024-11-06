@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-to-have-count'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/prefer-to-have-count.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('prefer-to-have-count', rule, {
   invalid: [

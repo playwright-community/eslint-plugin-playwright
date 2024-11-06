@@ -1,8 +1,8 @@
 import { Rule } from 'eslint'
 import ESTree from 'estree'
-import { getParent, getStringValue, isIdentifier } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { ParsedFnCall, parseFnCall } from '../utils/parseFnCall'
+import { getParent, getStringValue, isIdentifier } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { ParsedFnCall, parseFnCall } from '../utils/parseFnCall.js'
 
 const validTypes = new Set([
   'AwaitExpression',

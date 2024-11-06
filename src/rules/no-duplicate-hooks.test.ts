@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-duplicate-hooks'
-import { javascript, runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-duplicate-hooks.js'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('basic describe block', rule, {
   invalid: [

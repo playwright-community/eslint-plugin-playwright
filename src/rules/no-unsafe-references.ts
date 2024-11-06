@@ -5,9 +5,9 @@ import {
   getStringValue,
   isFunction,
   isPageMethod,
-} from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { truthy } from '../utils/misc'
+} from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { truthy } from '../utils/misc.js'
 
 /** Collect all variable references in the parent scopes recursively. */
 function collectVariables(scope: Scope.Scope | null): string[] {

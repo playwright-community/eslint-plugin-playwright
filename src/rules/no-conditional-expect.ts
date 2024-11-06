@@ -1,9 +1,9 @@
 import { Rule, Scope } from 'eslint'
 import * as ESTree from 'estree'
-import { getParent, isPropertyAccessor } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
-import { KnownCallExpression } from '../utils/types'
+import { getParent, isPropertyAccessor } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall.js'
+import { KnownCallExpression } from '../utils/types.js'
 
 const isCatchCall = (
   node: ESTree.CallExpression,

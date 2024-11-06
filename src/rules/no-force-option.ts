@@ -1,6 +1,6 @@
 import ESTree from 'estree'
-import { getStringValue, isBooleanLiteral } from '../utils/ast'
-import { createRule } from '../utils/createRule'
+import { getStringValue, isBooleanLiteral } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 
 function isForceOptionEnabled(node: ESTree.CallExpression) {
   const arg = node.arguments.at(-1)

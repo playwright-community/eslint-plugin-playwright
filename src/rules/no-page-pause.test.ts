@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-page-pause'
-import { runRuleTester, test } from '../utils/rule-tester'
+import rule from '../../src/rules/no-page-pause.js'
+import { runRuleTester, test } from '../utils/rule-tester.js'
 
 const messageId = 'noPagePause'
 

@@ -1,7 +1,7 @@
 import * as ESTree from 'estree'
-import { getStringValue, isFunction, isStringLiteral } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { parseFnCall } from '../utils/parseFnCall'
+import { getStringValue, isFunction, isStringLiteral } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { parseFnCall } from '../utils/parseFnCall.js'
 
 const paramsLocation = (
   params: ESTree.CallExpression['arguments'] | ESTree.Pattern[],

@@ -6,9 +6,9 @@ import {
   getStringValue,
   isBooleanLiteral,
   isStringLiteral,
-} from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { parseFnCall } from '../utils/parseFnCall'
+} from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { parseFnCall } from '../utils/parseFnCall.js'
 
 const isString = (node: ESTree.Node) => {
   return isStringLiteral(node) || node.type === 'TemplateLiteral'

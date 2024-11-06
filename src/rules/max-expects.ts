@@ -1,7 +1,7 @@
 import * as ESTree from 'estree'
-import { getParent } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
+import { getParent } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall.js'
 
 export default createRule({
   create(context) {

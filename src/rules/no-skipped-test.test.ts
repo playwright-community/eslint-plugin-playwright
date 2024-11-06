@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-skipped-test'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-skipped-test.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'removeSkippedTestAnnotation'
 

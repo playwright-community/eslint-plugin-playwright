@@ -1,13 +1,13 @@
 import * as ESTree from 'estree'
-import { getStringValue, isBooleanLiteral } from '../utils/ast'
-import { createRule } from '../utils/createRule'
+import { getStringValue, isBooleanLiteral } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 import {
   getRangeOffset,
   removePropertyFixer,
   replaceAccessorFixer,
-} from '../utils/fixer'
-import { truthy } from '../utils/misc'
-import { type ParsedExpectFnCall, parseFnCall } from '../utils/parseFnCall'
+} from '../utils/fixer.js'
+import { truthy } from '../utils/misc.js'
+import { type ParsedExpectFnCall, parseFnCall } from '../utils/parseFnCall.js'
 
 const matcherConfig: Record<string, { argName?: string; inverse: string }> = {
   toBeDisabled: { inverse: 'toBeEnabled' },

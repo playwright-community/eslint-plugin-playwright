@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-nth-methods'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-nth-methods.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'noNthMethod'
 

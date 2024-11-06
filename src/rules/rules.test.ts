@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { expect, test } from 'vitest'
-import plugin from '../../src/index'
+
+const plugin = await import('../../src/index.js')
 
 test('exports all rules', async () => {
   const files = await fs.readdir('src/rules')
