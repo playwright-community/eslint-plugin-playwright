@@ -16,10 +16,10 @@
     "node": ">=16.6.0"
   },
   "type": "commonjs",
-  "types": "./index.d.ts",
+  "types": "./index.d.mts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
+      "types": "./index.d.mts",
       "import": "./index.mjs",
       "require": "./dist/index.js"
     }
@@ -27,7 +27,7 @@
   "files": [
     "dist",
     "index.mjs",
-    "index.d.ts"
+    "index.d.mts"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs --out-dir dist",
