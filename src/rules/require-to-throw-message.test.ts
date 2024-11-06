@@ -1,5 +1,5 @@
-import { javascript, runRuleTester } from '../utils/rule-tester'
-import rule from './require-to-throw-message'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
+import rule from './require-to-throw-message.js'
 
 runRuleTester('require-to-throw-message', rule, {
   invalid: [

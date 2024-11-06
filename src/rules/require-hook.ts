@@ -1,8 +1,8 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
-import { getStringValue, isFunction, isIdentifier } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
+import { getStringValue, isFunction, isIdentifier } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall.js'
 
 const isNullOrUndefined = (node: ESTree.Expression): boolean => {
   return (

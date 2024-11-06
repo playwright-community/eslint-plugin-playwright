@@ -1,5 +1,5 @@
-import rule from '../../src/rules/prefer-web-first-assertions'
-import { javascript, runRuleTester, test } from '../utils/rule-tester'
+import rule from '../../src/rules/prefer-web-first-assertions.js'
+import { javascript, runRuleTester, test } from '../utils/rule-tester.js'
 
 runRuleTester('prefer-web-first-assertions', rule, {
   invalid: [

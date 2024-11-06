@@ -1,12 +1,12 @@
 import * as ESTree from 'estree'
-import { getParent, getStringValue } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { getAmountData } from '../utils/misc'
+import { getParent, getStringValue } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { getAmountData } from '../utils/misc.js'
 import {
   isSupportedAccessor,
   modifiers,
   parseFnCallWithReason,
-} from '../utils/parseFnCall'
+} from '../utils/parseFnCall.js'
 
 const findTopMostMemberExpression = (
   node: ESTree.MemberExpression,

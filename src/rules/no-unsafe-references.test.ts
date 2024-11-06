@@ -1,10 +1,10 @@
-import rule from '../../src/rules/no-unsafe-references'
+import rule from '../../src/rules/no-unsafe-references.js'
 import {
   javascript,
   runRuleTester,
   runTSRuleTester,
   typescript,
-} from '../utils/rule-tester'
+} from '../utils/rule-tester.js'
 
 const messageId = 'noUnsafeReference'
 

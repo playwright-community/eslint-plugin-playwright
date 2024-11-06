@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-get-by-title'
-import { runRuleTester, test } from '../utils/rule-tester'
+import rule from '../../src/rules/no-get-by-title.js'
+import { runRuleTester, test } from '../utils/rule-tester.js'
 
 const messageId = 'noGetByTitle'
 

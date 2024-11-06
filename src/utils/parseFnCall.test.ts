@@ -1,18 +1,18 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
-import { getStringValue } from './ast'
+import { getStringValue } from './ast.js'
 import {
   isSupportedAccessor,
   type ParsedFnCall,
   parseFnCallWithReason,
   type ResolvedFnWithNode,
-} from './parseFnCall'
+} from './parseFnCall.js'
 import {
   javascript,
   runRuleTester,
   runTSRuleTester,
   typescript,
-} from './rule-tester'
+} from './rule-tester.js'
 
 const isNode = (obj: unknown): obj is ESTree.Node => {
   if (typeof obj === 'object' && obj !== null) {

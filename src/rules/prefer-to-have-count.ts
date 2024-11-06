@@ -1,7 +1,11 @@
-import { dereference, equalityMatchers, isPropertyAccessor } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { replaceAccessorFixer } from '../utils/fixer'
-import { parseFnCall } from '../utils/parseFnCall'
+import {
+  dereference,
+  equalityMatchers,
+  isPropertyAccessor,
+} from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { replaceAccessorFixer } from '../utils/fixer.js'
+import { parseFnCall } from '../utils/parseFnCall.js'
 
 const matchers = new Set([...equalityMatchers, 'toHaveLength'])
 

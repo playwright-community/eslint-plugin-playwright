@@ -1,5 +1,5 @@
-import { runRuleTester } from '../utils/rule-tester'
-import rule from './prefer-native-locators'
+import { runRuleTester } from '../utils/rule-tester.js'
+import rule from './prefer-native-locators.js'
 
 runRuleTester('prefer-native-locators', rule, {
   invalid: [

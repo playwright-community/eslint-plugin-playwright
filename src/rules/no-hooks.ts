@@ -1,5 +1,5 @@
-import { createRule } from '../utils/createRule'
-import { parseFnCall } from '../utils/parseFnCall'
+import { createRule } from '../utils/createRule.js'
+import { parseFnCall } from '../utils/parseFnCall.js'
 
 export default createRule({
   create(context) {

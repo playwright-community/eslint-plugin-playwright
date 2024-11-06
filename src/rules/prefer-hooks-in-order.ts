@@ -1,5 +1,5 @@
-import { createRule } from '../utils/createRule'
-import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall'
+import { createRule } from '../utils/createRule.js'
+import { isTypeOfFnCall, parseFnCall } from '../utils/parseFnCall.js'
 
 const order = ['beforeAll', 'beforeEach', 'afterEach', 'afterAll']
 

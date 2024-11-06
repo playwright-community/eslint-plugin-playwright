@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-useless-not'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-useless-not.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('no-useless-not', rule, {
   invalid: [

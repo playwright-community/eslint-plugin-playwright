@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-raw-locators'
-import { runRuleTester, test } from '../utils/rule-tester'
+import rule from '../../src/rules/no-raw-locators.js'
+import { runRuleTester, test } from '../utils/rule-tester.js'
 
 const messageId = 'noRawLocator'
 

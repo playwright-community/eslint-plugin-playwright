@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-useless-await'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-useless-await.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'noUselessAwait'
 

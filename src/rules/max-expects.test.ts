@@ -1,5 +1,5 @@
-import rule from '../../src/rules/max-expects'
-import { javascript, runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/max-expects.js'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('max-expects', rule, {
   invalid: [

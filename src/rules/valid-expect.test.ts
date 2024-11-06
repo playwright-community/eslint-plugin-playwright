@@ -1,5 +1,5 @@
-import rule from '../../src/rules/valid-expect'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/valid-expect.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('valid-expect', rule, {
   invalid: [

@@ -1,5 +1,5 @@
-import rule from '../../src/rules/no-wait-for-selector'
-import { runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/no-wait-for-selector.js'
+import { runRuleTester } from '../utils/rule-tester.js'
 
 const messageId = 'noWaitForSelector'
 

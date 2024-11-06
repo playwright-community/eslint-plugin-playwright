@@ -1,5 +1,5 @@
-import { getStringValue } from '../utils/ast'
-import { createRule } from '../utils/createRule'
+import { getStringValue } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 
 const methods = new Set(['first', 'last', 'nth'])
 

@@ -6,15 +6,15 @@ import {
   getStringValue,
   isFunction,
   isIdentifier,
-} from '../utils/ast'
-import { createRule } from '../utils/createRule'
+} from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 import {
   findTopMostCallExpression,
   isSupportedAccessor,
   isTypeOfFnCall,
   parseFnCall,
-} from '../utils/parseFnCall'
-import { KnownCallExpression } from '../utils/types'
+} from '../utils/parseFnCall.js'
+import { KnownCallExpression } from '../utils/types.js'
 
 const isPromiseChainCall = (node: ESTree.Node): node is KnownCallExpression => {
   if (

@@ -1,6 +1,6 @@
-import { getStringValue } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { parseFnCall } from '../utils/parseFnCall'
+import { getStringValue } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { parseFnCall } from '../utils/parseFnCall.js'
 
 export default createRule({
   create(context) {

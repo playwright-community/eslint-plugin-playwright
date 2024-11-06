@@ -1,7 +1,7 @@
 import { AST } from 'eslint'
 import ESTree from 'estree'
-import { isPageMethod } from '../utils/ast'
-import { createRule } from '../utils/createRule'
+import { isPageMethod } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
 
 function getPropertyRange(node: ESTree.Node): AST.Range {
   return node.type === 'Identifier'

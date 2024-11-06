@@ -1,5 +1,5 @@
-import { runRuleTester, test } from '../utils/rule-tester'
-import rule from './prefer-locator'
+import { runRuleTester, test } from '../utils/rule-tester.js'
+import rule from './prefer-locator.js'
 
 runRuleTester('prefer-locator', rule, {
   invalid: [

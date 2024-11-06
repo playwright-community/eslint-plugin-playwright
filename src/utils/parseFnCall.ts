@@ -8,7 +8,7 @@ import {
   isIdentifier,
   isStringNode,
   StringNode,
-} from './ast'
+} from './ast.js'
 
 const testHooks = new Set(['afterAll', 'afterEach', 'beforeAll', 'beforeEach'])
 

@@ -1,5 +1,5 @@
-import rule from '../../src/rules/valid-title'
-import { javascript, runRuleTester } from '../utils/rule-tester'
+import rule from '../../src/rules/valid-title.js'
+import { javascript, runRuleTester } from '../utils/rule-tester.js'
 
 runRuleTester('valid-title', rule, {
   invalid: [

@@ -1,6 +1,6 @@
 import dedent from 'dedent'
-import rule from '../../src/rules/missing-playwright-await'
-import { javascript, runRuleTester, test } from '../utils/rule-tester'
+import rule from '../../src/rules/missing-playwright-await.js'
+import { javascript, runRuleTester, test } from '../utils/rule-tester.js'
 
 runRuleTester('missing-playwright-await', rule, {
   invalid: [

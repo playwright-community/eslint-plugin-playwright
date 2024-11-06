@@ -1,7 +1,7 @@
 import { Rule } from 'eslint'
-import { findParent } from '../utils/ast'
-import { createRule } from '../utils/createRule'
-import { isTypeOfFnCall } from '../utils/parseFnCall'
+import { findParent } from '../utils/ast.js'
+import { createRule } from '../utils/createRule.js'
+import { isTypeOfFnCall } from '../utils/parseFnCall.js'
 
 export default createRule({
   create(context) {
