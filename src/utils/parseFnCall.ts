@@ -58,6 +58,7 @@ const VALID_CHAINS = new Set([
   // Test
   'test',
   'test.fail',
+  'test.fail.only',
   'test.fixme',
   'test.only',
   'test.skip',
