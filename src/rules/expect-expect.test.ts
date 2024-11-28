@@ -5,7 +5,7 @@ runRuleTester('expect-expect', rule, {
   invalid: [
     {
       code: 'test("should fail", () => {});',
-      errors: [{ messageId: 'noAssertions', type: 'Identifier', }],
+      errors: [{ messageId: 'noAssertions', type: 'Identifier' }],
     },
     {
       code: 'test.skip("should fail", () => {});',
