@@ -5,11 +5,11 @@ runRuleTester('expect-expect', rule, {
   invalid: [
     {
       code: 'test("should fail", () => {});',
-      errors: [{ messageId: 'noAssertions' }],
+      errors: [{ messageId: 'noAssertions', type: 'Identifier' }],
     },
     {
       code: 'test.skip("should fail", () => {});',
-      errors: [{ messageId: 'noAssertions' }],
+      errors: [{ messageId: 'noAssertions', type: 'MemberExpression' }],
     },
     {
       code: javascript`
@@ -17,7 +17,7 @@ runRuleTester('expect-expect', rule, {
           await assertCustomCondition(page)
         })
       `,
-      errors: [{ messageId: 'noAssertions' }],
+      errors: [{ messageId: 'noAssertions', type: 'Identifier' }],
     },
     {
       code: javascript`
@@ -25,13 +25,13 @@ runRuleTester('expect-expect', rule, {
           await assertCustomCondition(page)
         })
       `,
-      errors: [{ messageId: 'noAssertions' }],
+      errors: [{ messageId: 'noAssertions', type: 'Identifier' }],
       name: 'Custom assert function',
       options: [{ assertFunctionNames: ['wayComplexCustomCondition'] }],
     },
     {
       code: 'it("should pass", () => hi(true).toBeDefined())',
-      errors: [{ messageId: 'noAssertions' }],
+      errors: [{ messageId: 'noAssertions', type: 'Identifier' }],
       name: 'Global aliases',
       settings: {
         playwright: {
