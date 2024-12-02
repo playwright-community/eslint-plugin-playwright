@@ -20,6 +20,7 @@ import noPagePause from './rules/no-page-pause.js'
 import noRawLocators from './rules/no-raw-locators.js'
 import noRestrictedMatchers from './rules/no-restricted-matchers.js'
 import noSkippedTest from './rules/no-skipped-test.js'
+import noSlowedTests from './rules/no-slowed-test.js'
 import noStandaloneExpect from './rules/no-standalone-expect.js'
 import noUnsafeReferences from './rules/no-unsafe-references.js'
 import noUselessAwait from './rules/no-useless-await.js'
@@ -72,6 +73,7 @@ const index = {
     'no-raw-locators': noRawLocators,
     'no-restricted-matchers': noRestrictedMatchers,
     'no-skipped-test': noSkippedTest,
+    'no-slowed-test': noSlowedTests,
     'no-standalone-expect': noStandaloneExpect,
     'no-unsafe-references': noUnsafeReferences,
     'no-useless-await': noUselessAwait,
