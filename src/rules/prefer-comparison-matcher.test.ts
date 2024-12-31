@@ -239,7 +239,7 @@ const testComparisonOperator = (
   preferredMatcher: string,
   preferredMatcherWhenNegated: string,
 ) => {
-  runRuleTester(`prefer-comparision-matcher: ${operator}`, rule, {
+  runRuleTester(`prefer-comparison-matcher: ${operator}`, rule, {
     invalid: [...equalityMatchers.keys()].reduce<RuleTester.InvalidTestCase[]>(
       (cases, equalityMatcher) => [
         ...cases,
@@ -275,7 +275,7 @@ testComparisonOperator('<', 'toBeLessThan', 'toBeGreaterThanOrEqual')
 testComparisonOperator('>=', 'toBeGreaterThanOrEqual', 'toBeLessThan')
 testComparisonOperator('<=', 'toBeLessThanOrEqual', 'toBeGreaterThan')
 
-runRuleTester('prefer-comparision-matcher', rule, {
+runRuleTester('prefer-comparison-matcher', rule, {
   invalid: [],
   valid: [
     'expect(true).toBe(...true)',
