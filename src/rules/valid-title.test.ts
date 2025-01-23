@@ -75,6 +75,18 @@ runRuleTester('valid-title', rule, {
       ],
       options: [{ disallowedWords: ['properly'] }],
     },
+    {
+      code: 'test.step.skip(`that the value is set properly`, function () {})',
+      errors: [
+        {
+          column: 16,
+          data: { word: 'properly' },
+          line: 1,
+          messageId: 'disallowedWord',
+        },
+      ],
+      options: [{ disallowedWords: ['properly'] }],
+    },
     // Global aliases
     {
       code: 'it("the correct way to properly handle all things", () => {});',

@@ -512,6 +512,48 @@ runRuleTester('test', rule, {
       ],
     },
     {
+      code: 'test.step.skip("a step", () => {});',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            group: 'step',
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['step', 'skip'],
+            name: 'step',
+            type: 'step',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
+      code: 'test.step("a step", () => {}, { timeout: 1000 });',
+      errors: [
+        {
+          column: 1,
+          data: expectedParsedFnCallResultData({
+            group: 'step',
+            head: {
+              local: 'test',
+              node: 'test',
+              original: null,
+            },
+            members: ['step'],
+            name: 'step',
+            type: 'step',
+          }),
+          line: 1,
+          messageId: 'details',
+        },
+      ],
+    },
+    {
       code: 'test.only("a test", () => {});',
       errors: [
         {
