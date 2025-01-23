@@ -10,7 +10,11 @@ export default createRule({
         const allowConditional = !!options.allowConditional
 
         const call = parseFnCall(context, node)
-        if (call?.group !== 'test' && call?.group !== 'describe') {
+        if (
+          call?.group !== 'test' &&
+          call?.group !== 'describe' &&
+          call?.group !== 'step'
+        ) {
           return
         }
 

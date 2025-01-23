@@ -63,6 +63,7 @@ const VALID_CHAINS = new Set([
   'test.only',
   'test.skip',
   'test.step',
+  'test.step.skip',
   'test.slow',
   'test.use',
 ])

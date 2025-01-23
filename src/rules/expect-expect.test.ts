@@ -85,6 +85,15 @@ runRuleTester('expect-expect', rule, {
     },
     {
       code: javascript`
+        test.only('steps', async ({ page }) => {
+          await test.step.skip('first tab', async () => {
+            await expect(page.getByText('Hello')).toBeVisible();
+          });
+        });
+      `,
+    },
+    {
+      code: javascript`
         test('should fail', async ({ page }) => {
           await assertCustomCondition(page)
         })

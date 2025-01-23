@@ -247,6 +247,62 @@ runRuleTester('no-skipped-test', rule, {
         },
       },
     },
+    {
+      code: 'test.step.skip("a step", async () => {});',
+      errors: [
+        {
+          column: 11,
+          endColumn: 15,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test.step("a step", async () => {});',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'test.step.skip("a step", async () => {}, { timeout: 1000 });',
+      errors: [
+        {
+          column: 11,
+          endColumn: 15,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test.step("a step", async () => {}, { timeout: 1000 });',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'it.step.skip("a step", async () => {});',
+      errors: [
+        {
+          column: 9,
+          endColumn: 13,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'it.step("a step", async () => {});',
+            },
+          ],
+        },
+      ],
+      settings: {
+        playwright: {
+          globalAliases: { test: ['it'] },
+        },
+      },
+    },
   ],
   valid: [
     'test("a test", () => {});',

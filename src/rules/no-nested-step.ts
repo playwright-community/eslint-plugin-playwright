@@ -1,24 +1,16 @@
 import { Rule } from 'eslint'
-import ESTree from 'estree'
-import { isPropertyAccessor } from '../utils/ast.js'
 import { createRule } from '../utils/createRule.js'
-
-function isStepCall(node: ESTree.Node): boolean {
-  const inner = node.type === 'CallExpression' ? node.callee : node
-
-  if (inner.type !== 'MemberExpression') {
-    return false
-  }
-
-  return isPropertyAccessor(inner, 'step')
-}
+import { isTypeOfFnCall } from '../utils/parseFnCall.js'
 
 export default createRule({
   create(context) {
     const stack: number[] = []
 
     function pushStepCallback(node: Rule.Node) {
-      if (node.parent.type !== 'CallExpression' || !isStepCall(node.parent)) {
+      if (
+        node.parent.type !== 'CallExpression' ||
+        !isTypeOfFnCall(context, node.parent, ['step'])
+      ) {
         return
       }
 
@@ -35,7 +27,10 @@ export default createRule({
     function popStepCallback(node: Rule.Node) {
       const { parent } = node
 
-      if (parent.type === 'CallExpression' && isStepCall(parent)) {
+      if (
+        parent.type === 'CallExpression' &&
+        isTypeOfFnCall(context, parent, ['step'])
+      ) {
         stack.pop()
       }
     }

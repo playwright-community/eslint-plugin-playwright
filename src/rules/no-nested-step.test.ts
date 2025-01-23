@@ -35,6 +35,24 @@ runRuleTester('max-nested-step', rule, {
         { column: 11, endColumn: 20, endLine: 6, line: 6, messageId },
       ],
     },
+    {
+      code: javascript`
+        test('foo', async () => {
+          await test.step("step1", async () => {
+            await test.step("nested step1", async () => {
+              await expect(true).toBe(true);
+            });
+            await test.step.skip("nested step2", async () => {
+              await expect(true).toBe(true);
+            });
+          });
+        });
+      `,
+      errors: [
+        { column: 11, endColumn: 20, endLine: 3, line: 3, messageId },
+        { column: 11, endColumn: 25, endLine: 6, line: 6, messageId },
+      ],
+    },
     // Global aliases
     {
       code: javascript`
@@ -57,6 +75,7 @@ runRuleTester('max-nested-step', rule, {
   valid: [
     'await test.step("step1", () => {});',
     'await test.step("step1", async () => {});',
+    'await test.step.skip("step1", async () => {});',
     {
       code: javascript`
         test('foo', async () => {
@@ -80,6 +99,18 @@ runRuleTester('max-nested-step', rule, {
             await expect(true).toBe(true);
           });
           await test.step("step2", async () => {
+            await expect(true).toBe(true);
+          });
+        });
+      `,
+    },
+    {
+      code: javascript`
+        test('foo', async () => {
+          await test.step("step1", async () => {
+            await expect(true).toBe(true);
+          });
+          await test.step.skip("step2", async () => {
             await expect(true).toBe(true);
           });
         });

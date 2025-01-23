@@ -182,6 +182,16 @@ runRuleTester('no-conditional-in-test', rule, {
       errors: [{ column: 5, endColumn: 17, endLine: 3, line: 3, messageId }],
     },
     {
+      code: javascript`
+        test('test', async ({ page }) => {
+          await test.step.skip('step', async () => {
+            if (true) {}
+          });
+        });
+      `,
+      errors: [{ column: 5, endColumn: 17, endLine: 3, line: 3, messageId }],
+    },
+    {
       code: 'it("foo", () => { if (true) { expect(1).toBe(1); } });',
       errors: [{ column: 19, endColumn: 51, endLine: 1, line: 1, messageId }],
       settings: {

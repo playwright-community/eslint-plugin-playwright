@@ -31,6 +31,7 @@ const expectPlaywrightMatchers = [
 ]
 
 const playwrightTestMatchers = [
+  'toBeAttached',
   'toBeChecked',
   'toBeDisabled',
   'toBeEditable',
@@ -38,23 +39,23 @@ const playwrightTestMatchers = [
   'toBeEnabled',
   'toBeFocused',
   'toBeHidden',
+  'toBeInViewport',
+  'toBeOK',
   'toBeVisible',
   'toContainText',
+  'toHaveAccessibleErrorMessage',
   'toHaveAttribute',
+  'toHaveCSS',
   'toHaveClass',
   'toHaveCount',
-  'toHaveCSS',
   'toHaveId',
   'toHaveJSProperty',
-  'toBeOK',
   'toHaveScreenshot',
   'toHaveText',
   'toHaveTitle',
   'toHaveURL',
   'toHaveValue',
   'toHaveValues',
-  'toBeAttached',
-  'toBeInViewport',
 ]
 
 function getReportNode(node: ESTree.Node) {
