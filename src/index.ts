@@ -120,7 +120,6 @@ const sharedConfig = {
     'playwright/no-networkidle': 'error',
     'playwright/no-page-pause': 'warn',
     'playwright/no-skipped-test': 'warn',
-    'playwright/no-slowed-test': 'warn',
     'playwright/no-standalone-expect': 'error',
     'playwright/no-unsafe-references': 'error',
     'playwright/no-useless-await': 'warn',

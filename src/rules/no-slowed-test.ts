@@ -52,7 +52,7 @@ export default createRule({
     docs: {
       category: 'Best Practices',
       description: 'Prevent usage of the `.slow()` slow test annotation.',
-      recommended: true,
+      recommended: false,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-slowed-test.md',
     },
     hasSuggestions: true,
