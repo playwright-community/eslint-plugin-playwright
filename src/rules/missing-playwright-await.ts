@@ -56,6 +56,7 @@ const playwrightTestMatchers = [
   'toHaveURL',
   'toHaveValue',
   'toHaveValues',
+  'toContainClass',
 ]
 
 function getReportNode(node: ESTree.Node) {
