@@ -19,7 +19,10 @@ function collectVariables(scope: Scope.Scope | null): string[] {
   ]
 }
 
-/** Add the variables from the outer scope as arguments to `page.evaluate()` */
+/**
+ * Add the variables from the outer scope as arguments to `page.evaluate()` or
+ * `page.addInitScript()`.
+ */
 function addArgument(
   fixer: Rule.RuleFixer,
   node: ESTree.CallExpression,
@@ -28,7 +31,7 @@ function addArgument(
   // This should never happen, but just in case
   if (!node.arguments.length) return
 
-  // If there the only one argument to `page.evaluate()` is the function, we
+  // If the only argument to the method is the function, we
   // have to add the references as the second argument.
   if (node.arguments.length === 1) {
     return fixer.insertTextAfter(node.arguments[0], `, [${refs}]`)
@@ -94,7 +97,11 @@ export default createRule({
   create(context) {
     return {
       CallExpression(node) {
-        if (!isPageMethod(node, 'evaluate')) return
+        if (
+          !isPageMethod(node, 'evaluate') &&
+          !isPageMethod(node, 'addInitScript')
+        )
+          return
 
         const [fn] = node.arguments
         if (!fn || !isFunction(fn)) return
@@ -113,8 +120,11 @@ export default createRule({
           })
           .filter((ref) => allRefs.has(ref.identifier.name))
           .forEach((ref, i, arr) => {
+            const methodName = isPageMethod(node, 'evaluate')
+              ? 'evaluate'
+              : 'addInitScript'
             const descriptor: Rule.ReportDescriptor = {
-              data: { variable: ref.identifier.name },
+              data: { method: methodName, variable: ref.identifier.name },
               messageId: 'noUnsafeReference',
               node: ref.identifier,
             }
@@ -143,14 +153,15 @@ export default createRule({
   meta: {
     docs: {
       category: 'Possible Errors',
-      description: 'Prevent unsafe variable references in page.evaluate()',
+      description:
+        'Prevent unsafe variable references in page.evaluate() and page.addInitScript()',
       recommended: true,
       url: 'https://github.com/playwright-community/eslint-plugin-playwright/tree/main/docs/rules/no-unsafe-references.md',
     },
     fixable: 'code',
     messages: {
       noUnsafeReference:
-        'Unsafe reference to variable "{{ variable }}" in page.evaluate()',
+        'Unsafe reference to variable "{{ variable }}" in page.{{ method }}()',
     },
     type: 'problem',
   },
