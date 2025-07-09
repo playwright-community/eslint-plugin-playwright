@@ -10,7 +10,34 @@ export default createRule({
       if (!call) return
 
       if (isTypeOfFnCall(context, call, ['test', 'step'])) {
-        context.report({ messageId: 'conditionalInTest', node })
+        // Check if the conditional is inside the test body (the function passed as the last argument)
+        const testFunction = call.arguments[call.arguments.length - 1]
+
+        // If the last argument is not a function, this is not a valid test call
+        if (
+          !testFunction ||
+          (testFunction.type !== 'FunctionExpression' &&
+            testFunction.type !== 'ArrowFunctionExpression')
+        ) {
+          return
+        }
+
+        // Check if the conditional node is inside the test function body
+        let currentNode: Rule.Node | null = node
+        let isInTestBody = false
+
+        while (currentNode && currentNode !== testFunction) {
+          if (currentNode === testFunction.body) {
+            isInTestBody = true
+            break
+          }
+          currentNode = currentNode.parent
+        }
+
+        // Only report if the conditional is inside the test body
+        if (isInTestBody) {
+          context.report({ messageId: 'conditionalInTest', node })
+        }
       }
     }
 

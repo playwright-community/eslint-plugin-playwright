@@ -2,6 +2,29 @@
 alwaysApply: true
 ---
 
+## Tests
+
+- This project is a large ESLint plugin that is used to lint Playwright tests.
+- Always use test driven development when writing code. Tests are the primary
+  means by which we can ensure the code is working as expected.
+
+## Solving Issues
+
+- Your most common task is to solve GitHub issues.
+- When asked to solve GitHub issues, use
+  `gh issue view <issue-number> --json 'title,body,comments'` to get the issue
+  details.
+- After getting the issue details, think step by step and write a plan for the
+  solution.
+- After you have a plan, solve the issue by first writing tests for the
+  functionality or bugs you are fixing.
+- After you have written the tests, write the code to fix the issue.
+- After you have written the code, run the tests using `pnpm test` to ensure
+  they pass.
+- If the tests fail, iterate on the code and run the tests again.
+- Once the tests pass, create a branch, commit the changes, and create a pull
+  request with the changes.
+
 ## Pull Requests
 
 - When creating pull requests, add the `cursor` label to the pull request.

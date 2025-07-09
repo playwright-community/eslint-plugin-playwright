@@ -311,5 +311,9 @@ runRuleTester('no-conditional-in-test', rule, {
         },
       },
     },
+    // Issue 363: conditionals in test metadata should not trigger the rule
+    `test('My Test', { tag: productType === 'XYZ' ? '@regression' : '@smoke' }, () => {
+      expect(1).toBe(1);
+    })`,
   ],
 })
