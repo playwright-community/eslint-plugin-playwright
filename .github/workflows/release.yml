@@ -18,26 +18,8 @@ jobs:
           node-version: '20.x'
       - name: Build
         run: pnpm build
-      - name: Clean package.json for publishing
-        run: |
-          # Create backup of original package.json
-          cp package.json package.json.backup
-          # Remove development-only fields
-          node -e "
-            const pkg = JSON.parse(require('fs').readFileSync('package.json', 'utf8'));
-            delete pkg.workspaces;
-            delete pkg.packageManager;
-            delete pkg.scripts;
-            delete pkg.devDependencies;
-            require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          "
       - name: Release
         run: pnpm semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.npm_token }}
-      - name: Restore package.json
-        if: always()
-        run: |
-          # Restore original package.json
-          mv package.json.backup package.json
