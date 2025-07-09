@@ -1,0 +1,20 @@
+---
+alwaysApply: true
+---
+
+## Pull Requests
+
+- When creating pull requests, add the `cursor` label to the pull request.
+
+## Commits
+
+- This project uses semantic-release to automatically publish new versions of
+  the package.
+- When creating commits, use the following format:
+  - `feat: add new feature`
+  - `fix: fix bug`
+  - `chore: update dependencies`
+  - `docs: update documentation`
+  - `refactor: refactor code`
+  - `test: add tests`
+  - `style: update styles`
