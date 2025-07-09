@@ -35,8 +35,8 @@
     "lint": "eslint .",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
-    "test": "vitest",
-    "test:watch": "vitest --reporter=dot",
+    "test": "vitest --run",
+    "test:watch": "vitest --reporter=dot --run",
     "ts": "tsc --noEmit"
   },
   "peerDependencies": {
