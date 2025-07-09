@@ -31,7 +31,7 @@ function addArgument(
   // This should never happen, but just in case
   if (!node.arguments.length) return
 
-  // If there the only one argument to the method is the function, we
+  // If the only argument to the method is the function, we
   // have to add the references as the second argument.
   if (node.arguments.length === 1) {
     return fixer.insertTextAfter(node.arguments[0], `, [${refs}]`)
