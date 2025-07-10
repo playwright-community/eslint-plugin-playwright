@@ -42,6 +42,7 @@ import preferToHaveLength from './rules/prefer-to-have-length.js'
 import preferWebFirstAssertions from './rules/prefer-web-first-assertions.js'
 import requireHook from './rules/require-hook.js'
 import requireSoftAssertions from './rules/require-soft-assertions.js'
+import requireToPassTimeout from './rules/require-to-pass-timeout.js'
 import requireToThrowMessage from './rules/require-to-throw-message.js'
 import requireTopLevelDescribe from './rules/require-top-level-describe.js'
 import validDescribeCallback from './rules/valid-describe-callback.js'
@@ -95,6 +96,7 @@ const index = {
     'prefer-web-first-assertions': preferWebFirstAssertions,
     'require-hook': requireHook,
     'require-soft-assertions': requireSoftAssertions,
+    'require-to-pass-timeout': requireToPassTimeout,
     'require-to-throw-message': requireToThrowMessage,
     'require-top-level-describe': requireTopLevelDescribe,
     'valid-describe-callback': validDescribeCallback,
