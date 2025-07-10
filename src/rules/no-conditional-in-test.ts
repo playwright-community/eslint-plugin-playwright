@@ -10,7 +10,23 @@ export default createRule({
       if (!call) return
 
       if (isTypeOfFnCall(context, call, ['test', 'step'])) {
-        context.report({ messageId: 'conditionalInTest', node })
+        // Check if the conditional is inside the test body (the function passed as the last argument)
+        const testFunction = call.arguments[call.arguments.length - 1]
+
+        // Use findParent to check if the conditional is inside the test function body
+        const functionBody = findParent(node, 'BlockStatement')
+        if (!functionBody) return
+
+        // Check if this BlockStatement belongs to our test function
+        let currentParent = functionBody.parent
+        while (currentParent && currentParent !== testFunction) {
+          currentParent = (currentParent as Rule.NodeParentExtension).parent
+        }
+
+        // Only report if the conditional is inside the test function body
+        if (currentParent === testFunction) {
+          context.report({ messageId: 'conditionalInTest', node })
+        }
       }
     }
 
