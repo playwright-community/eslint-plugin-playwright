@@ -1,5 +1,5 @@
 import { Rule } from 'eslint'
-import { findParent } from '../utils/ast.js'
+import { findParent, isFunction } from '../utils/ast.js'
 import { createRule } from '../utils/createRule.js'
 import { isTypeOfFnCall } from '../utils/parseFnCall.js'
 
@@ -14,28 +14,22 @@ export default createRule({
         const testFunction = call.arguments[call.arguments.length - 1]
 
         // If the last argument is not a function, this is not a valid test call
-        if (
-          !testFunction ||
-          (testFunction.type !== 'FunctionExpression' &&
-            testFunction.type !== 'ArrowFunctionExpression')
-        ) {
+        if (!testFunction || !isFunction(testFunction)) {
           return
         }
 
-        // Check if the conditional node is inside the test function body
-        let currentNode: Rule.Node | null = node
-        let isInTestBody = false
+        // Use findParent to check if the conditional is inside the test function body
+        const functionBody = findParent(node, 'BlockStatement')
+        if (!functionBody) return
 
-        while (currentNode && currentNode !== testFunction) {
-          if (currentNode === testFunction.body) {
-            isInTestBody = true
-            break
-          }
-          currentNode = currentNode.parent
+        // Check if this BlockStatement belongs to our test function
+        let currentParent = functionBody.parent
+        while (currentParent && currentParent !== testFunction) {
+          currentParent = (currentParent as any).parent
         }
 
-        // Only report if the conditional is inside the test body
-        if (isInTestBody) {
+        // Only report if the conditional is inside the test function body
+        if (currentParent === testFunction) {
           context.report({ messageId: 'conditionalInTest', node })
         }
       }
