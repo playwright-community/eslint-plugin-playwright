@@ -636,6 +636,257 @@ runRuleTester('prefer-web-first-assertions', rule, {
       ),
     },
 
+    // allTextContents
+    {
+      code: test('expect(await foo.allTextContents()).toBe("bar")'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 63,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(foo).toHaveText("bar")'),
+    },
+    {
+      code: test('expect(await foo.allTextContents()).not.toBe("bar")'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 63,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(foo).not.toHaveText("bar")'),
+    },
+    {
+      code: test('expect(await foo.allTextContents()).toEqual("bar")'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 63,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(foo).toHaveText("bar")'),
+    },
+    {
+      code: test('expect.soft(await foo.allTextContents()).toBe("bar")'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 68,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect.soft(foo).toHaveText("bar")'),
+    },
+    {
+      code: test('expect["soft"](await foo.allTextContents()).not.toEqual("bar")'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 71,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect["soft"](foo).not.toHaveText("bar")'),
+    },
+    {
+      code: test(`
+        const fooLocator = page.locator('.fooClass');
+        const fooLocatorText = await fooLocator.allTextContents();
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        const fooLocator = page.locator('.fooClass');
+        const fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
+    },
+    {
+      code: test(`
+        const fooLocator = page.locator('.fooClass');
+        let fooLocatorText = await fooLocator.allTextContents();
+        expect(fooLocatorText).toEqual('foo');
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        const fooLocator = page.locator('.fooClass');
+        let fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('foo');
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+      `),
+    },
+    {
+      code: test(`
+        let fooLocatorText;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = 'Unrelated';
+        fooLocatorText = await fooLocator.allTextContents();
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 31,
+          line: 6,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        let fooLocatorText;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = 'Unrelated';
+        fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
+    },
+    {
+      code: test(`
+        let fooLocatorText;
+        let fooLocatorText2;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = await fooLocator.allTextContents();
+        fooLocatorText2 = await fooLocator.allTextContents();
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 31,
+          line: 7,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        let fooLocatorText;
+        let fooLocatorText2;
+        const fooLocator = page.locator('.fooClass');
+        fooLocatorText = fooLocator;
+        fooLocatorText2 = await fooLocator.allTextContents();
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
+    },
+    {
+      code: test(`
+        let fooLocatorText;
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+        fooLocatorText = await page.locator('.fooClass').allTextContents();
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 31,
+          line: 6,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        let fooLocatorText;
+        fooLocatorText = 'foo';
+        expect(fooLocatorText).toEqual('foo');
+        fooLocatorText = page.locator('.fooClass');
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
+    },
+    {
+      code: test(`
+        const unrelatedAssignment = "unrelated";
+        const fooLocatorText = await page.locator('.foo').allTextContents();
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        const unrelatedAssignment = "unrelated";
+        const fooLocatorText = page.locator('.foo');
+        await expect(fooLocatorText).toHaveText('foo');
+      `),
+    },
+    {
+      code: test(`
+        const locatorFoo = page.locator(".foo")
+        const isBarText = await locatorFoo.locator(".bar").allTextContents()
+        expect(isBarText).toBe("bar")
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 26,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        const locatorFoo = page.locator(".foo")
+        const isBarText = locatorFoo.locator(".bar")
+        await expect(isBarText).toHaveText("bar")
+      `),
+    },
+    {
+      code: test(`
+        const content = await foo.allTextContents();
+        expect(content).toBe("bar")
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'allTextContents' },
+          endColumn: 24,
+          line: 3,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        const content = foo;
+        await expect(content).toHaveText("bar")
+      `),
+    },
+
     // isChecked
     {
       code: test('expect(await page.locator("howdy").isChecked()).toBe(true)'),
