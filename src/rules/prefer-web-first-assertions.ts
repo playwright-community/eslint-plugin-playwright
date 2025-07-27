@@ -16,6 +16,7 @@ type MethodConfig = {
 }
 
 const methods: Record<string, MethodConfig> = {
+  allInnerTexts: { matcher: 'toHaveText', type: 'string' },
   allTextContents: { matcher: 'toHaveText', type: 'string' },
   getAttribute: {
     matcher: 'toHaveAttribute',
