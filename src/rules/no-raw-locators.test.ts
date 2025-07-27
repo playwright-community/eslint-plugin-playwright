@@ -10,6 +10,14 @@ runRuleTester('no-raw-locators', rule, {
       errors: [{ column: 34, endColumn: 48, line: 1, messageId }],
     },
     {
+      code: test('const locator = await page.locator()'),
+      errors: [{ column: 50, endColumn: 64, line: 1, messageId }],
+    },
+    {
+      code: test('let locator = await page.locator()'),
+      errors: [{ column: 48, endColumn: 62, line: 1, messageId }],
+    },
+    {
       code: test('await this.page.locator()'),
       errors: [{ column: 34, endColumn: 53, line: 1, messageId }],
     },
@@ -37,7 +45,18 @@ runRuleTester('no-raw-locators', rule, {
       ),
       errors: [{ column: 77, endColumn: 100, line: 1, messageId }],
     },
-
+    {
+      code: test(
+        'const button = page.locator(); page.locator(button)',
+      ),
+      errors: [{ column: 43, endColumn: 57, line: 1, messageId }],
+    },
+    {
+      code: test(
+        'let button = page.locator(); page.locator(button)',
+      ),
+      errors: [{ column: 41, endColumn: 55, line: 1, messageId }],
+    },
     // Allowed
     {
       code: test('await page.locator("[aria-busy=false]")'),
@@ -79,6 +98,14 @@ runRuleTester('no-raw-locators', rule, {
 
     test(
       'const section = page.getByRole("section"); section.getByRole("button")',
+    ),
+
+    // Variable references with proper locators
+    test(
+      'const button = page.getByRole("button", { name: "common button" }); page.locator(button)',
+    ),
+    test(
+      'const firstButton = page.getByRole("region", { name: "first" }).locator(button); const secondButton = page.getByRole("region", { name: "second" }).locator(button)',
     ),
 
     // bare calls
