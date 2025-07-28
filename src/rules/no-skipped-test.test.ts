@@ -316,6 +316,24 @@ runRuleTester('no-skipped-test', rule, {
       ],
       options: [{ allowConditional: true }],
     },
+    {
+      code: 'test.skip("foo", ({}) => { expect(1).toBe(1) })',
+      errors: [
+        {
+          column: 6,
+          endColumn: 10,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test("foo", ({}) => {  })',
+            },
+          ],
+        },
+      ],
+      options: [{ allowConditional: true }],
+    },
   ],
   valid: [
     'test("a test", () => {});',

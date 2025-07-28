@@ -133,6 +133,23 @@ runRuleTester('no-slowed-test', rule, {
         },
       ],
     },
+    {
+      code: 'test.slow("foo", ({}) => { expect(1).toBe(1) })',
+      errors: [
+        {
+          column: 6,
+          endColumn: 10,
+          line: 1,
+          messageId: 'noSlowedTest',
+          suggestions: [
+            {
+              messageId,
+              output: 'test("foo", ({}) => { expect(1).toBe(1) })',
+            },
+          ],
+        },
+      ],
+    },
     // Global aliases
     {
       code: 'it.slow("slow this test", async ({ page }) => {});',
