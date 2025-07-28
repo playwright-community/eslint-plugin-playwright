@@ -25,8 +25,8 @@ import noStandaloneExpect from './rules/no-standalone-expect.js'
 import noUnsafeReferences from './rules/no-unsafe-references.js'
 import noUselessAwait from './rules/no-useless-await.js'
 import noUselessNot from './rules/no-useless-not.js'
-import noWaitForSelector from './rules/no-wait-for-selector.js'
 import noWaitForNavigation from './rules/no-wait-for-navigation.js'
+import noWaitForSelector from './rules/no-wait-for-selector.js'
 import noWaitForTimeout from './rules/no-wait-for-timeout.js'
 import preferComparisonMatcher from './rules/prefer-comparison-matcher.js'
 import preferEqualityMatcher from './rules/prefer-equality-matcher.js'
@@ -79,8 +79,8 @@ const index = {
     'no-unsafe-references': noUnsafeReferences,
     'no-useless-await': noUselessAwait,
     'no-useless-not': noUselessNot,
-    'no-wait-for-selector': noWaitForSelector,
     'no-wait-for-navigation': noWaitForNavigation,
+    'no-wait-for-selector': noWaitForSelector,
     'no-wait-for-timeout': noWaitForTimeout,
     'prefer-comparison-matcher': preferComparisonMatcher,
     'prefer-equality-matcher': preferEqualityMatcher,
@@ -126,8 +126,8 @@ const sharedConfig = {
     'playwright/no-unsafe-references': 'error',
     'playwright/no-useless-await': 'warn',
     'playwright/no-useless-not': 'warn',
-    'playwright/no-wait-for-selector': 'warn',
     'playwright/no-wait-for-navigation': 'error',
+    'playwright/no-wait-for-selector': 'warn',
     'playwright/no-wait-for-timeout': 'warn',
     'playwright/prefer-web-first-assertions': 'error',
     'playwright/valid-describe-callback': 'error',
