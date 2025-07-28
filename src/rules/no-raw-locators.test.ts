@@ -46,15 +46,11 @@ runRuleTester('no-raw-locators', rule, {
       errors: [{ column: 77, endColumn: 100, line: 1, messageId }],
     },
     {
-      code: test(
-        'const button = page.locator(); page.locator(button)',
-      ),
+      code: test('const button = page.locator(); page.locator(button)'),
       errors: [{ column: 43, endColumn: 57, line: 1, messageId }],
     },
     {
-      code: test(
-        'let button = page.locator(); page.locator(button)',
-      ),
+      code: test('let button = page.locator(); page.locator(button)'),
       errors: [{ column: 41, endColumn: 55, line: 1, messageId }],
     },
     // Allowed
