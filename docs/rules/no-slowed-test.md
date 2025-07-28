@@ -47,10 +47,24 @@ mark a test as slow. This can be helpful if you want to prevent usage of
 `test.slow` being added by mistake but still allow slow tests based on
 browser/environment setup.
 
+Examples of **incorrect** code for the `{ "allowConditional": true }` option:
+
+```javascript
+test.slow('foo', ({}) => {
+  expect(1).toBe(1)
+})
+
+test('foo', ({}) => {
+  test.slow()
+  expect(1).toBe(1)
+})
+```
+
 Example of **correct** code for the `{ "allowConditional": true }` option:
 
 ```javascript
 test('foo', ({ browserName }) => {
   test.slow(browserName === 'firefox', 'Still working on it')
+  expect(1).toBe(1)
 })
 ```

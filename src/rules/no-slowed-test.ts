@@ -1,4 +1,4 @@
-import { getStringValue } from '../utils/ast.js'
+import { findParent, getStringValue } from '../utils/ast.js'
 import { createRule } from '../utils/createRule.js'
 import { parseFnCall } from '../utils/parseFnCall.js'
 
@@ -23,7 +23,12 @@ export default createRule({
 
         // If allowConditional is enabled and it's not a test function,
         // we ignore any `test.slow` calls that have no arguments.
-        if (isStandalone && allowConditional) {
+        if (
+          isStandalone &&
+          allowConditional &&
+          (node.arguments.length !== 0 ||
+            findParent(node, 'BlockStatement')?.parent?.type === 'IfStatement')
+        ) {
           return
         }
 

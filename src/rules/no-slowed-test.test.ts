@@ -156,6 +156,19 @@ runRuleTester('no-slowed-test', rule, {
         },
       },
     },
+    {
+      code: 'test("foo", ({}) => { test.slow(); })',
+      errors: [
+        {
+          column: 23,
+          endColumn: 34,
+          line: 1,
+          messageId: 'noSlowedTest',
+          suggestions: [{ messageId, output: 'test("foo", ({}) => {  })' }],
+        },
+      ],
+      options: [{ allowConditional: true }],
+    },
   ],
   valid: [
     'test("a test", () => {});',
@@ -172,7 +185,15 @@ runRuleTester('no-slowed-test', rule, {
     'this["slow"]();',
     'this[`slow`]();',
     {
-      code: 'test.slow(browserName === "firefox", "Still working on it");',
+      code: 'test("foo", ({ browserName }) => { test.slow(browserName === "firefox", "Still working on it") })',
+      options: [{ allowConditional: true }],
+    },
+    {
+      code: 'test("foo", ({ browserName }) => { if (browserName === "firefox") { test.slow("Still working on it") } })',
+      options: [{ allowConditional: true }],
+    },
+    {
+      code: 'test("foo", ({ browserName }) => { if (browserName === "firefox") { test.slow() } })',
       options: [{ allowConditional: true }],
     },
     // Global aliases

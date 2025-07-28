@@ -303,6 +303,19 @@ runRuleTester('no-skipped-test', rule, {
         },
       },
     },
+    {
+      code: 'test("foo", ({}) => { test.skip(); })',
+      errors: [
+        {
+          column: 23,
+          endColumn: 34,
+          line: 1,
+          messageId: 'noSkippedTest',
+          suggestions: [{ messageId, output: 'test("foo", ({}) => {  })' }],
+        },
+      ],
+      options: [{ allowConditional: true }],
+    },
   ],
   valid: [
     'test("a test", () => {});',
@@ -323,7 +336,15 @@ runRuleTester('no-skipped-test', rule, {
     'this["skip"]();',
     'this[`skip`]();',
     {
-      code: 'test.skip(browserName === "firefox", "Still working on it");',
+      code: 'test("foo", ({ browserName }) => { test.skip(browserName === "firefox", "Still working on it") })',
+      options: [{ allowConditional: true }],
+    },
+    {
+      code: 'test("foo", ({ browserName }) => { if (browserName === "firefox") { test.skip("Still working on it") } })',
+      options: [{ allowConditional: true }],
+    },
+    {
+      code: 'test("foo", ({ browserName }) => { if (browserName === "firefox") { test.skip() } })',
       options: [{ allowConditional: true }],
     },
     // Global aliases
