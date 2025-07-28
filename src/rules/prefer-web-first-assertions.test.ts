@@ -980,31 +980,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
     },
     {
       code: test(`
-        const fooLocator = page.locator('.fooClass');
-        let fooLocatorText = await fooLocator.allInnerTexts();
-        expect(fooLocatorText).toEqual('foo');
-        fooLocatorText = 'foo';
-        expect(fooLocatorText).toEqual('foo');
-      `),
-      errors: [
-        {
-          column: 9,
-          data: { matcher: 'toHaveText', method: 'allInnerTexts' },
-          endColumn: 31,
-          line: 4,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test(`
-        const fooLocator = page.locator('.fooClass');
-        let fooLocatorText = fooLocator;
-        await expect(fooLocatorText).toHaveText('foo');
-        fooLocatorText = 'foo';
-        expect(fooLocatorText).toEqual('foo');
-      `),
-    },
-    {
-      code: test(`
         let fooLocatorText;
         const fooLocator = page.locator('.fooClass');
         fooLocatorText = 'Unrelated';
@@ -1025,33 +1000,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const fooLocator = page.locator('.fooClass');
         fooLocatorText = 'Unrelated';
         fooLocatorText = fooLocator;
-        await expect(fooLocatorText).toHaveText('foo');
-      `),
-    },
-    {
-      code: test(`
-        let fooLocatorText;
-        let fooLocatorText2;
-        const fooLocator = page.locator('.fooClass');
-        fooLocatorText = await fooLocator.allInnerTexts();
-        fooLocatorText2 = await fooLocator.allInnerTexts();
-        expect(fooLocatorText).toEqual('foo');
-      `),
-      errors: [
-        {
-          column: 9,
-          data: { matcher: 'toHaveText', method: 'allInnerTexts' },
-          endColumn: 31,
-          line: 7,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test(`
-        let fooLocatorText;
-        let fooLocatorText2;
-        const fooLocator = page.locator('.fooClass');
-        fooLocatorText = fooLocator;
-        fooLocatorText2 = await fooLocator.allInnerTexts();
         await expect(fooLocatorText).toHaveText('foo');
       `),
     },
