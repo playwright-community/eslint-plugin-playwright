@@ -327,7 +327,7 @@ runRuleTester('no-skipped-test', rule, {
           suggestions: [
             {
               messageId,
-              output: 'test("foo", ({}) => {  })',
+              output: 'test("foo", ({}) => { expect(1).toBe(1) })',
             },
           ],
         },

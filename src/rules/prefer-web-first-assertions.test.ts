@@ -195,7 +195,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toBeHidden', method: 'isVisible' },
-          endColumn: 72,
+          endColumn: 71,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
@@ -262,7 +262,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toBeHidden', method: 'isHidden' },
-          endColumn: 69,
+          endColumn: 68,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
@@ -347,7 +347,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toHaveAttribute', method: 'getAttribute' },
-          endColumn: 85,
+          endColumn: 88,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
@@ -392,7 +392,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toHaveText', method: 'innerText' },
-          endColumn: 71,
+          endColumn: 69,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
@@ -626,7 +626,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toHaveText', method: 'textContent' },
-          endColumn: 75,
+          endColumn: 74,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
@@ -759,7 +759,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toBeChecked', method: 'isChecked' },
-          endColumn: 72,
+          endColumn: 73,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
@@ -826,7 +826,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toBeDisabled', method: 'isDisabled' },
-          endColumn: 70,
+          endColumn: 71,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
@@ -893,7 +893,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toBeEnabled', method: 'isEnabled' },
-          endColumn: 69,
+          endColumn: 70,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
@@ -1020,7 +1020,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
         {
           column: 28,
           data: { matcher: 'toBeEditable', method: 'isEditable' },
-          endColumn: 73,
+          endColumn: 74,
           line: 1,
           messageId: 'useWebFirstAssertion',
         },
