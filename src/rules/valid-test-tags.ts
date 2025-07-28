@@ -10,19 +10,23 @@ interface RuleOptions {
 
 export default createRule({
   create(context) {
-    const options = context.options[0] as RuleOptions || {}
+    const options = (context.options[0] as RuleOptions) || {}
     const allowedTags = options.allowedTags || []
     const disallowedTags = options.disallowedTags || []
 
     // Validate that the options are not used together
     if (allowedTags.length > 0 && disallowedTags.length > 0) {
-      throw new Error('The allowedTags and disallowedTags options cannot be used together')
+      throw new Error(
+        'The allowedTags and disallowedTags options cannot be used together',
+      )
     }
 
     // Validate that all configured tags start with @
     for (const tag of [...allowedTags, ...disallowedTags]) {
       if (typeof tag === 'string' && !tag.startsWith('@')) {
-        throw new Error(`Invalid tag "${tag}" in configuration: tags must start with @`)
+        throw new Error(
+          `Invalid tag "${tag}" in configuration: tags must start with @`,
+        )
       }
     }
 
@@ -36,8 +40,8 @@ export default createRule({
       }
 
       if (allowedTags.length > 0) {
-        const isAllowed = allowedTags.some(pattern => 
-          pattern instanceof RegExp ? pattern.test(tag) : pattern === tag
+        const isAllowed = allowedTags.some((pattern) =>
+          pattern instanceof RegExp ? pattern.test(tag) : pattern === tag,
         )
         if (!isAllowed) {
           context.report({
@@ -50,8 +54,8 @@ export default createRule({
       }
 
       if (disallowedTags.length > 0) {
-        const isDisallowed = disallowedTags.some(pattern =>
-          pattern instanceof RegExp ? pattern.test(tag) : pattern === tag
+        const isDisallowed = disallowedTags.some((pattern) =>
+          pattern instanceof RegExp ? pattern.test(tag) : pattern === tag,
         )
         if (isDisallowed) {
           context.report({
@@ -82,7 +86,7 @@ export default createRule({
             prop.type === 'Property' &&
             !('argument' in prop) && // Ensure it's not a spread element
             prop.key.type === 'Identifier' &&
-            prop.key.name === 'tag'
+            prop.key.name === 'tag',
         ) as TSESTree.Property | undefined
 
         if (!tagProperty) return
@@ -101,7 +105,11 @@ export default createRule({
         } else if (tagValue.type === 'ArrayExpression') {
           // Handle array of strings
           for (const element of tagValue.elements) {
-            if (!element || element.type !== 'Literal' || typeof element.value !== 'string') {
+            if (
+              !element ||
+              element.type !== 'Literal' ||
+              typeof element.value !== 'string'
+            ) {
               return // Skip invalid elements, TypeScript will handle this
             }
             validateTag(element.value, node)
@@ -134,8 +142,8 @@ export default createRule({
             items: {
               oneOf: [
                 { type: 'string' },
-                { properties: { source: { type: 'string' } }, type: 'object' }
-              ]
+                { properties: { source: { type: 'string' } }, type: 'object' },
+              ],
             },
             type: 'array',
           },
@@ -143,8 +151,8 @@ export default createRule({
             items: {
               oneOf: [
                 { type: 'string' },
-                { properties: { source: { type: 'string' } }, type: 'object' }
-              ]
+                { properties: { source: { type: 'string' } }, type: 'object' },
+              ],
             },
             type: 'array',
           },
@@ -154,4 +162,4 @@ export default createRule({
     ],
     type: 'problem',
   },
-}) 
+})

@@ -1,14 +1,17 @@
 # Valid Test Tags
 
-This rule ensures that test tags in Playwright test files follow the correct format and meet any configured requirements.
+This rule ensures that test tags in Playwright test files follow the correct
+format and meet any configured requirements.
 
 ## Rule Details
 
 This rule enforces the following:
 
 1. Tags must start with `@` (e.g., `@e2e`, `@regression`)
-2. (Optional, exclusive of 3) Tags must match one of the values in the `allowedTags` property
-3. (Optional, exclusive of 2) Tags must not match one of the values in the `disallowedTags` property
+2. (Optional, exclusive of 3) Tags must match one of the values in the
+   `allowedTags` property
+3. (Optional, exclusive of 2) Tags must not match one of the values in the
+   `disallowedTags` property
 
 ### Examples
 
@@ -25,19 +28,24 @@ test.fixme('my test', { tag: '@e2e' }, async ({ page }) => {})
 test.only('my test', { tag: '@e2e' }, async ({ page }) => {})
 
 // Valid with annotation
-test('my test', { 
-  tag: '@e2e',
-  annotation: { type: 'issue', description: 'BUG-123' }
-}, async ({ page }) => {})
+test(
+  'my test',
+  {
+    tag: '@e2e',
+    annotation: { type: 'issue', description: 'BUG-123' },
+  },
+  async ({ page }) => {},
+)
 
 // Valid with array of annotations
-test('my test', { 
-  tag: '@e2e',
-  annotation: [
-    { type: 'issue', description: 'BUG-123' },
-    { type: 'flaky' }
-  ]
-}, async ({ page }) => {})
+test(
+  'my test',
+  {
+    tag: '@e2e',
+    annotation: [{ type: 'issue', description: 'BUG-123' }, { type: 'flaky' }],
+  },
+  async ({ page }) => {},
+)
 
 // Invalid
 test('my test', { tag: 'e2e' }, async ({ page }) => {}) // Missing @ prefix
@@ -50,14 +58,15 @@ This rule accepts an options object with the following properties:
 
 ```ts
 type RuleOptions = {
-  allowedTags?: (string | RegExp)[]; // List of allowed tags or patterns
-  disallowedTags?: (string | RegExp)[]; // List of disallowed tags or patterns
+  allowedTags?: (string | RegExp)[] // List of allowed tags or patterns
+  disallowedTags?: (string | RegExp)[] // List of disallowed tags or patterns
 }
 ```
 
 ### `allowedTags`
 
-When specified, only the listed tags are allowed. You can use either exact strings or regular expressions to match patterns.
+When specified, only the listed tags are allowed. You can use either exact
+strings or regular expressions to match patterns.
 
 ```ts
 // Only allow specific tags
@@ -77,7 +86,8 @@ When specified, only the listed tags are allowed. You can use either exact strin
 
 ### `disallowedTags`
 
-When specified, the listed tags are not allowed. You can use either exact strings or regular expressions to match patterns.
+When specified, the listed tags are not allowed. You can use either exact
+strings or regular expressions to match patterns.
 
 ```ts
 // Disallow specific tags
@@ -95,9 +105,10 @@ When specified, the listed tags are not allowed. You can use either exact string
 }
 ```
 
-Note: You cannot use both `allowedTags` and `disallowedTags` together. Choose one approach based on your needs.
+Note: You cannot use both `allowedTags` and `disallowedTags` together. Choose
+one approach based on your needs.
 
 ## Further Reading
 
 - [Playwright Test Tags Documentation](https://playwright.dev/docs/test-annotations#tag-tests)
-- [Playwright Test Annotations Documentation](https://playwright.dev/docs/test-annotations) 
+- [Playwright Test Annotations Documentation](https://playwright.dev/docs/test-annotations)

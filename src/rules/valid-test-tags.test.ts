@@ -18,7 +18,7 @@ runTSRuleTester('valid-test-tags', validTestTags, {
       code: "test('my test', { tag: ['e2e', 'login'] }, async ({ page }) => {})",
       errors: [
         { messageId: 'invalidTagFormat' },
-        { messageId: 'invalidTagFormat' }
+        { messageId: 'invalidTagFormat' },
       ],
     },
     // Tag not in allowedTags list
@@ -138,4 +138,4 @@ runTSRuleTester('valid-test-tags', validTestTags, {
       code: "test.only('my test', { tag: '@e2e', annotation: { type: 'issue', description: 'BUG-123' } }, async ({ page }) => {})",
     },
   ],
-}) 
+})
