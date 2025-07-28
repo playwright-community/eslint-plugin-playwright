@@ -189,6 +189,19 @@ runRuleTester('prefer-web-first-assertions', rule, {
       ],
       output: test('await expect(page.locator(".tweet")).toBeVisible()'),
     },
+    {
+      code: test('expect(page.locator(".button").isVisible()).toBe(false)'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeHidden', method: 'isVisible' },
+          endColumn: 72,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(page.locator(".button")).toBeHidden()'),
+    },
 
     // isHidden
     {
@@ -242,6 +255,19 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test('await expect(foo).toBeHidden()'),
+    },
+    {
+      code: test('expect(page.locator(".link").isHidden()).toBe(true)'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeHidden', method: 'isHidden' },
+          endColumn: 69,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(page.locator(".link")).toBeHidden()'),
     },
 
     // getAttribute
@@ -313,6 +339,23 @@ runRuleTester('prefer-web-first-assertions', rule, {
         'await expect.soft(page.locator("foo")).not.toHaveAttribute("aria-label", "bar")',
       ),
     },
+    {
+      code: test(
+        'expect(page.locator(".element").getAttribute("data-testid")).toBe("submit")',
+      ),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveAttribute', method: 'getAttribute' },
+          endColumn: 85,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(page.locator(".element")).toHaveAttribute("data-testid", "submit")',
+      ),
+    },
 
     // innerText
     {
@@ -341,6 +384,23 @@ runRuleTester('prefer-web-first-assertions', rule, {
       ],
       output: test('await expect.soft(foo).not.toHaveText("bar")'),
     },
+    {
+      code: test(
+        'expect(page.locator(".text").innerText()).toBe("Hello World")',
+      ),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'innerText' },
+          endColumn: 71,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(page.locator(".text")).toHaveText("Hello World")',
+      ),
+    },
 
     // inputValue
     {
@@ -368,6 +428,23 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test('await expect[`soft`](foo).not.toHaveValue("bar")'),
+    },
+    {
+      code: test(
+        'expect(page.locator(".input").inputValue()).toBe("user input")',
+      ),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveValue', method: 'inputValue' },
+          endColumn: 71,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(page.locator(".input")).toHaveValue("user input")',
+      ),
     },
 
     // textContent
@@ -541,6 +618,23 @@ runRuleTester('prefer-web-first-assertions', rule, {
         await expect(fooLocatorText).toHaveText('foo');
       `),
     },
+    {
+      code: test(
+        'expect(page.locator(".content").textContent()).toBe("Some content")',
+      ),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'textContent' },
+          endColumn: 75,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(page.locator(".content")).toHaveText("Some content")',
+      ),
+    },
 
     // isChecked
     {
@@ -659,6 +753,19 @@ runRuleTester('prefer-web-first-assertions', rule, {
       ],
       output: test('await expect(page.locator("howdy")).toBeChecked()'),
     },
+    {
+      code: test('expect(page.locator(".checkbox").isChecked()).toBe(true)'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeChecked', method: 'isChecked' },
+          endColumn: 72,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(page.locator(".checkbox")).toBeChecked()'),
+    },
 
     // isDisabled
     {
@@ -713,6 +820,19 @@ runRuleTester('prefer-web-first-assertions', rule, {
       ],
       output: test('await expect(foo).toBeDisabled()'),
     },
+    {
+      code: test('expect(page.locator(".input").isDisabled()).toBe(true)'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeDisabled', method: 'isDisabled' },
+          endColumn: 70,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(page.locator(".input")).toBeDisabled()'),
+    },
 
     // isEnabled
     {
@@ -766,6 +886,19 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test('await expect(foo).toBeEnabled()'),
+    },
+    {
+      code: test('expect(page.locator(".field").isEnabled()).toBe(true)'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeEnabled', method: 'isEnabled' },
+          endColumn: 69,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(page.locator(".field")).toBeEnabled()'),
     },
 
     // isEditable
@@ -881,6 +1014,19 @@ runRuleTester('prefer-web-first-assertions', rule, {
       ],
       output: test('await expect(page.locator("howdy")).toBeEditable()'),
     },
+    {
+      code: test('expect(page.locator(".textarea").isEditable()).toBe(true)'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toBeEditable', method: 'isEditable' },
+          endColumn: 73,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test('await expect(page.locator(".textarea")).toBeEditable()'),
+    },
     // Global aliases
     {
       code: test('assert(await page.locator(".tweet").isVisible()).toBe(true)'),
@@ -938,165 +1084,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         const content = foo;
         await expect(content).toHaveText("bar")
       `),
-    },
-    {
-      code: test('expect(page.locator(".tweet").isVisible()).toBe(true)'),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toBeVisible', method: 'isVisible' },
-          endColumn: 70,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test('await expect(page.locator(".tweet")).toBeVisible()'),
-    },
-    {
-      code: test('expect(page.locator(".button").isVisible()).toBe(false)'),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toBeHidden', method: 'isVisible' },
-          endColumn: 72,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test('await expect(page.locator(".button")).toBeHidden()'),
-    },
-    {
-      code: test('expect(page.locator(".checkbox").isChecked()).toBe(true)'),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toBeChecked', method: 'isChecked' },
-          endColumn: 72,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test('await expect(page.locator(".checkbox")).toBeChecked()'),
-    },
-    {
-      code: test('expect(page.locator(".input").isDisabled()).toBe(true)'),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toBeDisabled', method: 'isDisabled' },
-          endColumn: 70,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test('await expect(page.locator(".input")).toBeDisabled()'),
-    },
-    {
-      code: test('expect(page.locator(".field").isEnabled()).toBe(true)'),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toBeEnabled', method: 'isEnabled' },
-          endColumn: 69,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test('await expect(page.locator(".field")).toBeEnabled()'),
-    },
-    {
-      code: test('expect(page.locator(".textarea").isEditable()).toBe(true)'),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toBeEditable', method: 'isEditable' },
-          endColumn: 73,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test('await expect(page.locator(".textarea")).toBeEditable()'),
-    },
-    {
-      code: test('expect(page.locator(".link").isHidden()).toBe(true)'),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toBeHidden', method: 'isHidden' },
-          endColumn: 69,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test('await expect(page.locator(".link")).toBeHidden()'),
-    },
-    {
-      code: test(
-        'expect(page.locator(".element").getAttribute("data-testid")).toBe("submit")',
-      ),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toHaveAttribute', method: 'getAttribute' },
-          endColumn: 85,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test(
-        'await expect(page.locator(".element")).toHaveAttribute("data-testid", "submit")',
-      ),
-    },
-    {
-      code: test(
-        'expect(page.locator(".text").innerText()).toBe("Hello World")',
-      ),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toHaveText', method: 'innerText' },
-          endColumn: 71,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test(
-        'await expect(page.locator(".text")).toHaveText("Hello World")',
-      ),
-    },
-    {
-      code: test(
-        'expect(page.locator(".input").inputValue()).toBe("user input")',
-      ),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toHaveValue', method: 'inputValue' },
-          endColumn: 71,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test(
-        'await expect(page.locator(".input")).toHaveValue("user input")',
-      ),
-    },
-    {
-      code: test(
-        'expect(page.locator(".content").textContent()).toBe("Some content")',
-      ),
-      errors: [
-        {
-          column: 28,
-          data: { matcher: 'toHaveText', method: 'textContent' },
-          endColumn: 75,
-          line: 1,
-          messageId: 'useWebFirstAssertion',
-        },
-      ],
-      output: test(
-        'await expect(page.locator(".content")).toHaveText("Some content")',
-      ),
     },
   ],
   valid: [
