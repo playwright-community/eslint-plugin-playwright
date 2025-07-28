@@ -62,40 +62,41 @@ export default createRule({
   create(context) {
     return {
       CallExpression(node) {
-        const call = parseFnCall(context, node)
-        if (call?.type !== 'expect') return
+        const fnCall = parseFnCall(context, node)
+        if (fnCall?.type !== 'expect') return
 
-        const expect = findParent(call.head.node, 'CallExpression')
+        const expect = findParent(fnCall.head.node, 'CallExpression')
         if (!expect) return
 
-        const arg = dereference(context, call.args[0])
+        const arg = dereference(context, fnCall.args[0])
+        if (!arg) return
+
+        const call = arg.type === 'AwaitExpression' ? arg.argument : arg
         if (
-          !arg ||
-          arg.type !== 'AwaitExpression' ||
-          arg.argument.type !== 'CallExpression' ||
-          arg.argument.callee.type !== 'MemberExpression'
+          call.type !== 'CallExpression' ||
+          call.callee.type !== 'MemberExpression'
         ) {
           return
         }
 
         // Matcher must be supported
-        if (!supportedMatchers.has(call.matcherName)) return
+        if (!supportedMatchers.has(fnCall.matcherName)) return
 
         // Playwright method must be supported
-        const method = getStringValue(arg.argument.callee.property)
+        const method = getStringValue(call.callee.property)
         const methodConfig = methods[method]
         if (!methodConfig) return
 
         // Change the matcher
-        const notModifier = call.modifiers.find(
+        const notModifier = fnCall.modifiers.find(
           (mod) => getStringValue(mod) === 'not',
         )
 
         const isFalsy =
           methodConfig.type === 'boolean' &&
-          ((!!call.matcherArgs.length &&
-            isBooleanLiteral(call.matcherArgs[0], false)) ||
-            call.matcherName === 'toBeFalsy')
+          ((!!fnCall.matcherArgs.length &&
+            isBooleanLiteral(fnCall.matcherArgs[0], false)) ||
+            fnCall.matcherName === 'toBeFalsy')
 
         const isInverse = methodConfig.inverse
           ? notModifier || isFalsy
@@ -108,7 +109,7 @@ export default createRule({
           (+!!notModifier ^ +isFalsy && methodConfig.inverse) ||
           methodConfig.matcher
 
-        const { callee } = arg.argument
+        const { callee } = call
         context.report({
           data: {
             matcher: newMatcher,
@@ -116,9 +117,7 @@ export default createRule({
           },
           fix: (fixer) => {
             const methodArgs =
-              arg.argument.type === 'CallExpression'
-                ? arg.argument.arguments
-                : []
+              call.type === 'CallExpression' ? call.arguments : []
 
             const methodEnd = methodArgs.length
               ? methodArgs.at(-1)!.range![1] + 1
@@ -128,10 +127,7 @@ export default createRule({
               // Add await to the expect call
               fixer.insertTextBefore(expect, 'await '),
               // Remove the await keyword
-              fixer.replaceTextRange(
-                [arg.range![0], arg.argument.range![0]],
-                '',
-              ),
+              fixer.replaceTextRange([arg.range![0], call.range![0]], ''),
               // Remove the old Playwright method and any arguments
               fixer.replaceTextRange(
                 [callee.property.range![0] - 1, methodEnd],
@@ -147,13 +143,13 @@ export default createRule({
 
             // Add not to the matcher chain if no inverse matcher exists
             if (!methodConfig.inverse && !notModifier && isFalsy) {
-              fixes.push(fixer.insertTextBefore(call.matcher, 'not.'))
+              fixes.push(fixer.insertTextBefore(fnCall.matcher, 'not.'))
             }
 
-            fixes.push(fixer.replaceText(call.matcher, newMatcher))
+            fixes.push(fixer.replaceText(fnCall.matcher, newMatcher))
 
             // Remove boolean argument if it exists
-            const [matcherArg] = call.matcherArgs ?? []
+            const [matcherArg] = fnCall.matcherArgs ?? []
             if (matcherArg && isBooleanLiteral(matcherArg)) {
               fixes.push(fixer.remove(matcherArg))
             }
@@ -173,7 +169,7 @@ export default createRule({
             ).length
 
             if (methodArgs) {
-              const range = call.matcher.range!
+              const range = fnCall.matcher.range!
               const stringArgs = methodArgs
                 .map((arg) => getRawValue(arg))
                 .concat(hasOtherArgs ? '' : [])
