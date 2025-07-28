@@ -690,7 +690,9 @@ runRuleTester('prefer-web-first-assertions', rule, {
       output: test('await expect.soft(foo).toHaveText("bar")'),
     },
     {
-      code: test('expect["soft"](await foo.allTextContents()).not.toEqual("bar")'),
+      code: test(
+        'expect["soft"](await foo.allTextContents()).not.toEqual("bar")',
+      ),
       errors: [
         {
           column: 28,
@@ -941,7 +943,9 @@ runRuleTester('prefer-web-first-assertions', rule, {
       output: test('await expect.soft(foo).toHaveText("bar")'),
     },
     {
-      code: test('expect["soft"](await foo.allInnerTexts()).not.toEqual("bar")'),
+      code: test(
+        'expect["soft"](await foo.allInnerTexts()).not.toEqual("bar")',
+      ),
       errors: [
         {
           column: 28,
