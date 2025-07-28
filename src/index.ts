@@ -135,6 +135,7 @@ const sharedConfig = {
     'playwright/valid-describe-callback': 'error',
     'playwright/valid-expect': 'error',
     'playwright/valid-expect-in-promise': 'error',
+    'playwright/valid-test-tags': 'error',
     'playwright/valid-title': 'error',
   },
 } as const

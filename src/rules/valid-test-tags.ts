@@ -142,7 +142,11 @@ export default createRule({
             items: {
               oneOf: [
                 { type: 'string' },
-                { properties: { source: { type: 'string' } }, type: 'object' },
+                {
+                  additionalProperties: false,
+                  properties: { source: { type: 'string' } },
+                  type: 'object',
+                },
               ],
             },
             type: 'array',
@@ -151,7 +155,11 @@ export default createRule({
             items: {
               oneOf: [
                 { type: 'string' },
-                { properties: { source: { type: 'string' } }, type: 'object' },
+                {
+                  additionalProperties: false,
+                  properties: { source: { type: 'string' } },
+                  type: 'object',
+                },
               ],
             },
             type: 'array',
