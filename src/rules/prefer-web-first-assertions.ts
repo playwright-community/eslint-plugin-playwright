@@ -12,12 +12,13 @@ type MethodConfig = {
   inverse?: string
   matcher: string
   prop?: string
+  noFix?: boolean
   type: 'boolean' | 'string'
 }
 
 const methods: Record<string, MethodConfig> = {
-  allInnerTexts: { matcher: 'toHaveText', type: 'string' },
-  allTextContents: { matcher: 'toHaveText', type: 'string' },
+  allInnerTexts: { matcher: 'toHaveText', noFix: true, type: 'string' },
+  allTextContents: { matcher: 'toHaveText', noFix: true, type: 'string' },
   getAttribute: {
     matcher: 'toHaveAttribute',
     type: 'string',
@@ -111,6 +112,17 @@ export default createRule({
           (+!!notModifier ^ +isFalsy && methodConfig.inverse) ||
           methodConfig.matcher
 
+          // We don't want to provide fix suggestion for some methods.
+          // In this case, we just report the error and let the user handle it.
+          if (methodConfig.noFix) {
+            context.report({
+              data: { matcher: methodConfig.matcher, method },
+              messageId: 'useWebFirstAssertion',
+              node: call.callee.property,
+            })
+            return
+          }
+          
         const { callee } = call
         context.report({
           data: {
