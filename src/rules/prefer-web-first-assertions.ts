@@ -11,8 +11,8 @@ import { parseFnCall } from '../utils/parseFnCall.js'
 type MethodConfig = {
   inverse?: string
   matcher: string
-  prop?: string
   noFix?: boolean
+  prop?: string
   type: 'boolean' | 'string'
 }
 
