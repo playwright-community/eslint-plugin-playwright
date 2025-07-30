@@ -85,7 +85,7 @@ export default createRule({
         // Playwright method must be supported
         const method = getStringValue(call.callee.property)
         const methodConfig = methods[method]
-        if (!methodConfig) return
+        if (!methods.hasOwnProperty(method)) return
 
         // Change the matcher
         const notModifier = fnCall.modifiers.find(
