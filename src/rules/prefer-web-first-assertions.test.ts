@@ -642,6 +642,12 @@ runRuleTester('prefer-web-first-assertions', rule, {
       errors: [{ messageId: 'useWebFirstAssertion' }],
     },
     {
+      code: javascript(`
+          const myText = page.locator('foo li').allTextContents();
+          expect(myText).toEqual(['Alpha', 'Beta', 'Gamma'])`),
+      errors: [{ messageId: 'useWebFirstAssertion' }],
+    },
+    {
       code: javascript('expect(await foo.allTextContents()).not.toBe("bar")'),
       errors: [{ messageId: 'useWebFirstAssertion' }],
     },
@@ -1266,6 +1272,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     { code: test('let visible = await foo.isVisible()') },
     { code: test('const value = await bar["inputValue"]()') },
     { code: test('const isEditable = await baz[`isEditable`]()') },
+    { code: test('const myText = page.locator("foo li").allTextContents()') },
     {
       code: javascript`
         import { expect } from '@playwright/test';
@@ -1331,11 +1338,6 @@ runRuleTester('prefer-web-first-assertions', rule, {
         fooLocatorText = 'foo';
         expect(fooLocatorText).toEqual('foo')
       `),
-    },
-    {
-      code: test(`
-        const myText = page.locator('foo li').allTextContents();
-        expect(myText).toEqual(['Alpha', 'Beta', 'Gamma'])`),
     },
   ],
 })
