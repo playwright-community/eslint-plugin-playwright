@@ -1272,6 +1272,7 @@ runRuleTester('prefer-web-first-assertions', rule, {
     { code: test('let visible = await foo.isVisible()') },
     { code: test('const value = await bar["inputValue"]()') },
     { code: test('const isEditable = await baz[`isEditable`]()') },
+    { code: test('await expect(await locator.toString()).toBe("something")') },
     { code: test('const myText = page.locator("foo li").allTextContents()') },
     {
       code: javascript`
