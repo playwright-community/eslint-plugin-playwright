@@ -369,7 +369,9 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
-      output: test('await expect.soft(foo).toHaveText("bar")'),
+      output: test(
+        'await expect.soft(foo).toHaveText("bar", { useInnerText: true })',
+      ),
     },
     {
       code: test('expect.soft(await foo.innerText()).not.toBe("bar")'),
@@ -382,7 +384,9 @@ runRuleTester('prefer-web-first-assertions', rule, {
           messageId: 'useWebFirstAssertion',
         },
       ],
-      output: test('await expect.soft(foo).not.toHaveText("bar")'),
+      output: test(
+        'await expect.soft(foo).not.toHaveText("bar", { useInnerText: true })',
+      ),
     },
     {
       code: test(
@@ -398,8 +402,74 @@ runRuleTester('prefer-web-first-assertions', rule, {
         },
       ],
       output: test(
-        'await expect(page.locator(".text")).toHaveText("Hello World")',
+        'await expect(page.locator(".text")).toHaveText("Hello World", { useInnerText: true })',
       ),
+    },
+    {
+      code: test('expect(await foo.innerText()).toBe("bar")'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'innerText' },
+          endColumn: 57,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(foo).toHaveText("bar", { useInnerText: true })',
+      ),
+    },
+    {
+      code: test('expect(await foo.innerText()).not.toBe("bar")'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'innerText' },
+          endColumn: 57,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(foo).not.toHaveText("bar", { useInnerText: true })',
+      ),
+    },
+    {
+      code: test('expect(await foo.innerText()).toEqual("bar")'),
+      errors: [
+        {
+          column: 28,
+          data: { matcher: 'toHaveText', method: 'innerText' },
+          endColumn: 57,
+          line: 1,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(
+        'await expect(foo).toHaveText("bar", { useInnerText: true })',
+      ),
+    },
+    {
+      code: test(`
+        const fooLocator = page.locator('.fooClass');
+        const fooLocatorText = await fooLocator.innerText();
+        expect(fooLocatorText).toEqual('foo');
+      `),
+      errors: [
+        {
+          column: 9,
+          data: { matcher: 'toHaveText', method: 'innerText' },
+          endColumn: 31,
+          line: 4,
+          messageId: 'useWebFirstAssertion',
+        },
+      ],
+      output: test(`
+        const fooLocator = page.locator('.fooClass');
+        const fooLocatorText = fooLocator;
+        await expect(fooLocatorText).toHaveText('foo', { useInnerText: true });
+      `),
     },
 
     // inputValue

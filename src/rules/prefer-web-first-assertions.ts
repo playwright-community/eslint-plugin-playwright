@@ -12,6 +12,7 @@ type MethodConfig = {
   inverse?: string
   matcher: string
   noFix?: boolean
+  options?: string
   prop?: string
   type: 'boolean' | 'string'
 }
@@ -23,7 +24,11 @@ const methods: Record<string, MethodConfig> = {
     matcher: 'toHaveAttribute',
     type: 'string',
   },
-  innerText: { matcher: 'toHaveText', type: 'string' },
+  innerText: {
+    matcher: 'toHaveText',
+    type: 'string',
+    options: '{ useInnerText: true }',
+  },
   inputValue: { matcher: 'toHaveValue', type: 'string' },
   isChecked: {
     matcher: 'toBeChecked',
@@ -195,6 +200,39 @@ export default createRule({
                   stringArgs,
                 ),
               )
+            }
+
+            // Add options if needed
+            if (methodConfig.options) {
+              const range = fnCall.matcher.range!
+
+              // Get the matcher argument (the text to match)
+              const [matcherArg] = fnCall.matcherArgs ?? []
+
+              if (matcherArg) {
+                // If there's a matcher argument, combine it with the options
+                const textValue = getRawValue(matcherArg)
+                const combinedArgs = `${textValue}, ${methodConfig.options}`
+
+                // Remove the original matcher argument
+                fixes.push(fixer.remove(matcherArg))
+
+                // Add the combined arguments
+                fixes.push(
+                  fixer.insertTextAfterRange(
+                    [range[0], range[1] + 1],
+                    combinedArgs,
+                  ),
+                )
+              } else {
+                // No matcher argument, just add the options
+                fixes.push(
+                  fixer.insertTextAfterRange(
+                    [range[0], range[1] + 1],
+                    methodConfig.options,
+                  ),
+                )
+              }
             }
 
             return fixes
