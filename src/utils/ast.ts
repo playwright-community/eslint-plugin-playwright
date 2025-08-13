@@ -275,8 +275,14 @@ export function getImportedAliases(
 
     for (const spec of stmt.specifiers) {
       if (spec.type !== 'ImportSpecifier') continue
-
-      const imported = (spec.imported as ESTree.Identifier).name
+      if ((spec as any).importKind === 'type') continue
+      const importedNode = spec.imported as ESTree.Identifier | ESTree.Literal
+      const imported =
+        importedNode.type === 'Identifier'
+          ? importedNode.name
+          : typeof importedNode.value === 'string'
+          ? importedNode.value
+          : undefined
       if (imported !== importedName) continue
 
       const localName = spec.local.name
