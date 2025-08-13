@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
 import type { Rule } from 'eslint'
+import { describe, expect, it } from 'vitest'
 import { getImportedAliases } from './ast.js'
 
 describe('getImportedAliases', () => {
@@ -9,25 +9,25 @@ describe('getImportedAliases', () => {
     // Here we use a Literal ('test') to ensure `getImportedAliases` gracefully
     // handles such shapes and still treats `import { test as it }` as aliasing.
     const program: any = {
-      type: 'Program',
-      sourceType: 'module',
       body: [
         {
-          type: 'ImportDeclaration',
-          specifiers: [
-            {
-              type: 'ImportSpecifier',
-              imported: { type: 'Literal', value: 'test', raw: "'test'" },
-              local: { type: 'Identifier', name: 'it' },
-            },
-          ],
           source: {
+            raw: "'@playwright/test'",
             type: 'Literal',
             value: '@playwright/test',
-            raw: "'@playwright/test'",
           },
+          specifiers: [
+            {
+              imported: { raw: "'test'", type: 'Literal', value: 'test' },
+              local: { name: 'it', type: 'Identifier' },
+              type: 'ImportSpecifier',
+            },
+          ],
+          type: 'ImportDeclaration',
         },
       ],
+      sourceType: 'module',
+      type: 'Program',
     }
 
     const context = {
