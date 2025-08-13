@@ -1,10 +1,12 @@
 import { Rule } from 'eslint'
 import * as ESTree from 'estree'
 import { createRule } from '../utils/createRule.js'
+import { getImportedAliases } from '../utils/ast.js'
 
 function getTestNames(context: Rule.RuleContext) {
   const aliases = context.settings.playwright?.globalAliases?.test ?? []
-  return ['test', ...aliases]
+  const importAliases = getImportedAliases(context, 'test')
+  return ['test', ...aliases, ...importAliases]
 }
 
 function hasTests(context: Rule.RuleContext, node: ESTree.Comment) {

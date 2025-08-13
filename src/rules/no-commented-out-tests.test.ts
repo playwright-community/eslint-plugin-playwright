@@ -143,5 +143,10 @@ runRuleTester('no-commented-out-tests', rule, {
         },
       },
     },
+    // Imported alias for test used properly and not commented
+    javascript`
+      import { test as stuff, expect as check } from '@playwright/test';
+      stuff('foo', () => { check(1).toBe(1); });
+    `,
   ],
 })

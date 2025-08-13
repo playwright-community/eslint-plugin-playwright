@@ -8,6 +8,13 @@ runRuleTester('expect-expect', rule, {
       errors: [{ messageId: 'noAssertions', type: 'Identifier' }],
     },
     {
+      code: javascript`
+        import { test as stuff } from '@playwright/test';
+        stuff("should fail", () => {});
+      `,
+      errors: [{ messageId: 'noAssertions', type: 'Identifier' }],
+    },
+    {
       code: 'test.skip("should fail", () => {});',
       errors: [{ messageId: 'noAssertions', type: 'MemberExpression' }],
     },
@@ -109,6 +116,13 @@ runRuleTester('expect-expect', rule, {
       `,
       name: 'Custom assert class method',
       options: [{ assertFunctionNames: ['assertCustomCondition'] }],
+    },
+    {
+      code: javascript`
+        import { test as stuff, expect as check } from '@playwright/test';
+        stuff('works', () => { check(1).toBe(1); });
+      `,
+      name: 'Imported aliases for test and expect',
     },
     {
       code: 'it("should pass", () => expect(true).toBeDefined())',
