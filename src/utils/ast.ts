@@ -266,7 +266,12 @@ export function getImportedAliases(
 
   for (const stmt of program.body) {
     if (stmt.type !== 'ImportDeclaration') continue
-    if (stmt.source.value !== '@playwright/test') continue
+    if (
+      !isStringLiteral(stmt.source) ||
+      stmt.source.value !== '@playwright/test'
+    )
+      continue
+    if ((stmt as any).importKind === 'type') continue
 
     for (const spec of stmt.specifiers) {
       if (spec.type !== 'ImportSpecifier') continue

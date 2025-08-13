@@ -6,7 +6,8 @@ import { getImportedAliases } from '../utils/ast.js'
 function getTestNames(context: Rule.RuleContext) {
   const aliases = context.settings.playwright?.globalAliases?.test ?? []
   const importAliases = getImportedAliases(context, 'test')
-  return ['test', ...aliases, ...importAliases]
+  const combined = ['test', ...aliases, ...importAliases]
+  return Array.from(new Set(combined))
 }
 
 function hasTests(context: Rule.RuleContext, node: ESTree.Comment) {
